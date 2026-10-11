@@ -120,15 +120,15 @@ try {
       "const orig=api.state.config,wasDark=h.classList.contains('dark');"+
       "const host=d.createElement('div'),sheet=d.createElement('style');"+
       "host.style.cssText='position:absolute;left:-10000px;top:0;width:18rem';"+
-      "host.innerHTML='<div class=\\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\\">'+"+
-      "'<div class=\\"qxframe9a7c2-item-collection\\"><div class=\\"qxframe9a7c2-item-collection-group\\">Group</div><input class=\\"qxframe9a7c2-item-collection-search-input\\" placeholder=\\"Search\\"><div class=\\"qxframe9a7c2-item-surface is-selected\\">Selected</div></div>'+"+
-      "'<div class=\\"qxframe9a7c2-date-panel\\"><button class=\\"qxframe9a7c2-date-panel-cell is-today\\">Today</button><button class=\\"qxframe9a7c2-date-panel-cell is-selected\\">Chosen</button><button class=\\"qxframe9a7c2-date-panel-nav\\">Next</button></div>'+"+
-      "'<div class=\\"qxframe9a7c2-period-panel\\"><button class=\\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\\">Q4</button></div>'+"+
-      "'<div class=\\"qxframe9a7c2-wheel-panel\\"><div class=\\"qxframe9a7c2-wheel-panel-item is-selected\\">10</div></div>'+"+
-      "'<button class=\\"qxframe9a7c2-date-picker-preset\\">Today</button>'+"+
-      "'<div class=\\"qxframe9a7c2-color-panel\\"><input class=\\"qxframe9a7c2-color-panel-input\\" value=\\"#ffffff\\"></div></div>'+"+
-      "'<div class=\\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\\"><span class=\\"qxframe9a7c2-item-collection\\">Popover</span></div>'+"+
-      "'<i data-menu-fg style=\\"color:var(--qxframe9a7c2-theme-menu-foreground)\\"></i><i data-menu-accent style=\\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\\"></i><i data-popover-fg style=\\"color:var(--qxframe9a7c2-theme-popover-foreground)\\"></i>';"+
+      "host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+"+
+      "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
+      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-period-panel\"><button class=\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\">Q4</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div>'+"+
+      "'<button class=\"qxframe9a7c2-date-picker-preset\">Today</button>'+"+
+      "'<div class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"></div></div>'+"+
+      "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
+      "'<i data-menu-fg style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-menu-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-popover-fg style=\"color:var(--qxframe9a7c2-theme-popover-foreground)\"></i>';"+
       "d.head.append(sheet);d.body.append(host);"+
       "const css=x=>d.defaultView.getComputedStyle(x);const query=x=>host.querySelector(x);"+
       "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
@@ -755,7 +755,7 @@ try {
   });
 
   await step('Source-local FAQ, Empty and Preferences geometry in 16 themes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=empty-distribute-track]")', 'Preview 01 card fixtures');
     // Pinned source style-mira has AccordionTrigger p-2 (8px), yet
     // AccordionContentInner pb-4 (16px); the roles are independently sourced.
@@ -821,7 +821,7 @@ try {
   });
 
   await step('Upcoming Payments Calendar selects today using the original source runtime configuration', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")', 'Upcoming Payments');
     const state=await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -841,7 +841,7 @@ try {
   });
 
   await step('Framed Radio Field and static SidebarMenuButton reproduce source box models', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
     for(const style of ['nova','maia','luma','sera']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -888,7 +888,7 @@ try {
   });
 
   await step('Adaptive Calendar uses source-sized cells and visible month rows', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Adaptive Calendar');
     for(const style of ['nova','mira','sera']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -919,7 +919,7 @@ try {
   });
 
   await step('Calendar outside-month muted colors and actual day height across 16 theme modes',async()=>{
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar-cell")','Calendar day cells');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -958,7 +958,7 @@ try {
   });
 
   await step('Adaptive Calendar keyboard movement across the month remains visible', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=upcoming-payments] .qxframe9a7c2-calendar")','Calendar keyboard');
     const state=await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -978,7 +978,7 @@ try {
   });
 
   await step('Display CardTitle uses pinned source leading for each style', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -999,7 +999,7 @@ try {
   });
 
   await step('FAQ footer preserves two intrinsic non-shrinking full-width actions', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ footer');
     for(const style of ['sera','lyra','maia','nova']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1029,7 +1029,7 @@ try {
   });
 
   await step('Embedded Table uses collapsed Row borders, excluding final row', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions]")','Transaction rows');
     for(const style of ['vega','nova']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1056,7 +1056,7 @@ try {
   });
 
   await step('Small Item style tiers and Sera Preferences action width remain source-driven', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=preferences]")','Preferences footer');
     for(const style of ['vega','maia','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1085,7 +1085,7 @@ try {
   });
 
   await step('Source Card action gap, Item sm vertical insets and transaction zero Stack', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")','Kitchen Item');
     for(const style of ['vega','sera']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1112,7 +1112,7 @@ try {
   });
 
   await step('Pinned status Badge/Stock separator/Cover artwork consume shared recipes', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=cover-art]")','Cover Artwork');
     for(const style of ['vega','mira','sera']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1144,7 +1144,7 @@ try {
   });
 
   await step('Syncing State uses symmetric Card insets and nested EmptyMedia in all themes', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state]")','Syncing State composition');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1184,7 +1184,7 @@ try {
   });
 
   await step('Source editorial ItemTitle text transformation is theme-driven, not a one-off wrap', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")','Dividend titles');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1206,7 +1206,7 @@ try {
   });
 
   await step('Dividend Income preserves the source Item flex sibling structure', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=dividend-income]")', 'Dividend Income');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1237,7 +1237,7 @@ try {
   });
 
   await step('Kitchen Island uses 16px unboxed ItemMedia and 10px compact group gaps', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=kitchen-island]")', 'Kitchen Island');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1297,7 +1297,7 @@ try {
   });
 
   await step('Payments ItemContent shrinks without wrapping trailing chevrons', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments fixture');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1323,7 +1323,7 @@ try {
   });
 
   await step('Syncing State consumes source p-4 Empty inset in all 16 style modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=syncing-state] .qxframe9a7c2-empty")','Syncing Empty ready');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1343,7 +1343,7 @@ try {
     }
   });
   await step('Loading Card matches pinned source height in eight styles and both modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=loading-card]")','Loading Card source fixture');
     const height={vega:372,nova:348,maia:376,lyra:348,mira:348,luma:374,sera:398,rhea:362};
     for(const [style,pinnedHeight] of Object.entries(height)){
@@ -1368,7 +1368,7 @@ try {
     }
   });
   await step('Nova Claimable CardTitle and Payout Slider track match pinned source heights', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=claimable-balance]")','Claimable Card ready');
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
     await waitFor(frameAttr('data-create-style')+' === "nova"','Nova geometry');
@@ -1393,7 +1393,7 @@ try {
     assert.ok(Math.abs(result.payoutHeight-468)<=.5,'pinned Nova Payout Threshold Card is 468px: '+JSON.stringify(result));
   });
   await step('Payout Threshold live amount tracks QX Slider keyboard ValueController', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payout-threshold] .qxframe9a7c2-slider-handle")','Payout Slider ready');
     const result=await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -1416,7 +1416,7 @@ try {
     assert.equal(result.sliderRoot,true,'existing QX runtime Slider is the only Slider root');
   });
   await step('Payments source-locked Nova Item rows match same-browser geometry', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payments comparison fixture');
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
     await waitFor(frameAttr('data-create-style')+' === "nova"', 'Nova same-browser Payments fixture');
@@ -1472,7 +1472,7 @@ try {
     console.log('[payments-same-browser-source] '+JSON.stringify(geometry));
   });
   await step('SidebarNav follows pinned 8-style menu and group gaps', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=sidebar-nav]")','SidebarNav fixture');
     const gaps={vega:4,nova:0,maia:4,lyra:0,mira:1,luma:2,sera:2,rhea:2};
     const approx=(actual,expected,desc)=>assert.ok(Number.isFinite(actual)&&Math.abs(actual-expected)<=.5,
@@ -1508,7 +1508,7 @@ try {
   });
 
   await step('FieldContent and Item text clamp calculated parity across 16 themes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=notification-settings]")','Form cards');
     const expected={vega:4,nova:2,maia:4,lyra:2,mira:2,luma:4,sera:4,rhea:4};
     for(const [style,expectedGap] of Object.entries(expected)){
@@ -1549,7 +1549,7 @@ try {
   });
 
   await step('Source FAQ segmented Tabs typography across eight styles and light/dark',async()=>{
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs")','source FAQ Tabs');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
@@ -1575,7 +1575,7 @@ try {
   });
 
   await step('FAQ segmented Tabs retain selected elevation through keyboard virtual-focus in 16 modes',async()=>{
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab.is-active")','FAQ segmented Tabs');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
@@ -1611,7 +1611,7 @@ try {
   });
 
   await step('SelectGroup Hover cannot override Field feedback or focus, Outline and Muted in 16 themes',async()=>{
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','SelectGroup Preview');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
@@ -1689,7 +1689,7 @@ try {
   });
 
   await step('FAQ Tabs pointer Focus preserves selected elevation and disables pointer ring in 16 modes',async()=>{
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab.is-active")','FAQ pointer shell');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
@@ -1750,7 +1750,7 @@ try {
   });
 
   await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1809,7 +1809,7 @@ try {
   });
 
   await step('Receiving Method uses 10px shared Radio Field rows in 16 modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=receiving-method]")','Receiving Method');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1868,7 +1868,7 @@ try {
   });
 
   await step('ItemMedia description alignment matches pinned source in eight styles and both modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','Payment media fixture');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1898,7 +1898,7 @@ try {
     }
   });
   await step('Audit InputGroup border/size/appearance and Item accent pairs in 16 modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=payments]")','audit visual fixtures');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", radius: "default", ext: {} })');
@@ -1946,7 +1946,7 @@ try {
     }
   });
   await step('FAQ remains single-open and collapsible after switching questions', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ toggle fixture');
     const states=await evaluate(`(() => {
       const items=[...document.querySelector('[data-create-frame]').contentDocument.querySelectorAll('[data-card=faq] details[name="qx-create-faq"]')];
@@ -1964,7 +1964,7 @@ try {
     assert.deepEqual(states.restored,[true,false,false]);
   });
   await step('FAQ QX Tabs switches independent source-locked Billing and Goals panels', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab-action")', 'FAQ Tabs ready');
     const result = await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -2016,7 +2016,7 @@ try {
   });
   
   await step('Recent Transactions dates consume semantic muted Table cell foreground', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=recent-transactions] .qxframe9a7c2-table")', 'Transactions Table ready');
     const result=await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -2037,7 +2037,7 @@ try {
   });
 
   await step('Motion none stops static Skeleton, Spinner and Accordion indicator in 16 modes', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','Motion preview');
     for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "'+style+'", ext: {motion: "none"} })');
@@ -2098,7 +2098,7 @@ try {
   });
 
   await step('High-difference first-Card structural diagnostics (Nova)', async () => {
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','first-Card diagnostics ready');
     await evaluate('window.QXFRAME9A7C2_CREATE.commit({ ...window.QXFRAME9A7C2_CREATE.state.config, style: "nova", radius: "default", ext: {} })');
     await waitFor(frameAttr('data-create-style')+' === "nova"','Nova diagnostic');
@@ -2165,7 +2165,7 @@ try {
   await step('Preview 01 refreshed first-Card height diagnostic against pinned source', async () => {
     const baseline = JSON.parse(fs.readFileSync(path.join(root, 'tools/qa/reports/stage-3/preview-01/report.json'), 'utf8'));
     assert.equal(baseline.source, '295a1f114a138f23b5dfee0e0c6812394dfeb90c');
-    await click('document.querySelector("[data-create-item=\\"01\\"]")');
+    await click('document.querySelector("[data-create-item=\"01\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=contribution-history]")', 'Preview 01 canvas', 7000);
     const rows = [];
     for (const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']) {
@@ -2220,7 +2220,7 @@ try {
 
 
   await step('Preview 01 controlled ToggleGroup/Slider/Checkbox states match pinned source', async () => {
-    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=roller-shades] .qxframe9a7c2-slider")', 'interactive Preview 01');
     const state = await evaluate(`(() => {
       const doc=document.querySelector('[data-create-frame]').contentDocument;
@@ -2360,7 +2360,7 @@ try {
   });
 
   await step('JS Input seven-axis pointer/keyboard real V2 border, ring, and Field valid status',async()=>{
-    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const cfg={...api.state.config,ext:{...api.state.config.ext,inputLook:'outline',pointerFocus:'ring',pointerFocusColor:'theme',keyboardFocus:'ring',keyboardFocusColor:'black-white'}};\n const sheet=d.createElement('style');sheet.textContent=api.compileTheme(cfg,{generatedAt:''}).body;d.head.append(sheet);\n const host=d.createElement('div');host.style.cssText='position:absolute;left:-8000px;top:0;width:400px';host.innerHTML='<div class=\\\"qxframe9a7c2-input\\\" data-js-normal><input class=\\\"qxframe9a7c2-input-control\\\" type=\\\"text\\\"></div><div class=\\\"qxframe9a7c2-field is-valid\\\"><div class=\\\"qxframe9a7c2-input\\\" data-js-valid><input class=\\\"qxframe9a7c2-input-control\\\" type=\\\"text\\\"></div><input class=\\\"qxframe9a7c2-form-input\\\" data-native-valid type=\\\"text\\\"><div class=\\\"qxframe9a7c2-selectgroup is-outline\\\"><label class=\\\"qxframe9a7c2-selectgroup-item\\\"><input class=\\\"qxframe9a7c2-selectgroup-input\\\" type=\\\"radio\\\" name=\\\"valid\\\"><span class=\\\"qxframe9a7c2-selectgroup-label\\\" data-group-valid>Valid choice</span></label></div></div>';d.body.append(host);host.querySelectorAll('*').forEach(el=>{el.style.transition='none';el.style.animation='none'});\n const previous=h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),results=[];\n for(const dark of [false,true]){const wasDark=h.classList.contains('dark');h.classList.toggle('dark',dark);const exp=key=>{const s=d.createElement('span');s.style.color='var(--qxframe9a7c2-theme-'+key+')';host.append(s);const val=getComputedStyle(s).color;s.remove();return val};const colors={pointer:exp('pointer-focus'),keyboard:exp('focus'),success:exp('success')};for(const keyboard of [false,true]){for(const name of ['normal','valid']){const node=host.querySelector('[data-js-'+name+']');const input=node.querySelector('input');input.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);node.classList.toggle('is-keyboard-focus',keyboard);const cs=getComputedStyle(node);results.push({dark,keyboard,name,color:cs.borderBottomColor,shadow:cs.boxShadow,role:cs.getPropertyValue('--_qxframe9a7c2-v2-control-border').trim(),expected:name==='valid'?colors.success:keyboard?colors.keyboard:colors.pointer});node.classList.remove('is-keyboard-focus');}const native=host.querySelector('[data-native-valid]');native.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);results.push({dark,keyboard,name:'native',color:getComputedStyle(native).borderBottomColor,expected:colors.success});const radio=host.querySelector('.qxframe9a7c2-selectgroup-input');radio.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);results.push({dark,keyboard,name:'group',color:getComputedStyle(host.querySelector('[data-group-valid]')).borderBottomColor,expected:colors.success});}h.classList.toggle('dark',wasDark);}h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',previous);host.remove();sheet.remove();return results;\n})()");
+    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const cfg={...api.state.config,ext:{...api.state.config.ext,inputLook:'outline',pointerFocus:'ring',pointerFocusColor:'theme',keyboardFocus:'ring',keyboardFocusColor:'black-white'}};\n const sheet=d.createElement('style');sheet.textContent=api.compileTheme(cfg,{generatedAt:''}).body;d.head.append(sheet);\n const host=d.createElement('div');host.style.cssText='position:absolute;left:-8000px;top:0;width:400px';host.innerHTML='<div class=\\"qxframe9a7c2-input\\" data-js-normal><input class=\\"qxframe9a7c2-input-control\\" type=\\"text\\"></div><div class=\\"qxframe9a7c2-field is-valid\\"><div class=\\"qxframe9a7c2-input\\" data-js-valid><input class=\\"qxframe9a7c2-input-control\\" type=\\"text\\"></div><input class=\\"qxframe9a7c2-form-input\\" data-native-valid type=\\"text\\"><div class=\\"qxframe9a7c2-selectgroup is-outline\\"><label class=\\"qxframe9a7c2-selectgroup-item\\"><input class=\\"qxframe9a7c2-selectgroup-input\\" type=\\"radio\\" name=\\"valid\\"><span class=\\"qxframe9a7c2-selectgroup-label\\" data-group-valid>Valid choice</span></label></div></div>';d.body.append(host);host.querySelectorAll('*').forEach(el=>{el.style.transition='none';el.style.animation='none'});\n const previous=h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),results=[];\n for(const dark of [false,true]){const wasDark=h.classList.contains('dark');h.classList.toggle('dark',dark);const exp=key=>{const s=d.createElement('span');s.style.color='var(--qxframe9a7c2-theme-'+key+')';host.append(s);const val=getComputedStyle(s).color;s.remove();return val};const colors={pointer:exp('pointer-focus'),keyboard:exp('focus'),success:exp('success')};for(const keyboard of [false,true]){for(const name of ['normal','valid']){const node=host.querySelector('[data-js-'+name+']');const input=node.querySelector('input');input.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);node.classList.toggle('is-keyboard-focus',keyboard);const cs=getComputedStyle(node);results.push({dark,keyboard,name,color:cs.borderBottomColor,shadow:cs.boxShadow,role:cs.getPropertyValue('--_qxframe9a7c2-v2-control-border').trim(),expected:name==='valid'?colors.success:keyboard?colors.keyboard:colors.pointer});node.classList.remove('is-keyboard-focus');}const native=host.querySelector('[data-native-valid]');native.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);results.push({dark,keyboard,name:'native',color:getComputedStyle(native).borderBottomColor,expected:colors.success});const radio=host.querySelector('.qxframe9a7c2-selectgroup-input');radio.focus({preventScroll:true});h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',keyboard);results.push({dark,keyboard,name:'group',color:getComputedStyle(host.querySelector('[data-group-valid]')).borderBottomColor,expected:colors.success});}h.classList.toggle('dark',wasDark);}h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',previous);host.remove();sheet.remove();return results;\n})()");
     assert.equal(r.length,16,'2 themes by 2 focus origins by 4 surface kinds');
     for(const row of r){
       assert.equal(row.color,row.expected,'real border focus paint '+JSON.stringify(row));
@@ -2487,19 +2487,19 @@ try {
       "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n"+
       "const wasDark=h.classList.contains('dark'),wasKeyboard=h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),orig=api.state.config;\n"+
       "const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-9000px;top:0;width:380px';\n"+
-      "host.innerHTML='<button class=\\\"qxframe9a7c2-button is-outline\\\" data-control=\\\"button\\\">Button</button><input data-control=\\\"bare-input\\\" value=\\\"Bare\\\"><textarea data-control=\\\"bare-textarea\\\">Bare textarea</textarea><select data-control=\\\"bare-select\\\"><option>Native</option></select><input class=\\\"qxframe9a7c2-form-input\\\" data-control=\\\"input\\\" value=\\\"Form\\\"><textarea class=\\\"qxframe9a7c2-form-textarea\\\" data-control=\\\"textarea\\\">Form textarea</textarea><select class=\\\"qxframe9a7c2-form-select\\\" data-control=\\\"select\\\"><option>Select</option></select><div class=\\\"qxframe9a7c2-native-form\\\"><textarea data-control=\\\"native-form-textarea\\\">Native form</textarea></div>';\n"+
+      "host.innerHTML='<button class=\\"qxframe9a7c2-button is-outline\\" data-control=\\"button\\">Button</button><input data-control=\\"bare-input\\" value=\\"Bare\\"><textarea data-control=\\"bare-textarea\\">Bare textarea</textarea><select data-control=\\"bare-select\\"><option>Native</option></select><input class=\\"qxframe9a7c2-form-input\\" data-control=\\"input\\" value=\\"Form\\"><textarea class=\\"qxframe9a7c2-form-textarea\\" data-control=\\"textarea\\">Form textarea</textarea><select class=\\"qxframe9a7c2-form-select\\" data-control=\\"select\\"><option>Select</option></select><div class=\\"qxframe9a7c2-native-form\\"><textarea data-control=\\"native-form-textarea\\">Native form</textarea></div>';\n"+
       "d.head.append(sheet);d.body.append(host);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       "const names=['button','bare-input','bare-textarea','bare-select','input','textarea','select','native-form-textarea'],out=[];\n"+
       "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n"+
       " h.classList.toggle('dark',dark);const c={...orig,style,ext:{...orig.ext,shadow:'none',controlShadow:'on',pointerFocus:'outline',keyboardFocus:'outline'}};\n"+
       " sheet.textContent=api.compileTheme(c,{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
-      " const on=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
-      " const target=host.querySelector('[data-control=\\\"bare-textarea\\\"]');target.focus({preventScroll:true});h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
+      " const on=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\"'+name+'\\"]')).boxShadow]));\n"+
+      " const target=host.querySelector('[data-control=\\"bare-textarea\\"]');target.focus({preventScroll:true});h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
       " const cs=getComputedStyle(target),pointer={width:cs.outlineWidth,offset:cs.outlineOffset,style:cs.outlineStyle,shadow:cs.boxShadow};\n"+
       " h.classList.add('qxframe9a7c2-keyboard-focus-origin');const ck=getComputedStyle(target),keyboard={width:ck.outlineWidth,offset:ck.outlineOffset,style:ck.outlineStyle,shadow:ck.boxShadow};\n"+
       " h.classList.remove('qxframe9a7c2-keyboard-focus-origin');target.blur();\n"+
       " sheet.textContent=api.compileTheme({...c,ext:{...c.ext,shadow:'heavy',controlShadow:'off'}},{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
-      " const off=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
+      " const off=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\"'+name+'\\"]')).boxShadow]));\n"+
       " out.push({style,dark,on,off,pointer,keyboard});\n"+
       "}h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);host.remove();sheet.remove();return out;\n"+
       "})()");
