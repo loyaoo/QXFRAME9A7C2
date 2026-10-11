@@ -74,3 +74,8 @@ Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs
 29. `visitors`
 30. `contributions-activity`
 31. `not-found`
+
+## Stage4 fifth functional batch (2026-10-11)
+- Five previously unwired Preview 02 primary actions: Report Bug Submit, Invite Team Send, GitHub Profile Save, Contributions privacy Save and Book Appointment.
+- Each uses the existing authored QX controls and truthful local-only validation/feedback; no simulated backend. Invite email validation covers dynamic rows, booking honors independent time toggles.
+- Browser regressions check required fields, focus, valid actions, stale status clearing and private/public states. QA ledger highlights only these five Cards/ten regions; previous markers removed.

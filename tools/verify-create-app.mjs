@@ -58,21 +58,21 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'shipping-address':['[data-pv-address-fields]','[data-pv-address-actions]'],'feedback-form':['[data-pv-feedback-fields]','[data-pv-feedback-submit]']}; // Stage4 live local form validation
+  const current={'report-bug':['[data-pv-bug-fields]','[data-pv-bug-submit]'],'invite-team':['[data-pv-invite-rows]','[data-pv-invite-send]'],'github-profile':['[data-pv-profile-fields]','[data-pv-profile-save]'],'contributions-activity':['[data-pv-activity-fields]','[data-pv-activity-save]'],'book-appointment':['[data-pv-multi-toggle="appointment"]','[data-pv-appointment-book]']}; // Stage4 five local-only actions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['contributions-activity'/,'previous Preview 02 highlights are cleared');
+  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['shipping-address'|\['feedback-form'/,'previous Preview 02 highlights are cleared');
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'only current Stage4 two local forms/four regions are highlighted');
+  assert.equal(count,10,'only current Stage4 five cards/ten regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');

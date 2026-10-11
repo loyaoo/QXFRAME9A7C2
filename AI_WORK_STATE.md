@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 Stage4 five-card action batch (CI pending)
+- Previous verified HEAD `69ccfbc6f2f1e1433a7730385fb3c3fb676c7eff`: QXFRAME #38136713869 and CSS Schema #38136713870 both SUCCESS; previous Windows artifact #11701771163 delivered. PR #266 Draft, main/backup untouched.
+- Five actual disconnected actions wired in Preview 02: Report Bug Submit, Invite Team Send (dynamic rows included), GitHub Profile Save, Contributions Activity Save, Book Appointment. Existing QX controls only; local validation/state, no invented backend; no Stage3 regression or pixel chase.
+- QA ledger ONLY five cards / 10 changed regions; Chromium behavioral regression added and static acceptance updated accordingly. Previous highlighting removed. State before full new CI.
+- Next exact step: verify latest dual CI, fix actual failures, fetch same-HEAD official Actions dist+docs artifact, build Windows offline ZIP and independently validate CRC/8 HTTP routes/SHA256. Stage4 estimate ~50%, CREATEAPP-V3 ~85%; Stage5 deferred.
+
 ## CURRENT — 2026-10-11 Stage4 local form verification gate correction (CI pending)
 - Previous HEAD d54c8e262cdd8c560283ea77c5ae670a3ce2d9d1 QXFRAME #38136570810 release failed solely at stale offline QA ledger assertion: shipping-address was intentionally highlighted in the NEW batch but was still prohibited by an old negative regex. The same QA overlay retained last batch caption; both corrected, without relaxing the requirement that previous live-waveform/no-team-members regions are absent.
 - Preserve actual new Shipping Address / Feedback Form behavior, chromium cases and two Card/four region markers. Old official 6a287e2f Windows ZIP remains the prior verified handoff; this batch requires exact-new-head dual-green and new artifact before new local ZIP.

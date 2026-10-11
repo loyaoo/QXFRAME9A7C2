@@ -182,7 +182,7 @@
     var inviteRows=inviteForm.querySelector('[data-pv-invite-rows]');
     inviteForm.querySelector('[data-pv-invite-send]').addEventListener('click',function(){
       var inputs=Array.prototype.slice.call(inviteRows.querySelectorAll('input'));
-      var invalid=inputs.find(function(input){return !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(input.value.trim());});
+      var invalid=inputs.find(function(input){return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());});
       if(invalid){localStatus(inviteForm,'Enter a valid email address for each invitee.');invalid.focus({preventScroll:true});return;}
       localStatus(inviteForm,inputs.length+' invitations validated locally; no invitations sent.');
     });

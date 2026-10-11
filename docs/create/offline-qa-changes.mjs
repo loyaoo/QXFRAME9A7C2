@@ -1,12 +1,24 @@
-/** Stage4: LiveWaveform real media/processing states; InviteMembers cross-card action. */
+/** Stage4 Preview 02: five current local-only action flow fixes. */
 const groups = [
- ['shipping-address','Shipping Address · Local Form',[
-  ['[data-pv-address-fields]','Required fields and focusable labels','Required street/city/ZIP; native fields and QX Select focus from their labels.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-address-actions]','Save / Cancel real local actions','Validate and reset draft; never imply a server saved the address.','__QA_BUNDLE_HEAD__']
+ ['report-bug','Report Bug · Validation',[
+  ['[data-pv-bug-fields]','Bug details','Require title and reproduction steps before local validation.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-bug-submit]','Submit Bug','No pretend server submission.','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['feedback-form','Feedback Form · Local Validation',[
-  ['[data-pv-feedback-fields]','Topic / Feedback required fields','Native Select and textarea label association, no false submission.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-feedback-submit]','Submit action feedback','Shows validation errors or honest local-only status.','__QA_BUNDLE_HEAD__']
+ ['invite-team','Invite Team · Send',[
+  ['[data-pv-invite-rows]','Invitee emails','Validate original and dynamic rows.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-invite-send]','Send Invites','Explicit local-only feedback.','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['github-profile','Profile · Save',[
+  ['[data-pv-profile-fields]','Profile fields','Preserve edits, clear prior feedback.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-profile-save]','Save Profile','No false persistence.','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['contributions-activity','Privacy · Save',[
+  ['[data-pv-activity-fields]','Privacy state','Observe current checkbox state.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-activity-save]','Save Changes','Local-only public/private preview.','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['book-appointment','Appointment · Booking',[
+  ['[data-pv-multi-toggle="appointment"]','Appointment slots','Retain original multiple selection.','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-appointment-book]','Book Appointment','Require at least one slot, no fake booking.','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -70,7 +82,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Shipping Address 与 Feedback Form；上一轮高亮已清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Report Bug、Invite Team、Profile、Contributions & Activity、Book Appointment；上一轮高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

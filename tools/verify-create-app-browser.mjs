@@ -378,6 +378,40 @@ try {
     await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
   });
 
+
+  await step('Stage4 five Preview02 local-only action flows: validation, focus and state',async()=>{
+    const actual=await evaluate("(() => {\n"+
+      "const d=document.querySelector('[data-create-frame]').contentDocument,c=id=>d.querySelector('[data-card=\"'+id+'\"]');\n"+
+      "const bug=c('report-bug'),title=bug.querySelector('[data-pv-bug-title]'),steps=bug.querySelector('[data-pv-bug-steps]'),bugButton=bug.querySelector('[data-pv-bug-submit]'),bs=bug.querySelector('[data-pv-report-bug-status]');\n"+
+      "bugButton.click();const missingTitle=bs.textContent,titleFocus=d.activeElement===title;\n"+
+      "title.value='Broken UI';bugButton.click();const missingSteps=bs.textContent,stepsFocus=d.activeElement===steps;\n"+
+      "steps.value='Click save';bugButton.click();const validBug=bs.textContent;\n"+
+      "const inv=c('invite-team'),emails=[...inv.querySelectorAll('[data-pv-invite-rows] input')],invButton=inv.querySelector('[data-pv-invite-send]'),iv=inv.querySelector('[data-pv-invite-team-status]');\n"+
+      "emails[0].value='invalid';invButton.click();const invalidEmail=iv.textContent,emailFocus=d.activeElement===emails[0];\n"+
+      "emails.forEach((e,i)=>e.value='person'+i+'@example.com');invButton.click();const validEmail=iv.textContent;\n"+
+      "const profile=c('github-profile'),ps=profile.querySelector('[data-pv-github-profile-status]');profile.querySelector('[data-pv-profile-save]').click();const savedProfile=ps.textContent;profile.querySelector('input').dispatchEvent(new Event('input',{bubbles:true}));const clearedProfile=ps.hidden;\n"+
+      "const activity=c('contributions-activity'),as=activity.querySelector('[data-pv-contributions-activity-status]'),privateInput=activity.querySelector('input[type=\"checkbox\"]');privateInput.checked=false;activity.querySelector('[data-pv-activity-save]').click();const publicState=as.textContent;privateInput.checked=true;privateInput.dispatchEvent(new Event('change',{bubbles:true}));const clearedActivity=as.hidden;activity.querySelector('[data-pv-activity-save]').click();const privateState=as.textContent;\n"+
+      "const booking=c('book-appointment'),slots=[...booking.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')],bookButton=booking.querySelector('[data-pv-appointment-book]'),bookStatus=booking.querySelector('[data-pv-book-appointment-status]');slots.forEach(b=>{if(b.classList.contains('is-active'))b.click()});bookButton.click();const missingBooking=bookStatus.textContent;slots[0].click();slots[2].click();bookButton.click();const validBooking=bookStatus.textContent;\n"+
+      "return {missingTitle,titleFocus,missingSteps,stepsFocus,validBug,invalidEmail,emailFocus,validEmail,savedProfile,clearedProfile,publicState,clearedActivity,privateState,missingBooking,validBooking};\n"+
+      "})()");
+    assert.match(actual.missingTitle,/Enter a bug title/);
+    assert.equal(actual.titleFocus,true);
+    assert.match(actual.missingSteps,/steps to reproduce/);
+    assert.equal(actual.stepsFocus,true);
+    assert.match(actual.validBug,/validated locally; not submitted/);
+    assert.match(actual.invalidEmail,/valid email/);
+    assert.equal(actual.emailFocus,true);
+    assert.match(actual.validEmail,/invitations validated locally; no invitations sent/);
+    assert.match(actual.savedProfile,/not saved to a server/);
+    assert.equal(actual.clearedProfile,true);
+    assert.match(actual.publicState,/public.*not saved/);
+    assert.equal(actual.clearedActivity,true);
+    assert.match(actual.privateState,/private.*not saved/);
+    assert.match(actual.missingBooking,/Select at least one/);
+    assert.match(actual.validBooking,/2 appointment time\(s\) selected locally; no booking sent/);
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
   await step('Stage4 real waveform microphone permission/lifecycle and InviteMembers navigation',async()=>{
     const actual=await evaluate("(async function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const frame=doc.defaultView;\n const card=doc.querySelector('[data-card=\"live-waveform\"]');\n const buttons=Object.fromEntries(['listen','process','mode'].map(k=>[k,card.querySelector('[data-pv-wave-action=\"'+k+'\"]')]));\n const status=card.querySelector('[data-pv-wave-status]');\n const visual=card.querySelector('[data-pv-wave-visual]');\n const snapshot=()=>({\n  state:visual.getAttribute('data-pv-wave-state'),\n  mode:visual.getAttribute('data-pv-wave-mode'),\n  listen:buttons.listen.textContent.trim(),\n  process:buttons.process.textContent.trim(),\n  modeLabel:buttons.mode.textContent.trim(),\n  message:status.textContent\n });\n const initial=snapshot();\n let requests=0,stopped=0,closed=0;\n const media=frame.navigator.mediaDevices;\n const original=media?.getUserMedia;\n const OriginalContext=frame.AudioContext;\n if(!media)throw new Error('mediaDevices missing in localhost test');\n media.getUserMedia=()=>{requests++;return Promise.reject(Error('test permission denied'))};\n try{\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const denied=snapshot(),afterDenied=requests;\n  media.getUserMedia=()=>{requests++;return Promise.resolve({getTracks:()=>[{stop(){stopped++}}]})};\n  frame.AudioContext=class {\n    createAnalyser(){return {frequencyBinCount:128,fftSize:256,smoothingTimeConstant:0.8,getByteFrequencyData(a){a.fill(90)}}}\n    createMediaStreamSource(){return {connect(){}}}\n    close(){closed++;return Promise.resolve()}\n  };\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const live=snapshot();\n  const rect=card.querySelector('.pv-wave rect').getAttribute('height');\n  buttons.mode.click();\n  const scrolling=snapshot();\n  buttons.listen.click();\n  const stoppedState=snapshot();\n  buttons.process.click();\n  const idle=snapshot();\n  buttons.process.click();\n  const processing=snapshot();\n  let finishRequest;\n  media.getUserMedia=()=>{requests++;return new Promise(resolve=>{finishRequest=resolve})};\n  buttons.listen.click();\n  const pending=buttons.listen.disabled;\n  buttons.process.click();\n  const cancelRestored=!buttons.listen.disabled;\n  finishRequest({getTracks:()=>[{stop(){stopped++}}]});\n  await new Promise(r=>setTimeout(r,65));\n  const afterLateStream=snapshot();\n  const lateStreamStopped=stopped;\n  const invite=doc.querySelector('[data-pv-jump-invites]');\n  const target=doc.querySelector('[data-card=\"invite-team\"] [data-pv-invite-add]');\n  invite.click();\n  const focused=doc.activeElement===target;\n  return {initial,denied,afterDenied,live,rect,scrolling,stoppedState,idle,processing,requests,stopped,closed,focused,pending,cancelRestored,afterLateStream,lateStreamStopped};\n }finally{\n  media.getUserMedia=original;\n  frame.AudioContext=OriginalContext;\n }\n})()");
     assert.equal(actual.initial.state,'processing');
