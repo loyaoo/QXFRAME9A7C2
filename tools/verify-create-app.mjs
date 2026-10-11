@@ -311,10 +311,10 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const generated=model.compileTheme(model.normalizeConfig({style:'nova',ext:{keyboardFocus:'ring',pointerFocus:'ring',keyboardFocusColor:'theme',pointerFocusColor:'black-white',hoverStyle:'both',hoverColor:'theme',focusBackground:'parent-surface'}})).body;
   assert.match(generated,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0/,'keyboard ring has a genuine shadow');
   assert.match(generated,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0/,'pointer ring has a genuine shadow');
-  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'Theme ring is emitted');
+  assert.match(generated,/--qxframe9a7c2-theme-ring:\s*oklch/,'shadcn input palette ring remains a source-only color');
   const colorTokens=Object.fromEntries([...generated.matchAll(/--qxframe9a7c2-theme-([\w-]+):\s*([^;]+);/g)].map(x=>[x[1],x[2]]));
   assert.equal(colorTokens.focus,colorTokens.primary,'selected theme sets focus outline to primary');
-  assert.equal(colorTokens.ring,colorTokens.primary,'selected theme sets actual control focus border to primary');
+  assert.notEqual(colorTokens.ring,colorTokens.primary,'imported shadcn palette ring remains independent of active Focus roles');
   assert.equal(colorTokens['hover-color'],colorTokens.primary,'Hover theme color is resolved independently');
   assert.notEqual(colorTokens['pointer-focus'],colorTokens.primary,'Pointer black-white does not inherit keyboard Theme color');
   assert.match(generated,/--qxframe9a7c2-theme-hover-background-strength:\s*15%/,'combined hover paints background');
@@ -328,7 +328,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
   assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*none/,'baseline keyboard default unchanged');
   assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
-  assert.match(source('docs/create/compiler.js'),/light\.ring = light\.primary;/,'theme-colored ring feeds focus border');
+  assert.doesNotMatch(source('docs/create/compiler.js'),/light\.ring\s*=\s*light\.primary/,'Theme Focus may not mutate imported shadcn palette ring');
   assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
   assert.match(source('src/styles/components/button.css'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-button:focus[^\{]*\{[^}]*theme-pointer-shadow/,'Button pointer focus projects Theme shadow independently of :active');
