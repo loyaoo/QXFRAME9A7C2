@@ -114,6 +114,33 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Native CSS base-select picker dark and inverted Theme roles: 8 Styles x light/dark x four Menu colors',async()=>{
+    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const prevDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:20rem';\n host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-qa-native=\"authored\"><option value=\"a\" selected>m@shadcn.com</option><option value=\"b\">m@gmail.com</option><option value=\"c\" disabled>disabled</option></select><div class=\"qxframe9a7c2-native-form\"><select data-qa-native=\"scoped\"><option selected>Scoped</option><option>Two</option></select></div><select data-qa-native=\"bare\"><option selected>Bare</option><option>Two</option></select><select class=\"qxframe9a7c2-form-select\" size=\"3\" data-qa-native=\"multirow\"><option>One</option><option>Two</option><option>Three</option></select><i data-qa-color=\"fg\" style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-qa-color=\"accent\" style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-qa-color=\"bg\" style=\"background:var(--qxframe9a7c2-theme-menu)\"></i>';\n d.head.append(sheet);d.body.append(host);\n const css=s=>getComputedStyle(s),cases=[];\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\n   const theme={fg:css(host.querySelector('[data-qa-color=fg]')).color,bg:css(host.querySelector('[data-qa-color=bg]')).backgroundColor,\n    accentFg:css(host.querySelector('[data-qa-color=accent]')).color,accentBg:css(host.querySelector('[data-qa-color=accent]')).backgroundColor};\n   const samples={};\n   for(const kind of ['authored','scoped','bare']){\n     const el=host.querySelector('[data-qa-native=\"'+kind+'\"]'),pick=getComputedStyle(el,'::picker(select)'),selected=css(el.options[0]),unselected=css(el.options[1]),disabled=kind==='authored'?css(el.options[2]):null;\n     samples[kind]={appearance:css(el).appearance,pickerAppearance:pick.appearance,colorScheme:css(el).colorScheme,pickerBg:pick.backgroundColor,pickerFg:pick.color,pickerBorderRadius:pick.borderTopLeftRadius,\n       selectedFg:selected.color,selectedBg:selected.backgroundColor,optionFg:unselected.color,optionBg:unselected.backgroundColor,\n       disabledFg:disabled?.color,disabledOpacity:disabled?.opacity,iconDisplay:getComputedStyle(el,'::picker-icon').display};\n   }\n   const multirow=host.querySelector('[data-qa-native=multirow]');\n   cases.push({style,dark,menuColor,theme,samples,multirow:css(multirow).appearance});\n }\n h.classList.toggle('dark',prevDark);host.remove();sheet.remove();\n return {supported:CSS.supports('appearance','base-select'),cases};\n})()");
+    assert.equal(r.supported,true,'Chromium must support native customizable select');
+    assert.equal(r.cases.length,64,'8 Styles x 2 modes x 4 Menu colors');
+    for(const c of r.cases){
+      const id=c.style+'/'+c.dark+'/'+c.menuColor;
+      for(const [type,select] of Object.entries(c.samples)){
+        const label=id+'/'+type;
+        assert.equal(select.appearance,'base-select',label+' control enabled');
+        assert.equal(select.pickerAppearance,'base-select',label+' picker enabled');
+        assert.equal(select.colorScheme,c.dark?'dark':'light',label+' fallback OS color-scheme');
+        assert.equal(select.pickerBg,c.theme.bg,label+' popup background follows Menu color');
+        assert.equal(select.pickerFg,c.theme.fg,label+' popup text follows Menu foreground');
+        assert.equal(select.optionFg,c.theme.fg,label+' idle options visible on dark menu');
+        assert.equal(select.selectedFg,c.theme.accentFg,label+' selected option readable');
+        assert.equal(select.selectedBg,c.theme.accentBg,label+' selected option has menu accent');
+        assert.ok(select.pickerBorderRadius !== undefined,label+' picker radius computed');
+        assert.equal(select.iconDisplay,'none',label+' no duplicated chevron');
+        if(type==='authored'){
+          assert.equal(select.disabledFg,c.theme.fg,label+' disabled option still uses menu foreground');
+          assert.equal(select.disabledOpacity,'0.45',label+' disabled option faded');
+        }
+      }
+      assert.notEqual(c.multirow,'base-select',id+' multirow native list is not converted to single picker');
+    }
+  });
+
   await step('Shared Select option padding grows with content; DatePicker Primary/shape roles match Button', async () => {
     const result = await evaluate(`(() => {
       const doc = document.querySelector('[data-create-frame]').contentDocument;

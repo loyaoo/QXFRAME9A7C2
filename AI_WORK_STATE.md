@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 native Select customizable picker dark/Theme parity (CI pending)
+- Prior exact green HEAD c924bf4c5c622776bd306ab2fa8014e2cef6c5dc PR #265 Draft; user screenshot Preview 02 GitHub Profile Public Email .qxframe9a7c2-form-select showed white OS dropdown on dark Theme despite dark closed control.
+- Chromium 134+ supports appearance:base-select on both select and ::picker(select). Framework previously used appearance:none only on control; popup OS-owned, not themed.
+- Added shared progressive-native single-select CSS in form-native.css for authored (.form-select), scoped (.native-form select) and unclassed select, excluding multiple/size lists. Picker uses Theme menu/bg/foreground, Theme menu accent on option:checked/:hover/:focus, popup border/radius/shadow, dark/light native color-scheme; disables intrinsic ::picker-icon because existing SVG chevron owns closed control. No JS replacement or new Theme tokens. Tests added static plus Chromium 64 style/theme/menu modes x three control selectors. Offline QA ledger ONLY Preview 02 github-profile Public Email select (removes last batch marker).
+- Next: check dual CI, fix any gates, extract exact-head official dist+docs artifact, verify Windows offline QA zip.
+- PR #265 Draft/open/unmerged; do not merge or modify main/backup/Stage4/5. Stage3 ~96%, Field/SelectGroup ~89%, overall ~79% remain estimates pending user acceptance.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 inverted Select dropdown foreground fix (CI pending)
 - Screenshot: inverted Preferred Currency Select popup has dark background, selected USD white but idle EUR/GBP/JPY nearly black.
 - Root cause: canonical Theme sets Popup menu foreground, but `ItemCollection` and `ItemSurface` consume page foreground instead of the popup foreground. Their explicit color prevents parent inheritance.

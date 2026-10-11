@@ -1,3 +1,5 @@
+/* Unclassed native Select's customizable popup paint and color-scheme are
+ * defined alongside authored Select in form-native.css (one shared owner). */
 /* Native text controls consume the same visual recipe as Control without creating a second component skin.
    Specialized native controls and framework-owned internals keep their own canonical component styles. */
 input:not([class*="qxframe9a7c2-"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="hidden"]),

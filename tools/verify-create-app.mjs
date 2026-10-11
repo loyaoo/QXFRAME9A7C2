@@ -58,10 +58,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'payout-threshold':['#preferred-currency']}; // this round inverted Select idle text fix
+  const current={'github-profile':['.qxframe9a7c2-form-select']}; // Preview 02 native customizable select
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
+    assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -69,10 +69,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only this round Select inverted menu text is highlighted in Preview 01');
+  assert.equal(count,1,'only this round Preview 02 native Select is highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -409,6 +409,22 @@ check('inverted Popup ItemCollection and Select idle text use menu foreground',(
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
  const result=model.compileTheme(model.normalizeConfig({menuColor:'inverted'}),{generatedAt:''}).body;
  assert.match(result,/--qxframe9a7c2-theme-menu-foreground:/);
+});
+
+
+check('Chromium native select picker inherits Menu colors and Popup geometry without a second custom JS popup',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+  assert.match(css,/@supports\s*\(appearance:base-select\)/,'native opt-in only where supported');
+  for(const base of ['.qxframe9a7c2-form-select:not([multiple]):not([size])','.qxframe9a7c2-native-form select:not([multiple]):not([size])','select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size])']){
+    assert.ok(css.includes(base+'::picker(select)'),'native picker enabled for '+base);
+    assert.ok(css.includes(base+'::picker-icon'),'native extra built-in icon suppressed for '+base);
+    assert.ok(css.includes(base+' option:checked'),'checked option uses theme');
+    assert.ok(css.includes(base+' option:disabled'),'disabled option still readable');
+  }
+  for(const token of ['menu','menu-foreground','menu-accent','menu-accent-foreground','radius-popup','shadow-popup','popup-edge'])
+    assert.ok(css.includes('--qxframe9a7c2-theme-'+token),'picker uses shared Theme token '+token);
+  assert.match(css,/\.dark \.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:dark;/,'OS fallback uses dark color-scheme');
+  assert.match(css,/\.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:light;/,'OS fallback light');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{

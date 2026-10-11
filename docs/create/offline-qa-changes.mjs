@@ -1,8 +1,8 @@
-/** Only this round: inverted Select dropdown idle foreground uses Menu foreground. */
+/** Current batch only: Preview 02 GitHub Profile Public Email native Select dark popup. */
 const groups = [
- ['payout-threshold','Payout Threshold · Preferred Currency',[
-  ['#preferred-currency','反色下拉前景色','普通选项使用菜单前景色，Hover/Selected 保留菜单强调色配对。','__QA_BUNDLE_HEAD__']
- ],'01']
+ ['github-profile','GitHub Profile · Public Email',[
+  ['.qxframe9a7c2-form-select','原生 Select 新式弹层','Chromium base-select：暗色与反色菜单文字/背景、Popup 边框与圆角、选项 Hover/Selected/Disabled 统一 Theme。','__QA_BUNDLE_HEAD__']
+ ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;

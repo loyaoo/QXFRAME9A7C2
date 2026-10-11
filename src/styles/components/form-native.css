@@ -232,6 +232,90 @@
 .qxframe9a7c2-native-form input[type="tel"]::placeholder,
 .qxframe9a7c2-native-form textarea::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-form-textarea,.qxframe9a7c2-native-form textarea{min-height:5rem;padding-block:0.5rem;resize:vertical}
+/* Chromium 134+ customizable native single-select. Opt in the control AND its
+ * top-layer picker; multiple/size lists keep the browser's native multi-row UI.
+ * Only existing Theme roles own its color, popup radius, shadow and spacing. */
+@supports (appearance:base-select){
+.qxframe9a7c2-form-select:not([multiple]):not([size]),
+.qxframe9a7c2-native-form select:not([multiple]):not([size]),
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
+  appearance:base-select;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size])::picker(select),
+.qxframe9a7c2-native-form select:not([multiple]):not([size])::picker(select),
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size])::picker(select){
+  appearance:base-select;
+  color:var(--qxframe9a7c2-theme-menu-foreground);
+  background:var(--qxframe9a7c2-theme-menu);
+  border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--qxframe9a7c2-theme-popup-edge);
+  border-radius:var(--qxframe9a7c2-theme-radius-popup);
+  box-shadow:var(--qxframe9a7c2-theme-shadow-popup);
+  padding:var(--_qxframe9a7c2-fixed-space-1,0.25rem);
+  max-height:20rem;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size])::picker-icon,
+.qxframe9a7c2-native-form select:not([multiple]):not([size])::picker-icon,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size])::picker-icon{
+  display:none;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option{
+  box-sizing:border-box;
+  min-width:0;
+  padding:0.5rem var(--_qxframe9a7c2-control-padding-inline);
+  border-radius:var(--qxframe9a7c2-theme-radius-item,var(--_qxframe9a7c2-navigation-radius));
+  color:var(--qxframe9a7c2-theme-menu-foreground);
+  background:transparent;
+  font:inherit;
+  line-height:var(--_qxframe9a7c2-control-line-height);
+  cursor:pointer;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option:checked,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option:checked,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option:checked,
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option:hover,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option:hover,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option:hover,
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option:focus,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option:focus,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option:focus{
+  color:var(--qxframe9a7c2-theme-menu-accent-foreground);
+  background:var(--qxframe9a7c2-theme-menu-accent);
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option:disabled,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option:disabled,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option:disabled{
+  color:var(--qxframe9a7c2-theme-menu-foreground);
+  background:transparent;
+  opacity:.45;
+  cursor:not-allowed;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size]) option::checkmark,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) option::checkmark,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option::checkmark{
+  color:currentColor;
+}
+.qxframe9a7c2-form-select:not([multiple]):not([size]) optgroup,
+.qxframe9a7c2-native-form select:not([multiple]):not([size]) optgroup,
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
+  color:var(--qxframe9a7c2-theme-menu-foreground);
+  background:var(--qxframe9a7c2-theme-menu);
+}
+}
+/* Non-customizable native menu color still follows the page color scheme.
+ * A dark .dark subtree must not show white OS options with white text. */
+.qxframe9a7c2-form-select:not([multiple]):not([size]),
+.qxframe9a7c2-native-form select:not([multiple]):not([size]),
+select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
+  color-scheme:light;
+}
+.dark .qxframe9a7c2-form-select:not([multiple]):not([size]),
+.dark .qxframe9a7c2-native-form select:not([multiple]):not([size]),
+.dark select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
+  color-scheme:dark;
+}
+
 /* Native Select: match the JS Select chevron-down SVG geometry (24px
  * viewBox, m6 9 6 6 6-6, round 2px stroke), not CSS triangles.
  * Encoded external SVG cannot inherit currentColor, so use explicit
