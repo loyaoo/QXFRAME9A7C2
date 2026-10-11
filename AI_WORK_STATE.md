@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage3 offline QA readme must reflect Preview 02 real changes (CI pending)
+- Previous commit 6e3c1453491248aac454e9b521db4f11bc0ce745 adds native-select base-select picker and correctly scopes current-round QA to Preview 02 github-profile Public Email.
+- Fixed tools/qa/build-offline-demo.py README bug: it unconditionally declared Preview 02 had no changes. Now determines Preview 02 changed cards using actual preview-02.html card IDs from current ledger, and refers to both stand-alone preview pages. No UI/CSS behavior change.
+- Full CI and official offline ZIP must be based on this new exact HEAD.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 native Select customizable picker dark/Theme parity (CI pending)
 - Prior exact green HEAD c924bf4c5c622776bd306ab2fa8014e2cef6c5dc PR #265 Draft; user screenshot Preview 02 GitHub Profile Public Email .qxframe9a7c2-form-select showed white OS dropdown on dark Theme despite dark closed control.
 - Chromium 134+ supports appearance:base-select on both select and ::picker(select). Framework previously used appearance:none only on control; popup OS-owned, not themed.
