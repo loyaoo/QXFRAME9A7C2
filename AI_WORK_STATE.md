@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage5 shared Navigation/Data radius propagation (CI pending)
+- Browser radius=none measurement identified inherited 0.25rem (4px) in '--_qxframe9a7c2-navigation-radius' and '--_qxframe9a7c2-data-radius', even when Theme radius-item=0. Corrected one upstream mapping each in fixed-values.css, not new component override layers; this extends to JSON/Sort/Tabs internal consumers still using the shared roles.
+- Browser acceptance now checks 19 QX-only component parts, 8 styles × 2 modes × none/default radius = 608 exact computed-radius assertions. It deliberately does not waive existing Preview01/02 acceptance tests.
+- Program stage5 commercial card gallery 66/66 built; visual/interaction validation of all 66 families remains an open requirement. Draft PR #267 stays unmerged. After two green CI workflows build exact-HEAD Windows offline package; QA overlay only marks 11 component regions in this batch.
+
 ## CURRENT — 2026-10-11 Stage5 visual parity QA ledger / 11 current family Cards (CI pending)
 - Offline demo QA highlights exactly 11 touched Preview03 Cards/regions for shared Menu, List, Steps, Tree, Carousel, Progress, Image, Avatar, Badge, Card skeleton and Slider Theme shape corrections. Removed previous inverse Picker 6/8 region highlights. Production docs remain unannotated.
 - 544 computed-corner Chromium assertions (8 styles × two color modes × none/default radius × 17 family parts) added to exact-head CI. Draft PR #267 unchanged merge restrictions; avoid interpreting 66 documentation entries as complete visual acceptance.

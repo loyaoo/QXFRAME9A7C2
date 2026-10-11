@@ -41,6 +41,14 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
 
 });
 
+check('Stage5 shared navigation/data radii do not inherit fixed 4px',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+  for(const role of ['navigation','data']) {
+    const expected='--_qxframe9a7c2-'+role+'-radius: var(--_qxframe9a7c2-family-'+role+'-radius, var(--qxframe9a7c2-theme-radius-item));';
+    assert.ok(css.includes(expected),role+' consumes unified Theme item radius');
+  }
+});
+
 check('Stage5 QX-only public components consume Theme corner roles',()=>{
   for(const part of ['menu','list','steps','tree','carousel','progress','image','badge','card','slider']){
     const css=fs.readFileSync(path.join(root,'src/styles/components',part+'.css'),'utf8');
