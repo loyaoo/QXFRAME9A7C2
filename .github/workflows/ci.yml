@@ -198,7 +198,7 @@ jobs:
   # This job is deliberately separate from the release gate so pinned source
   # dependencies cannot enter the shipped framework, dist or npm package.
   source-preview-geometry:
-    if: github.event_name == 'pull_request' && github.head_ref == 'redesign/create'
+    if: github.event_name == 'pull_request' && (github.head_ref == 'redesign/create' || github.head_ref == 'redesign/create-stage4')
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -244,15 +244,21 @@ jobs:
           set -euo pipefail
           CHROMIUM_BIN="$(command -v chromium || command -v chromium-browser || command -v google-chrome || command -v google-chrome-stable)"
           export CHROMIUM_BIN
-          node tools/qa/preview-01-audit.mjs
-          node tools/qa/validate-preview-01-same-browser.mjs
+          if [ "$GITHUB_HEAD_REF" = "redesign/create-stage4" ]; then
+            node tools/qa/preview-02-audit.mjs
+          else
+            node tools/qa/preview-01-audit.mjs
+            node tools/qa/validate-preview-01-same-browser.mjs
+          fi
 
       - name: Upload same-browser report and screenshots
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: stage3-same-browser-${{ github.sha }}
-          path: tools/qa/reports/stage-3/preview-01/
+          name: stage-same-browser-${{ github.sha }}
+          path: |
+            tools/qa/reports/stage-3/preview-01/
+            tools/qa/reports/stage-4/preview-02/
           if-no-files-found: warn
           retention-days: 30
 

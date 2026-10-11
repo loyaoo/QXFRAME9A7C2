@@ -427,6 +427,21 @@ check('Chromium native select picker inherits Menu colors and Popup geometry wit
   assert.match(css,/\.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:light;/,'OS fallback light');
 });
 
+
+check('Stage 4 Preview 02 pinned 31-card inventory and same-browser audit entrypoint',()=>{
+  const html=read('preview-02.html');
+  const markers=[...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]);
+  const close=[...html.matchAll(/<!-- @end ([a-z0-9-]+) -->/g)].map(m=>m[1]);
+  const expected=["style-overview","typography-specimen","codespaces-card","invoice","icon-preview-grid","ui-elements","observability-card","shipping-address","environment-variables","bar-chart-card","invite-team","activate-agent-dialog","skeleton-loading","pie-chart-card","no-team-members","report-bug","contributors","feedback-form","book-appointment","sleep-report","github-profile","weekly-fitness-summary","file-upload","analytics-card","usage-card","shortcuts","anomaly-alert","live-waveform","visitors","contributions-activity","not-found"];
+  assert.deepEqual(markers,expected,'all 31 QX Preview 02 Cards remain ordered');
+  assert.deepEqual(close,expected,'each Stage 4 Card has explicit paired close marker');
+  const audit=fs.readFileSync(path.join(root,'tools/qa/preview-02-audit.mjs'),'utf8');
+  assert.match(audit,/item=preview&style=/,'Stage4 must use pinned reference Preview, not Stage3 Preview-02');
+  assert.match(audit,/docs\/create\/preview-02\.html/,'Stage4 must compare QX Preview 02');
+  assert.match(audit,/assert\.equal\(rows\.length,496/,'31 Cards times eight styles and two themes');
+  execFileSync(process.execPath,['--check',path.join(root,'tools/qa/preview-02-audit.mjs')],{stdio:'pipe'});
+});
+
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   const source=p=>fs.readFileSync(path.join(root,p),'utf8');
   const data=source('docs/create/data.js');
