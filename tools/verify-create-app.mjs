@@ -21,7 +21,7 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.deepEqual([...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]),ids,'18 independently addressable original Cards');
   for(const id of ids)assert.ok(html.includes('data-card="'+id+'"'),'QX commercial Card '+id);
   assert.match(js,/QXFRAME9A7C2_PREVIEW3/,'JS exports live runtime diagnostics');
-  assert.match(js,/Factory\.create\(config\)/,'Card widgets must be real framework runtime components');
+  assert.match(js,/C\[type\]\.create/,'Original 18 Cards mount QX runtime components');
   assert.match(html,/preview-03\.css/);
   assert.match(html,/preview-03\.js/);
   assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
@@ -36,7 +36,7 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.equal((html.match(/data-card="/g)||[]).length,66,'exactly 66 Preview03 Card containers');
   assert.match(html,/preview-03-extra\.js/,'extra-QX runtime script wired');
   const extra=read('preview-03-extra.js');
-  assert.match(extra,/C\[type\]\.create/,'expanded examples mount real QX constructors');
+  assert.match(extra,/Factory\.create\(config\)/,'Additional 48 Cards mount through QX runtime constructors');
   assert.match(extra,/QXFRAME9A7C2_PREVIEW3/,'expanded script shares diagnostics with baseline');
 
 });
