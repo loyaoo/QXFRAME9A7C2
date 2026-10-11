@@ -65,7 +65,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  assert.doesNotMatch(ledger,/\['shipping-address'|\['contributions-activity'/,'last round Preview 02 highlights are cleared');
+  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['contributions-activity'/,'previous Preview 02 highlights are cleared');
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }

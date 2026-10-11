@@ -70,7 +70,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Live Audio Waveform 与 No Team Members；上一轮高亮已清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Shipping Address 与 Feedback Form；上一轮高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

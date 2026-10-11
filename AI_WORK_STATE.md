@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage4 local form verification gate correction (CI pending)
+- Previous HEAD d54c8e262cdd8c560283ea77c5ae670a3ce2d9d1 QXFRAME #38136570810 release failed solely at stale offline QA ledger assertion: shipping-address was intentionally highlighted in the NEW batch but was still prohibited by an old negative regex. The same QA overlay retained last batch caption; both corrected, without relaxing the requirement that previous live-waveform/no-team-members regions are absent.
+- Preserve actual new Shipping Address / Feedback Form behavior, chromium cases and two Card/four region markers. Old official 6a287e2f Windows ZIP remains the prior verified handoff; this batch requires exact-new-head dual-green and new artifact before new local ZIP.
+- PR #266 remains Draft/open/unmerged; main/backup untouched; Stage5 deferred.
+
 ## CURRENT — 2026-10-11 Stage4 shipping address + feedback form batch (new CI pending)
 - Prior verified successful HEAD 6a287e2fce9fa2008accb441936c83e4f48405bb, tree b426e8331473047469ed41df75d531518894b2eb: QXFRAME #38134387495 SUCCESS; CSS Schema #38134387460 SUCCESS; official complete dist+docs artifact #11701071429 downloaded and independently packaged as Windows Stage4 offline QA ZIP, CRC PASS and 8/8 local HTTP 200. QA overlay local-only and restricted to prior Live Waveform/No Team Members batch (2 Cards/3 regions).
 - Newly confirmed disconnected local actions: Shipping Address Save/Cancel, Feedback Form Submit. Added explicit local validation, truthful not-sent messages, proper FieldLabel targets (including QX Select focus root), cancel reset via mounted Select API. No backend, no invented persistence, no framework CSS/token changes.
