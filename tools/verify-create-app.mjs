@@ -21,7 +21,7 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.deepEqual([...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]),ids,'18 independently addressable original Cards');
   for(const id of ids)assert.ok(html.includes('data-card="'+id+'"'),'QX commercial Card '+id);
   assert.match(js,/QXFRAME9A7C2_PREVIEW3/,'JS exports live runtime diagnostics');
-  assert.match(js,/C\[type\]\.create/,'Original 18 Cards mount QX runtime components');
+  assert.match(js,/Factory\.create/,'Original 18 Cards mount a public QX constructor');
   assert.match(html,/preview-03\.css/);
   assert.match(html,/preview-03\.js/);
   assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
