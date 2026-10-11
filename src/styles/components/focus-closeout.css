@@ -103,3 +103,18 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe
   --_qxframe9a7c2-focused-parent-layer:color-mix(in oklab,var(--qxframe9a7c2-theme-background) var(--qxframe9a7c2-theme-focus-background-strength),transparent);
   background-image:linear-gradient(var(--_qxframe9a7c2-focused-parent-layer),var(--_qxframe9a7c2-focused-parent-layer))
 }
+
+/* Pointer Outline is a CSS outline on standalone authored native fields.
+ * Keyboard FocusOrigin keeps the independent 2px/-1px keyboard contract;
+ * connected InputGroup fields retain their higher-specificity outer owner. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus:not(:disabled):not([readonly]),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus:not(:disabled),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus:not(:disabled):not([readonly]),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus:not(:disabled){
+  outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
+  outline-offset:var(--qxframe9a7c2-theme-pointer-offset,-1px)
+}
+/* Hosted native editors never paint a second pointer outline. */
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-select:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-textarea:focus{outline:none}

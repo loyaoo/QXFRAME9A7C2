@@ -135,6 +135,17 @@ check('normal Control Shadow is shared and separate from pointer/keyboard focus'
   }
 });
 
+
+check('bare native controls retain normal elevation and independent pointer/keyboard outline',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+ const focus=fs.readFileSync(path.join(root,'src/styles/components/focus-closeout.css'),'utf8');
+ assert.ok(css.includes('outline:0;box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent);transition:'),'bare input/textarea/select normal elevation');
+ assert.ok(css.includes('border-color:var(--qxframe9a7c2-theme-pointer-focus);outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid'),'bare pointer color and real outline');
+ assert.ok(css.includes('border-color:var(--qxframe9a7c2-theme-focus);outline:var(--qxframe9a7c2-theme-focus-width,2px) solid'),'bare keyboard focus color and outline');
+ assert.ok(css.includes('.qxframe9a7c2-input-group-field>input:not([class*="qxframe9a7c2-"])'),'bare hosted editors have no second shadow');
+ assert.ok(focus.includes('.qxframe9a7c2-form-textarea:focus:not(:disabled):not([readonly])'),'authored Textarea pointer outline is real CSS');
+});
+
 check('real Focus outline and common Choice/Slider/Control Surface contracts',()=>{
  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
  const group=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');

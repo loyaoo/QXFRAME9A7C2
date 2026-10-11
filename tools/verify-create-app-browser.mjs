@@ -2231,6 +2231,46 @@ try {
     }
   });
 
+
+  await step('Normal Shadow and real native Textarea/bare control Focus matrix: 8 styles x light/dark',async()=>{
+    const rows=await evaluate("(() => {\n"+
+      "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n"+
+      "const wasDark=h.classList.contains('dark'),wasKeyboard=h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),orig=api.state.config;\n"+
+      "const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-9000px;top:0;width:380px';\n"+
+      "host.innerHTML='<button class=\\\"qxframe9a7c2-button is-outline\\\" data-control=\\\"button\\\">Button</button><input data-control=\\\"bare-input\\\" value=\\\"Bare\\\"><textarea data-control=\\\"bare-textarea\\\">Bare textarea</textarea><select data-control=\\\"bare-select\\\"><option>Native</option></select><input class=\\\"qxframe9a7c2-form-input\\\" data-control=\\\"input\\\" value=\\\"Form\\\"><textarea class=\\\"qxframe9a7c2-form-textarea\\\" data-control=\\\"textarea\\\">Form textarea</textarea><select class=\\\"qxframe9a7c2-form-select\\\" data-control=\\\"select\\\"><option>Select</option></select><div class=\\\"qxframe9a7c2-native-form\\\"><textarea data-control=\\\"native-form-textarea\\\">Native form</textarea></div>';\n"+
+      "d.head.append(sheet);d.body.append(host);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
+      "const names=['button','bare-input','bare-textarea','bare-select','input','textarea','select','native-form-textarea'],out=[];\n"+
+      "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n"+
+      " h.classList.toggle('dark',dark);const c={...orig,style,ext:{...orig.ext,shadow:'light',pointerFocus:'outline',keyboardFocus:'outline'}};\n"+
+      " sheet.textContent=api.compileTheme(c,{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
+      " const on=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
+      " const target=host.querySelector('[data-control=\\\"bare-textarea\\\"]');target.focus({preventScroll:true});h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n"+
+      " const cs=getComputedStyle(target),pointer={width:cs.outlineWidth,offset:cs.outlineOffset,style:cs.outlineStyle,shadow:cs.boxShadow};\n"+
+      " h.classList.add('qxframe9a7c2-keyboard-focus-origin');const ck=getComputedStyle(target),keyboard={width:ck.outlineWidth,offset:ck.outlineOffset,style:ck.outlineStyle,shadow:ck.boxShadow};\n"+
+      " h.classList.remove('qxframe9a7c2-keyboard-focus-origin');target.blur();\n"+
+      " sheet.textContent=api.compileTheme({...c,ext:{...c.ext,shadow:'none'}},{generatedAt:''}).body+'[data-control]{transition:none!important;animation:none!important}';\n"+
+      " const off=Object.fromEntries(names.map(name=>[name,getComputedStyle(host.querySelector('[data-control=\\\"'+name+'\\\"]')).boxShadow]));\n"+
+      " out.push({style,dark,on,off,pointer,keyboard});\n"+
+      "}h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);host.remove();sheet.remove();return out;\n"+
+      "})()");
+    assert.equal(rows.length,16);
+    for(const r of rows){
+      const baseline=r.on.button;
+      assert.notEqual(baseline,'none',r.style+' normal Button shadow');
+      for(const name of Object.keys(r.on)){
+        assert.ok(r.on[name].includes(baseline),r.style+'/'+r.dark+' normal Shadow matches Button for '+name+': '+JSON.stringify(r));
+        assert.ok(!r.off[name].includes(baseline),r.style+'/'+r.dark+' Shadow=none removes normal elevation on '+name+': '+JSON.stringify(r));
+      }
+      for(const origin of ['pointer','keyboard']){
+        const focus=r[origin];
+        assert.equal(focus.style,'solid',r.style+'/'+r.dark+' '+origin+' bare Textarea must paint CSS outline');
+        assert.equal(focus.width,'2px',r.style+'/'+r.dark+' '+origin+' CSS outline width');
+        assert.equal(focus.offset,'-1px',r.style+'/'+r.dark+' '+origin+' CSS outline offset');
+        assert.ok(focus.shadow.includes(baseline),r.style+'/'+r.dark+' '+origin+' keeps ordinary Shadow');
+      }
+    }
+  });
+
   await step('SelectGroup nine floating anchors and one Surface focus owner', async()=>{
     const result=await evaluate("(() => {\n      const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n      const origin=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');\n      const host=d.createElement('div');\n      host.style.cssText='position:absolute;left:100px;top:100px;width:570px;z-index:1;background:var(--qxframe9a7c2-theme-background)';\n      const group=d.createElement('div');group.className='qxframe9a7c2-selectgroup is-outline';\n      const anchors=['top-left','top-center','top-right','middle-left','middle-center','middle-right','bottom-left','bottom-center','bottom-right'];\n      for(const anchor of anchors){\n        const row=d.createElement('label');row.className='qxframe9a7c2-selectgroup-item';\n        row.style.cssText='width:9rem;height:6rem';\n        row.innerHTML='<input type=\"checkbox\" class=\"qxframe9a7c2-selectgroup-input\"><span class=\"qxframe9a7c2-selectgroup-label\" style=\"width:100%;height:100%\"><span class=\"qxframe9a7c2-selectgroup-indicator is-checkbox is-floating is-'+anchor+'\"></span><span class=\"qxframe9a7c2-flex is-center\">'+anchor+'</span></span>';\n        group.append(row);\n      }\n      host.append(group);d.body.append(host);\n      const entries=[];\n      for(const [index,anchor] of anchors.entries()){\n        const row=group.children[index],surface=row.querySelector('.qxframe9a7c2-selectgroup-label'),indicator=row.querySelector('.qxframe9a7c2-selectgroup-indicator');\n        const b=surface.getBoundingClientRect(),r=indicator.getBoundingClientRect();\n        const x=(r.left+r.right-2*b.left)/(2*b.width),y=(r.top+r.bottom-2*b.top)/(2*b.height);\n        entries.push({anchor,x,y,position:getComputedStyle(indicator).position});\n      }\n      const input=group.children[0].querySelector('input'),surface=group.children[0].querySelector('.qxframe9a7c2-selectgroup-label'),indicator=group.children[0].querySelector('.qxframe9a7c2-selectgroup-indicator');\n      // Measure the settled focus paint synchronously; production keeps the box-shadow transition.\n      surface.style.transition='none';\n      const oldShadow=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow'),oldWidth=h.style.getPropertyValue('--qxframe9a7c2-theme-pointer-width');\n      const oldKShadow=h.style.getPropertyValue('--qxframe9a7c2-theme-focus-shadow');\n      h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');\n      h.style.setProperty('--qxframe9a7c2-theme-pointer-width','0');\n      h.style.setProperty('--qxframe9a7c2-theme-focus-shadow','0 0 0 3px rgb(0, 180, 0)');\n      input.focus();\n      h.classList.add('qxframe9a7c2-keyboard-focus-origin');\n      const keyboard={surfaceOutline:getComputedStyle(surface).outlineWidth,surfaceShadow:getComputedStyle(surface).boxShadow,indicatorOutline:getComputedStyle(indicator).outlineStyle,actualFocus:d.activeElement===input,inputFocus:input.matches(':focus'),inputFocusVisible:input.matches(':focus-visible'),origin:h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),customRing:getComputedStyle(surface).getPropertyValue('--_qxframe9a7c2-choice-focus-shadow'),themeShadow:getComputedStyle(surface).getPropertyValue('--qxframe9a7c2-theme-focus-shadow'),styleCount:d.styleSheets.length};\n      h.classList.remove('qxframe9a7c2-keyboard-focus-origin');\n      const pointer={surfaceShadow:getComputedStyle(surface).boxShadow,surfaceOutline:getComputedStyle(surface).outlineWidth,indicatorOutline:getComputedStyle(indicator).outlineStyle,actualFocus:d.activeElement===input,inputFocus:input.matches(':focus'),origin:h.classList.contains('qxframe9a7c2-keyboard-focus-origin'),customRing:getComputedStyle(surface).getPropertyValue('--_qxframe9a7c2-choice-focus-shadow'),themeShadow:getComputedStyle(surface).getPropertyValue('--qxframe9a7c2-theme-pointer-shadow')};\n      input.checked=true;\n      const checked=getComputedStyle(indicator).backgroundColor;\n      for(const [k,v] of [['--qxframe9a7c2-theme-pointer-shadow',oldShadow],['--qxframe9a7c2-theme-pointer-width',oldWidth],['--qxframe9a7c2-theme-focus-shadow',oldKShadow]]){\n        if(v)h.style.setProperty(k,v);else h.style.removeProperty(k);\n      }\n      h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',origin);\n      host.remove();\n      return {entries,keyboard,pointer,checked};\n    })()"); 
     assert.equal(result.entries.length,9);

@@ -1,13 +1,7 @@
-/** Current batch: shared CSS private Focus shadow naming; no cosmetic recipe change. */
+/** Current batch: native Textarea/control Shadow parity and genuine pointer/keyboard CSS Outline. */
 const groups = [
-  ['savings-targets','Savings Targets · InputGroup',[
-    ['.qxframe9a7c2-input-group','统一 Focus 阴影语义','InputGroup 单边框所有权：内部 state-focus-shadow 改名；不改变阴影叠加和主题值。','__QA_BUNDLE_HEAD__']
-  ],'01'],
-  ['receiving-method','Receiving Method · SelectGroup',[
-    ['.qxframe9a7c2-selectgroup','统一 Choice Focus 阴影语义','移除 choice-ring 私有变量命名，保留 FocusOrigin、Indicator 单光环及 Theme 覆盖。','__QA_BUNDLE_HEAD__']
-  ],'01'],
-  ['faq','FAQ · Tabs Focus',[
-    ['.pv-tabs .qxframe9a7c2-tabs','统一 Tabs Focus 阴影语义','保留 Tabs elevation 与 Focus 阴影叠加，改用 tabs-tab-focus-shadow 单一消费槽。','__QA_BUNDLE_HEAD__']
+  ['payout-threshold','Payout Threshold · Textarea',[
+    ['.qxframe9a7c2-form-textarea','Textarea 正常阴影与焦点轮廓','正常 Shadow 与 Button 同步；鼠标 Outline 为真实 2px/-1px。','__QA_BUNDLE_HEAD__']
   ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
