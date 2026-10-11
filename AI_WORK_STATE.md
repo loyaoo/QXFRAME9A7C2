@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Stage5 Preview03 QX global Tree export correction (CI pending)
+- Chromium CSS Schema workflow #38143540322 exposed real runtime contract: UMD `QXFRAME9A7C2.Components.Tree` is unavailable, even though `src/components/tree.js` exports the ESM class. Avoid new changes to frozen qxframe.js/Stage3 or faking a tree; the Workspace Explorer now composes QX JSON's actual hierarchical Tree-backed viewer with QX TreeSelect. Other 18 Cards remain unchanged.
+- Latest Draft PR #267 head follows fix. Rerun exact-HEAD Chromium/dual CI and official Windows dist+docs. No Stage5 merge, no legacy generator deletion.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3 Stage5 Preview 03 (QX-only business composition gallery; CI pending)
 - Stage 4 PR #266 merged to main: 718da2a6be0bc71520adb0451429cd3d3d8320b3. Preview 01/02 were explicitly accepted by owner; DO NOT regress/edit their cards.
 - Owner directs third createApp preview page: QXFRAME-only commercial compositions absent from pinned shadcn Create, sourced from docs/assets/qxframe9a7c2-admin-views.js and actual src/components APIs. New branch redesign/create-stage5 from merged main. Stage5 PR must stay Draft.
