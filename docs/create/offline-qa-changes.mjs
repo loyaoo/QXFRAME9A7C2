@@ -1,7 +1,7 @@
-/** Current batch visual change: Preview 01 FAQ segmented Tabs keyboard-focus elevation. */
+/** Current batch visual change: Preview 01 FAQ Tabs pointer-focus paint. */
 const groups = [
   ['faq','FAQ · Segmented Tabs',[
-    ['.pv-tabs','分段 Tab 键盘焦点','选中的分段 Tab 获得键盘焦点时保留既有阴影；2px 键盘外框只绘制在 Tab Shell，不在内部 Action 重复显示。','__QA_BUNDLE_HEAD__']
+    ['.pv-tabs','分段 Tab 鼠标焦点','鼠标焦点按主题绘制独立阴影或描边；选中阴影保留，内部 Action 不重复绘制。','__QA_BUNDLE_HEAD__']
   ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -65,7 +65,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview 01 · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 FAQ 分段 Tabs 的焦点及阴影；此前黄色高亮已全部清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 FAQ 分段 Tabs 的鼠标焦点主题阴影/描边；此前黄色高亮已全部清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

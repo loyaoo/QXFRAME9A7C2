@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ Tabs pointer Focus paint (CI pending)
+- Parent 75b079c0ff966eb9f01cc23da1d1fe432b6e90af; PR #265 Draft/open/unmerged; QXFRAME #38102125201 and CSS Schema #38102125284 confirmed SUCCESS, correcting the parent "CI pending" status.
+- Official same-browser 528/528 subset and height diagnostics passed; the nested role probes are diagnostic and mixed DOM wrappers/padding are not blindly treated as defects.
+- Fixed composite Tabs pointer focus missing Theme ring/outline consumption. Reused one Tab shell and existing elevation + ring shadow slot with :focus-within; Theme pointer width/color/opacity/offset, disabled guard and keyboard origin exclusion. Inner action owns no second outline. No JS/runtime or new token.
+- Added static owner gate and real Chromium 8 styles × dark/light paint assertions for selected elevation, pointer ring, configurable outline, disabled priority and inner action. Offline-only QA ledger retains only the newly changed FAQ .pv-tabs pointer region (previous keyboard label removed).
+- NEXT: obtain **both** official CI successes on the new HEAD, repair any real regression without gate weakening, build full Windows ZIP from that exact successful dist+docs artifact and smoke-check. PR Draft, no merge, no Stage4/5. Estimated Stage3 95%, Field/SelectGroup 86%, overall 77%.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ segmented Tabs keyboard-focus elevation (CI pending)
 - Accepted base cf656d17e93f149c93a95daef48dcbad0ecb34ca: QXFRAME CI #38100844623 and CSS Schema #38100844615 both SUCCESS, PR #265 Draft/open/unmerged. No re-audit, no Stage4/5.
 - Source-locked selected segmented FAQ tab has an active elevation shadow from shared Theme `--qxframe9a7c2-shadow-sm`. Tabs keyboard virtual focus currently sets box-shadow:none, unexpectedly discarding selected state shadow even though keyboard outline belongs to the same Tab shell.

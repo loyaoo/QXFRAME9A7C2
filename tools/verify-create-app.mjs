@@ -79,6 +79,14 @@ check('Tabs keyboard focus preserves the selected elevation on the same focus sh
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
 
+check('Tabs pointer Focus paints once on the shell using independent Theme axes',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  assert.ok(css.includes('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tabs-tab:focus-within:not(.is-disabled):not(:disabled){'),'pointer Tab shell has terminal guards');
+  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:var(--qxframe9a7c2-theme-pointer-shadow'),'the one existing Tab ring slot uses pointer Theme');
+  assert.ok(css.includes('outline:var(--qxframe9a7c2-theme-pointer-width'),'pointer outline uses Theme configuration');
+  assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring)'),'selected elevation is never replaced');
+});
+
 check('segmented Tabs use the pinned source dark active input/30 recipe', () => {
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.match(css,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\{[^}]*border:1px solid transparent\}/,'source Tab border box with typography role');

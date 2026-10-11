@@ -1356,6 +1356,42 @@ try {
     }
   });
 
+  await step('FAQ Tabs pointer Focus preserves selected elevation and disables pointer ring in 16 modes',async()=>{
+    await click('document.querySelector("[data-create-item=\\\"01\\\"]")');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq] .qxframe9a7c2-tabs-tab.is-active")','FAQ pointer shell');
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+      await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
+      await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ pointer '+style);
+      for(const mode of ['light','dark']){
+        const m=await evaluate(\`(()=>{
+          const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
+          const t=d.querySelector('[data-card="faq"] .qxframe9a7c2-tabs-tab.is-active'),a=t?.querySelector('.qxframe9a7c2-tabs-tab-action')||t;
+          const wasDark=h.classList.contains('dark'),wasKeyboard=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');
+          const vars=['--qxframe9a7c2-theme-pointer-shadow','--qxframe9a7c2-shadow-sm','--qxframe9a7c2-theme-pointer-width','--qxframe9a7c2-theme-pointer-offset'];
+          const prior=vars.map(v=>h.style.getPropertyValue(v)),wasDisabled=t?.classList.contains('is-disabled');
+          h.classList.toggle('dark',__DARK__);h.classList.remove('qxframe9a7c2-keyboard-focus-origin');
+          h.style.setProperty(vars[0],'0 0 0 3px rgb(211, 67, 31)');
+          h.style.setProperty(vars[1],'0 2px 4px 0 rgb(53, 101, 211)');
+          h.style.setProperty(vars[2],'2px');h.style.setProperty(vars[3],'-1px');
+          if(t)t.classList.remove('is-disabled');if(a)a.focus();
+          const s=t&&getComputedStyle(t),out={exists:!!t,focusWithin:!!t?.matches(':focus-within'),shadow:s?.boxShadow,outline:s?.outlineWidth,offset:s?.outlineOffset,childOutline:a&&a!==t?getComputedStyle(a).outlineStyle:null};
+          if(t)t.classList.add('is-disabled');
+          out.disabledShadow=t?getComputedStyle(t).boxShadow:null;
+          if(a)a.blur();if(t)t.classList.toggle('is-disabled',!!wasDisabled);
+          vars.forEach((v,i)=>prior[i]?h.style.setProperty(v,prior[i]):h.style.removeProperty(v));
+          h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);return out;
+        })()\`.replace('__DARK__',String(mode==='dark')));
+        assert.ok(m.exists&&m.focusWithin,style+'/'+mode+' pointer focus reached shell '+JSON.stringify(m));
+        assert.ok(m.shadow?.includes('211, 67, 31'),style+'/'+mode+' pointer shadow drawn '+JSON.stringify(m));
+        assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
+        assert.equal(m.outline,'2px',style+'/'+mode+' pointer outline width');
+        assert.equal(m.offset,'-1px',style+'/'+mode+' pointer outline offset');
+        assert.ok(!m.disabledShadow?.includes('211, 67, 31'),style+'/'+mode+' disabled has no pointer shadow');
+        if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' no inner outline');
+      }
+    }
+  });
+
   await step('FieldContent label line and FAQ trigger gap follow source in 16 themes', async () => {
     await click('document.querySelector("[data-create-item=\\"01\\"]")');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument?.querySelector("[data-card=faq]")','FAQ and Notifications');
