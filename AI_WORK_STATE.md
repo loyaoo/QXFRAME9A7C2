@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3 Stage5 Preview 03 (QX-only business composition gallery; CI pending)
+- Stage 4 PR #266 merged to main: 718da2a6be0bc71520adb0451429cd3d3d8320b3. Preview 01/02 were explicitly accepted by owner; DO NOT regress/edit their cards.
+- Owner directs third createApp preview page: QXFRAME-only commercial compositions absent from pinned shadcn Create, sourced from docs/assets/qxframe9a7c2-admin-views.js and actual src/components APIs. New branch redesign/create-stage5 from merged main. Stage5 PR must stay Draft.
+- Preview 03: 18 operational cards across three wide product columns; QX runtime Tree, TreeSelect, Transfer, Steps, Progress, Table, Pagination, ColorPicker, DatePicker, TimePicker, Cascader, Select, InputNumber, Rate, TagInput, JSON, Carousel, Tags, InputOTP, Slider, Collapse. Separate preview-03.css/js only, no framework CSS/Theme/public token modifications.
+- Next: mount runtime components with real local actions, add static + Chromium gates, verify 8 Styles × 2 modes, check CI and artifact. No legacy generator deletion before final Stage5 acceptance.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S4 Preview 02 owner accepted; Stage 4 closeout (CI pending for documentation-only commit)
 - Owner explicitly confirmed **all 31 Preview 02 Cards have been inspected and are acceptable** (2026-10-11: “卡片都验收了没问题，继续”). Stage 4 Card visual/interaction acceptance is complete (31/31). Do not reopen pixel-only comparisons to shadcn or repeat accepted Stage 3/4 repairs.
 - Previous exact green development HEAD `7cb643cbe70c89f01c250d1432737ec1e3b6d815`, Git tree `ea963b33cdc555501708febdcc0a7320b6154071`: QXFRAME CI #38140220682 SUCCESS; CSS Schema Acceptance #38140220688 SUCCESS; official complete `dist+docs` artifact #11702368628. The prior successful 10-Card Windows bundle was provided to owner.

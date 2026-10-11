@@ -17,7 +17,7 @@ export const MAIN_LABELS = {
   style: '风格', baseColor: '基础色', theme: '主题色', chartColor: '图表色', fontHeading: '标题字体',
   font: '正文字体', radius: '圆角', menuColor: '菜单', menuAccent: '菜单强调'
 };
-export const PREVIEW_ITEMS = { '01': './preview-01.html', '02': './preview-02.html' };
+export const PREVIEW_ITEMS = { '01': './preview-01.html', '02': './preview-02.html', '03': './preview-03.html' };
 
 /* ------------------------------------------------------------------ */
 /* Configuration model                                                 */
