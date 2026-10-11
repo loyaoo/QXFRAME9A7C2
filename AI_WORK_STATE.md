@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 Calendar source inner-role correction (new CI pending)
+- Accepted parent e7615ea584bd6b9537cc25ed0fada03249a352bc, QXFRAME #38098832352 and CSS Schema #38098832367 SUCCESS, PR #265 Draft/unmerged.
+- Official same-browser 528-case nested inner-roles report identifies Upcoming Payments outside-month day text: source muted 400, QX normal foreground 500 / Sera 600 across 16 theme modes. Sera adaptive day width is 36px, actual height 40px due generic control minimum (reference 36px).
+- Fixed in shared Calendar CSS: explicit semantic muted outside day color; day font-weight 400; adaptive cell height and min-height tied to existing shared Theme dimension. No JS changes, new tokens, private Preview CSS or broader Calendar layout refactor.
+- Static regression updated; offline-only QA ledger annotates only Preview 01 Upcoming Payments .pv-calendar (one region, current HEAD placeholder). Previous yellow highlights cleared; production pages remain unannotated.
+- NEXT: add real Chromium 8 styles × 2 modes (muted/normal text weight and actual dimensions), run both official CI workflows, verify 528 same-browser geometry, produce same-HEAD full Windows dist+docs ZIP. #265 remains Draft, Stage4/5 pending.
+
 ## CURRENT — 2026-10-11 Stage 3 Field valid focus precedence product fix (CI pending)
 - Real Chromium CSS Schema candidate dab406be rendered ordinary JS Input pointer Focus border and focus-ring correctly; test then rejected the **real** is-valid Field JS Input focus border, which used generic pointer-focus rather than Theme success. CSS Schema #38098270620 FAILED at exact is-valid computed border and was not waived.
 - Reused the existing single V2 JS Input border paint slot. Strengthened Field/form-field is-valid consumer on :focus-within/.is-focused so success outranks the more specific ordinary FocusOrigin color, while explicit child warning/invalid and disabled/readonly remain excluded. Added static regression; existing light/dark × input/choice Chromium paint gate stays strict.

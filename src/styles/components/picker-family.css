@@ -4,7 +4,7 @@
 .qxframe9a7c2-calendar-weekday,.qxframe9a7c2-calendar-cell{box-sizing:border-box;flex:0 0 calc((100% - 0.75rem)/7);min-width:0}
 .qxframe9a7c2-calendar-weekday{padding-block:var(--_qxframe9a7c2-fixed-space-1);text-align:center;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.82em}
 .qxframe9a7c2-calendar-cell{aspect-ratio:1/1}
-.qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
+.qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled);color:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar-cell.is-outside:hover:not(:disabled):not(.is-selected):not(.is-in-range),.qxframe9a7c2-calendar-cell.is-outside.is-hover:not(:disabled):not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar.is-disabled{--_qxframe9a7c2-calendar-ring:none;--_qxframe9a7c2-calendar-opacity:.62}
 /* Opt-in source-style inline month. Dates/keyboard remain Calendar-owned;
@@ -46,8 +46,10 @@
   margin-top:.5rem;row-gap:.5rem
 }
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
-  aspect-ratio:1/1;border-width:0
-}
+  /* Exact adaptive day-box dimension; generic date controls may set a taller min-height. */
+  aspect-ratio:1/1;min-height:0;height:var(--_qxframe9a7c2-calendar-adaptive-cell);
+  border-width:0;font-weight:400
+
 /* Source DayPicker presents four, five or six weeks as needed by the month. */
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(29).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+29),
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(36).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+36){display:none}
