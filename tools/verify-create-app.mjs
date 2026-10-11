@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'style-overview':['[data-pv-text="style-font"]'],'typography-specimen':['.qxframe9a7c2-card-content','[data-pv-dialog="feedback"]'],'ui-elements':['[data-pv-dialog="alert"]'],'codespaces-card':['[data-pv-create-codespace]']}; // Stage4 real display/interaction batch
+  const current={'file-upload':['[data-pv-file-drop]'],'report-bug':['[data-pv-bug-attach]'],'invite-team':['[data-pv-invite-add]','[data-pv-invite-copy]']}; // Stage4 local file/invite behavior
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
@@ -72,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,5,'only five current Stage4 regions are highlighted');
+  assert.equal(count,4,'only current Stage4 4 changed file/invite regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -475,6 +475,19 @@ check('Stage4 font labels, source dialogs and Codespaces loading are restored wi
  assert.match(runtime,/button\.classList\.add\('is-loading'\)/,'framework Button loading state');
  assert.match(runtime,/button\.classList\.remove\('is-loading'\)/,'loading recovery');
  assert.match(runtime,/2000\)/,'pinned source two second action feedback');
+});
+
+
+check('Stage4 local file selection, attachment, and dynamic invite use real native/QX owners',()=>{
+ const page=read('preview-02.html'),runtime=read('preview-cards.js');
+ for(const attr of ['data-pv-file-drop','data-pv-upload-input','data-pv-upload-browse','data-pv-upload-status','data-pv-bug-file-input','data-pv-bug-attach','data-pv-bug-file-status','data-pv-invite-rows','data-pv-invite-add','data-pv-invite-copy'])
+   assert.ok(page.includes(attr),'Preview02 wires '+attr);
+ assert.match(runtime,/10 \* 1024 \* 1024/,'10 MiB max local file validation');
+ assert.match(runtime,/local preview only; not uploaded/,'local selection is never falsely presented as a remote upload');
+ assert.match(runtime,/Attached locally:/,'Bug attachment is locally chosen only');
+ assert.match(runtime,/C\.Select\.create\(\{\s*container: role/,'new invite row uses QX Select instance, not cloned DOM');
+ assert.match(runtime,/navigator\.clipboard\.writeText/,'copy supports native browser clipboard');
+ assert.match(runtime,/Invite link selected; use Ctrl\+C/,'copy failure remains actionable');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{

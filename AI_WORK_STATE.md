@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-11 Stage4 Preview02 local file/invite actual behavior (CI pending)
+- Previous Stage4 exact green HEAD eb2cea4c2fcf0c1dcee5f0eefface381dd296de2, QXFRAME #38130513582 success, CSS Schema #38130513577 success, 496 source-preview-geometry passing.
+- Owner: do not chase shadcn pixel parity; retain approved QX controls. Real remaining stage4 defects: File Upload browse/drop button inert; Report Bug Attach File inert; Invite Team Add another inert; Invite link copy icon inert. Source is static demo but button actions advertise capabilities, so restore local behaviors without inventing server API results.
+- File Upload: real native file chooser, drop target, PNG/JPG/PDF and 10MiB client selection validation, local-only status not success. Report Bug native attachment input with local file name status, no fake server upload. Invite Team Add another adds a new framework Input plus separately constructed C.Select controller (do not clone mounted DOM); copy existing invite URL through Clipboard API, with text-selection fallback.
+- Chromium end-to-end tests exercise change/drop, invalid extensions, QX Select new row, clipboard feedback. Static gate updated. This round ONLY 3 Cards / 4 QA highlights: file-upload, report-bug, invite-team. Previous Typography/UIElements/Codespaces highlights cleared.
+- PR #266 Draft/unmerged, main/backup unchanged; Stage5 not started. Full exact-new-head dual CI and Windows dist+docs offline ZIP pending.
+
 ## CURRENT — 2026-10-11 Stage4 practical four-card display/dialog/feedback batch (CI pending)
 - Prior Stage4 HEAD c94c1743db21b9351b709d947d28bb617e9b68fa, QXFRAME #38129351970 SUCCESS and CSS Schema #38129351952 SUCCESS; Stage4 31 cards × 16 styles 496/496 geometry.
 - Audited original pinned shadcn source: TypographySpecimen Share Feedback opens Dialog with Name/Email/Category/Message; UIElements Alert Dialog opens Allow Accessory confirmation; Codespaces Create action has 2-second loading/disabled state. Current Preview02 had both data-pv-dialog triggers disconnected and Codespaces static Button. These are actual missing functionality, not shadcn pixel differences.

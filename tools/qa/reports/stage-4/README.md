@@ -25,6 +25,12 @@ Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs
 - Fix demo typography display labels: QX English preview now shows readable font category names instead of Chinese picklist labels rendered as missing glyphs; generator UI labels and font choices unchanged.
 - QA marks only these four Cards this batch, no pixel-matching of already approved Controls.
 
+## Stage4 third real behavior batch (2026-10-11)
+- File Upload: native chooser and drag/drop with PNG/JPG/PDF up to 10 MiB, local selection status (no remote upload claim).
+- Report Bug: Attach File selects local attachment and displays its filename, without inventing a submission endpoint.
+- Invite Team: Add another constructs a new QX Select instance per new row; copy link works with clipboard or selects text as fallback.
+- Current QA only these three Cards/four regions; previous round highlights erased.
+
 ## Follow-up
 
 - Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.

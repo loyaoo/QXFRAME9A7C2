@@ -156,6 +156,94 @@
     });
   });
 
+
+  // Stage4: File Upload is a local picker/drop demonstration, NOT an upload
+  // API. Match the copy ("PNG, JPG, PDF up to 10MB"), reject other/oversized
+  // files and never claim a remote upload succeeded.
+  var upload = document.querySelector('[data-card="file-upload"]');
+  if (upload) {
+    var input = upload.querySelector('[data-pv-upload-input]');
+    var drop = upload.querySelector('[data-pv-file-drop]');
+    var status = upload.querySelector('[data-pv-upload-status]');
+    function renderSelectedFile(file) {
+      if (!file) return;
+      var validType = /\.(png|jpe?g|pdf)$/i.test(file.name) &&
+        (!file.type || /^(image\/png|image\/jpeg|application\/pdf)$/.test(file.type));
+      status.hidden = false;
+      if (!validType) status.textContent = 'Choose a PNG, JPG or PDF file.';
+      else if (file.size > 10 * 1024 * 1024) status.textContent = 'File exceeds the 10MB limit.';
+      else status.textContent = 'Selected: ' + file.name + ' (local preview only; not uploaded)';
+    }
+    upload.querySelector('[data-pv-upload-browse]').addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () { renderSelectedFile(input.files && input.files[0]); });
+    ['dragenter','dragover'].forEach(function (type) {
+      drop.addEventListener(type, function (event) { event.preventDefault(); });
+    });
+    drop.addEventListener('drop', function (event) {
+      event.preventDefault();
+      renderSelectedFile(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]);
+    });
+  }
+  // Stage4 Report Bug: Attach File must invoke a real native file picker.
+  // Source does not provide an upload endpoint; show selected local name only.
+  var bug = document.querySelector('[data-card="report-bug"]');
+  if (bug) {
+    var bugInput = bug.querySelector('[data-pv-bug-file-input]');
+    var bugStatus = bug.querySelector('[data-pv-bug-file-status]');
+    bug.querySelector('[data-pv-bug-attach]').addEventListener('click', function () { bugInput.click(); });
+    bugInput.addEventListener('change', function () {
+      var file = bugInput.files && bugInput.files[0];
+      if (!file) return;
+      bugStatus.hidden = false;
+      bugStatus.textContent = 'Attached locally: ' + file.name;
+    });
+  }
+  // Stage4 Invite Team: append a fresh row using the actual QX Select
+  // controller. Cloning a mounted Select DOM would illegally duplicate its
+  // state and event owners. Preserve the existing two authored invite rows.
+  var invite = document.querySelector('[data-card="invite-team"]');
+  if (invite) {
+    var rows = invite.querySelector('[data-pv-invite-rows]');
+    invite.querySelector('[data-pv-invite-add]').addEventListener('click', function () {
+      var row = document.createElement('div');
+      row.className = 'qxframe9a7c2-flex';
+      var email = document.createElement('input');
+      email.type = 'email';
+      email.placeholder = 'name@example.com';
+      email.className = 'qxframe9a7c2-form-input pv-grow';
+      var role = document.createElement('div');
+      role.className = 'pv-select pv-w-24';
+      row.append(email, role);
+      rows.appendChild(row);
+      C.Select.create({
+        container: role,
+        items: pairs('admin::Admin|editor::Editor|viewer::Viewer'),
+        value: 'viewer',
+        size: 'md'
+      });
+      email.focus({ preventScroll:true });
+    });
+    var copy = invite.querySelector('[data-pv-invite-copy]');
+    var url = invite.querySelector('.qxframe9a7c2-input-group input[readonly]');
+    var copyStatus = invite.querySelector('[data-pv-invite-copy-status]');
+    copy.addEventListener('click', function () {
+      function report(message) { copyStatus.hidden=false; copyStatus.textContent=message; }
+      if (!url) return;
+      var text = url.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          report('Invite link copied');
+        }, function () {
+          url.focus();url.select();
+          report('Invite link selected; use Ctrl+C to copy');
+        });
+      } else {
+        url.focus();url.select();
+        report('Invite link selected; use Ctrl+C to copy');
+      }
+    });
+  }
+
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
     if (!Calendar) return;

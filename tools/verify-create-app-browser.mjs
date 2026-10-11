@@ -343,6 +343,19 @@ try {
     assert.deepEqual(result.done,result.idle,'loading ends and button is restored');
   });
 
+  await step('Stage4 File Upload, Bug attachment and Invite Team use real local interactions',async()=>{
+    const actual=await evaluate("(async function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const upload=doc.querySelector('[data-card=\"file-upload\"]');\n const report=doc.querySelector('[data-card=\"report-bug\"]');\n const invite=doc.querySelector('[data-card=\"invite-team\"]');\n function setFile(input,file){\n  const transfer=new DataTransfer();transfer.items.add(file);\n  input.files=transfer.files;input.dispatchEvent(new Event('change',{bubbles:true}));\n }\n const upInput=upload.querySelector('[data-pv-upload-input]');\n setFile(upInput,new File(['test'],'diagram.png',{type:'image/png'}));\n const selected=upload.querySelector('[data-pv-upload-status]').textContent;\n setFile(upInput,new File(['bad'],'unsafe.exe',{type:'application/octet-stream'}));\n const invalid=upload.querySelector('[data-pv-upload-status]').textContent;\n const drop=new DataTransfer();drop.items.add(new File(['pdf'],'plan.pdf',{type:'application/pdf'}));\n upload.querySelector('[data-pv-file-drop]').dispatchEvent(new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:drop}));\n const dropped=upload.querySelector('[data-pv-upload-status]').textContent;\n const bugInput=report.querySelector('[data-pv-bug-file-input]');\n setFile(bugInput,new File(['log'],'debug.txt',{type:'text/plain'}));\n const attached=report.querySelector('[data-pv-bug-file-status]').textContent;\n const before=invite.querySelectorAll('[data-pv-invite-rows]>div').length;\n invite.querySelector('[data-pv-invite-add]').click();\n const after=invite.querySelectorAll('[data-pv-invite-rows]>div').length;\n const newRow=invite.querySelector('[data-pv-invite-rows]>div:last-child');\n const hasRealSelect=!!newRow.querySelector('.qxframe9a7c2-select');\n const email=newRow.querySelector('input').placeholder;\n invite.querySelector('[data-pv-invite-copy]').click();\n await new Promise(resolve=>setTimeout(resolve,160));\n const copied=invite.querySelector('[data-pv-invite-copy-status]').textContent;\n return {selected,invalid,dropped,attached,before,after,hasRealSelect,email,copied};\n})()");
+    assert.match(actual.selected,/Selected: diagram\.png.*not uploaded/,'file selection not presented as server upload');
+    assert.match(actual.invalid,/Choose a PNG, JPG or PDF/,'file type validated');
+    assert.match(actual.dropped,/Selected: plan\.pdf/,'drag and drop accepted');
+    assert.match(actual.attached,/Attached locally: debug\.txt/,'bug attachment updates visible status');
+    assert.equal(actual.before,2,'Invite Team has two original rows');
+    assert.equal(actual.after,3,'Add another appends a third row');
+    assert.equal(actual.hasRealSelect,true,'new row mounts QX Select');
+    assert.equal(actual.email,'name@example.com');
+    assert.match(actual.copied,/Invite link copied|Invite link selected; use Ctrl\+C/,'copy action gives truthful feedback');
+  });
+
   await step('import errors are reported and keep the current configuration', async () => {
     const before = JSON.stringify((await state()).config);
     await key('o');
