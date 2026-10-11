@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Picker inverted Menu semantic role repair (CI pending)
+- Owner reports incorrect Picker internals in inverse Menu mode. Root cause: floating Menu popup receives --theme-menu bg/fg, nested ItemCollection/Calendar/PeriodPanel/TimePanel/ColorPanel/inputs still rebind page-level semantic/control colors under @scope universal; selected dates and wheel choices hardcode theme-primary.
+- Fixed local role chain in src/styles/main/theme-visual-v2.css for menu popup and nested items, search, groups, footer borders, input, calendar/period selected, wheel selected, presets and color panel. Popover/Dialog surface remains independent from Menu color; no new Theme tokens.
+- Added true Chromium 8 Styles × 2 light/dark × 4 Menu variants = 64 x descendant role checks and static guards. Draft PR #267 remains unmerged. Existing 66 Preview03 Card gallery preserved.
+
 ## CURRENT — 2026-10-11 Stage5 Preview03 public Components vs BuildingBlocks correction (CI pending)
 - QX public global has both `Components` and `BuildingBlocks`. QX UMD Components excludes Tree, Calendar, ColorPanel, List, OptionList, PeriodPanel and VirtualList by design: these are public BuildingBlocks. Updated Preview03 18+48 runtime mount helpers to read either namespace; restored real QX Tree cards (no replacement JSON stand-ins).
 - Draft PR #267, 66 original business cards and 66/66 documented family matrix. Next must pass exact-head QXFRAME CI, CSS Schema browser gate, official complete Windows dist+docs artifact. Preview01/02 unchanged, main untouched.

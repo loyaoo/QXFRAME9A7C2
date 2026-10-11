@@ -114,6 +114,47 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Menu inverse Picker descendants use readable local semantic roles (8 Styles x 2 modes x 4 Menu variants)',async()=>{
+    const result=await evaluate("(() => {"+
+      "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;"+
+      "const orig=api.state.config,wasDark=h.classList.contains('dark');"+
+      "const host=d.createElement('div'),sheet=d.createElement('style');"+
+      "host.style.cssText='position:absolute;left:-10000px;top:0;width:18rem';"+
+      "host.innerHTML='<div class=\\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\\">'+"+
+      "'<div class=\\"qxframe9a7c2-item-collection\\"><div class=\\"qxframe9a7c2-item-collection-group\\">Group</div><input class=\\"qxframe9a7c2-item-collection-search-input\\" placeholder=\\"Search\\"><div class=\\"qxframe9a7c2-item-surface is-selected\\">Selected</div></div>'+"+
+      "'<div class=\\"qxframe9a7c2-date-panel\\"><button class=\\"qxframe9a7c2-date-panel-cell is-today\\">Today</button><button class=\\"qxframe9a7c2-date-panel-cell is-selected\\">Chosen</button><button class=\\"qxframe9a7c2-date-panel-nav\\">Next</button></div>'+"+
+      "'<div class=\\"qxframe9a7c2-period-panel\\"><button class=\\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\\">Q4</button></div>'+"+
+      "'<div class=\\"qxframe9a7c2-wheel-panel\\"><div class=\\"qxframe9a7c2-wheel-panel-item is-selected\\">10</div></div>'+"+
+      "'<button class=\\"qxframe9a7c2-date-picker-preset\\">Today</button>'+"+
+      "'<div class=\\"qxframe9a7c2-color-panel\\"><input class=\\"qxframe9a7c2-color-panel-input\\" value=\\"#ffffff\\"></div></div>'+"+
+      "'<div class=\\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\\"><span class=\\"qxframe9a7c2-item-collection\\">Popover</span></div>'+"+
+      "'<i data-menu-fg style=\\"color:var(--qxframe9a7c2-theme-menu-foreground)\\"></i><i data-menu-accent style=\\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\\"></i><i data-popover-fg style=\\"color:var(--qxframe9a7c2-theme-popover-foreground)\\"></i>';"+
+      "d.head.append(sheet);d.body.append(host);"+
+      "const css=x=>d.defaultView.getComputedStyle(x);const query=x=>host.querySelector(x);"+
+      "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
+      "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
+      "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
+      "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
+      "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
+      "accentFg:accent.color,accentBg:accent.backgroundColor,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
+      "dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
+      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
+      "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
+      "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
+    assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
+    for(const r of result){
+      const id=r.style+'/'+r.dark+'/'+r.menuColor;
+      for(const field of ['rows','search','today','wheel','preset','colorInput'])
+        assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
+      assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
+      assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
+      assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');
+      assert.equal(r.periodSelected,r.accentFg,id+' selected Period uses Menu accent foreground');
+      assert.equal(r.popover,r.popoverFg,id+' Popover is independent of Menu color');
+      assert.notEqual(r.group,'rgba(0, 0, 0, 0)',id+' group label has paint');
+    }
+  });
+
   await step('Native CSS base-select picker dark and inverted Theme roles: 8 Styles x light/dark x four Menu colors',async()=>{
     const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const prevDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:20rem';\n host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-qa-native=\"authored\"><option value=\"a\" selected>m@shadcn.com</option><option value=\"b\">m@gmail.com</option><option value=\"c\" disabled>disabled</option></select><div class=\"qxframe9a7c2-native-form\"><select data-qa-native=\"scoped\"><option selected>Scoped</option><option>Two</option></select></div><select data-qa-native=\"bare\"><option selected>Bare</option><option>Two</option></select><select class=\"qxframe9a7c2-form-select\" size=\"3\" data-qa-native=\"multirow\"><option>One</option><option>Two</option><option>Three</option></select><i data-qa-color=\"fg\" style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-qa-color=\"accent\" style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-qa-color=\"bg\" style=\"background:var(--qxframe9a7c2-theme-menu)\"></i>';\n d.head.append(sheet);d.body.append(host);\n const css=s=>getComputedStyle(s),cases=[];\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\n   const theme={fg:css(host.querySelector('[data-qa-color=fg]')).color,bg:css(host.querySelector('[data-qa-color=bg]')).backgroundColor,\n    accentFg:css(host.querySelector('[data-qa-color=accent]')).color,accentBg:css(host.querySelector('[data-qa-color=accent]')).backgroundColor};\n   const samples={};\n   for(const kind of ['authored','scoped','bare']){\n     const el=host.querySelector('[data-qa-native=\"'+kind+'\"]'),pick=getComputedStyle(el,'::picker(select)'),selected=css(el.options[0]),unselected=css(el.options[1]),disabled=kind==='authored'?css(el.options[2]):null;\n     samples[kind]={appearance:css(el).appearance,pickerAppearance:pick.appearance,colorScheme:css(el).colorScheme,pickerBg:pick.backgroundColor,pickerFg:pick.color,pickerBorderRadius:pick.borderTopLeftRadius,\n       selectedFg:selected.color,selectedBg:selected.backgroundColor,optionFg:unselected.color,optionBg:unselected.backgroundColor,\n       disabledFg:disabled?.color,disabledOpacity:disabled?.opacity,iconDisplay:getComputedStyle(el,'::picker-icon').display};\n   }\n   const multirow=host.querySelector('[data-qa-native=multirow]');\n   cases.push({style,dark,menuColor,theme,samples,multirow:css(multirow).appearance});\n }\n h.classList.toggle('dark',prevDark);host.remove();sheet.remove();\n return {supported:CSS.supports('appearance','base-select'),cases};\n})()");
     assert.equal(r.supported,true,'Chromium must support native customizable select');

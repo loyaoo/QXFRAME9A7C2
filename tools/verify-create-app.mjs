@@ -41,6 +41,19 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
 
 });
 
+check('menu-inverted Picker descendants consume matched Menu surface roles',()=>{
+  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const menuScope='qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)';
+  assert.ok(v2.includes(menuScope),'Picker surface is menu-scoped, not global');
+  for(const role of ['semantic-text','semantic-text-secondary','semantic-text-disabled','semantic-text-placeholder',
+    'semantic-surface','semantic-border-subtle','navigation-bg','control-bg','control-text','control-border'])
+    assert.match(v2,new RegExp('--_qxframe9a7c2-'+role+':'),'nested popup semantic role '+role);
+  for(const component of ['item-surface.is-selected','date-panel-cell.is-selected','date-panel-cell.is-today',
+    'date-picker-preset','wheel-panel-item.is-selected','color-panel'])
+    assert.ok(v2.includes('qxframe9a7c2-'+component),'nested Picker state '+component);
+  assert.ok(v2.includes('qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container'),'Popover stays on non-menu surface');
+});
+
 check('all CSS private Focus shadows use focus, not ring terminology',()=>{
   const dirs=['src/styles/components','src/styles/main'];
   const found=[];

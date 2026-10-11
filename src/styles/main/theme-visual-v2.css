@@ -393,7 +393,89 @@
   .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface {
     --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-popup-surface-text);
   }
-  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground); }
+
+  /* Popup-context contrast contract. Menu color is independent of page light/dark.
+     An inverted menu can be dark on a light page or light on a dark page.
+     Popup children re-declare semantic roles through the scoped universal rule,
+     so a foreground on the panel alone cannot reach nested Picker controls.
+     Resolve each nested consumer against its *own popup surface* instead.
+     This affects Select, Cascader, TreeSelect, DatePicker, TimePicker,
+     ColorPicker and WheelPicker, not their closed trigger controls. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) *,
+  .qxframe9a7c2-menu-submenu-panel,
+  .qxframe9a7c2-menu-submenu-panel *,
+  .qxframe9a7c2-menu-overflow-panel,
+  .qxframe9a7c2-menu-overflow-panel * {
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-secondary: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 76%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-text-muted: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 70%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-text-placeholder: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 62%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-text-disabled: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 55%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-semantic-subtle-hover: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-semantic-border: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 22%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-border-subtle: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 16%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-control-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 92%, var(--qxframe9a7c2-theme-menu-foreground));
+    --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-control-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
+    --_qxframe9a7c2-control-text-disabled: var(--_qxframe9a7c2-semantic-text-disabled);
+    --_qxframe9a7c2-control-border: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-hover: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-disabled: var(--_qxframe9a7c2-semantic-border-subtle);
+  }
+  /* Pair selected/hover fills with their own foreground. In particular,
+     a page-primary ink is not readable against an inverted Menu surface. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-hover,
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface:hover,
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected,
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected.is-hover {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected,
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-hover {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-date-panel-cell-border: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-border: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--qxframe9a7c2-theme-menu-accent);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
+    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-item.is-selected {
+    --_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-picker-preset {
+    --_qxframe9a7c2-date-picker-preset-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel {
+    --_qxframe9a7c2-color-panel-field-bg: var(--_qxframe9a7c2-control-bg);
+    --_qxframe9a7c2-color-panel-field-border: var(--_qxframe9a7c2-control-border);
+    --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
     border-color: var(--_qxframe9a7c2-v2-popup-border);
