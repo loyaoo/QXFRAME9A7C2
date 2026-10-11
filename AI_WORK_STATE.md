@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-11 Stage3 corresponding static gate for FocusOrigin-scoped native outlines (CI pending)
+- Previous parent 9f9afba006cf8a313db5ebf1a1bf4451d388da83 moved standalone bare Pointer Outline into explicit FocusOrigin CSS to preserve one painted owner; its own static verifier still expected obsolete unguarded declaration. Synchronized source assertion to require FocusOrigin-gated rule, explicit pointer border and outline, with no loosening. Needs exact-HEAD dual CI + official offline ZIP. PR #265 Draft.
+
 ## CURRENT — 2026-10-11 Stage3 explicit FocusOrigin gate for standalone native controls (CI pending)
 - Parent 6a70f404e2eb9375f82c8fa154e68886f78b9587 QXFRAME Release failure at verify-final-focus-origin: an ungated bare :focus outline was unsafe. Moved naked Input/Select/Textarea Pointer Outline to FocusOrigin-scoped CSS with existing theme width/offset; regular :focus retains border and normal elevation only. Tightened the gate's finite allowed single-owner list to include only three standalone bare native controls and explicitly gated authored native Input/Select/Textarea, without general exemptions. Await same-head CI; PR #265 remains Draft.
 
