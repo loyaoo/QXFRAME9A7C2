@@ -160,6 +160,64 @@
 
 
 
+
+  // Stage4: real local-only actions for five Preview02 cards (no server API).
+  function localStatus(card,message) {
+    var node=card.querySelector('[data-pv-'+card.dataset.card+'-status]');
+    if(node){node.hidden=!message;node.textContent=message||'';}
+  }
+  var bugForm=document.querySelector('[data-card="report-bug"]');
+  if(bugForm){
+    var bugTitle=bugForm.querySelector('[data-pv-bug-title]');
+    var bugSteps=bugForm.querySelector('[data-pv-bug-steps]');
+    bugForm.querySelector('[data-pv-bug-submit]').addEventListener('click',function(){
+      if(!bugTitle.value.trim()){localStatus(bugForm,'Enter a bug title before submitting.');bugTitle.focus({preventScroll:true});return;}
+      if(!bugSteps.value.trim()){localStatus(bugForm,'Describe the steps to reproduce the issue.');bugSteps.focus({preventScroll:true});return;}
+      localStatus(bugForm,'Bug report validated locally; not submitted to a server.');
+    });
+    [bugTitle,bugSteps].forEach(function(input){input.addEventListener('input',function(){localStatus(bugForm,'');});});
+  }
+  var inviteForm=document.querySelector('[data-card="invite-team"]');
+  if(inviteForm){
+    var inviteRows=inviteForm.querySelector('[data-pv-invite-rows]');
+    inviteForm.querySelector('[data-pv-invite-send]').addEventListener('click',function(){
+      var inputs=Array.prototype.slice.call(inviteRows.querySelectorAll('input'));
+      var invalid=inputs.find(function(input){return !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(input.value.trim());});
+      if(invalid){localStatus(inviteForm,'Enter a valid email address for each invitee.');invalid.focus({preventScroll:true});return;}
+      localStatus(inviteForm,inputs.length+' invitations validated locally; no invitations sent.');
+    });
+    inviteRows.addEventListener('input',function(){localStatus(inviteForm,'');});
+  }
+  var profileForm=document.querySelector('[data-card="github-profile"]');
+  if(profileForm){
+    var profileFields=profileForm.querySelector('[data-pv-profile-fields]');
+    profileFields.addEventListener('submit',function(e){e.preventDefault();});
+    profileForm.querySelector('[data-pv-profile-save]').addEventListener('click',function(){
+      localStatus(profileForm,'Profile changes previewed locally; not saved to a server.');
+    });
+    ['input','change'].forEach(function(type){profileFields.addEventListener(type,function(){localStatus(profileForm,'');});});
+  }
+  var activityForm=document.querySelector('[data-card="contributions-activity"]');
+  if(activityForm){
+    var activityFields=activityForm.querySelector('[data-pv-activity-fields]');
+    var privacy=activityFields.querySelector('input[type="checkbox"]');
+    activityFields.addEventListener('submit',function(e){e.preventDefault();});
+    activityForm.querySelector('[data-pv-activity-save]').addEventListener('click',function(){
+      localStatus(activityForm,'Activity visibility '+(privacy.checked?'private':'public')+' previewed locally; not saved to a server.');
+    });
+    privacy.addEventListener('change',function(){localStatus(activityForm,'');});
+  }
+  var appointmentForm=document.querySelector('[data-card="book-appointment"]');
+  if(appointmentForm){
+    var slots=appointmentForm.querySelector('[data-pv-multi-toggle="appointment"]');
+    appointmentForm.querySelector('[data-pv-appointment-book]').addEventListener('click',function(){
+      var active=slots.querySelectorAll('button.is-active');
+      if(!active.length){localStatus(appointmentForm,'Select at least one appointment time.');slots.querySelector('button').focus({preventScroll:true});return;}
+      localStatus(appointmentForm,active.length+' appointment time(s) selected locally; no booking sent to a server.');
+    });
+    slots.addEventListener('click',function(){localStatus(appointmentForm,'');});
+  }
+
   // Stage4 practical form interactions: preserve authored QX fields/Select and
   // validate locally. These examples have NO submission or persistence API.
   var addressCard = document.querySelector('[data-card="shipping-address"]');
