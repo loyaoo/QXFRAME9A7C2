@@ -29,7 +29,7 @@ const groups = [
   ['.qxframe9a7c2-badge','Badge 标签','标签计数及装饰形态遵循 badge 主题','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['revenue-surfaces','Card 内部形态',[
-  ['.pv3x-mini-cards','Card 内部形态','卡片骨架与分区细节统一','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-card-skeleton]','Card 骨架圆角','真实骨架行现已按 Theme radius-item 统一','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['usage-meter','Slider 标记',[
   ['[data-pv3-component="usage-slider"]','Slider 标记','Slider 标记遵循 thumb 形状策略','__QA_BUNDLE_HEAD__']

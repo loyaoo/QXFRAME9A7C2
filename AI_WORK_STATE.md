@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Preview03 Card skeleton theme QA exemplar (CI pending)
+- The Card Skeleton consumer was corrected to radius-item but had no matching rendered line in the commercial gallery. Added actual QX Card skeleton lines to the Revenue overview card (already existing of 66; no new card count), and re-targeted current-round offline QA highlight to [data-pv3x-card-skeleton], not unrelated nested revenue cards.
+- Preserves 66 Card roots, 66/66 documented family inventory, 11 current changed QA regions, strict Draft PR #267 merge gate. Browser tests must verify resulting page and source constraints; Preview01/02 unchanged.
+
 ## CURRENT — 2026-10-11 Stage5 shared Navigation/Data radius propagation (CI pending)
 - Browser radius=none measurement identified inherited 0.25rem (4px) in '--_qxframe9a7c2-navigation-radius' and '--_qxframe9a7c2-data-radius', even when Theme radius-item=0. Corrected one upstream mapping each in fixed-values.css, not new component override layers; this extends to JSON/Sort/Tabs internal consumers still using the shared roles.
 - Browser acceptance now checks 19 QX-only component parts, 8 styles × 2 modes × none/default radius = 608 exact computed-radius assertions. It deliberately does not waive existing Preview01/02 acceptance tests.
