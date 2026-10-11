@@ -5,10 +5,10 @@
   --_qxframe9a7c2-list-max-height:var(--qxframe9a7c2-list-max-height,15rem);
   --_qxframe9a7c2-list-bg:var(--qxframe9a7c2-list-bg,var(--_qxframe9a7c2-navigation-bg));
   --_qxframe9a7c2-list-border:var(--qxframe9a7c2-list-border,var(--_qxframe9a7c2-semantic-border));
-  --_qxframe9a7c2-list-radius:var(--qxframe9a7c2-list-radius,var(--_qxframe9a7c2-navigation-radius));
+  --_qxframe9a7c2-list-radius:var(--qxframe9a7c2-list-radius,var(--qxframe9a7c2-theme-radius-item));
   --_qxframe9a7c2-list-group-bg:var(--qxframe9a7c2-list-group-bg,var(--_qxframe9a7c2-semantic-surface-muted));
   --_qxframe9a7c2-list-group-text:var(--qxframe9a7c2-list-group-text,var(--_qxframe9a7c2-semantic-text-secondary));
-  --_qxframe9a7c2-list-group-radius:var(--qxframe9a7c2-list-group-radius,var(--_qxframe9a7c2-navigation-radius));
+  --_qxframe9a7c2-list-group-radius:var(--qxframe9a7c2-list-group-radius,var(--qxframe9a7c2-theme-radius-item));
   --_qxframe9a7c2-list-focus-shadow:none;
   box-sizing:border-box;display:flex;flex-direction:column;min-width:0;max-width:100%;color:var(--_qxframe9a7c2-semantic-text);background:var(--_qxframe9a7c2-list-bg);border:1px solid var(--_qxframe9a7c2-list-border);border-radius:var(--_qxframe9a7c2-list-radius);font-size:var(--_qxframe9a7c2-control-font-size);line-height:1.4;box-shadow:var(--_qxframe9a7c2-list-focus-shadow);overflow:hidden
 }

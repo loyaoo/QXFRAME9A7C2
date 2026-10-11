@@ -18,7 +18,7 @@
 .qxframe9a7c2-progress-info{display:inline-flex;min-width:2.75rem;flex:none;align-items:center;justify-content:center;color:var(--_qxframe9a7c2-progress-info-text);text-align:center}
 .qxframe9a7c2-progress.is-success,.qxframe9a7c2-progress.is-exception{--_qxframe9a7c2-progress-primary:var(--_qxframe9a7c2-accent);--_qxframe9a7c2-progress-info-text:var(--_qxframe9a7c2-accent)}
 .qxframe9a7c2-progress-inner.is-steps{display:flex;overflow:visible;border-radius:0;background:transparent}
-.qxframe9a7c2-progress-step{height:100%;min-width:var(--_qxframe9a7c2-fixed-progress-step-size);flex:1;border-radius:0.25rem;background:var(--_qxframe9a7c2-semantic-subtle);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
+.qxframe9a7c2-progress-step{height:100%;min-width:var(--_qxframe9a7c2-fixed-progress-step-size);flex:1;border-radius:var(--qxframe9a7c2-progress-step-radius,var(--qxframe9a7c2-theme-radius-track));background:var(--_qxframe9a7c2-semantic-subtle);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-progress-step.is-active{background:var(--_qxframe9a7c2-progress-primary)}
 .qxframe9a7c2-progress-step.is-success{background:var(--_qxframe9a7c2-progress-success)}
 .qxframe9a7c2-progress-outer.is-vertical{width:auto;height:10rem}

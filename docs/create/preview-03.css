@@ -59,7 +59,7 @@
 .pv3x-hint{color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem}
 .pv3x-avatars,.pv3x-actions,.pv3x-tags,.pv3x-choices,.pv3x-mini-cards,.pv3x-fields,.pv3x-process,.pv3x-metrics-grid{display:flex;flex-wrap:wrap;gap:.75rem}
 .pv3x-choices,.pv3x-fields{flex-direction:column;align-items:stretch}
-.pv3x-avatars .qxframe9a7c2-avatar{display:inline-flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;border-radius:100rem;background:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground);font-size:.75rem;font-weight:700}
+.pv3x-avatars .qxframe9a7c2-avatar{display:inline-flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;border-radius:var(--qxframe9a7c2-theme-radius-avatar);background:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground);font-size:.75rem;font-weight:700}
 .pv3x-mini-cards>.qxframe9a7c2-card{min-width:0;flex:1 1 0}
 .pv3x-mini-cards .qxframe9a7c2-card-content{display:flex;flex-direction:column;gap:.5rem;padding:1rem}
 .pv3x-mini-cards strong{font-size:1.375rem}
