@@ -116,9 +116,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input.is-focused:not
 
 /* A connected InputGroup owns its one outer pointer outline. Standalone JS Input
  * keeps the real pointer 2px/-1px outline, but a hosted child never paints twice. */
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input:focus-within,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input.is-focused,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input:focus-within,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input.is-focused{
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly){
   outline:none
 }
