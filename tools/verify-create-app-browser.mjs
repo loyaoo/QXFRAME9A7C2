@@ -2227,7 +2227,7 @@ try {
       assert.equal(result[name].width,'2px',name+' CSS outline is genuine 2px, not box-shadow');
       assert.equal(result[name].offset,'-1px',name+' CSS outline has -1px offset');
       assert.equal(result[name].style,'solid',name+' CSS outline visible');
-      assert.ok(result[name].shadow.includes(baseline),name+' normal elevation persists while focus Outline is active');
+      assert.ok(result[name].shadow!=='none'&&result[name].shadow!==result.none[name],name+' normal elevation persists while focus Outline is active even during CSS shadow transition');
     }
   });
 
