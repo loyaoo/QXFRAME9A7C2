@@ -32,7 +32,7 @@ function mount(id,type,opts){
  }catch(e){errors.push({id:id,type:type,message:String(e&&e.message||e)});target.textContent='Unable to mount '+type;return null;}
 }
 function item(key,label){return {key:key,value:key,label:label}}
-function simple(id,type,items,options){return mount(id,type,Object.assign({items:items.map((x,i)=>item(String(i),x))},options||{}))}
+function simple(id,type,items,options){return mount(id,type,Object.assign({items:items.map(function(x,i){var key=String(i);return(type==='Menu'||type==='Sort')?{key:key,label:x}:item(key,x)})},options||{}))}
 function noteAction(id,text){button(id,'View details').addEventListener('click',function(){status(id,text+' · This is a local QX demonstration.')})}
 var samples={
  contacts:[item('alpha','Alex Morgan · Account Lead'),item('beta','Sam Patel · Billing'),item('gamma','Taylor Chen · Customer Care')],
