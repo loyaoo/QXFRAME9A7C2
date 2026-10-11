@@ -1,7 +1,7 @@
-/** Current batch visual change: Preview 01 Receiving Method SelectGroup Hover state precedence. */
+/** Current batch visual change: Preview 01 FAQ segmented Tabs Theme radius allocation. */
 const groups = [
-  ['receiving-method','Receiving Method · SelectGroup',[
-    ['.qxframe9a7c2-selectgroup.is-outline','选择组 Hover/反馈态','未选中选项 Hover 不能覆盖 Warning、Invalid、Valid 或 Focus；Outline/Muted 共享反馈优先级，禁用与选中态保留既有样式。','__QA_BUNDLE_HEAD__']
+  ['faq','FAQ · Segmented Tabs',[
+    ['.pv-tabs .qxframe9a7c2-tabs.is-segmented','分段 Tabs · Theme 圆角','Maia/Rhea 源参考圆角分别为 14px/18px；同步其他风格、夜间模式与 Shape 策略。','__QA_BUNDLE_HEAD__']
   ],'01']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

@@ -1,3 +1,12 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ segmented Tabs Theme radius allocation (CI pending)
+- Previous development HEAD 2da75989ff62c96066e5b2523fab6eaee434d9b4 verified QXFRAME #38107758242 and CSS Schema #38107758253 SUCCESS; PR #265 remains Draft/unmerged.
+- Examined 528-case pinned source inner-role diagnostics with semantic/text matching. Field/title border readings reflect nonhomologous wrappers; Upcoming Payments source 27 calendar trigger vs QX unnamed nav button also different roles and must not be treated as defects.
+- FAQ active segmented Tabs are directly comparable: Maia 14px source vs QX 24px, Rhea 18px source vs QX 16px in all 16 style/mode measurements. Fixed shared Theme category allocation in docs/create/compiler.js: rounded Tabs list radius 1.6× base, smooth 2× base, then existing Tabs trigger inset -2px yields source 14px/18px for 10px default radius; other six style mappings unaffected.
+- Preserve explicit shapeTabs square/circle/pill, global radius none, framework consumer ownership and root/dark-only theme.css export. No runtime JS or private Preview CSS.
+- Extended existing real Chromium 8 styles × light/dark FAQ typography check with exact matched trigger radius checks, retained prior weight/focus tests. Strict static gate proves shared role chain.
+- Offline yellow markers reset previous Receiving Method; mark only FAQ segmented Tabs radius, never production Create.
+- NEXT: complete exact-head QXFRAME + CSS Schema SUCCESS, official Actions complete dist+docs artifact, Windows offline ZIP CRC/HTTP verification and PR checkpoint. Estimates Stage3 95–96%, Field/SelectGroup 87%, CREATEAPP-V3 overall ~78%. Stage4/5 forbidden, no merge.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 SelectGroup Hover/Field feedback precedence (CI pending)
 - Accepted parent b4d6c87a94e3c3c7a91f256dc20d1c705ef302b0: QXFRAME #38106601801 and CSS Schema #38106601815 both SUCCESS, PR #265 Draft/open/unmerged.
 - Isolated a real shared CSS defect in SelectGroup Outline/Muted: the high-specificity hovered unchecked item replaced a Field Warning/Invalid/Valid status border, tinted validation surfaces, and could win over Focus on unselected items. This is not a role-probe false difference.

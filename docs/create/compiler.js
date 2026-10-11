@@ -529,7 +529,12 @@ export function themeTokens(resolved) {
   root['radius-field'] = shapeRadius(ext.shapeInput, alloc.field, controlShape);
   root['radius-select'] = shapeRadius(ext.shapeSelect, alloc.field, controlShape);
   root['radius-badge'] = shapeRadius(ext.shapeBadge, alloc.badge, controlShape);
-  root['radius-tabs'] = shapeRadius(ext.shapeTabs, alloc.tabs, controlShape);
+  // Source-pinned segmented Tabs: tab trigger sits 2px inside the list.
+  // Rounded and smooth category allocations previously over/under-sized
+  // Maia and Rhea respectively; keep category ratios proportional to Radius.
+  const tabsListRadius = ext.radiusAlloc === 'rounded' ? px(basePx * 1.6)
+    : ext.radiusAlloc === 'smooth' ? px(basePx * 2) : alloc.tabs;
+  root['radius-tabs'] = shapeRadius(ext.shapeTabs, tabsListRadius, controlShape);
   root['radius-item'] = alloc.item;
   root['radius-choice'] = alloc.choice;
   root['radius-radio'] = shapeRadius(roundShape('shapeRadio'), alloc.button, controlShape);

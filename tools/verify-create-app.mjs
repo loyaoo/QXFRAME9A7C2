@@ -42,7 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'receiving-method':['.qxframe9a7c2-selectgroup.is-outline']}; // current batch SelectGroup Hover feedback owner
+  const current={'faq':['.pv-tabs .qxframe9a7c2-tabs.is-segmented']}; // current batch FAQ Tabs Shape allocation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -57,8 +57,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one modified Receiving Method SelectGroup region in Preview 01');
-  assert.match(ledger,/const groups = \[/,'live SelectGroup ledger exists');
+  assert.equal(count,1,'one modified FAQ Tabs Theme radius region in Preview 01');
+  assert.match(ledger,/const groups = \[/,'live Tabs Radius ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -86,6 +86,15 @@ check('Tabs pointer Focus paints once on the shell using independent Theme axes'
   assert.ok(css.includes('var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'pointer halo composes in same ring slot');
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab:focus-within[^}]*\boutline\s*:/,'pointer focus never paints an outline');
   assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring)'),'selected elevation is never replaced');
+});
+
+check('Maia and Rhea Tabs radius allocation follows source while Shape override wins',()=>{
+  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+  assert.ok(compiler.includes("ext.radiusAlloc === 'rounded' ? px(basePx * 1.6)"),'Maia rounded Tabs list alloc');
+  assert.ok(compiler.includes("ext.radiusAlloc === 'smooth' ? px(basePx * 2)"),'Rhea smooth Tabs list alloc');
+  assert.ok(compiler.includes("shapeRadius(ext.shapeTabs, tabsListRadius, controlShape)"),'Tabs Shape override retained');
+  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  assert.ok(css.includes("calc(var(--_qxframe9a7c2-tabs-radius) - .125rem)"),'shared trigger radius inset remains 2px');
 });
 
 check('segmented Tabs use the pinned source dark active input/30 recipe', () => {

@@ -1309,13 +1309,17 @@ try {
           const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
           const old=h.classList.contains('dark');h.classList.toggle('dark',${mode==='dark'});
           const tabs=[...d.querySelectorAll('[data-card="faq"] .qxframe9a7c2-tabs.is-segmented .qxframe9a7c2-tabs-tab')];
-          const out={weights:tabs.map(t=>Number(getComputedStyle(t).fontWeight)),active:tabs.filter(t=>t.classList.contains('is-active')).map(t=>Number(getComputedStyle(t).fontWeight))};
+          const out={weights:tabs.map(t=>Number(getComputedStyle(t).fontWeight)),active:tabs.filter(t=>t.classList.contains('is-active')).map(t=>Number(getComputedStyle(t).fontWeight)),radii:tabs.map(t=>parseFloat(getComputedStyle(t).borderTopLeftRadius))};
           h.classList.toggle('dark',old);return out;
         })()`);
         assert.ok(a.weights.length>=3,style+'/'+mode+' FAQ segmented triggers');
         assert.equal(a.active.length,1,style+'/'+mode+' exactly one current tab');
         const expected=style==='sera'?600:500;
         for(const w of a.weights)assert.equal(w,expected,style+'/'+mode+' source tab weight');
+        const expectedRadius={vega:8,nova:8,maia:14,lyra:0,mira:8,luma:998,sera:0,rhea:18}[style];
+        assert.equal(a.radii.length,a.weights.length,style+'/'+mode+' radius painter');
+        for(const radius of a.radii)assert.ok(Math.abs(radius-expectedRadius)<.6,
+          style+'/'+mode+' source-trigger corner '+expectedRadius+'px actual '+radius);
       }
     }
   });
