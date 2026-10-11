@@ -1405,7 +1405,12 @@ try {
         assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('inset'),style+'/'+mode+' pointer width paints an inset border without outline');
         assert.equal(m.keyboardClass,false,style+'/'+mode+' pointer state excludes keyboard virtual-focus class');
-        assert.equal(m.outline,'0px',style+'/'+mode+' real pointer must not have an outline '+JSON.stringify(m));
+        // Chromium may compute outline-width:medium (3px) with outline-style:none.
+        // Width alone is not a painted outline; the strict visible-paint
+        // contract is outline-style:none, plus no keyboard focus origin.
+        assert.equal(m.outlineStyle,'none',style+'/'+mode+' real pointer must not paint an outline '+JSON.stringify(m));
+        assert.equal(m.focusVisible,false,style+'/'+mode+' pointer Tab must not be focus-visible');
+        assert.equal(m.actionFocusVisible,false,style+'/'+mode+' pointer action must not be focus-visible');
         assert.ok(!m.disabledShadow?.includes('211, 67, 31'),style+'/'+mode+' disabled has no pointer shadow');
         if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' no inner outline');
       }
