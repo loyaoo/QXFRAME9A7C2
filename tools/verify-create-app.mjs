@@ -451,7 +451,7 @@ check('inverted Popup ItemCollection and Select idle text use menu foreground',(
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-collection\s*\{\s*color:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\s*\{\s*--_qxframe9a7c2-item-text:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
- assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
+ assert.match(css,/\.qxframe9a7c2-popup-surface:not\(\.qxframe9a7c2-popover-container\) \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
  const result=model.compileTheme(model.normalizeConfig({menuColor:'inverted'}),{generatedAt:''}).body;
  assert.match(result,/--qxframe9a7c2-theme-menu-foreground:/);
 });
