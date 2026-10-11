@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage5 all component Theme visual parity batch (CI pending)
+- User requests all QX components beyond Preview01/02 to integrate Theme tokens consistently for radius/color/size/states. Real local Chromium audit of 66 Preview03 Cards under Nova radius=none/default, Maia large, Sera found menu-item/list stuck at 4px, fixed round tree/steps/carousel controls, Preview03 Avatar fixed to 100rem, other fixed Badge/Image/Progress/Slider internal corners.
+- Updated 10 shared CSS component families plus Preview03 Avatar example, preserving framework-level radius role tokens and public component overrides; this is not a preview-only patch. New browser gate checks 17 QX-only component parts under 8 Styles × 2 modes × none/default radius = 544 computed corner checks. Existing 66-family doc mapping remains; no claim of full 66-family visual signoff from mapping alone.
+- Branch redesign/create-stage5; Draft PR #267; main untouched. Next validate dual CI and exact-HEAD full Windows dist+docs ZIP; continue cross-component color, disabled, shape and spacing audit.
+
 ## CURRENT — 2026-10-11 Inverted Menu Picker QA highlight closeout (CI pending)
 - Only 6 affected Preview03 cards / 8 Picker regions are annotated in offline QA. All 48 previous commercial gallery creation highlights cleared; Preview01/02 accepted cards stay unchanged.
 - Underlying global Theme consumer corrections are in src/styles/main/theme-visual-v2.css, checked via 64 combinations in real Chromium. Draft PR #267 unmerged.

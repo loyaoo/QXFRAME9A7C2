@@ -41,6 +41,14 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
 
 });
 
+check('Stage5 QX-only public components consume Theme corner roles',()=>{
+  for(const part of ['menu','list','steps','tree','carousel','progress','image','badge','card','slider']){
+    const css=fs.readFileSync(path.join(root,'src/styles/components',part+'.css'),'utf8');
+    assert.match(css,/--qxframe9a7c2-theme-radius-(?:item|button|track|thumb|popup|badge)/,part+' Theme corner role');
+  }
+  assert.match(read('preview-03.css'),/\.pv3x-avatars \.qxframe9a7c2-avatar[^}]*border-radius:var\(--qxframe9a7c2-theme-radius-avatar\)/,'Preview03 Avatar is not hard-coded pill');
+});
+
 check('menu-inverted Picker descendants consume matched Menu surface roles',()=>{
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   const menuScope='qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)';
