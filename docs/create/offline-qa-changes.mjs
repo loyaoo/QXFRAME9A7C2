@@ -1,24 +1,38 @@
-/** Stage4 Preview 02: five current local-only action flow fixes. */
+/** Stage4 current batch: ten real Preview02 card-action fixes, no earlier highlights. */
 const groups = [
- ['report-bug','Report Bug · Validation',[
-  ['[data-pv-bug-fields]','Bug details','Require title and reproduction steps before local validation.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-bug-submit]','Submit Bug','No pretend server submission.','__QA_BUNDLE_HEAD__']
+ ['invoice','Invoice · PDF / Payment',[
+  ['[data-pv-action="invoice-pdf"]','Generate actual local PDF','Creates a downloadable PDF without a backend','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-action="invoice-pay"]','Payment guard','Explains payment cannot be processed in preview','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['invite-team','Invite Team · Send',[
-  ['[data-pv-invite-rows]','Invitee emails','Validate original and dynamic rows.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-invite-send]','Send Invites','Explicit local-only feedback.','__QA_BUNDLE_HEAD__']
+ ['environment-variables','Environment Variables · Draft',[
+  ['[data-pv-action="env-edit"]','Edit public variable','Validates and stores only local public API URL draft','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-action="env-deploy"]','Deploy guard','Explicitly reports no deployment API','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['github-profile','Profile · Save',[
-  ['[data-pv-profile-fields]','Profile fields','Preserve edits, clear prior feedback.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-profile-save]','Save Profile','No false persistence.','__QA_BUNDLE_HEAD__']
+ ['activate-agent-dialog','Agent · Activation Actions',[
+  ['[data-pv-action="agent-cancel"]','Cancel state','Shows truthful canceled state','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-action="agent-enable"]','Activation guard','No cloud activation or credit change','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['contributions-activity','Privacy · Save',[
-  ['[data-pv-activity-fields]','Privacy state','Observe current checkbox state.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-activity-save]','Save Changes','Local-only public/private preview.','__QA_BUNDLE_HEAD__']
+ ['observability-card','Observability · Query',[
+  ['[data-pv-action="obs-query"]','Open QX query dialog','Local editable query, no remote execution','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['book-appointment','Appointment · Booking',[
-  ['[data-pv-multi-toggle="appointment"]','Appointment slots','Retain original multiple selection.','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-appointment-book]','Book Appointment','Require at least one slot, no fake booking.','__QA_BUNDLE_HEAD__']
+ ['anomaly-alert','Anomaly · Upgrade',[
+  ['[data-pv-action="anomaly-upgrade"]','Locate relevant demo','Focus and scroll to Observability example, no charge','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['bar-chart-card','Traffic · Report',[
+  ['[data-pv-action="traffic-report"]','Open data detail','QX dialog with existing sample metrics','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['sleep-report','Sleep · Detail',[
+  ['[data-pv-action="sleep-detail"]','Open sleep detail','QX dialog with existing sample metrics','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['weekly-fitness-summary','Fitness · Detail',[
+  ['[data-pv-action="fitness-detail"]','Open activity detail','QX dialog with existing sample percentages','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['analytics-card','Analytics · Detail',[
+  ['[data-pv-action="analytics-detail"]','Open analytics detail','QX dialog with existing sample figures','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['not-found','404 · Search / Home',[
+  ['[data-pv-local-search]','Local card search','Enter finds a Preview 02 card or shows no results','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-action="notfound-home"]','Working home navigation','Go to local Create homepage','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -82,7 +96,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Report Bug、Invite Team、Profile、Contributions & Activity、Book Appointment；上一轮高亮已清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：10 张卡片、14 处区域。往期高亮全部清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

@@ -36,6 +36,11 @@ Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs
 - No Team Members: Invite Members navigates/focuses the existing Invite Team Card rather than pretending to send invitations.
 - QA marks only those two Preview 02 Cards; no pixel-level changes to accepted QX widgets.
 
+## Stage4 bulk practical action batch (2026-10-11)
+- Restored real local/offline actions in 10 previously inactive cards: Invoice downloadable PDF + payment guard, Environment Variables public API URL draft + deploy guard, Agent Cancel/Activate guard, Observability sample-query QX modal, anomaly CTA cross-card navigation, traffic/sleep/fitness/analytics detail dialogs, and 404 local search + home navigation.
+- No payment, deployment, billing, activation, telemetry, or medical data is transmitted or falsely reported. Changed regions are annotated only in the local Windows ZIP, with previous highlights cleared.
+- Chromium interactions are tested on the real Preview02 iframe; no shadcn pixel-equality assertion introduced.
+
 ## Follow-up
 
 - Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.

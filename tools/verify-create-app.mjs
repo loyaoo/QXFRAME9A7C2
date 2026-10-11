@@ -58,21 +58,22 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'report-bug':['[data-pv-bug-fields]','[data-pv-bug-submit]'],'invite-team':['[data-pv-invite-rows]','[data-pv-invite-send]'],'github-profile':['[data-pv-profile-fields]','[data-pv-profile-save]'],'contributions-activity':['[data-pv-activity-fields]','[data-pv-activity-save]'],'book-appointment':['[data-pv-multi-toggle="appointment"]','[data-pv-appointment-book]']}; // Stage4 five local-only actions
+  assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
+  const current={"invoice":["[data-pv-action=\"invoice-pdf\"]","[data-pv-action=\"invoice-pay\"]"],"environment-variables":["[data-pv-action=\"env-edit\"]","[data-pv-action=\"env-deploy\"]"],"activate-agent-dialog":["[data-pv-action=\"agent-cancel\"]","[data-pv-action=\"agent-enable\"]"],"observability-card":["[data-pv-action=\"obs-query\"]"],"anomaly-alert":["[data-pv-action=\"anomaly-upgrade\"]"],"bar-chart-card":["[data-pv-action=\"traffic-report\"]"],"sleep-report":["[data-pv-action=\"sleep-detail\"]"],"weekly-fitness-summary":["[data-pv-action=\"fitness-detail\"]"],"analytics-card":["[data-pv-action=\"analytics-detail\"]"],"not-found":["[data-pv-local-search]","[data-pv-action=\"notfound-home\"]"]}; // Stage4 ten actual Preview02 action fixes
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['shipping-address'|\['feedback-form'/,'previous Preview 02 highlights are cleared');
+  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['shipping-address'|\['feedback-form'|\['report-bug'|\['invite-team'|\['github-profile'|\['contributions-activity'|\['book-appointment'/,'previous Preview 02 highlights are cleared');
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,10,'only current Stage4 five cards/ten regions are highlighted');
+  assert.equal(count,14,'only current Stage4 ten cards/fourteen regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
