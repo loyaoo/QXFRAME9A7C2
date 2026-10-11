@@ -1363,6 +1363,22 @@ try {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
       await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ pointer '+style);
       for(const mode of ['light','dark']){
+        // Use CDP's physical mouse in the Preview iframe. Programmatic
+        // element.focus() after the keyboard test is NOT a pointer-focus probe:
+        // Chromium may intentionally preserve :focus-visible on that path.
+        const point=await evaluate(`(()=>{
+          const frame=document.querySelector('[data-create-frame]');
+          const t=frame.contentDocument.querySelector('[data-card="faq"] .qxframe9a7c2-tabs-tab.is-active');
+          const action=t?.querySelector('.qxframe9a7c2-tabs-tab-action')||t;
+          if(!action)return null;
+          action.scrollIntoView({block:'center',inline:'nearest'});
+          const outer=frame.getBoundingClientRect(),r=action.getBoundingClientRect();
+          return {x:outer.left+r.left+r.width/2,y:outer.top+r.top+r.height/2};
+        })()`);
+        assert.ok(point,style+'/'+mode+' FAQ pointer target exists');
+        await mouse('mouseMoved',point.x,point.y);
+        await mouse('mousePressed',point.x,point.y);
+        await mouse('mouseReleased',point.x,point.y);
         const m=await evaluate(`(()=>{
           const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
           const t=d.querySelector('[data-card="faq"] .qxframe9a7c2-tabs-tab.is-active'),a=t?.querySelector('.qxframe9a7c2-tabs-tab-action')||t;
@@ -1373,11 +1389,11 @@ try {
           h.style.setProperty(vars[0],'0 0 0 3px rgb(211, 67, 31)');
           h.style.setProperty(vars[1],'0 2px 4px 0 rgb(53, 101, 211)');
           h.style.setProperty(vars[2],'2px');h.style.setProperty(vars[3],'-1px');
-          if(t)t.classList.remove('is-disabled');if(a)a.focus();
-          // Synthetic pointer probe must clear any virtual keyboard focus left by
-          // the previous keyboard-specific regression, without changing runtime.
+          if(t)t.classList.remove('is-disabled');
+          // Physical CDP mouse click above focuses the actual action and sets
+          // the browser pointer modality. Do not call focus() programmatically.
           if(t)t.classList.remove('is-keyboard-focus');
-          const s=t&&getComputedStyle(t),out={exists:!!t,focusWithin:!!t?.matches(':focus-within'),shadow:s?.boxShadow,outline:s?.outlineWidth,offset:s?.outlineOffset,childOutline:a&&a!==t?getComputedStyle(a).outlineStyle:null,keyboardClass:t?.classList.contains('is-keyboard-focus')};
+          const s=t&&getComputedStyle(t),out={exists:!!t,focusWithin:!!t?.matches(':focus-within'),shadow:s?.boxShadow,outline:s?.outlineWidth,offset:s?.outlineOffset,childOutline:a&&a!==t?getComputedStyle(a).outlineStyle:null,keyboardClass:t?.classList.contains('is-keyboard-focus'),tabTag:t?.tagName,focusVisible:t?.matches(':focus-visible'),actionFocusVisible:a?.matches(':focus-visible'),outlineStyle:s?.outlineStyle,outlineColor:s?.outlineColor,activeTag:d.activeElement?.tagName};
           if(t)t.classList.add('is-disabled');
           out.disabledShadow=t?getComputedStyle(t).boxShadow:null;
           if(a)a.blur();if(t){t.classList.toggle('is-disabled',!!wasDisabled);t.classList.toggle('is-keyboard-focus',!!wasKeyboardTab)}
@@ -1389,7 +1405,7 @@ try {
         assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('inset'),style+'/'+mode+' pointer width paints an inset border without outline');
         assert.equal(m.keyboardClass,false,style+'/'+mode+' pointer state excludes keyboard virtual-focus class');
-        assert.equal(m.outline,'0px',style+'/'+mode+' pointer must have no outline');
+        assert.equal(m.outline,'0px',style+'/'+mode+' real pointer must not have an outline '+JSON.stringify(m));
         assert.ok(!m.disabledShadow?.includes('211, 67, 31'),style+'/'+mode+' disabled has no pointer shadow');
         if(m.childOutline)assert.equal(m.childOutline,'none',style+'/'+mode+' no inner outline');
       }
