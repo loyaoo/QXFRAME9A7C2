@@ -408,10 +408,10 @@
   .qxframe9a7c2-menu-overflow-panel,
   .qxframe9a7c2-menu-overflow-panel * {
     --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-menu-foreground);
-    --_qxframe9a7c2-semantic-text-secondary: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 76%, var(--qxframe9a7c2-theme-menu));
-    --_qxframe9a7c2-semantic-text-muted: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 70%, var(--qxframe9a7c2-theme-menu));
-    --_qxframe9a7c2-semantic-text-placeholder: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 62%, var(--qxframe9a7c2-theme-menu));
-    --_qxframe9a7c2-semantic-text-disabled: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 55%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-menu-foreground);
     --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
@@ -420,12 +420,12 @@
     --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-semantic-subtle-hover: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-border: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 22%, var(--qxframe9a7c2-theme-menu));
-    --_qxframe9a7c2-semantic-border-subtle: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 16%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-control-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 92%, var(--qxframe9a7c2-theme-menu-foreground));
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-menu-foreground);
     --_qxframe9a7c2-control-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
