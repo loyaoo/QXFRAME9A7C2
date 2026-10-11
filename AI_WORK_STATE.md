@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Stage4 QX Tabs event target correction (CI pending)
+- Prior HEAD c5d23c29f97f55832bd3aa24b098afe0352b592e: CSS Schema #38128876105 real Chromium failed the NEW Stage4 Codespaces test at expected outer panel switch, because the test clicked `.qxframe9a7c2-tabs-tab` (non-interactive surface shell) not the actual framework button `.qxframe9a7c2-tabs-tab-action` (which owns private tabsKey and click handler). Source src/components/tabs.js createTab()/DOM.listen proves real event contract. Corrected test click target without changing production CSS or TS. Keep strong outer+inner content and 4-slot selection expectations unchanged.
+- Windows tools and Stage4 496/496 geometry passed on former HEAD. Await exact-new-head two-green CI; PR #266 Draft/no merge.
+
 ## CURRENT — 2026-10-11 Stage4 real Chromium and static gates added (CI pending)
 - Parent 74d1d63d18cab847a11642ff3accdbde4994afe5 restored Codespaces Local clone panel via nested QX Tabs and BookAppointment 4 independent slots.
 - Extended static verifier to current two-region QA ledger and nested controls DOM/source checks.
