@@ -412,6 +412,8 @@
     --_qxframe9a7c2-semantic-text-muted: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 70%, var(--qxframe9a7c2-theme-menu));
     --_qxframe9a7c2-semantic-text-placeholder: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 62%, var(--qxframe9a7c2-theme-menu));
     --_qxframe9a7c2-semantic-text-disabled: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 55%, var(--qxframe9a7c2-theme-menu));
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-menu-accent);
@@ -476,6 +478,31 @@
     --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
 
+  /* Picker's auxiliary controls are not ItemSurface rows. They previously
+     painted page-primary ink onto a potentially opposite menu background. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-time-picker-now {
+    --_qxframe9a7c2-time-picker-now-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
+    background: var(--qxframe9a7c2-theme-menu-accent);
+    border-block-color: var(--_qxframe9a7c2-semantic-border);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button.is-active {
+    --_qxframe9a7c2-color-picker-mode-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-color-picker-mode-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-color-picker-mode-border: var(--_qxframe9a7c2-semantic-border);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add {
+    --_qxframe9a7c2-color-picker-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-active,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop.is-active {
+    border-color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-selection-indicator.is-check {
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
     border-color: var(--_qxframe9a7c2-v2-popup-border);
