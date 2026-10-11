@@ -254,3 +254,6 @@ body.create-preview-body {
 .pv-select, .pv-tabs { min-width: 0; }
 .qxframe9a7c2-item.is-plain { background: transparent; }
 .qxframe9a7c2-item-group.is-gap-0 { gap: 0; }
+
+/* Nested QX Tabs panels stay hidden even if Stack declares display:flex. */
+[data-pv-tab-panel][hidden] { display: none; }

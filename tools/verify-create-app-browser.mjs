@@ -305,6 +305,157 @@ try {
     assert.match((await state()).search, /item=02/);
   });
 
+  await step('Stage4 real Preview02 Codespaces nested QX Tabs and Appointment multiselect',async()=>{
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.querySelector("[data-card=codespaces-card] .qxframe9a7c2-tabs-tab")','Codespaces mounted QX Tabs');
+    const actual=await evaluate("(function(){\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const codespaces=doc.querySelector('[data-card=\"codespaces-card\"]');\n      const appointment=doc.querySelector('[data-card=\"book-appointment\"]');\n      const panel=(name)=>codespaces.querySelector('[data-pv-tab-panel=\"'+name+'\"]');\n      const shown=name=>Boolean(panel(name)&&!panel(name).hidden);\n      const tab=(group,name)=>{\n        const host=codespaces.querySelector('[data-pv-tab-group=\"'+group+'\"]');\n        const button=[...host.querySelectorAll('.qxframe9a7c2-tabs-tab-action')].find(x=>x.textContent.trim()===name);\n        if(!button)throw new Error('Missing QX Tabs '+group+'/'+name);\n        button.click();\n      };\n      const first=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const local=[shown('codespaces'),shown('local'),shown('https'),shown('ssh'),shown('cli'),panel('https').querySelector('input').value];\n      tab('codespaces-local','SSH');\n      const ssh=[shown('https'),shown('ssh'),shown('cli'),panel('ssh').querySelector('input').value];\n      tab('codespaces-local','GitHub CLI');\n      const cli=[shown('https'),shown('ssh'),shown('cli'),panel('cli').querySelector('input').value];\n      tab('codespaces','Codespaces');\n      const back=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const reopen=[shown('local'),shown('cli')];\n      tab('codespaces','Codespaces');\n      const slots=[...appointment.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')];\n      const snapshot=()=>slots.map(b=>({active:b.classList.contains('is-active'),pressed:b.getAttribute('aria-pressed')}));\n      const start=snapshot();\n      slots[1].click();const add=snapshot();\n      slots[0].click();const single=snapshot();\n      slots[1].click();const none=snapshot();\n      slots[2].click();slots[3].click();const multiple=snapshot();\n      return {first,local,ssh,cli,back,reopen,start,add,single,none,multiple,count:slots.length};\n    })()");
+    assert.deepEqual(actual.first,[true,false],'Codespaces initial panel active');
+    assert.deepEqual(actual.local,[false,true,true,false,false,'https://github.com/shadcn-ui/ui.git']);
+    assert.deepEqual(actual.ssh,[false,true,false,'git@github.com:shadcn-ui/ui.git']);
+    assert.deepEqual(actual.cli,[false,false,true,'gh repo clone shadcn-ui/ui']);
+    assert.deepEqual(actual.back,[true,false]);
+    assert.deepEqual(actual.reopen,[true,true],'nested CLI tab state survives outer hide/show');
+    assert.equal(actual.count,4);
+    const bools=s=>s.map(x=>x.active);
+    assert.deepEqual(bools(actual.start),[true,false,false,false]);
+    assert.deepEqual(bools(actual.add),[true,true,false,false]);
+    assert.deepEqual(bools(actual.single),[false,true,false,false]);
+    assert.deepEqual(bools(actual.none),[false,false,false,false]);
+    assert.deepEqual(bools(actual.multiple),[false,false,true,true]);
+    for(const group of [actual.start,actual.add,actual.single,actual.none,actual.multiple])
+      for(const item of group)assert.equal(item.pressed,String(item.active),'multiselect class/semantic state synchronized');
+  });
+
+  await step('Stage4 Preview02 typography labels, QX Dialogs and Codespaces loading',async()=>{
+    const result=await evaluate("(async function(){\n      const api=window.QXFRAME9A7C2_CREATE;\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const peek=()=>({\n        style:doc.querySelector('[data-card=\"style-overview\"] [data-pv-text=\"style-font\"]').textContent,\n        type:doc.querySelector('[data-card=\"typography-specimen\"] [data-pv-text=\"heading-body\"]').textContent\n      });\n      const before=peek();\n      const feedbackTrigger=doc.querySelector('[data-pv-dialog=\"feedback\"]');\n      const alertTrigger=doc.querySelector('[data-pv-dialog=\"alert\"]');\n      feedbackTrigger.click();\n      await new Promise(resolve=>setTimeout(resolve,180));\n      const modal=()=>[...doc.querySelectorAll('.qxframe9a7c2-modal-root')]\n        .find(el=>getComputedStyle(el).display!=='none'&&!el.hidden);\n      const feedback=modal();\n      const fb={open:!!feedback,title:feedback?.querySelector('.qxframe9a7c2-modal-title')?.textContent,\n        name:!!feedback?.querySelector('#pv-feedback-name'),email:!!feedback?.querySelector('#pv-feedback-email'),\n        category:!!feedback?.querySelector('#pv-feedback-category'),message:!!feedback?.querySelector('#pv-feedback-message')};\n      const cancel=feedback&&[...feedback.querySelectorAll('button')].find(b=>b.textContent.trim()==='Cancel');\n      if(cancel)cancel.click();\n      await new Promise(resolve=>setTimeout(resolve,280));\n      alertTrigger.click();\n      await new Promise(resolve=>setTimeout(resolve,180));\n      const alert=modal();\n      const al={open:!!alert,title:alert?.querySelector('.qxframe9a7c2-modal-title')?.textContent,\n        prompt:alert?.textContent.includes('USB accessory'),\n        buttons:alert?[...alert.querySelectorAll('button')].map(x=>x.textContent.trim()).filter(Boolean):[]};\n      const reject=alert&&[...alert.querySelectorAll('button')].find(b=>b.textContent.trim()===\"Don't allow\");\n      if(reject)reject.click();\n      await new Promise(resolve=>setTimeout(resolve,280));\n      const create=doc.querySelector('[data-pv-create-codespace]');\n      const state=()=>({disabled:create.disabled,loading:create.classList.contains('is-loading'),\n        spinner:!create.querySelector('.qxframe9a7c2-button-indicator').hidden});\n      const idle=state();create.click();const active=state();create.click();const still=state();\n      await new Promise(resolve=>setTimeout(resolve,2170));const done=state();\n      return {before,fb,al,idle,active,still,done};\n    })()");
+    assert.ok(result.before.style.includes(' - '));
+    assert.ok(result.before.type.includes(' - '));
+    assert.ok(!/无衬线|等宽|跟随正文/.test(result.before.style+result.before.type),'English preview must not show missing Chinese glyph labels');
+    assert.equal(result.fb.open,true,'Feedback Modal opens from QX Button');
+    assert.equal(result.fb.title,'Share Feedback');
+    for(const key of ['name','email','category','message'])assert.equal(result.fb[key],true,'Feedback includes '+key);
+    assert.equal(result.al.open,true,'Alert Dialog opens from QX Button');
+    assert.equal(result.al.title,'Allow accessory to connect?');
+    assert.equal(result.al.prompt,true);
+    assert.ok(result.al.buttons.includes("Don't allow")&&result.al.buttons.includes('Allow'),'Alert actions');
+    assert.deepEqual(result.idle,{disabled:false,loading:false,spinner:false});
+    assert.deepEqual(result.active,{disabled:true,loading:true,spinner:true});
+    assert.deepEqual(result.still,result.active,'repeat click cannot retrigger loading');
+    assert.deepEqual(result.done,result.idle,'loading ends and button is restored');
+  });
+
+  await step('Stage4 File Upload, Bug attachment and Invite Team use real local interactions',async()=>{
+    const actual=await evaluate("(async function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const upload=doc.querySelector('[data-card=\"file-upload\"]');\n const report=doc.querySelector('[data-card=\"report-bug\"]');\n const invite=doc.querySelector('[data-card=\"invite-team\"]');\n function setFile(input,file){\n  const transfer=new DataTransfer();transfer.items.add(file);\n  input.files=transfer.files;input.dispatchEvent(new Event('change',{bubbles:true}));\n }\n const upInput=upload.querySelector('[data-pv-upload-input]');\n setFile(upInput,new File(['test'],'diagram.png',{type:'image/png'}));\n const selected=upload.querySelector('[data-pv-upload-status]').textContent;\n setFile(upInput,new File(['bad'],'unsafe.exe',{type:'application/octet-stream'}));\n const invalid=upload.querySelector('[data-pv-upload-status]').textContent;\n const drop=new DataTransfer();drop.items.add(new File(['pdf'],'plan.pdf',{type:'application/pdf'}));\n upload.querySelector('[data-pv-file-drop]').dispatchEvent(new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:drop}));\n const dropped=upload.querySelector('[data-pv-upload-status]').textContent;\n const bugInput=report.querySelector('[data-pv-bug-file-input]');\n setFile(bugInput,new File(['log'],'debug.txt',{type:'text/plain'}));\n const attached=report.querySelector('[data-pv-bug-file-status]').textContent;\n const before=invite.querySelectorAll('[data-pv-invite-rows]>div').length;\n invite.querySelector('[data-pv-invite-add]').click();\n const after=invite.querySelectorAll('[data-pv-invite-rows]>div').length;\n const newRow=invite.querySelector('[data-pv-invite-rows]>div:last-child');\n const hasRealSelect=!!newRow.querySelector('.qxframe9a7c2-select');\n const email=newRow.querySelector('input').placeholder;\n invite.querySelector('[data-pv-invite-copy]').click();\n await new Promise(resolve=>setTimeout(resolve,160));\n const copied=invite.querySelector('[data-pv-invite-copy-status]').textContent;\n return {selected,invalid,dropped,attached,before,after,hasRealSelect,email,copied};\n})()");
+    assert.match(actual.selected,/Selected: diagram\.png.*not uploaded/,'file selection not presented as server upload');
+    assert.match(actual.invalid,/Choose a PNG, JPG or PDF/,'file type validated');
+    assert.match(actual.dropped,/Selected: plan\.pdf/,'drag and drop accepted');
+    assert.match(actual.attached,/Attached locally: debug\.txt/,'bug attachment updates visible status');
+    assert.equal(actual.before,2,'Invite Team has two original rows');
+    assert.equal(actual.after,3,'Add another appends a third row');
+    assert.equal(actual.hasRealSelect,true,'new row mounts QX Select');
+    assert.equal(actual.email,'name@example.com');
+    assert.match(actual.copied,/Invite link copied|Invite link selected; use Ctrl\+C/,'copy action gives truthful feedback');
+    // This test deliberately clicked/focused inputs inside Preview 02 iframe.
+    // Return keyboard origin to the Create host before the next test sends
+    // the host-level "O" import shortcut; typing in iframe must NOT forward it.
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+    assert.equal(await evaluate('document.activeElement.tagName'),'BUTTON','host keyboard origin restored');
+  });
+
+
+  await step('Stage4 Shipping Address and Feedback Form validate and report local-only actions',async()=>{
+    const actual=await evaluate("(function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const address=doc.querySelector('[data-card=\"shipping-address\"]');\n const feedback=doc.querySelector('[data-card=\"feedback-form\"]');\n const street=address.querySelector('#pv-address-street');\n const city=address.querySelector('#pv-address-city');\n const zip=address.querySelector('#pv-address-zip');\n const save=address.querySelector('[data-pv-address-save]');\n const cancel=address.querySelector('[data-pv-address-cancel]');\n const addressStatus=address.querySelector('[data-pv-address-status]');\n save.click();\n const emptyAddress=addressStatus.textContent, firstFocused=doc.activeElement===street;\n street.value='1 Main Street';city.value='Chicago';zip.value='60601';\n save.click();\n const validAddress=addressStatus.textContent;\n const stateLabel=address.querySelector('label[for=\"pv-address-state\"]');\n stateLabel.click();\n const selectFocus=doc.activeElement?.id==='pv-address-state';\n cancel.click();\n const canceledAddress=addressStatus.textContent;\n const clear=street.value===''&&city.value===''&&zip.value===''&&address.querySelector('input[type=\"checkbox\"]').checked;\n const topic=feedback.querySelector('#pv-form-topic');\n const message=feedback.querySelector('#pv-form-message');\n const submit=feedback.querySelector('[data-pv-feedback-submit]');\n const status=feedback.querySelector('[data-pv-feedback-status]');\n submit.click();\n const emptyTopic=status.textContent,topicFocused=doc.activeElement===topic;\n topic.value='Billing';topic.dispatchEvent(new Event('change',{bubbles:true}));\n submit.click();const emptyMessage=status.textContent,messageFocused=doc.activeElement===message;\n message.value='Detailed user feedback';\n submit.click();const validFeedback=status.textContent;\n return {emptyAddress,firstFocused,validAddress,selectFocus,canceledAddress,clear,emptyTopic,topicFocused,emptyMessage,messageFocused,validFeedback};\n})()");
+    assert.match(actual.emptyAddress,/required before saving/);
+    assert.equal(actual.firstFocused,true,'invalid address focuses missing Street field');
+    assert.match(actual.validAddress,/checked locally; not saved to a server/);
+    assert.equal(actual.selectFocus,true,'State label forwards focus to actual QX Select root');
+    assert.match(actual.canceledAddress,/discarded locally/);
+    assert.equal(actual.clear,true,'Cancel restores unsaved fields');
+    assert.match(actual.emptyTopic,/Select a topic/);
+    assert.equal(actual.topicFocused,true,'missing topic is focused');
+    assert.match(actual.emptyMessage,/Enter feedback/);
+    assert.equal(actual.messageFocused,true,'missing feedback is focused');
+    assert.match(actual.validFeedback,/validated locally; not submitted to a server/);
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
+
+  await step('Stage4 five Preview02 local-only action flows: validation, focus and state',async()=>{
+    const actual=await evaluate("(() => {\n"+
+      "const d=document.querySelector('[data-create-frame]').contentDocument,c=id=>d.querySelector('[data-card=\"'+id+'\"]');\n"+
+      "const bug=c('report-bug'),title=bug.querySelector('[data-pv-bug-title]'),steps=bug.querySelector('[data-pv-bug-steps]'),bugButton=bug.querySelector('[data-pv-bug-submit]'),bs=bug.querySelector('[data-pv-report-bug-status]');\n"+
+      "bugButton.click();const missingTitle=bs.textContent,titleFocus=d.activeElement===title;\n"+
+      "title.value='Broken UI';bugButton.click();const missingSteps=bs.textContent,stepsFocus=d.activeElement===steps;\n"+
+      "steps.value='Click save';bugButton.click();const validBug=bs.textContent;\n"+
+      "const inv=c('invite-team'),emails=[...inv.querySelectorAll('[data-pv-invite-rows] input')],invButton=inv.querySelector('[data-pv-invite-send]'),iv=inv.querySelector('[data-pv-invite-team-status]');\n"+
+      "emails[0].value='invalid';invButton.click();const invalidEmail=iv.textContent,emailFocus=d.activeElement===emails[0];\n"+
+      "emails.forEach((e,i)=>e.value='person'+i+'@example.com');invButton.click();const validEmail=iv.textContent;\n"+
+      "const profile=c('github-profile'),ps=profile.querySelector('[data-pv-github-profile-status]');profile.querySelector('[data-pv-profile-save]').click();const savedProfile=ps.textContent;profile.querySelector('input').dispatchEvent(new Event('input',{bubbles:true}));const clearedProfile=ps.hidden;\n"+
+      "const activity=c('contributions-activity'),as=activity.querySelector('[data-pv-contributions-activity-status]'),privateInput=activity.querySelector('input[type=\"checkbox\"]');privateInput.checked=false;activity.querySelector('[data-pv-activity-save]').click();const publicState=as.textContent;privateInput.checked=true;privateInput.dispatchEvent(new Event('change',{bubbles:true}));const clearedActivity=as.hidden;activity.querySelector('[data-pv-activity-save]').click();const privateState=as.textContent;\n"+
+      "const booking=c('book-appointment'),slots=[...booking.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')],bookButton=booking.querySelector('[data-pv-appointment-book]'),bookStatus=booking.querySelector('[data-pv-book-appointment-status]');slots.forEach(b=>{if(b.classList.contains('is-active'))b.click()});bookButton.click();const missingBooking=bookStatus.textContent;slots[0].click();slots[2].click();bookButton.click();const validBooking=bookStatus.textContent;\n"+
+      "return {missingTitle,titleFocus,missingSteps,stepsFocus,validBug,invalidEmail,emailFocus,validEmail,savedProfile,clearedProfile,publicState,clearedActivity,privateState,missingBooking,validBooking};\n"+
+      "})()");
+    assert.match(actual.missingTitle,/Enter a bug title/);
+    assert.equal(actual.titleFocus,true);
+    assert.match(actual.missingSteps,/steps to reproduce/);
+    assert.equal(actual.stepsFocus,true);
+    assert.match(actual.validBug,/validated locally; not submitted/);
+    assert.match(actual.invalidEmail,/valid email/);
+    assert.equal(actual.emailFocus,true);
+    assert.match(actual.validEmail,/invitations validated locally; no invitations sent/);
+    assert.match(actual.savedProfile,/not saved to a server/);
+    assert.equal(actual.clearedProfile,true);
+    assert.match(actual.publicState,/public.*not saved/);
+    assert.equal(actual.clearedActivity,true);
+    assert.match(actual.privateState,/private.*not saved/);
+    assert.match(actual.missingBooking,/Select at least one/);
+    assert.match(actual.validBooking,/2 appointment time\(s\) selected locally; no booking sent/);
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
+  await step('Stage4 real waveform microphone permission/lifecycle and InviteMembers navigation',async()=>{
+    const actual=await evaluate("(async function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const frame=doc.defaultView;\n const card=doc.querySelector('[data-card=\"live-waveform\"]');\n const buttons=Object.fromEntries(['listen','process','mode'].map(k=>[k,card.querySelector('[data-pv-wave-action=\"'+k+'\"]')]));\n const status=card.querySelector('[data-pv-wave-status]');\n const visual=card.querySelector('[data-pv-wave-visual]');\n const snapshot=()=>({\n  state:visual.getAttribute('data-pv-wave-state'),\n  mode:visual.getAttribute('data-pv-wave-mode'),\n  listen:buttons.listen.textContent.trim(),\n  process:buttons.process.textContent.trim(),\n  modeLabel:buttons.mode.textContent.trim(),\n  message:status.textContent\n });\n const initial=snapshot();\n let requests=0,stopped=0,closed=0;\n const media=frame.navigator.mediaDevices;\n const original=media?.getUserMedia;\n const OriginalContext=frame.AudioContext;\n if(!media)throw new Error('mediaDevices missing in localhost test');\n media.getUserMedia=()=>{requests++;return Promise.reject(Error('test permission denied'))};\n try{\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const denied=snapshot(),afterDenied=requests;\n  media.getUserMedia=()=>{requests++;return Promise.resolve({getTracks:()=>[{stop(){stopped++}}]})};\n  frame.AudioContext=class {\n    createAnalyser(){return {frequencyBinCount:128,fftSize:256,smoothingTimeConstant:0.8,getByteFrequencyData(a){a.fill(90)}}}\n    createMediaStreamSource(){return {connect(){}}}\n    close(){closed++;return Promise.resolve()}\n  };\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const live=snapshot();\n  const rect=card.querySelector('.pv-wave rect').getAttribute('height');\n  buttons.mode.click();\n  const scrolling=snapshot();\n  buttons.listen.click();\n  const stoppedState=snapshot();\n  buttons.process.click();\n  const idle=snapshot();\n  buttons.process.click();\n  const processing=snapshot();\n  let finishRequest;\n  media.getUserMedia=()=>{requests++;return new Promise(resolve=>{finishRequest=resolve})};\n  buttons.listen.click();\n  const pending=buttons.listen.disabled;\n  buttons.process.click();\n  const cancelRestored=!buttons.listen.disabled;\n  finishRequest({getTracks:()=>[{stop(){stopped++}}]});\n  await new Promise(r=>setTimeout(r,65));\n  const afterLateStream=snapshot();\n  const lateStreamStopped=stopped;\n  const invite=doc.querySelector('[data-pv-jump-invites]');\n  const target=doc.querySelector('[data-card=\"invite-team\"] [data-pv-invite-add]');\n  invite.click();\n  const focused=doc.activeElement===target;\n  return {initial,denied,afterDenied,live,rect,scrolling,stoppedState,idle,processing,requests,stopped,closed,focused,pending,cancelRestored,afterLateStream,lateStreamStopped};\n }finally{\n  media.getUserMedia=original;\n  frame.AudioContext=OriginalContext;\n }\n})()");
+    assert.equal(actual.initial.state,'processing');
+    assert.equal(actual.initial.mode,'static');
+    assert.equal(actual.afterDenied,1,'microphone requested only on click');
+    assert.equal(actual.denied.state,'processing','permission denied never claims live microphone');
+    assert.match(actual.denied.message,/permission denied/,'error is visible');
+    assert.equal(actual.live.state,'listening','actual stream and analyser were started');
+    assert.equal(actual.live.listen,'Stop Listening');
+    assert.match(actual.live.message,/Live microphone input.*not recorded or uploaded/);
+    assert.equal(actual.requests,3,'two live attempts plus canceled pending microphone prompt');
+    assert.equal(actual.scrolling.mode,'scrolling');
+    assert.equal(actual.scrolling.modeLabel,'Scrolling');
+    assert.equal(actual.stoppedState.state,'idle');
+    assert.equal(actual.stopped,2,'stop releases live track and canceled late stream');
+    assert.equal(actual.closed,1,'stop closes audio context');
+    assert.equal(actual.idle.state,'processing');
+    assert.equal(actual.processing.state,'idle');
+    assert.equal(actual.pending,true,'permission pending disables Start');
+    assert.equal(actual.cancelRestored,true,'canceling permission restores Start');
+    assert.equal(actual.afterLateStream.state,'processing','late response cannot override state');
+    assert.equal(actual.lateStreamStopped,2,'canceled late stream stops its track');
+    assert.equal(actual.focused,true,'InviteMembers action focuses real InviteTeam button');
+    // Leave host keyboard origin for existing CreateApp shortcuts.
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
+
+  await step('Stage4 ten-card batch: local PDF, environment draft, agent state, query modal, charts and 404 search',async()=>{
+    const actual=await evaluate("(async function(){\nconst doc=document.querySelector('[data-create-frame]').contentDocument;\nconst card=id=>doc.querySelector('[data-card=\"'+id+'\"]');\nconst action=name=>doc.querySelector('[data-pv-action=\"'+name+'\"]');\nconst required=['invoice-pdf','invoice-pay','env-edit','env-deploy','agent-cancel','agent-enable','obs-query','anomaly-upgrade','traffic-report','sleep-detail','fitness-detail','analytics-detail','notfound-home'];\nconst hooks=required.map(name=>!!action(name));\nlet actualPdf='';\nconst win=doc.defaultView, originalCreate=win.URL.createObjectURL;\nwin.URL.createObjectURL=function(blob){blob.text().then(x=>actualPdf=x);return originalCreate.call(this,blob)};\ntry{action('invoice-pdf').click()}finally{win.URL.createObjectURL=originalCreate}\nawait new Promise(r=>setTimeout(r,80));\nconst invoice=card('invoice').querySelector('[data-pv-action-status]')?.textContent;\naction('env-edit').click();\nconst envInput=card('environment-variables').querySelector('[data-pv-env-api] input');\nconst editing=!!envInput;envInput.value='bad-url';action('env-edit').click();\nconst invalid=card('environment-variables').querySelector('[data-pv-action-status]').textContent;\nenvInput.value='https://api.qa.local';action('env-edit').click();\nconst saved=card('environment-variables').querySelector('[data-pv-env-api]').textContent;\naction('agent-cancel').click();const agent=card('activate-agent-dialog').querySelector('[data-pv-action-status]').textContent;\naction('obs-query').click();const query=!!doc.querySelector('#pv-obs-query-text');\nconst close=[...doc.querySelectorAll('.qxframe9a7c2-modal-root button')].find(x=>x.textContent.trim()==='Close');\nif(close)close.click();\nawait new Promise(r=>setTimeout(r,280));\naction('anomaly-upgrade').click();const focus=doc.activeElement===action('obs-query');\nconst search=card('not-found').querySelector('[data-pv-local-search]');\nsearch.value='sleep';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst found=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nsearch.value='unlikely-xyz-card';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst missing=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nreturn {hooks,actualPdf,invoice,editing,invalid,saved,agent,query,focus,found,missing};\n})()");
+    assert.ok(actual.hooks.every(Boolean),'all 13 actions are wired');
+    assert.ok(actual.actualPdf.startsWith('%PDF-1.4'),'PDF bytes produced locally');
+    assert.match(actual.invoice,/PDF generated locally/);
+    assert.equal(actual.editing,true);
+    assert.match(actual.invalid,/valid HTTPS/);
+    assert.equal(actual.saved,'https://api.qa.local');
+    assert.match(actual.agent,/not enabled/);
+    assert.equal(actual.query,true);
+    assert.equal(actual.focus,true);
+    assert.match(actual.found,/sleep-report/);
+    assert.match(actual.missing,/No matching/);
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
   await step('import errors are reported and keep the current configuration', async () => {
     const before = JSON.stringify((await state()).config);
     await key('o');

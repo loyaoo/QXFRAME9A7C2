@@ -1,3 +1,97 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S4 Preview 02 owner accepted; Stage 4 closeout (CI pending for documentation-only commit)
+- Owner explicitly confirmed **all 31 Preview 02 Cards have been inspected and are acceptable** (2026-10-11: “卡片都验收了没问题，继续”). Stage 4 Card visual/interaction acceptance is complete (31/31). Do not reopen pixel-only comparisons to shadcn or repeat accepted Stage 3/4 repairs.
+- Previous exact green development HEAD `7cb643cbe70c89f01c250d1432737ec1e3b6d815`, Git tree `ea963b33cdc555501708febdcc0a7320b6154071`: QXFRAME CI #38140220682 SUCCESS; CSS Schema Acceptance #38140220688 SUCCESS; official complete `dist+docs` artifact #11702368628. The prior successful 10-Card Windows bundle was provided to owner.
+- This closeout batch changes ONLY persistent documentation and packaging acceptance wording (plus its static verification). It does not change 31 Preview 02 cards, Preview 01, qxframe.js, framework CSS, user-approved geometry, tokens, or live QA geometry. Historical 10 Card/14 region QA annotations remain the latest actual code-change batch in offline ZIP only; no newly invented visual fixes.
+- PR #266 must remain OPEN/DRAFT/UNMERGED. The owner's Card acceptance is NOT explicit permission to merge, switch PR to Ready, modify main/backup, or begin Stage 5. Await separate express authorization for those actions.
+- Next exact step: verify QXFRAME CI and CSS Schema on THIS documentation commit and the same-tree official complete artifact; create and verify the final Windows Stage 4 package (CRC, SHA256, 8/8 localhost HTTP, HEAD/tree, 31-card pages). Report Stage 4 owner Card acceptance 100%, technical closeout pending green CI; CREATEAPP-V3 overall engineering estimate ~87% before Stage 5.
+## CURRENT — 2026-10-11 Stage4 five-card action batch (CI pending)
+- Previous verified HEAD `69ccfbc6f2f1e1433a7730385fb3c3fb676c7eff`: QXFRAME #38136713869 and CSS Schema #38136713870 both SUCCESS; previous Windows artifact #11701771163 delivered. PR #266 Draft, main/backup untouched.
+- Five actual disconnected actions wired in Preview 02: Report Bug Submit, Invite Team Send (dynamic rows included), GitHub Profile Save, Contributions Activity Save, Book Appointment. Existing QX controls only; local validation/state, no invented backend; no Stage3 regression or pixel chase.
+- QA ledger ONLY five cards / 10 changed regions; Chromium behavioral regression added and static acceptance updated accordingly. Previous highlighting removed. State before full new CI.
+- Next exact step: verify latest dual CI, fix actual failures, fetch same-HEAD official Actions dist+docs artifact, build Windows offline ZIP and independently validate CRC/8 HTTP routes/SHA256. Stage4 estimate ~50%, CREATEAPP-V3 ~85%; Stage5 deferred.
+
+## CURRENT — 2026-10-11 Stage4 local form verification gate correction (CI pending)
+- Previous HEAD d54c8e262cdd8c560283ea77c5ae670a3ce2d9d1 QXFRAME #38136570810 release failed solely at stale offline QA ledger assertion: shipping-address was intentionally highlighted in the NEW batch but was still prohibited by an old negative regex. The same QA overlay retained last batch caption; both corrected, without relaxing the requirement that previous live-waveform/no-team-members regions are absent.
+- Preserve actual new Shipping Address / Feedback Form behavior, chromium cases and two Card/four region markers. Old official 6a287e2f Windows ZIP remains the prior verified handoff; this batch requires exact-new-head dual-green and new artifact before new local ZIP.
+- PR #266 remains Draft/open/unmerged; main/backup untouched; Stage5 deferred.
+
+## CURRENT — 2026-10-11 Stage4 shipping address + feedback form batch (new CI pending)
+- Prior verified successful HEAD 6a287e2fce9fa2008accb441936c83e4f48405bb, tree b426e8331473047469ed41df75d531518894b2eb: QXFRAME #38134387495 SUCCESS; CSS Schema #38134387460 SUCCESS; official complete dist+docs artifact #11701071429 downloaded and independently packaged as Windows Stage4 offline QA ZIP, CRC PASS and 8/8 local HTTP 200. QA overlay local-only and restricted to prior Live Waveform/No Team Members batch (2 Cards/3 regions).
+- Newly confirmed disconnected local actions: Shipping Address Save/Cancel, Feedback Form Submit. Added explicit local validation, truthful not-sent messages, proper FieldLabel targets (including QX Select focus root), cancel reset via mounted Select API. No backend, no invented persistence, no framework CSS/token changes.
+- New Chromium regression covers missing/valid values, cancellation resets, Select label focus, truthful statuses. New batch offline highlighter shows ONLY Shipping Address/Feedback Form 2 Cards/4 regions; previous waveform/Invite CTA markers removed, prior behavior fixes retained.
+- PR #266 stays Draft, no merge; main/backup unchanged. New exact-head dual CI and corresponding full Actions artifact Windows ZIP remain REQUIRED before new batch acceptance. Stage4 engineering estimate ~40% pending CI; overall CREATEAPP-V3 ~85% estimate pending remaining Stage4/Stage5.
+- Next: verify new HEAD dual CI, fix failures, create and validate new full Windows dist+docs artifact ZIP. Resume real issues only; do not repeat Stage3 pixel audit.
+
+## CURRENT — 2026-10-11 Stage4 microphone pending permission cancellation race (CI pending)
+- Parent 10e4385403b2750b629bb28d6a4349907b5524bc added real LiveWaveform microphone and InviteMembers cross-card interaction.
+- Pre-CI race identified: switching to Processing while getUserMedia permission is pending invalidates request generation but its finally skips UI reset; Start Listening could remain disabled. Fixed stopMedia to re-enable Start immediately, added Chromium deferred permission promise test: cancel, check button active, stop late stream, preserve Processing state.
+- Exact-head dual-green CI / official Windows artifact required. PR #266 Draft/unmerged; main/backup untouched.
+
+## CURRENT — 2026-10-11 Stage4 real waveform/audio media and cross-card invite CTA (CI pending)
+- Previous exact green Stage4 15bcdfc91374e40728bd8a7ac3549e44e313f994: QXFRAME #38132983920 and CSS Schema #38132983937 both SUCCESS, 31x16 = 496 source-preview cards collected.
+- Owner prohibits pixel-perfect changes to approved QX controls. New functional source gap: Live Audio Waveform source actually requests microphone on Start, stops tracks, toggles simulated Processing, and switches Static/Scrolling. QX preview previously had a fixed SVG and three inert Buttons. Implemented stateful local SVG waveform using native getUserMedia+WebAudio analyser only after user click, no recording or upload. Permission denial shows real error; stopping/unloading releases tracks and AudioContext. Processing is explicitly marked simulated, not falsely claimed microphone audio.
+- No Team Members Invite Members previously inert: now brings the existing Invite Team card into view and focuses the real Add another QX Button; no invented remote send.
+- Added static gate and Chromium mic deny/success stubs, stop resource checks, mode/processing transitions and cross-card focus. Current QA highlights ONLY 2 cards / 3 regions (live-waveform, no-team-members). Prior local upload/invite highlights erased.
+- Await exact-head dual-green CI, official Windows full dist+docs artifact/zip. PR #266 Draft, do not merge; main/backup and Stage5 untouched.
+
+## CURRENT — 2026-10-11 Stage4 iframe focus test boundary fix (CI pending)
+- Previous HEAD f848bbf6eb14a97db02e06abb9973a50d33f0ddf, QXFRAME #38132718677 geometry 496 + Windows success; CSS Schema #38132718763 failed AFTER new Stage4 file/upload/invite Chromium test PASSED. Subsequent old import shortcut test timed out because new InviteTeam copy fallback focused and selected a URL input INSIDE Preview02 iframe; by design keyboard shortcuts are not forwarded from an input. No production bug.
+- Browser test now explicitly focuses a visible enabled BUTTON in CreateApp host and asserts that focus has returned to host before old import shortcut fires. Retains strict file type/drop, dynamic QX Select and copy fallback assertions.
+- Await exact-new-head dual CI and official offline artifact. PR #266 remains Draft, main/backup unchanged.
+
+## CURRENT — 2026-10-11 Stage4 Preview02 local file/invite actual behavior (CI pending)
+- Previous Stage4 exact green HEAD eb2cea4c2fcf0c1dcee5f0eefface381dd296de2, QXFRAME #38130513582 success, CSS Schema #38130513577 success, 496 source-preview-geometry passing.
+- Owner: do not chase shadcn pixel parity; retain approved QX controls. Real remaining stage4 defects: File Upload browse/drop button inert; Report Bug Attach File inert; Invite Team Add another inert; Invite link copy icon inert. Source is static demo but button actions advertise capabilities, so restore local behaviors without inventing server API results.
+- File Upload: real native file chooser, drop target, PNG/JPG/PDF and 10MiB client selection validation, local-only status not success. Report Bug native attachment input with local file name status, no fake server upload. Invite Team Add another adds a new framework Input plus separately constructed C.Select controller (do not clone mounted DOM); copy existing invite URL through Clipboard API, with text-selection fallback.
+- Chromium end-to-end tests exercise change/drop, invalid extensions, QX Select new row, clipboard feedback. Static gate updated. This round ONLY 3 Cards / 4 QA highlights: file-upload, report-bug, invite-team. Previous Typography/UIElements/Codespaces highlights cleared.
+- PR #266 Draft/unmerged, main/backup unchanged; Stage5 not started. Full exact-new-head dual CI and Windows dist+docs offline ZIP pending.
+
+## CURRENT — 2026-10-11 Stage4 practical four-card display/dialog/feedback batch (CI pending)
+- Prior Stage4 HEAD c94c1743db21b9351b709d947d28bb617e9b68fa, QXFRAME #38129351970 SUCCESS and CSS Schema #38129351952 SUCCESS; Stage4 31 cards × 16 styles 496/496 geometry.
+- Audited original pinned shadcn source: TypographySpecimen Share Feedback opens Dialog with Name/Email/Category/Message; UIElements Alert Dialog opens Allow Accessory confirmation; Codespaces Create action has 2-second loading/disabled state. Current Preview02 had both data-pv-dialog triggers disconnected and Codespaces static Button. These are actual missing functionality, not shadcn pixel differences.
+- Preview typography was showing Chinese menu labels (无衬线) inside English/system-font sample; actual screenshot rendered tofu squares. Display English readable font category names only in Preview payload; retain Chinese generator picker labels, system font stacks and all approved QX sizing.
+- Reused existing C.Modal.create and QX Field/native Select/Input/Textarea for both dialogs; no new custom Overlay or CSS. QX Button spinner and is-loading projection for Codespaces.
+- Added static and Chromium real modal open/cancel/action-content and Codespaces 2s loading sequence. Current QA highlights only 5 changes in 4 Preview02 cards: style-overview, typography-specimen, ui-elements, codespaces-card. Previous Codespaces Local and BookAppointment highlight removed.
+- Next dual CI exact HEAD and full official dist+docs Windows offline bundle. PR #266 remains Draft/no merge, main/backup unchanged. Stage4 ~25% after verified; overall ~83% estimated. Stage5 not started.
+
+## CURRENT — 2026-10-11 Stage4 browser regression test literal syntax corrected (CI pending)
+- Prior 33b9b982632181a420d97891921891cc8e131b8a Release static gate failed due a test-internal comment inserted as literal newlines inside a JSON-escaped Runtime.evaluate argument (invalid JavaScript source), not a product defect. Removed only the inline comment, preserving target .qxframe9a7c2-tabs-tab-action and all Codespaces and BookAppointment assertions.
+- Earlier CSS Schema on c5d23c29 failed because it clicked decorative Surface instead of real QX inner action. Need exact-new-head dual-green CI, then full Windows offline bundle. Stage4 #266 remains Draft, no merge.
+
+## CURRENT — 2026-10-11 Stage4 QX Tabs event target correction (CI pending)
+- Prior HEAD c5d23c29f97f55832bd3aa24b098afe0352b592e: CSS Schema #38128876105 real Chromium failed the NEW Stage4 Codespaces test at expected outer panel switch, because the test clicked `.qxframe9a7c2-tabs-tab` (non-interactive surface shell) not the actual framework button `.qxframe9a7c2-tabs-tab-action` (which owns private tabsKey and click handler). Source src/components/tabs.js createTab()/DOM.listen proves real event contract. Corrected test click target without changing production CSS or TS. Keep strong outer+inner content and 4-slot selection expectations unchanged.
+- Windows tools and Stage4 496/496 geometry passed on former HEAD. Await exact-new-head two-green CI; PR #266 Draft/no merge.
+
+## CURRENT — 2026-10-11 Stage4 real Chromium and static gates added (CI pending)
+- Parent 74d1d63d18cab847a11642ff3accdbde4994afe5 restored Codespaces Local clone panel via nested QX Tabs and BookAppointment 4 independent slots.
+- Extended static verifier to current two-region QA ledger and nested controls DOM/source checks.
+- Added real createApp Chromium Stage4 5 Codespaces panel transitions (outer and inner preserve state), plus BookAppointment zero/one/multiple 4-slot interaction, checked CSS class and pressed state. No source shadcn pixel matching.
+- New exact-head dual CI required; correct any real failures then ship official full Windows offline dist+docs.
+
+## CURRENT — 2026-10-11 Stage4 real functional fixes (CI pending)
+- PR #266 Draft/open, preceding head 2e3eb2406a0faa09696dfae530eeb5c3aade1e26, Stage4 QXFRAME #38127372265 and CSS Schema #38127372258 success; Stage4 source/QX 31x16 same-Chromium comparisons mapped 496/496, no page JS errors.
+- Stage3 PR #265 merged into main 0b2c931. User policy: QX approved component differences are NOT bugs; no pixel-perfect shadcn rework.
+- Real Stage4 issues: Codespaces Local tab previously had no separate panel, despite source HTTPS/SSH/CLI nested content; BookAppointment 4 time buttons were authored static, missing multiple-selection behavior.
+- Add Local panel with QX nested Tabs and framework InputGroup (reference copy and descriptions). Shared preview Tabs activation now acts only on direct child panel siblings to preserve nested QX Tabs and Stage3 FAQ. BookAppointment multiple toggle delegation projects on existing QX Button.is-active + aria-pressed, allowing 0..4 active slots. No JS runtime framework changes.
+- QA ledger current batch ONLY Codespaces and BookAppointment two Preview02 cards; remove old GitHub-profile highlight. Add strict static/Chromium click tests next, verify 2 CI, official exact-head complete Windows dist+docs ZIP.
+- Stage4 ~15% estimate after validation, overall ~81%, Stage5 not begun.
+
+## CURRENT — 2026-10-11 Stage 3 merged; Stage 4 owner-approved QX-priority acceptance (CI pending)
+- Stage3 PR #265 merged into main by explicit owner authorization: merge 0b2c9310712ad73a9f2d279a9c3cfb2bc468e7d6, previous Stage3 HEAD 75fbacfd48a85a957f3c0c712bc34bafb3ece061; both QXFRAME #38125642688 and CSS Schema #38125642536 were SUCCESS. Stage3 practical acceptance DONE; not a 100% pixel-equivalence claim.
+- Owner's definitive Stage4 policy: Preview 02 is NOT pixel-perfect shadcn reproduction. All previously approved/modified QX components may change Card size/paint and are **not** bugs. Repair only real theme/contrast/layout/overflow/state/interaction/regression or component-ownership defects. Avoid fixed Card heights and needless shadow/radius/token rewrites. Stage4 should move quickly by shared fixes.
+- Stage4 PR #266 Draft branch redesign/create-stage4; merge main into branch as second parent, preserving Stage4 work. Do NOT merge #266 without explicit owner acceptance. Preserve main/backup contents.
+- Stage4 initial source-preview-geometry CI #38127104981 FAILED from tool bug: original pinned shadcn Preview does NOT expose Stage3 `data-qa-card`. It has seven source columns in fixed order and duplicate responsive UIElements (mobile hidden). Fixed Stage4 audit to wait for original `data-slot=capture-target` and map visible Card roots by pinned seven-column order only if exact column cardinality matches; otherwise report missing comparisons without guessing. Strict 31 real QX Cards × 16 themes, valid boxes and page errors; source pixel deltas diagnostic, not gates.
+- Next: exact-head Stage4 dual CI, fix any script defects, inspect remaining actual UI flaws, focused batch fixes/only-current-batch highlights, official Windows dist/docs offline package; Stage5 not started.
+- Estimates: CREATEAPP overall ~79% before Stage4, Stage3 accepted 100% practical milestone, Stage4 baseline setup ~10% (not actual card completion), Stage5 0%.
+
+## CURRENT — 2026-10-11 CREATEAPP-V3-S4 first batch: Preview 02 baseline (CI pending)
+- Owner confirmed Stage 3 Preview 01 real-world visual acceptance broadly passed and allowed progress to next Stage if no blockers. Previous Stage3 exact green HEAD 75fbacfd48a85a957f3c0c712bc34bafb3ece061, QXFRAME CI #38125642688 SUCCESS; CSS Schema #38125642536 SUCCESS. Official dist+docs offline Windows bundle delivered (artifact 11697731235).
+- Stage3 accepted as a practical visual gate, with **nonblocking** outstanding pixel-perfect secondary/nested Card audit and remaining full-component variants moved to Stage5. This is not a claim of 100% pixel identity. Stage3 PR #265 remains Open/Draft, NOT merged, untouched; main and backup unchanged.
+- Created Stage4 branch redesign/create-stage4 from exact Stage3 HEAD (stacked) to avoid premature merge or Stage3 source loss. Stage4 Draft PR targets main temporarily while Stage3 remains unmerged and will have Stage3 diff until #265 is merged. Stage4 user work is only Preview 02 card visual alignment, per v3 §8.2.
+- Stage4 baseline: exact 31-card Preview 02 inventory, separate pinned source-vs-QX one-Chromium 8 Styles × light/dark = 496 candidate comparisons, source QX nested Header/Content/Footer/Field/Item/Button observations and Nova screenshots. Report mismatches explicitly as diagnostics, no false full parity. Extend source-preview-geometry workflow to run new Stage4 audit only for Stage4 head while keeping Stage3 existing strict QA on Stage3 head.
+- Next exact steps: verify initial Stage4 draft PR CI and actual diagnostic report; group high-delta related Card/Field/Input/Select and layout fixes in Preview02, add strict sourced geometry gates as each shared family is corrected; deliver exact-HEAD Windows dist+docs bundle with only current-round highlighted Card regions after visual changes.
+- Engineering estimates prior CREATEAPP total ~79%, Stage3 practical gate accepted, Stage4 baseline setup ~5%, Stage5 0%. Do not prematurely merge #265 or stage4 PR; no Stage5 work yet.
+
 ## CURRENT — 2026-10-11 Chromium arrow contract updated for CSS base-select (CI pending)
 - Previous HEAD f3a2cb7f81387d6d414f4a290471cfc7cbde6d67 CSS Schema run #38125293855 reached real browser acceptance and verified newly added 64 Menu Picker cases, but failed an older browser test line 2368 insisting `appearance:none` on native Select; Chromium correctly computed `base-select` under the new opt-in.
 - Updated old assertion to require `base-select` on Select and its `::picker(select)`, plus `::picker-icon` display none, while preserving real SVG background-image arrow check. Does not weaken coverage or change CSS/geometry.

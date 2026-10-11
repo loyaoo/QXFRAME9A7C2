@@ -622,8 +622,13 @@ function previewPayload() {
     mode: state.mode,
     labels: (() => {
       const style = STYLES.find(item => item.value === config.style).label;
-      const body = FONTS.find(item => item.value === config.font).label;
-      const heading = config.fontHeading === 'inherit' ? null : HEADING_FONTS.find(item => item.value === config.fontHeading).label;
+      // Preview cards are English typography specimens: use readable font
+      // category names, not the Chinese menu labels (missing glyphs in the
+      // embedded/system sample fonts can render as empty squares).
+      // UI picker labels and the configured font stacks remain unchanged.
+      const previewFont = { system: 'System UI', sans: 'Sans-serif', serif: 'Serif', mono: 'Monospace' };
+      const body = previewFont[config.font] || 'System UI';
+      const heading = config.fontHeading === 'inherit' ? null : previewFont[config.fontHeading];
       return {
         'style-font': `${style} - ${heading && heading !== body ? heading : body}`,
         'heading-body': `${heading && heading !== body ? heading : 'Inherit'} - ${body}`

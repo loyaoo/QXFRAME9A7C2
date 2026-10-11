@@ -58,21 +58,22 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'github-profile':['.qxframe9a7c2-form-select']}; // Preview 02 native customizable select
+  assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
+  const current={"invoice":["[data-pv-action=\"invoice-pdf\"]","[data-pv-action=\"invoice-pay\"]"],"environment-variables":["[data-pv-action=\"env-edit\"]","[data-pv-action=\"env-deploy\"]"],"activate-agent-dialog":["[data-pv-action=\"agent-cancel\"]","[data-pv-action=\"agent-enable\"]"],"observability-card":["[data-pv-action=\"obs-query\"]"],"anomaly-alert":["[data-pv-action=\"anomaly-upgrade\"]"],"bar-chart-card":["[data-pv-action=\"traffic-report\"]"],"sleep-report":["[data-pv-action=\"sleep-detail\"]"],"weekly-fitness-summary":["[data-pv-action=\"fitness-detail\"]"],"analytics-card":["[data-pv-action=\"analytics-detail\"]"],"not-found":["[data-pv-local-search]","[data-pv-action=\"notfound-home\"]"]}; // Stage4 ten actual Preview02 action fixes
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
-  assert.doesNotMatch(ledger,/\['shipping-address'|\['contributions-activity'/,'last round Preview 02 highlights are cleared');
+  assert.doesNotMatch(ledger,/\['live-waveform'|\['no-team-members'|\['shipping-address'|\['feedback-form'|\['report-bug'|\['invite-team'|\['github-profile'|\['contributions-activity'|\['book-appointment'/,'previous Preview 02 highlights are cleared');
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only this round Preview 02 native Select is highlighted');
+  assert.equal(count,14,'only current Stage4 ten cards/fourteen regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -82,6 +83,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
+  assert.match(packager,/31 张 Preview 02 卡片已经用户人工验收通过/,'offline bundle must reflect Stage4 owner acceptance');
+  assert.doesNotMatch(packager,/尚待人工验收/,'do not ship stale pending Stage4 copy after owner acceptance');
   for(const page of ['index.html','preview-01.html','preview-02.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
@@ -425,6 +428,85 @@ check('Chromium native select picker inherits Menu colors and Popup geometry wit
     assert.ok(css.includes('--qxframe9a7c2-theme-'+token),'picker uses shared Theme token '+token);
   assert.match(css,/\.dark \.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:dark;/,'OS fallback uses dark color-scheme');
   assert.match(css,/\.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:light;/,'OS fallback light');
+});
+
+
+check('Stage 4 Preview 02 pinned 31-card inventory and same-browser audit entrypoint',()=>{
+  const html=read('preview-02.html');
+  const markers=[...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]);
+  const close=[...html.matchAll(/<!-- @end ([a-z0-9-]+) -->/g)].map(m=>m[1]);
+  const expected=["style-overview","typography-specimen","codespaces-card","invoice","icon-preview-grid","ui-elements","observability-card","shipping-address","environment-variables","bar-chart-card","invite-team","activate-agent-dialog","skeleton-loading","pie-chart-card","no-team-members","report-bug","contributors","feedback-form","book-appointment","sleep-report","github-profile","weekly-fitness-summary","file-upload","analytics-card","usage-card","shortcuts","anomaly-alert","live-waveform","visitors","contributions-activity","not-found"];
+  assert.deepEqual(markers,expected,'all 31 QX Preview 02 Cards remain ordered');
+  assert.deepEqual(close,expected,'each Stage 4 Card has explicit paired close marker');
+  const audit=fs.readFileSync(path.join(root,'tools/qa/preview-02-audit.mjs'),'utf8');
+  assert.match(audit,/item=preview&style=/,'Stage4 must use pinned reference Preview, not Stage3 Preview-02');
+  assert.match(audit,/docs\/create\/preview-02\.html/,'Stage4 must compare QX Preview 02');
+  assert.match(audit,/assert\.equal\(rows\.length,496/,'31 Cards times eight styles and two themes');
+  execFileSync(process.execPath,['--check',path.join(root,'tools/qa/preview-02-audit.mjs')],{stdio:'pipe'});
+});
+
+
+check('Stage4 Codespaces nested QX Tabs and BookAppointment multiple button state owner',()=>{
+ const page=read('preview-02.html');
+ const codespaces=page.slice(page.indexOf('<!-- @card codespaces-card -->'),page.indexOf('<!-- @end codespaces-card -->'));
+ const appointment=page.slice(page.indexOf('<!-- @card book-appointment -->'),page.indexOf('<!-- @end book-appointment -->'));
+ for(const name of ['codespaces','local','https','ssh','cli'])
+   assert.match(codespaces,new RegExp('data-pv-tab-panel="'+name+'"'),'real nested source tab panel '+name);
+ assert.match(codespaces,/data-pv-tab-group="codespaces"/,'outer QX Tabs');
+ assert.match(codespaces,/data-pv-tab-group="codespaces-local"/,'nested QX Tabs');
+ assert.match(appointment,/data-pv-multi-toggle="appointment"/,'authored multiple group');
+ assert.equal((appointment.match(/aria-pressed=/g)||[]).length,4,'4 independent time slots');
+ const runtime=read('preview-cards.js');
+ assert.match(runtime,/host\.parentNode\.children/,'QX Tabs only owns direct panels');
+ assert.match(runtime,/data-pv-multi-toggle/,'delegated real multiple choice Buttons');
+ assert.match(read('preview.css'),/\[data-pv-tab-panel\]\[hidden\]\s*\{\s*display:\s*none/,'nested Stack panels stay hidden');
+});
+
+
+check('Stage4 font labels, source dialogs and Codespaces loading are restored with existing QX components',()=>{
+ const app=read('app.js'),preview=read('preview-02.html'),runtime=read('preview-cards.js');
+ assert.match(app,/const previewFont = \{/,'display category names separate from Chinese Theme Picker labels');
+ for(const [id,key] of [['style-overview','style-font'],['typography-specimen','heading-body']]){
+   const card=preview.slice(preview.indexOf('<!-- @card '+id+' -->'),preview.indexOf('<!-- @end '+id+' -->'));
+   assert.ok(card.includes('data-pv-text="'+key+'"'),'live label binding in '+id);
+   assert.doesNotMatch(card,/无衬线|跟随正文/,'no missing CJK glyph labels in English sample '+id);
+ }
+ for(const kind of ['feedback','alert']) assert.ok(preview.includes('data-pv-dialog="'+kind+'"'),'source modal trigger '+kind);
+ assert.match(runtime,/C\.Modal\.create\(/,'reuse existing framework Modal, no fake overlay');
+ for(const role of ['Name','Email','Category','Message'])assert.ok(runtime.includes(role),'feedback content '+role);
+ assert.match(preview,/data-pv-create-codespace/,'Codespaces action wired');
+ assert.match(runtime,/button\.classList\.add\('is-loading'\)/,'framework Button loading state');
+ assert.match(runtime,/button\.classList\.remove\('is-loading'\)/,'loading recovery');
+ assert.match(runtime,/2000\)/,'pinned source two second action feedback');
+});
+
+
+check('Stage4 local file selection, attachment, and dynamic invite use real native/QX owners',()=>{
+ const page=read('preview-02.html'),runtime=read('preview-cards.js');
+ for(const attr of ['data-pv-file-drop','data-pv-upload-input','data-pv-upload-browse','data-pv-upload-status','data-pv-bug-file-input','data-pv-bug-attach','data-pv-bug-file-status','data-pv-invite-rows','data-pv-invite-add','data-pv-invite-copy'])
+   assert.ok(page.includes(attr),'Preview02 wires '+attr);
+ assert.match(runtime,/10 \* 1024 \* 1024/,'10 MiB max local file validation');
+ assert.match(runtime,/local preview only; not uploaded/,'local selection is never falsely presented as a remote upload');
+ assert.match(runtime,/Attached locally:/,'Bug attachment is locally chosen only');
+ assert.match(runtime,/C\.Select\.create\(\{\s*container: role/,'new invite row uses QX Select instance, not cloned DOM');
+ assert.match(runtime,/navigator\.clipboard\.writeText/,'copy supports native browser clipboard');
+ assert.match(runtime,/Invite link selected; use Ctrl\+C/,'copy failure remains actionable');
+});
+
+
+check('Stage4 waveform media lifecycle and InviteMembers cross-card focus are real behaviors',()=>{
+ const html=read('preview-02.html'),runtime=read('preview-cards.js');
+ for(const action of ['listen','process','mode'])
+   assert.ok(html.includes('data-pv-wave-action="'+action+'"'),'QX waveform button '+action);
+ assert.match(html,/data-pv-wave-visual/,'live waveform data state');
+ assert.match(html,/data-pv-jump-invites/,'invite CTA');
+ assert.match(runtime,/navigator\.mediaDevices\.getUserMedia\(\{audio:/,'microphone only on action');
+ assert.match(runtime,/getTracks\(\)\.forEach/,'stop all microphone tracks');
+ assert.match(runtime,/createMediaStreamSource\(stream\)\.connect\(analyser\)/,'actual analyser consumes live microphone stream');
+ assert.match(runtime,/window\.addEventListener\('pagehide'/,'release media and timer on unload');
+ assert.match(runtime,/waveState\.mode === 'static' \? 'scrolling' : 'static'/,'mode toggles static/scrolling');
+ assert.match(runtime,/target\.focus\(\{preventScroll:true\}\)/,'invite CTA focuses existing QX action');
+ assert.match(runtime,/not recorded or uploaded/,'local privacy disclosure');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{
@@ -1468,6 +1550,23 @@ check('CardFooter peer Button equal-width semantic only when editorial',()=>{
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0%':'0 1 auto')+';'),'theme peer action role '+style);
   }
+});
+
+
+check('Stage4 local-only forms use real labels, validation, QX Select and action feedback',()=>{
+  const html=read('preview-02.html'),js=read('preview-cards.js');
+  for(const card of ['shipping-address','feedback-form'])
+    assert.ok(html.includes('data-card="'+card+'"'),'form Card '+card);
+  for(const id of ['pv-address-street','pv-address-suite','pv-address-city','pv-address-state','pv-address-zip','pv-address-country','pv-form-topic','pv-form-message']){
+    assert.ok(html.includes('for="'+id+'"'),'FieldLabel points to '+id);
+    assert.ok(html.includes('id="'+id+'"') || html.includes('data-pv-label-id="'+id+'"'),'actual input or Select focus owner '+id);
+  }
+  for(const name of ['data-pv-address-save','data-pv-address-cancel','data-pv-address-status','data-pv-feedback-submit','data-pv-feedback-status'])
+    assert.ok(html.includes(name),'working form hook '+name);
+  assert.match(js,/previewSelects\.set\(host,mountedSelect\)/,'existing Select instance retained, no cloned controllers');
+  assert.match(js,/select\.setValue\(host\.getAttribute\('data-value'\) \|\| ''\)/,'Cancel restores authored QX Select');
+  assert.match(js,/Address checked locally; not saved to a server/,'address result cannot fake persistence');
+  assert.match(js,/Feedback validated locally; not submitted to a server/,'feedback result cannot fake submission');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

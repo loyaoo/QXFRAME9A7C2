@@ -21,7 +21,7 @@ artifact_arg, head, run_id, artifact_id, merge_sha, tree_sha = sys.argv[1:7]
 artifact = Path(artifact_arg).resolve()
 base = Path(sys.argv[7]).resolve() if len(sys.argv) > 7 else artifact.parent
 base.mkdir(parents=True, exist_ok=True)
-out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S3-dist-docs-LOCAL-' + head[:8] + '.zip')
+out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S4-dist-docs-LOCAL-' + head[:8] + '.zip')
 work = base / ('offline-QXFRAME9A7C2-' + head[:8])
 assert len(head) == len(merge_sha) == len(tree_sha) == 40
 shutil.rmtree(work, ignore_errors=True)
@@ -104,7 +104,7 @@ http.createServer((req,res)=>{
     '\nSame Git tree: ' + tree_sha + '\nQXFRAME run: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n', encoding='utf-8')
 (work / 'README-本地验收.md').write_text(
-    '# QXFRAME9A7C2 Stage3 Windows 离线验收\n\n'
+    '# QXFRAME9A7C2 Stage4 Windows 离线验收\n\n'
     '开发 HEAD: ' + head + '\nPR CI 合成 SHA: ' + merge_sha +
     '\n同一 Git tree: ' + tree_sha + '\nQXFRAME CI: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n\n'
@@ -120,9 +120,9 @@ http.createServer((req,res)=>{
     ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
     ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')
-    '未标注的卡片不代表已通过验收。\n\n'
+    '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
-    '此包未合并到 main，Stage 3 尚待人工验收。\n', encoding='utf-8')
+    'Stage 3 已合并；Stage 4 Preview 02 全部 31 张卡片已通过用户人工验收。此验收包来自 Draft PR #266，未经单独授权仍未合并 main，Stage 5 未启动。\n', encoding='utf-8')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass

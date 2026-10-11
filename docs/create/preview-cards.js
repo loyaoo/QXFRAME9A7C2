@@ -10,14 +10,16 @@
       return { value: parts[0], label: parts[1] === undefined ? parts[0] : parts[1] };
     });
   }
+  var previewSelects = new Map();
   document.querySelectorAll('[data-pv-select]').forEach(function (host) {
-    C.Select.create({
+    var mountedSelect = C.Select.create({
       container: host,
       items: pairs(host.getAttribute('data-options')),
       value: host.getAttribute('data-value') || undefined,
       placeholder: host.getAttribute('data-placeholder') || undefined,
       size: host.getAttribute('data-size') || 'md'
     });
+    previewSelects.set(host,mountedSelect);
     // A non-searchable QX Select owns a focusable div[tabindex], not an
     // input. Bridge source FieldLabel clicks to the QX-owned focus root.
     var focusId = host.getAttribute('data-pv-label-id');
@@ -86,7 +88,11 @@
     // The QX Tabs controller owns activation. Panels are authored framework
     // compositions, not a second tab implementation or duplicate styling.
     var group = host.getAttribute('data-pv-tab-group');
-    var panels = group ? Array.prototype.slice.call(host.parentNode.querySelectorAll('[data-pv-tab-panel]')) : [];
+    // Limit each Tabs' activation to DIRECT sibling panels. A nested Tabs owner
+    // must not have its panels hidden by the outer parent controller.
+    var panels = group ? Array.prototype.filter.call(host.parentNode.children, function (node) {
+      return node.hasAttribute('data-pv-tab-panel');
+    }) : [];
     if (panels.length) {
       options.onChange = function (activeKey) {
         panels.forEach(function (panel) { panel.hidden = panel.getAttribute('data-pv-tab-panel') !== String(activeKey); });
@@ -97,6 +103,431 @@
     if (host.hasAttribute('data-pv-equal')) tabs.getRootElement().classList.add('is-equal');
     if (panels.length) options.onChange(tabs.activeKey || options.defaultActiveKey);
   });
+  // Stage4 source Codespaces Create button: loading feedback for 2s,
+  // with QX Button's existing spinner, disabled paint, and no new Token.
+  document.querySelectorAll('[data-pv-create-codespace]').forEach(function (button) {
+    var timer = null;
+    button.addEventListener('click', function () {
+      if (button.disabled || timer) return;
+      var indicator = button.querySelector('.qxframe9a7c2-button-indicator');
+      button.disabled = true;
+      button.classList.add('is-loading');
+      if (indicator) indicator.hidden = false;
+      timer = window.setTimeout(function () {
+        timer = null;
+        button.disabled = false;
+        button.classList.remove('is-loading');
+        if (indicator) indicator.hidden = true;
+      }, 2000);
+    });
+  });
+
+  // Both source Preview 02 examples own a real Dialog/AlertDialog.
+  // Compose existing QX field/input/select and QX Modal rather than
+  // inventing a second overlay, shadow or FocusController.
+  var dialogs = {};
+  function makeFeedback() {
+    var content = document.createElement('div');
+    content.className = 'qxframe9a7c2-field-group';
+    content.innerHTML =
+      '<p class="qxframe9a7c2-form-description">Let us know how we can improve your experience.</p>' +
+      '<div class="qxframe9a7c2-flex is-wrap is-gap-3">' +
+      '<div class="qxframe9a7c2-form-field is-composed pv-grow"><label class="qxframe9a7c2-form-label" for="pv-feedback-name">Name</label><input id="pv-feedback-name" class="qxframe9a7c2-form-input" placeholder="Your name"></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed pv-grow"><label class="qxframe9a7c2-form-label" for="pv-feedback-email">Email</label><input id="pv-feedback-email" type="email" class="qxframe9a7c2-form-input" placeholder="you@example.com"></div></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label" for="pv-feedback-category">Category</label><select id="pv-feedback-category" class="qxframe9a7c2-form-select"><option value="general">General</option><option value="bug">Bug Report</option><option value="feature">Feature Request</option><option value="improvement">Improvement</option></select></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label" for="pv-feedback-message">Message</label><textarea id="pv-feedback-message" class="qxframe9a7c2-form-textarea" rows="4" placeholder="Tell us what\'s on your mind..."></textarea></div>';
+    return content;
+  }
+  document.querySelectorAll('[data-pv-dialog]').forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      if (!C.Modal) return;
+      var kind = trigger.getAttribute('data-pv-dialog');
+      if (!dialogs[kind]) {
+        var feedback = kind === 'feedback';
+        dialogs[kind] = C.Modal.create({
+          autoOpen: false,
+          width: feedback ? 480 : 400,
+          title: feedback ? 'Share Feedback' : 'Allow accessory to connect?',
+          content: feedback ? makeFeedback() : 'Do you want to allow the USB accessory to connect to this device and your data?',
+          buttons: feedback
+            ? [{ content:'Cancel', role:'cancel' },{ content:'Submit', role:'confirm' }]
+            : [{ content:"Don't allow", role:'cancel' },{ content:'Allow', role:'confirm' }]
+        });
+      }
+      dialogs[kind].open('preview');
+    });
+  });
+
+
+
+
+  // Stage4: real local-only actions for five Preview02 cards (no server API).
+  function localStatus(card,message) {
+    var node=card.querySelector('[data-pv-'+card.dataset.card+'-status]');
+    if(node){node.hidden=!message;node.textContent=message||'';}
+  }
+  var bugForm=document.querySelector('[data-card="report-bug"]');
+  if(bugForm){
+    var bugTitle=bugForm.querySelector('[data-pv-bug-title]');
+    var bugSteps=bugForm.querySelector('[data-pv-bug-steps]');
+    bugForm.querySelector('[data-pv-bug-submit]').addEventListener('click',function(){
+      if(!bugTitle.value.trim()){localStatus(bugForm,'Enter a bug title before submitting.');bugTitle.focus({preventScroll:true});return;}
+      if(!bugSteps.value.trim()){localStatus(bugForm,'Describe the steps to reproduce the issue.');bugSteps.focus({preventScroll:true});return;}
+      localStatus(bugForm,'Bug report validated locally; not submitted to a server.');
+    });
+    [bugTitle,bugSteps].forEach(function(input){input.addEventListener('input',function(){localStatus(bugForm,'');});});
+  }
+  var inviteForm=document.querySelector('[data-card="invite-team"]');
+  if(inviteForm){
+    var inviteRows=inviteForm.querySelector('[data-pv-invite-rows]');
+    inviteForm.querySelector('[data-pv-invite-send]').addEventListener('click',function(){
+      var inputs=Array.prototype.slice.call(inviteRows.querySelectorAll('input'));
+      var invalid=inputs.find(function(input){return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());});
+      if(invalid){localStatus(inviteForm,'Enter a valid email address for each invitee.');invalid.focus({preventScroll:true});return;}
+      localStatus(inviteForm,inputs.length+' invitations validated locally; no invitations sent.');
+    });
+    inviteRows.addEventListener('input',function(){localStatus(inviteForm,'');});
+  }
+  var profileForm=document.querySelector('[data-card="github-profile"]');
+  if(profileForm){
+    var profileFields=profileForm.querySelector('[data-pv-profile-fields]');
+    profileFields.addEventListener('submit',function(e){e.preventDefault();});
+    profileForm.querySelector('[data-pv-profile-save]').addEventListener('click',function(){
+      localStatus(profileForm,'Profile changes previewed locally; not saved to a server.');
+    });
+    ['input','change'].forEach(function(type){profileFields.addEventListener(type,function(){localStatus(profileForm,'');});});
+  }
+  var activityForm=document.querySelector('[data-card="contributions-activity"]');
+  if(activityForm){
+    var activityFields=activityForm.querySelector('[data-pv-activity-fields]');
+    var privacy=activityFields.querySelector('input[type="checkbox"]');
+    activityFields.addEventListener('submit',function(e){e.preventDefault();});
+    activityForm.querySelector('[data-pv-activity-save]').addEventListener('click',function(){
+      localStatus(activityForm,'Activity visibility '+(privacy.checked?'private':'public')+' previewed locally; not saved to a server.');
+    });
+    privacy.addEventListener('change',function(){localStatus(activityForm,'');});
+  }
+  var appointmentForm=document.querySelector('[data-card="book-appointment"]');
+  if(appointmentForm){
+    var slots=appointmentForm.querySelector('[data-pv-multi-toggle="appointment"]');
+    appointmentForm.querySelector('[data-pv-appointment-book]').addEventListener('click',function(){
+      var active=slots.querySelectorAll('button.is-active');
+      if(!active.length){localStatus(appointmentForm,'Select at least one appointment time.');slots.querySelector('button').focus({preventScroll:true});return;}
+      localStatus(appointmentForm,active.length+' appointment time(s) selected locally; no booking sent to a server.');
+    });
+    slots.addEventListener('click',function(){localStatus(appointmentForm,'');});
+  }
+
+  // Stage4 practical form interactions: preserve authored QX fields/Select and
+  // validate locally. These examples have NO submission or persistence API.
+  var addressCard = document.querySelector('[data-card="shipping-address"]');
+  if (addressCard) {
+    var addressInputs = Array.prototype.slice.call(addressCard.querySelectorAll('[data-pv-address-fields] input[type="text"]'));
+    var addressStatus = addressCard.querySelector('[data-pv-address-status]');
+    var addressCheckbox = addressCard.querySelector('[data-pv-address-fields] input[type="checkbox"]');
+    var addressSelects = Array.prototype.slice.call(addressCard.querySelectorAll('[data-pv-address-fields] [data-pv-select]'));
+    function addressMessage(message) {
+      addressStatus.hidden = !message;
+      addressStatus.textContent = message || '';
+    }
+    addressCard.querySelector('[data-pv-address-save]').addEventListener('click',function () {
+      var missing = addressInputs.find(function (input) { return input.required && !input.value.trim(); });
+      if (missing) {
+        addressMessage('Street address, city and ZIP Code are required before saving.');
+        missing.focus({preventScroll:true});
+        return;
+      }
+      addressMessage('Address checked locally; not saved to a server.');
+    });
+    addressCard.querySelector('[data-pv-address-cancel]').addEventListener('click',function () {
+      addressInputs.forEach(function (input) { input.value = ''; });
+      if (addressCheckbox) addressCheckbox.checked = true;
+      addressSelects.forEach(function (host) {
+        var select = previewSelects.get(host);
+        if (select && typeof select.setValue === 'function')
+          select.setValue(host.getAttribute('data-value') || '');
+      });
+      addressMessage('Unsaved address changes discarded locally.');
+    });
+    addressInputs.forEach(function (input) {
+      input.addEventListener('input',function () { addressMessage(''); });
+    });
+  }
+  var feedbackCard = document.querySelector('[data-card="feedback-form"]');
+  if (feedbackCard) {
+    var feedbackFields = feedbackCard.querySelector('[data-pv-feedback-fields]');
+    var feedbackTopic = feedbackFields.querySelector('select');
+    var feedbackBody = feedbackFields.querySelector('textarea');
+    var feedbackStatus = feedbackCard.querySelector('[data-pv-feedback-status]');
+    function feedbackMessage(message) {
+      feedbackStatus.hidden = !message;
+      feedbackStatus.textContent = message || '';
+    }
+    feedbackCard.querySelector('[data-pv-feedback-submit]').addEventListener('click',function () {
+      if (!feedbackTopic.value) {
+        feedbackMessage('Select a topic before submitting feedback.');
+        feedbackTopic.focus({preventScroll:true});
+        return;
+      }
+      if (!feedbackBody.value.trim()) {
+        feedbackMessage('Enter feedback before submitting.');
+        feedbackBody.focus({preventScroll:true});
+        return;
+      }
+      feedbackMessage('Feedback validated locally; not submitted to a server.');
+    });
+    feedbackFields.addEventListener('input',function () { feedbackMessage(''); });
+    feedbackTopic.addEventListener('change',function () { feedbackMessage(''); });
+    feedbackFields.addEventListener('submit',function (event) { event.preventDefault(); });
+  }
+
+  // Stage4: File Upload is a local picker/drop demonstration, NOT an upload
+  // API. Match the copy ("PNG, JPG, PDF up to 10MB"), reject other/oversized
+  // files and never claim a remote upload succeeded.
+  var upload = document.querySelector('[data-card="file-upload"]');
+  if (upload) {
+    var input = upload.querySelector('[data-pv-upload-input]');
+    var drop = upload.querySelector('[data-pv-file-drop]');
+    var status = upload.querySelector('[data-pv-upload-status]');
+    function renderSelectedFile(file) {
+      if (!file) return;
+      var validType = /\.(png|jpe?g|pdf)$/i.test(file.name) &&
+        (!file.type || /^(image\/png|image\/jpeg|application\/pdf)$/.test(file.type));
+      status.hidden = false;
+      if (!validType) status.textContent = 'Choose a PNG, JPG or PDF file.';
+      else if (file.size > 10 * 1024 * 1024) status.textContent = 'File exceeds the 10MB limit.';
+      else status.textContent = 'Selected: ' + file.name + ' (local preview only; not uploaded)';
+    }
+    upload.querySelector('[data-pv-upload-browse]').addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () { renderSelectedFile(input.files && input.files[0]); });
+    ['dragenter','dragover'].forEach(function (type) {
+      drop.addEventListener(type, function (event) { event.preventDefault(); });
+    });
+    drop.addEventListener('drop', function (event) {
+      event.preventDefault();
+      renderSelectedFile(event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]);
+    });
+  }
+  // Stage4 Report Bug: Attach File must invoke a real native file picker.
+  // Source does not provide an upload endpoint; show selected local name only.
+  var bug = document.querySelector('[data-card="report-bug"]');
+  if (bug) {
+    var bugInput = bug.querySelector('[data-pv-bug-file-input]');
+    var bugStatus = bug.querySelector('[data-pv-bug-file-status]');
+    bug.querySelector('[data-pv-bug-attach]').addEventListener('click', function () { bugInput.click(); });
+    bugInput.addEventListener('change', function () {
+      var file = bugInput.files && bugInput.files[0];
+      if (!file) return;
+      bugStatus.hidden = false;
+      bugStatus.textContent = 'Attached locally: ' + file.name;
+    });
+  }
+  // Stage4 Invite Team: append a fresh row using the actual QX Select
+  // controller. Cloning a mounted Select DOM would illegally duplicate its
+  // state and event owners. Preserve the existing two authored invite rows.
+  var invite = document.querySelector('[data-card="invite-team"]');
+  if (invite) {
+    var rows = invite.querySelector('[data-pv-invite-rows]');
+    invite.querySelector('[data-pv-invite-add]').addEventListener('click', function () {
+      var row = document.createElement('div');
+      row.className = 'qxframe9a7c2-flex';
+      var email = document.createElement('input');
+      email.type = 'email';
+      email.placeholder = 'name@example.com';
+      email.className = 'qxframe9a7c2-form-input pv-grow';
+      var role = document.createElement('div');
+      role.className = 'pv-select pv-w-24';
+      row.append(email, role);
+      rows.appendChild(row);
+      C.Select.create({
+        container: role,
+        items: pairs('admin::Admin|editor::Editor|viewer::Viewer'),
+        value: 'viewer',
+        size: 'md'
+      });
+      email.focus({ preventScroll:true });
+    });
+    var copy = invite.querySelector('[data-pv-invite-copy]');
+    var url = invite.querySelector('.qxframe9a7c2-input-group input[readonly]');
+    var copyStatus = invite.querySelector('[data-pv-invite-copy-status]');
+    copy.addEventListener('click', function () {
+      function report(message) { copyStatus.hidden=false; copyStatus.textContent=message; }
+      if (!url) return;
+      var text = url.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          report('Invite link copied');
+        }, function () {
+          url.focus();url.select();
+          report('Invite link selected; use Ctrl+C to copy');
+        });
+      } else {
+        url.focus();url.select();
+        report('Invite link selected; use Ctrl+C to copy');
+      }
+    });
+  }
+
+  // Stage4 LiveWaveform: microphone is requested ONLY after a real user click.
+  // Process is a synthetic preview animation, never labeled microphone data.
+  // Keep media streams local, release tracks/AudioContext on stop and unload.
+  var waveCard = document.querySelector('[data-card="live-waveform"]');
+  if (waveCard) {
+    var waveVisual = waveCard.querySelector('[data-pv-wave-visual]');
+    var waveStatus = waveCard.querySelector('[data-pv-wave-status]');
+    var waveBars = Array.prototype.slice.call(waveVisual.querySelectorAll('rect'));
+    var waveStart = waveCard.querySelector('[data-pv-wave-action="listen"]');
+    var waveProcess = waveCard.querySelector('[data-pv-wave-action="process"]');
+    var waveMode = waveCard.querySelector('[data-pv-wave-action="mode"]');
+    var waveState = { active:false, processing:true, mode:'static', stream:null, context:null,
+      analyser:null, phase:0, tick:null, generation:0, disposed:false };
+    function waveMessage(value) {
+      waveStatus.hidden = !value;
+      waveStatus.textContent = value || '';
+    }
+    function waveButton(button, active) {
+      button.classList.toggle('is-primary',active);
+      button.classList.toggle('is-solid',active);
+      button.classList.toggle('is-default',!active);
+      button.classList.toggle('is-outlined',!active);
+    }
+    function syncWave() {
+      waveStart.querySelector('.qxframe9a7c2-button-label').textContent =
+        (waveState.active ? 'Stop' : 'Start') + ' Listening';
+      waveProcess.querySelector('.qxframe9a7c2-button-label').textContent =
+        (waveState.processing ? 'Stop' : 'Start') + ' Processing';
+      waveMode.querySelector('.qxframe9a7c2-button-label').textContent =
+        waveState.mode === 'static' ? 'Static' : 'Scrolling';
+      waveButton(waveStart,waveState.active);
+      waveButton(waveProcess,waveState.processing);
+      waveVisual.setAttribute('data-pv-wave-state',
+        waveState.active ? 'listening' : waveState.processing ? 'processing' : 'idle');
+      waveVisual.setAttribute('data-pv-wave-mode',waveState.mode);
+    }
+    function stopMedia() {
+      ++waveState.generation;
+      // Cancel a pending permission prompt without stranding Start disabled.
+      waveStart.disabled = false;
+      if (waveState.stream) {
+        waveState.stream.getTracks().forEach(function (track) { track.stop(); });
+        waveState.stream = null;
+      }
+      if (waveState.context) {
+        var closing = waveState.context.close();
+        if (closing && closing.catch) closing.catch(function () {});
+        waveState.context = null;
+      }
+      waveState.analyser = null;
+      waveState.active = false;
+    }
+    function paintWave() {
+      if (waveState.disposed || (!waveState.active && !waveState.processing)) return;
+      waveState.phase += 0.18;
+      var data = null;
+      if (waveState.active && waveState.analyser) {
+        data = new Uint8Array(waveState.analyser.frequencyBinCount);
+        waveState.analyser.getByteFrequencyData(data);
+      }
+      waveBars.forEach(function (rect,i) {
+        var fraction = i / Math.max(1,waveBars.length - 1);
+        var source = data ? data[Math.min(data.length - 1, Math.floor((waveState.mode === 'static'
+          ? Math.abs(fraction * 2 - 1) : 1 - fraction) * data.length))] / 255 :
+          0.16 + (Math.sin(waveState.phase + i * 0.16) + Math.cos(waveState.phase * 0.7 - i * 0.11) + 2) * 0.1;
+        var height = 4 + Math.min(1,Math.max(0,source)) * 56;
+        if (waveState.mode === 'static') height *= 0.45 + (1-Math.abs(fraction*2-1))*0.55;
+        height = Math.max(4,Math.min(64,height));
+        rect.setAttribute('height',height.toFixed(2));
+        rect.setAttribute('y',((80-height)/2).toFixed(2));
+        rect.setAttribute('opacity',(0.38+source*0.55).toFixed(2));
+      });
+    }
+    waveState.tick = window.setInterval(paintWave,120);
+    waveStart.addEventListener('click',function () {
+      if (waveState.active) {
+        stopMedia();
+        waveMessage('Microphone stopped; audio was not recorded or uploaded.');
+        syncWave();
+        return;
+      }
+      if (waveStart.disabled) return;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        waveMessage('Microphone is unavailable in this browser or context.');
+        return;
+      }
+      var version = ++waveState.generation;
+      waveStart.disabled = true;
+      navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})
+        .then(function (stream) {
+          if (waveState.disposed || version !== waveState.generation) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            return;
+          }
+          var AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtor) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            throw Error('AudioContext is unavailable');
+          }
+          var ctx;
+          try {
+            ctx = new AudioCtor();
+            var analyser = ctx.createAnalyser();
+            analyser.fftSize = 256;
+            analyser.smoothingTimeConstant = 0.8;
+            ctx.createMediaStreamSource(stream).connect(analyser);
+            waveState.stream = stream;
+            waveState.context = ctx;
+            waveState.analyser = analyser;
+          } catch (err) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            if (ctx) { try { ctx.close(); } catch (_) {} }
+            throw err;
+          }
+          waveState.active = true;
+          waveState.processing = false;
+          waveMessage('Live microphone input (local only; not recorded or uploaded).');
+        })
+        .catch(function (error) {
+          if (version !== waveState.generation || waveState.disposed) return;
+          waveMessage('Microphone not started: ' + (error && error.message || 'permission denied'));
+        })
+        .finally(function () {
+          if (version !== waveState.generation || waveState.disposed) return;
+          waveStart.disabled = false;
+          syncWave();
+        });
+    });
+    waveProcess.addEventListener('click',function () {
+      if (!waveState.processing) {
+        stopMedia();
+        waveState.processing = true;
+        waveMessage('Simulated processing animation; microphone is off.');
+      } else {
+        waveState.processing = false;
+        waveMessage('Waveform idle; microphone is off.');
+      }
+      syncWave();
+    });
+    waveMode.addEventListener('click',function () {
+      waveState.mode = waveState.mode === 'static' ? 'scrolling' : 'static';
+      syncWave();
+    });
+    window.addEventListener('pagehide',function () {
+      waveState.disposed = true;
+      stopMedia();
+      if (waveState.tick) window.clearInterval(waveState.tick);
+    },{once:true});
+    syncWave();
+  }
+  // The Preview 02 InviteMembers CTA should lead to the existing InviteTeam
+  // composition, not pretend to send an invitation without an API.
+  var inviteJump = document.querySelector('[data-pv-jump-invites]');
+  if (inviteJump) inviteJump.addEventListener('click',function () {
+    var target = document.querySelector('[data-card="invite-team"] [data-pv-invite-add]');
+    if (!target) return;
+    target.scrollIntoView({block:'nearest'});
+    target.focus({preventScroll:true});
+  });
+
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
     if (!Calendar) return;
@@ -139,6 +570,17 @@
       if (next) onChange(next);
     });
   }
+  // BookAppointment composes framework Buttons as a multiple ToggleGroup.
+  // The control remains an authored preview, not another framework Controller.
+  document.querySelectorAll('[data-pv-multi-toggle]').forEach(function (group) {
+    group.addEventListener('click', function (event) {
+      var button = event.target.closest('button');
+      if (!button || !group.contains(button) || button.disabled) return;
+      var selected = !button.classList.contains('is-active');
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+  });
   var kitchen = document.querySelector('[data-card="kitchen-island"]');
   if (kitchen) {
     var scenes = {
