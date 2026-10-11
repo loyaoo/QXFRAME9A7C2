@@ -50,7 +50,7 @@ check('Stage5 shared navigation/data radii do not inherit fixed 4px',()=>{
 });
 
 check('Stage5 QX-only public components consume Theme corner roles',()=>{
-  for(const part of ['menu','list','steps','tree','carousel','progress','image','badge','card','slider']){
+  for(const part of ['menu','list','steps','tree','carousel','progress','image','badge','card','slider','tabs','picker-family']){
     const css=fs.readFileSync(path.join(root,'src/styles/components',part+'.css'),'utf8');
     assert.match(css,/--qxframe9a7c2-theme-radius-(?:item|button|track|thumb|popup|badge)/,part+' Theme corner role');
   }
@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"navigation-workspace":["[data-pv3x-widget=\"navigation-workspace\"]"],"activity-timeline":["[data-pv3x-widget=\"activity-timeline\"]"],"onboarding-flow":["[data-pv3-component=\"onboarding-steps\"]"],"org-hierarchy":["[data-pv3x-widget=\"org-hierarchy\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]"],"service-health":["[data-pv3-component=\"service-progress\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"stakeholder-roster":[".pv3x-avatars"],"compliance-flags":[".qxframe9a7c2-badge"],"revenue-surfaces":["[data-pv3x-card-skeleton]"],"usage-meter":["[data-pv3-component=\"usage-slider\"]"]}; // Stage5 QX-only visual parity batch
+  const current={"navigation-workspace":["[data-pv3x-widget=\"navigation-workspace\"]"],"activity-timeline":["[data-pv3x-widget=\"activity-timeline\"]"],"onboarding-flow":["[data-pv3-component=\"onboarding-steps\"]"],"org-hierarchy":["[data-pv3x-widget=\"org-hierarchy\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]"],"service-health":["[data-pv3-component=\"service-progress\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"stakeholder-roster":[".pv3x-avatars"],"compliance-flags":[".qxframe9a7c2-badge"],"revenue-surfaces":["[data-pv3x-card-skeleton]"],"usage-meter":["[data-pv3-component=\"usage-slider\"]"],"segmented-console":["[data-pv3x-widget=\"segmented-console\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"]}; // Stage5 full QX shape parity, 13 modified Cards
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -130,7 +130,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,11,'only current 11 QX-only component Card regions are highlighted');
+  assert.equal(count,13,'only current 13 QX-only component Card regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');

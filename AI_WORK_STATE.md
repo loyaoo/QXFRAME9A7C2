@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 shape parity follow-up: Tabs and ColorPanel (CI pending)
+- Earlier 608-case radius audit and complete Windows build at 39e22a12 were green. Further CSS review found Tabs indicator/badge/close and ColorPanel hue/alpha/gradient tracks still locked to 50%/100rem. Fixed only these six ordinary UI shapes to consume the existing Theme radius-track/badge/button slots while keeping public per-component override priority.
+- New Chromium matrix: 8 Styles × light/dark × none/default radius × 25 sampled component parts = 800 computed corners. Offline QA highlights only the 13 affected Preview03 Cards, 13 regions (previous Picker/creation highlights cleared).
+- Continue auditing semantic colors, density, spacing, hover, active, selected, disabled, read-only across the 66 demos. Draft PR #267 stays unmerged; no changes to Preview01/02 cards or Theme token schema.
+
 ## CURRENT — 2026-10-11 Preview03 Card skeleton theme QA exemplar (CI pending)
 - The Card Skeleton consumer was corrected to radius-item but had no matching rendered line in the commercial gallery. Added actual QX Card skeleton lines to the Revenue overview card (already existing of 66; no new card count), and re-targeted current-round offline QA highlight to [data-pv3x-card-skeleton], not unrelated nested revenue cards.
 - Preserves 66 Card roots, 66/66 documented family inventory, 11 current changed QA regions, strict Draft PR #267 merge gate. Browser tests must verify resulting page and source constraints; Preview01/02 unchanged.

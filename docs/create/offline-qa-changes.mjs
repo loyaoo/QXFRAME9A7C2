@@ -1,4 +1,4 @@
-/** Stage5 current batch: QX-only Theme visual parity; only this batch's 11 component regions.
+/** Stage5 current batch: QX-only Theme visual parity; only this batch's 13 component regions.
  * No previous Preview01/02 card or the older 48-card expansion stays highlighted. */
 const groups = [
  ['navigation-workspace','Menu 角样式',[
@@ -33,6 +33,12 @@ const groups = [
  ],'03'],
  ['usage-meter','Slider 标记',[
   ['[data-pv3-component="usage-slider"]','Slider 标记','Slider 标记遵循 thumb 形状策略','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['segmented-console','Tabs 指示、徽标与关闭按钮',[
+  ['[data-pv3x-widget="segmented-console"]','Tabs 圆角','Tabs indicator / badge / close consume Theme radius-track, badge and button','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['palette-laboratory','ColorPanel 滑轨形状',[
+  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel 轨道','Hue, alpha and gradient tracks consume Theme radius-track','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -96,7 +102,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：全组件 Theme 形态统一 11 张卡片、11 处控件区域；上轮反色 Picker 高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：全组件 Theme 形态统一 13 张卡片、13 处控件区域；上轮反色 Picker 高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
