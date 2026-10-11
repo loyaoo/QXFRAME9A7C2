@@ -408,10 +408,10 @@
   .qxframe9a7c2-menu-overflow-panel,
   .qxframe9a7c2-menu-overflow-panel * {
     --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-menu-foreground);
-    --_qxframe9a7c2-semantic-text-secondary: oklch(from var(--qxframe9a7c2-theme-menu-foreground) l c h / 0.82);
-    --_qxframe9a7c2-semantic-text-muted: oklch(from var(--qxframe9a7c2-theme-menu-foreground) l c h / 0.76);
-    --_qxframe9a7c2-semantic-text-placeholder: oklch(from var(--qxframe9a7c2-theme-menu-foreground) l c h / 0.65);
-    --_qxframe9a7c2-semantic-text-disabled: oklch(from var(--qxframe9a7c2-theme-menu-foreground) l c h / 0.55);
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
