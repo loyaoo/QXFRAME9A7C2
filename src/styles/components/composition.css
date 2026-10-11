@@ -1,42 +1,42 @@
 /* composition */
 /* QXFRAME9A7C2 Composition Protocol. Geometry only: seam/radius/stacking/group gap. */
-.qxframe9a7c2-form-input-group{
-  --_qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-form-input-group-radius,var(--_qxframe9a7c2-control-radius));
+.qxframe9a7c2-input-group{
+  --_qxframe9a7c2-input-group-radius:var(--qxframe9a7c2-input-group-radius,var(--_qxframe9a7c2-control-radius));
   box-sizing:border-box;display:flex;align-items:stretch;width:100%;min-width:0;isolation:isolate
 }
-.qxframe9a7c2-form-input-group.is-rounded{--_qxframe9a7c2-form-input-group-radius:var(--qxframe9a7c2-form-input-group-radius,100rem)}
-.qxframe9a7c2-form-input-group.is-separated{gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem)}
-.qxframe9a7c2-form-input-group.is-vertical{flex-direction:column}
+.qxframe9a7c2-input-group.is-rounded{--_qxframe9a7c2-input-group-radius:var(--qxframe9a7c2-input-group-radius,100rem)}
+.qxframe9a7c2-input-group.is-separated{gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem)}
+.qxframe9a7c2-input-group.is-vertical{flex-direction:column}
 /* Connected composition is the size owner by default. Child size classes are ignored in this layer; `.is-mixed-size` is the explicit escape hatch. */
-.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-mixed-size)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{--_qxframe9a7c2-control-height:inherit;--_qxframe9a7c2-control-font-size:inherit;--_qxframe9a7c2-control-padding-inline:inherit;--_qxframe9a7c2-control-padding-block:inherit;--_qxframe9a7c2-control-gap:inherit;--_qxframe9a7c2-control-radius:inherit;--_qxframe9a7c2-control-border-width:inherit;--_qxframe9a7c2-control-icon-size:inherit;--_qxframe9a7c2-control-line-height:inherit}
-.qxframe9a7c2-form-input-group-item{--_qxframe9a7c2-group-stack:1;position:relative;z-index:var(--_qxframe9a7c2-group-stack);display:flex;align-items:stretch;flex:1 1 0;min-width:0}
+.qxframe9a7c2-input-group:not(.is-mixed-size)>.qxframe9a7c2-group-control,.qxframe9a7c2-input-group:not(.is-mixed-size)>.qxframe9a7c2-input-group-item>.qxframe9a7c2-group-control{--_qxframe9a7c2-control-height:inherit;--_qxframe9a7c2-control-font-size:inherit;--_qxframe9a7c2-control-padding-inline:inherit;--_qxframe9a7c2-control-padding-block:inherit;--_qxframe9a7c2-control-gap:inherit;--_qxframe9a7c2-control-radius:inherit;--_qxframe9a7c2-control-border-width:inherit;--_qxframe9a7c2-control-icon-size:inherit;--_qxframe9a7c2-control-line-height:inherit}
+.qxframe9a7c2-input-group-item{--_qxframe9a7c2-group-stack:1;position:relative;z-index:var(--_qxframe9a7c2-group-stack);display:flex;align-items:stretch;flex:1 1 0;min-width:0}
 /* Auto-width slots keep intrinsic width when space exists, but must still shrink under zoom/long-copy pressure. */
-.qxframe9a7c2-form-input-group-item.is-auto{flex:0 1 auto;min-width:0;max-width:100%}
-.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{width:100%;min-width:0}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-input,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-select,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item{position:relative;flex:1 1 0;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),30%)}
+.qxframe9a7c2-input-group-item.is-auto{flex:0 1 auto;min-width:0;max-width:100%}
+.qxframe9a7c2-input-group-item>.qxframe9a7c2-group-control{width:100%;min-width:0}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input,.qxframe9a7c2-input-group>.qxframe9a7c2-form-input,.qxframe9a7c2-input-group>.qxframe9a7c2-form-select,.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item{position:relative;flex:1 1 0;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),30%)}
 /* Non-field segments may shrink instead of forcing horizontal page overflow. Preserve one usable field segment and one control-height action floor. */
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-addon{position:relative;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-button{position:relative;flex:0 1 auto;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),35%);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-square,.qxframe9a7c2-form-input-group>.qxframe9a7c2-button.is-circle{min-width:var(--_qxframe9a7c2-control-height);flex-shrink:0}
-.qxframe9a7c2-form-input-group-addon{
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-addon{position:relative;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-input-group>.qxframe9a7c2-button{position:relative;flex:0 1 auto;min-width:min(calc(var(--_qxframe9a7c2-control-height) * 2),35%);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qxframe9a7c2-input-group>.qxframe9a7c2-button.is-square,.qxframe9a7c2-input-group>.qxframe9a7c2-button.is-circle{min-width:var(--_qxframe9a7c2-control-height);flex-shrink:0}
+.qxframe9a7c2-input-group-addon{
   box-sizing:border-box;display:inline-flex;min-width:0;min-height:var(--_qxframe9a7c2-control-height);align-items:center;justify-content:center;
   gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem);padding:0 var(--_qxframe9a7c2-control-padding-inline);border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
-  border-radius:var(--_qxframe9a7c2-form-input-group-radius);background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary);
+  border-radius:var(--_qxframe9a7c2-input-group-radius);background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary);
   font:inherit;font-size:var(--_qxframe9a7c2-control-font-size);line-height:1;white-space:nowrap
 }
-button.qxframe9a7c2-form-input-group-addon,a.qxframe9a7c2-form-input-group-addon,.qxframe9a7c2-form-input-group-addon.is-action{cursor:pointer;text-decoration:none}
-button.qxframe9a7c2-form-input-group-addon:hover,a.qxframe9a7c2-form-input-group-addon:hover,.qxframe9a7c2-form-input-group-addon.is-action:hover{background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text)}
-button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-input-group-addon:focus-visible,.qxframe9a7c2-form-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none);z-index:var(--qxframe9a7c2-z-local-focus)}
-.qxframe9a7c2-form-input-group-addon>.qxframe9a7c2-form-check-input{--_qxframe9a7c2-form-check-size:calc(var(--_qxframe9a7c2-control-height) * .5);margin:0}
-.qxframe9a7c2-form-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:var(--_qxframe9a7c2-fixed-space-1) 0.375rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:var(--_qxframe9a7c2-fixed-form-kbd-border-bottom);border-radius:0.25rem;background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-.qxframe9a7c2-form-input-group-link{color:var(--qxframe9a7c2-theme-primary);text-decoration:none}
-.qxframe9a7c2-form-input-group-link:hover{text-decoration:underline;text-underline-offset:.16em}
+button.qxframe9a7c2-input-group-addon,a.qxframe9a7c2-input-group-addon,.qxframe9a7c2-input-group-addon.is-action{cursor:pointer;text-decoration:none}
+button.qxframe9a7c2-input-group-addon:hover,a.qxframe9a7c2-input-group-addon:hover,.qxframe9a7c2-input-group-addon.is-action:hover{background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text)}
+button.qxframe9a7c2-input-group-addon:focus-visible,a.qxframe9a7c2-input-group-addon:focus-visible,.qxframe9a7c2-input-group-addon.is-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);border-color:var(--_qxframe9a7c2-semantic-focus);box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none);z-index:var(--qxframe9a7c2-z-local-focus)}
+.qxframe9a7c2-input-group-addon>.qxframe9a7c2-form-check-input{--_qxframe9a7c2-form-check-size:calc(var(--_qxframe9a7c2-control-height) * .5);margin:0}
+.qxframe9a7c2-input-group-kbd{display:inline-flex;align-items:center;gap:.2em;padding:var(--_qxframe9a7c2-fixed-space-1) 0.375rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-bottom-width:var(--_qxframe9a7c2-fixed-form-kbd-border-bottom);border-radius:0.25rem;background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text-secondary);font:600 .78em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.qxframe9a7c2-input-group-link{color:var(--qxframe9a7c2-theme-primary);text-decoration:none}
+.qxframe9a7c2-input-group-link:hover{text-decoration:underline;text-underline-offset:.16em}
 
 /* A connected group only owns adjacent borders/radii/z-order. It never mutates child value/state owners. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control+.qxframe9a7c2-group-control{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item>.qxframe9a7c2-group-control{border-radius:0}
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:first-child,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:first-child>.qxframe9a7c2-group-control{border-start-start-radius:var(--_qxframe9a7c2-form-input-group-radius);border-end-start-radius:var(--_qxframe9a7c2-form-input-group-radius)}
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:last-child,.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:last-child>.qxframe9a7c2-group-control{border-start-end-radius:var(--_qxframe9a7c2-form-input-group-radius);border-end-end-radius:var(--_qxframe9a7c2-form-input-group-radius)}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control+.qxframe9a7c2-group-control{margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control,.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-item>.qxframe9a7c2-group-control{border-radius:0}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:first-child,.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-item:first-child>.qxframe9a7c2-group-control{border-start-start-radius:var(--_qxframe9a7c2-input-group-radius);border-end-start-radius:var(--_qxframe9a7c2-input-group-radius)}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-group-control:last-child,.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-item:last-child>.qxframe9a7c2-group-control{border-start-end-radius:var(--_qxframe9a7c2-input-group-radius);border-end-end-radius:var(--_qxframe9a7c2-input-group-radius)}
 
 
 
@@ -45,14 +45,14 @@ button.qxframe9a7c2-form-input-group-addon:focus-visible,a.qxframe9a7c2-form-inp
 
 
 /* Formal group-item projection. No child state colors are owned here. */
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control{--_qxframe9a7c2-group-stack:1;z-index:var(--_qxframe9a7c2-group-stack)}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-button-item{z-index:auto}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control:hover{--_qxframe9a7c2-group-stack:2}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-invalid,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-warning{--_qxframe9a7c2-group-stack:3}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control:focus-within,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-focused,.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-expanded-visible{--_qxframe9a7c2-group-stack:4}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-group-control.is-expanded{--_qxframe9a7c2-group-stack:5}
+.qxframe9a7c2-input-group>.qxframe9a7c2-group-control{--_qxframe9a7c2-group-stack:1;z-index:var(--_qxframe9a7c2-group-stack)}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item.is-button-item{z-index:auto}
+.qxframe9a7c2-input-group>.qxframe9a7c2-group-control:hover{--_qxframe9a7c2-group-stack:2}
+.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-error,.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-invalid,.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-warning{--_qxframe9a7c2-group-stack:3}
+.qxframe9a7c2-input-group>.qxframe9a7c2-group-control:focus-within,.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-focused,.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-expanded-visible{--_qxframe9a7c2-group-stack:4}
+.qxframe9a7c2-input-group>.qxframe9a7c2-group-control.is-expanded{--_qxframe9a7c2-group-stack:5}
 @media(max-width:640px){
- .qxframe9a7c2-form-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
+ .qxframe9a7c2-input-group.is-responsive>.qxframe9a7c2-group-control{margin-inline-start:0}
 }
 /* One seam algorithm for direct Items and Items wrapped in an independent Flex.
  * Connected is geometric, not an Appearance, and never invents None borders. */
@@ -94,10 +94,10 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
   border-end-start-radius:var(--qxframe9a7c2-theme-radius-field);border-end-end-radius:var(--qxframe9a7c2-theme-radius-field)
 }
 /* Nested stable GroupItem projects child interaction state to the composition stacking owner. */
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-error,.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:focus-within{--_qxframe9a7c2-group-stack:4}
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item.is-expanded{--_qxframe9a7c2-group-stack:5}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item:hover{--_qxframe9a7c2-group-stack:2}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item.is-error,.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item.is-warning{--_qxframe9a7c2-group-stack:3}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item:focus-within{--_qxframe9a7c2-group-stack:4}
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item.is-expanded{--_qxframe9a7c2-group-stack:5}
 
 /* ButtonGroup is geometry-only: every Button keeps a full border and owns its paint z-index. */
 .qxframe9a7c2-button-group{
@@ -281,131 +281,131 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
 /* Composition protocol: an addon belongs INSIDE one field outline.
  * Prefix/suffix are attached OUTER segments with an inner dividing border.
  * The connected group owns seams; the field retains value, state and focus. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>:not(:first-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>:not(:first-child){
   border-start-start-radius:0;border-end-start-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>:not(:last-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>:not(:last-child){
   border-start-end-radius:0;border-end-end-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:not(:first-child)>.qxframe9a7c2-group-control{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-item:not(:first-child)>.qxframe9a7c2-group-control{
   border-start-start-radius:0;border-end-start-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-item:not(:last-child)>.qxframe9a7c2-group-control{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-item:not(:last-child)>.qxframe9a7c2-group-control{
   border-start-end-radius:0;border-end-end-radius:0
 }
-.qxframe9a7c2-form-input-group-prefix,.qxframe9a7c2-form-input-group-suffix{
+.qxframe9a7c2-input-group-prefix,.qxframe9a7c2-input-group-suffix{
   box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
   min-width:0;flex:0 1 auto;padding-inline:var(--_qxframe9a7c2-control-padding-inline);
   border:var(--_qxframe9a7c2-control-border-width) solid var(--_qxframe9a7c2-semantic-border);
-  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  border-radius:var(--_qxframe9a7c2-input-group-radius);
   background:var(--_qxframe9a7c2-semantic-surface-muted);color:var(--_qxframe9a7c2-semantic-text-secondary)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon){
   box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);
   border:var(--_qxframe9a7c2-control-border-width) solid var(--qxframe9a7c2-theme-field-border);
   border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
   border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  border-radius:var(--_qxframe9a7c2-input-group-radius);
   background:var(--qxframe9a7c2-theme-field)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon{
   border:0;border-radius:0;background:transparent;min-height:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-input{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input{
   box-sizing:border-box;height:100%;min-height:0;
   border:0;border-radius:0;background:transparent;min-width:0
 }
 /* One border owner consumes the actual field's appearance and capability
  * state. Inner inputs keep value/focus/keyboard ownership, not border paint. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-addon{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-addon{
   box-sizing:border-box;min-height:0;height:100%;
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
-.qxframe9a7c2-form-input-group-field:focus-within{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):focus-within,
+.qxframe9a7c2-input-group-field:focus-within{
   border-color:var(--qxframe9a7c2-theme-pointer-focus);
 }
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group-field:focus-within{border-color:var(--qxframe9a7c2-theme-focus)}
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon),
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group-field,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-warning),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-warning),
-.qxframe9a7c2-form-input-group-field:has(>.is-warning){
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):focus-within,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input-group-field:focus-within{border-color:var(--qxframe9a7c2-theme-focus)}
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon),
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input-group-field,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-warning),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-warning),
+.qxframe9a7c2-input-group-field:has(>.is-warning){
   border-color:var(--qxframe9a7c2-theme-warning);
 }
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon),
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group-field,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-invalid),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-error),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-invalid),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-error),
-.qxframe9a7c2-form-input-group-field:has(>.is-invalid),
-.qxframe9a7c2-form-input-group-field:has(>.is-error){
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon),
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input-group-field,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-invalid),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-error),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-invalid),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input.is-error),
+.qxframe9a7c2-input-group-field:has(>.is-invalid),
+.qxframe9a7c2-input-group-field:has(>.is-error){
   border-color:var(--qxframe9a7c2-theme-destructive);
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-prefix,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-suffix{
   border-block:0;border-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix:first-child,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:first-child{border-inline-start:0}
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-prefix:last-child,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input-group-suffix:last-child{border-inline-end:0}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-prefix:first-child,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-suffix:first-child{border-inline-start:0}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-prefix:last-child,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input-group-suffix:last-child{border-inline-end:0}
 
 
 /* InputGroup is a presentation composition, not a second Control skin.
  * Connected addon + field owns one OUTER border. Reduce only the two
  * touching inset halves while preserving full exterior padding. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon:not(:last-child),
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon:not(:last-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon:not(:last-child),
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon:not(:last-child){
   padding-inline-end:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon:not(:first-child),
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon:not(:first-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon:not(:first-child),
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon:not(:first-child){
   padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-addon+.qxframe9a7c2-form-input,
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon+.qxframe9a7c2-form-input{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon+.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon+.qxframe9a7c2-form-input{
   padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-form-input-group-addon),
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-form-input-group-addon){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-input-group-addon),
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input:has(+.qxframe9a7c2-input-group-addon){
   padding-inline-end:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }
 /* A keyboard-focused field inside connected addon composition projects its
  * one 2px outline to the border owner. Mouse focus keeps the existing border
  * projection, and the native input NEVER draws a second outline. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
+.qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
   outline:var(--_qxframe9a7c2-focus-visible-outline);
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-form-input:focus-visible,
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input:focus-visible{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-form-input:focus-visible,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input:focus-visible{
   outline:none;box-shadow:none
 }
 /* A hosted JS Input shell owns value and runtime focus origin, but the
  * connected Field/Group owns both painted outlines and shadows. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon)>.qxframe9a7c2-input,
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-input{
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-input,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input{
   --_qxframe9a7c2-state-ring:none;
   --_qxframe9a7c2-state-outline:none;
   outline:none;box-shadow:none
 }
 /* The same connected border owner paints the keyboard halo; child editor
  * remains shadowless so the input and addon never show two nested rings. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
-.qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
+.qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+.qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
   box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-focus-shadow,0 0 0 0 transparent)
 }
 /* A nested group is an independent composition island. Mixing connected
  * seam ownership across parent/child roots is not implicit. */
-.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group{
+.qxframe9a7c2-input-group>.qxframe9a7c2-input-group{
   flex:1 1 auto;min-width:0
 }
 
@@ -423,42 +423,42 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group-field:foc
  * The Field wrapper owns the single input border; prefix/suffix retain their
  * own borders outside it. This avoids the impossible single-root outline when
  * both inner and outer segments are present in the same flat DOM. */
-.qxframe9a7c2-form-input-group-field{
+.qxframe9a7c2-input-group-field{
   box-sizing:border-box;display:flex;flex:1 1 0;align-items:stretch;min-width:0;
   box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);
   border:var(--_qxframe9a7c2-control-border-width) solid var(--qxframe9a7c2-theme-field-border);
   border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
   border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-  border-radius:var(--_qxframe9a7c2-form-input-group-radius);
+  border-radius:var(--_qxframe9a7c2-input-group-radius);
   background:var(--qxframe9a7c2-theme-field)
 }
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input,
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-input{
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input{
   box-sizing:border-box;flex:1 1 0;min-width:0;min-height:0;height:100%;border:0;border-radius:0;background:transparent
 }
-.qxframe9a7c2-form-input-group-field>.qxframe9a7c2-form-input-group-addon{
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon{
   display:inline-flex;align-items:center;flex:0 1 auto;min-width:0;
   border:0;border-radius:0;background:transparent
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-field:not(:first-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-field:not(:first-child){
   border-start-start-radius:0;border-end-start-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-form-input-group-field:not(:last-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-field:not(:last-child){
   border-start-end-radius:0;border-end-end-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix,
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix{
-  border-radius:var(--_qxframe9a7c2-form-input-group-radius)
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-prefix,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-suffix{
+  border-radius:var(--_qxframe9a7c2-input-group-radius)
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix:not(:last-child),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix:not(:last-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-prefix:not(:last-child),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-suffix:not(:last-child){
   border-start-end-radius:0;border-end-end-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-prefix:not(:first-child),
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>.qxframe9a7c2-form-input-group-suffix:not(:first-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-prefix:not(:first-child),
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>.qxframe9a7c2-input-group-suffix:not(:first-child){
   border-start-start-radius:0;border-end-start-radius:0
 }
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-field)>:not(:first-child){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-field)>:not(:first-child){
   margin-inline-start:calc(0px - var(--_qxframe9a7c2-control-border-width))
 }
 
@@ -468,12 +468,12 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group-field:foc
  * html element, so such a selector never matches). This selector's focus
  * origin is separate from the keyboard 2px visual owner above; no bare
  * :focus-within outline (forbidden by the FocusOrigin contract). */
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input:focus-visible),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)),
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)){
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-form-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-input:focus-visible),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)),
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field:has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)){
   outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
   outline-offset:var(--qxframe9a7c2-theme-pointer-offset);
   box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)
@@ -481,27 +481,27 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
 
 /* Connected InputGroup must expose the same subtle hover border as a single
  * Control. Never let hover hide focus or any child disabled/error/warning. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.qxframe9a7c2-input.is-invalid)):not(:has(>.qxframe9a7c2-input.is-error)):not(:has(>.qxframe9a7c2-input.is-warning)){
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-form-input.is-invalid)):not(:has(>.qxframe9a7c2-form-input.is-error)):not(:has(>.qxframe9a7c2-form-input.is-warning)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.qxframe9a7c2-input.is-invalid)):not(:has(>.qxframe9a7c2-input.is-error)):not(:has(>.qxframe9a7c2-input.is-warning)){
   border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))
 }
 /* InputGroupField is an independent border owner, not an unstyled inner
  * wrapper. Mirror the same Theme hover derivation without replacing focus
  * or error/warning/disabled feedback, including a hosted JS Input. */
-.qxframe9a7c2-form-input-group-field:hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.is-invalid)):not(:has(>.is-error)):not(:has(>.is-warning)){
+.qxframe9a7c2-input-group-field:hover:not(:focus-within):not(:has(>.qxframe9a7c2-form-input:disabled)):not(:has(>.qxframe9a7c2-input.is-disabled)):not(:has(>.is-invalid)):not(:has(>.is-error)):not(:has(>.is-warning)){
   border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))
 }
-.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input-group-field:hover,
-.qxframe9a7c2-form-field.is-error .qxframe9a7c2-form-input-group-field:hover{
+.qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-input-group-field:hover,
+.qxframe9a7c2-form-field.is-error .qxframe9a7c2-input-group-field:hover{
   border-color:var(--qxframe9a7c2-theme-destructive)
 }
-.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group-field:hover{
+.qxframe9a7c2-form-field.is-warning .qxframe9a7c2-input-group-field:hover{
   border-color:var(--qxframe9a7c2-theme-warning)
 }
 
 /* Action Addons keep an independent pointer shadow only while THEY have
  * real focus; they never steal the InputGroup Field's editor focus halo. */
-html:not(.qxframe9a7c2-keyboard-focus-origin) button.qxframe9a7c2-form-input-group-addon:focus,
-html:not(.qxframe9a7c2-keyboard-focus-origin) a.qxframe9a7c2-form-input-group-addon:focus{
+html:not(.qxframe9a7c2-keyboard-focus-origin) button.qxframe9a7c2-input-group-addon:focus,
+html:not(.qxframe9a7c2-keyboard-focus-origin) a.qxframe9a7c2-input-group-addon:focus{
   box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
 }
 
@@ -525,5 +525,5 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup.is-outli
 }
 
 /* The connected InputGroup or Field is the single Control elevation owner. */
-.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):not(:focus-within),
-.qxframe9a7c2-form-input-group-field:not(:focus-within){box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)}
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):not(:focus-within),
+.qxframe9a7c2-input-group-field:not(:focus-within){box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)}

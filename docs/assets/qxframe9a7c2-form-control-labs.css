@@ -34,7 +34,7 @@
 .qxframe9a7c2-docs-field-style-stack,.qxframe9a7c2-docs-input-group-stage{display:grid;gap:8px;min-width:0}
 .qxframe9a7c2-docs-input-group-card.is-wide{grid-column:1/-1}
 .qxframe9a7c2-docs-input-group-lab{display:grid;gap:12px;width:100%;margin:0}
-.qxframe9a7c2-docs-input-group-stage>.qxframe9a7c2-form-input-group{max-width:100%}
+.qxframe9a7c2-docs-input-group-stage>.qxframe9a7c2-input-group{max-width:100%}
 .qxframe9a7c2-docs-input-group-stage .qxframe9a7c2-select{min-width:0}
 @media(max-width:900px){.qxframe9a7c2-docs-field-style-grid,.qxframe9a7c2-docs-input-group-grid{grid-template-columns:1fr}.qxframe9a7c2-docs-input-group-card.is-wide{grid-column:auto}}
 .qxframe9a7c2-docs-field-lab-native{box-sizing:border-box;width:100%}

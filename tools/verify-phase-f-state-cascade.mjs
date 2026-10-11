@@ -24,8 +24,8 @@ const movedOwners=[
   '.qxframe9a7c2-table-filter-actions',
   '.qxframe9a7c2-table-filter-search',
   '.qxframe9a7c2-table-filter-option-spacer',
-  '.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:hover',
-  '.qxframe9a7c2-form-input-group>.qxframe9a7c2-form-input-group-item:focus-within',
+  '.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item:hover',
+  '.qxframe9a7c2-input-group>.qxframe9a7c2-input-group-item:focus-within',
   '.qxframe9a7c2-card{overflow:visible}'
 ];
 for(const selector of movedOwners){
@@ -50,11 +50,11 @@ const transfer=pos('.qxframe9a7c2-transfer{');
 assert.ok(table>=0 && tableFilterPopup>table && tableFilterPopup<transfer,
   'Table filter popup/options must stay inside the Table owner section before Transfer.');
 
-assert.match(css,/\.qxframe9a7c2-form-input-group-item\{--_qxframe9a7c2-group-stack:1;position:relative;z-index:var\(--_qxframe9a7c2-group-stack\);/,
+assert.match(css,/\.qxframe9a7c2-input-group-item\{--_qxframe9a7c2-group-stack:1;position:relative;z-index:var\(--_qxframe9a7c2-group-stack\);/,
   'InputGroup item must consume its private group-stack channel in the canonical base rule.');
-assert.match(css,/\.qxframe9a7c2-form-input-group>\.qxframe9a7c2-form-input-group-item:hover\{--_qxframe9a7c2-group-stack:2\}/,
+assert.match(css,/\.qxframe9a7c2-input-group>\.qxframe9a7c2-input-group-item:hover\{--_qxframe9a7c2-group-stack:2\}/,
   'InputGroup hover must resolve stacking through the private group-stack state channel.');
-assert.match(css,/\.qxframe9a7c2-form-input-group>\.qxframe9a7c2-form-input-group-item:focus-within\{--_qxframe9a7c2-group-stack:4\}/,
+assert.match(css,/\.qxframe9a7c2-input-group>\.qxframe9a7c2-input-group-item:focus-within\{--_qxframe9a7c2-group-stack:4\}/,
   'InputGroup focus must resolve stacking through the private group-stack state channel.');
 
 assert.equal(count('--_qxframe9a7c2-calendar-cell-text'),0,'Calendar must not write the retired pre-unification cell-text channel.');

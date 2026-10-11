@@ -42,7 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'savings-targets':['.qxframe9a7c2-form-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup'],'notification-settings':['.qxframe9a7c2-selectgroup'],'faq':['.pv-tabs .qxframe9a7c2-tabs']}; // current batch FAQ Tabs Shape allocation
+  const current={'savings-targets':['.qxframe9a7c2-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup'],'notification-settings':['.qxframe9a7c2-selectgroup'],'faq':['.pv-tabs .qxframe9a7c2-tabs']}; // current batch FAQ Tabs Shape allocation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -53,8 +53,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','savings-targets',
-    'recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['sidebar-nav','dividend-income','payout-threshold','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
   assert.equal(count,4,'exactly four affected Control and Choice regions in Preview 01');
@@ -227,7 +226,7 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select arrow uses a theme-overridable SVG image slot');
   assert.match(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'dark SVG must use theme boundary (light-dark does not accept URLs)');
   assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
-  assert.match(css('composition'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-form-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes Theme pointer token and is restricted to pointer origin');
+  assert.match(css('composition'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes Theme pointer token and is restricted to pointer origin');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
   assert.match(css('composition'),/sidebar-menu-button:hover:not\(\.is-active\)[^\{]*\{[^}]*theme-muted/,'muted hover');

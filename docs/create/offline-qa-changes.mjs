@@ -1,7 +1,7 @@
 /** Current batch: shared Focus, SelectGroup, Choice and Control Shadow/Slider visuals. */
 const groups = [
   ['savings-targets','Savings Targets · InputGroup',[
-    ['.qxframe9a7c2-form-input-group','InputGroup Focus/Shadow','同主题边框焦点消费 pointer-focus/keyboard focus；Outline 为真实 CSS 外轮廓。','__QA_BUNDLE_HEAD__']
+    ['.qxframe9a7c2-input-group','InputGroup Focus/Shadow','同主题边框焦点消费 pointer-focus/keyboard focus；Outline 为真实 CSS 外轮廓。','__QA_BUNDLE_HEAD__']
   ],'01'],
   ['receiving-method','Receiving Method · SelectGroup',[
     ['.qxframe9a7c2-selectgroup','SelectGroup Radius/Choice','圆角统一 Item 档位；无 Appearance 焦点仅由指示器/原生控件绘制。','__QA_BUNDLE_HEAD__']

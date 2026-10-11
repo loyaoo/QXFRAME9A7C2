@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 canonical InputGroup class migration (CI pending)
+- HEAD parent 13038d10a4758900c6e835ba7386350ecd9087ab; PR #265 Draft/open/unmerged. Previous verify:create-app failed due stale previous-round highlight ban on currently highlighted Savings Targets; corrected in this batch.
+- Canonical CSS class selector is now qxframe9a7c2-input-group and companion -item/-field/-addon/-prefix/-suffix/-kbd etc; qxframe9a7c2-form-input-group removed from active composition, Create previews, component docs/labs and verifiers. No runtime qxframe.js edits or obsolete class aliases.
+- Shared Focus/Choice/Slider/Shadow fixes from parent preserved. Browser/static acceptance updated alongside migration. Next: exact-HEAD full CI, Chromium, artifact/Windows ZIP; no merge.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 shared Focus/Choice/Slider/Shadow contract (CI pending)
 - Parent 6ec3267fe9e1777ea1d407c253cd34c4692ce4c4 QXFRAME #38108679776 and CSS Schema #38108679788 SUCCESS, PR #265 Draft/open/unmerged.
 - Pointer Outline is now true CSS outline (2px, -1px), no faux pointer-shadow. Tabs pointer shell draws actual outline and still composes selected elevation and independent halo only in halo mode.
