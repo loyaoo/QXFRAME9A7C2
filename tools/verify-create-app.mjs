@@ -115,7 +115,7 @@ check('connected JS Input never draws a second pointer Outline',()=>{
   const css=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
   assert.match(css,/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-input-group-field>\.qxframe9a7c2-input\.is-focused/);
   assert.match(css,/\.qxframe9a7c2-input-group:not\(\.is-separated\):not\(\.is-vertical\):has\(>\.qxframe9a7c2-input-group-addon\)>\.qxframe9a7c2-input:focus-within/);
-  assert.match(css,/\.qxframe9a7c2-input-group-field>\.qxframe9a7c2-input\.is-focused\{\s*outline:none/);
+  assert.match(css,/\.qxframe9a7c2-input-group-field>\.qxframe9a7c2-input\.is-focused:not\(\.is-disabled\):not\(\.is-focus-outline-disabled\):not\(\.is-readonly\)\{\s*outline:none/);
 });
 
 check('normal Control Shadow is shared and separate from pointer/keyboard focus',()=>{
