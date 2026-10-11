@@ -111,6 +111,13 @@ check('unwrapped native SelectGroup checkbox and radio share canonical visuals',
    assert.ok(css.includes('selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:checked)):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)) .qxframe9a7c2-selectgroup-indicator.is-'+kind),'Hover never supersedes checked, disabled, or focused '+kind);
 });
 
+check('connected JS Input never draws a second pointer Outline',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+  assert.match(css,/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-input-group-field>\.qxframe9a7c2-input\.is-focused/);
+  assert.match(css,/\.qxframe9a7c2-input-group:not\(\.is-separated\):not\(\.is-vertical\):has\(>\.qxframe9a7c2-input-group-addon\)>\.qxframe9a7c2-input:focus-within/);
+  assert.match(css,/\.qxframe9a7c2-input-group-field>\.qxframe9a7c2-input\.is-focused\{\s*outline:none/);
+});
+
 check('normal Control Shadow is shared and separate from pointer/keyboard focus',()=>{
   const compiler=read('compiler.js'),source=p=>fs.readFileSync(path.join(root,p),'utf8');
   const native=source('src/styles/components/native-input.css'),form=source('src/styles/components/form-native.css');
