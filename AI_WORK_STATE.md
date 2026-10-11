@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Stage5 Preview03 public Components vs BuildingBlocks correction (CI pending)
+- QX public global has both `Components` and `BuildingBlocks`. QX UMD Components excludes Tree, Calendar, ColorPanel, List, OptionList, PeriodPanel and VirtualList by design: these are public BuildingBlocks. Updated Preview03 18+48 runtime mount helpers to read either namespace; restored real QX Tree cards (no replacement JSON stand-ins).
+- Draft PR #267, 66 original business cards and 66/66 documented family matrix. Next must pass exact-head QXFRAME CI, CSS Schema browser gate, official complete Windows dist+docs artifact. Preview01/02 unchanged, main untouched.
+
 ## CURRENT — 2026-10-11 Preview03 expanded to 66 commercial Cards, 66/66 component documentation families (CI pending)
 - Stage5 Draft PR #267; owner requested at least 48 commercial Cards and **all documented QX components**, not a limited 18-Card gallery.
 - 18 existing Preview03 Cards preserved; 48 new QX business compositions added: **66 total**. Repository docs/components has 66 component families, every one mapped in docs/create/preview-03-coverage.json. Distinguish actual QX JS runtime mounting vs QX framework-native CSS/static behavioral components. Avoid falsely claiming static components are JS instances.

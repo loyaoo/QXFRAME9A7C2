@@ -11,8 +11,9 @@ function card(id){return document.querySelector('[data-card="'+id+'"]');}
 function mount(id,type,opts){
   var node=host(id);if(!node)return;
   try{
-    if(!C[type]||typeof C[type].create!=='function')throw new Error(type+' runtime unavailable');
-    var instance=C[type].create(Object.assign({container:node},opts||{}));
+    var Factory=C[type]||(Q.BuildingBlocks&&Q.BuildingBlocks[type]);
+    if(!Factory||typeof Factory.create!=='function')throw new Error(type+' public Components/BuildingBlocks create unavailable');
+    var instance=Factory.create(Object.assign({container:node},opts||{}));
     if(instance){live[id]=instance;owned.push(instance);}
     if(!node.children.length)throw new Error(type+' rendered no content');
   }catch(error){
@@ -34,7 +35,7 @@ var org=[
   {key:'partners',value:'partners',label:'Partners',items:[{key:'agency',value:'agency',label:'Agency'}]}
 ];
 // UMD Components exposes TreeSelect but not the standalone Tree constructor; QX JSON uses Tree internally.
-mount('workspace-tree','JSON',{data:{Company:{Product:{'Web app':'Production',Mobile:'Canary'},Operations:{Finance:'Restricted',Support:'Standard'}},Partners:{Agency:'Limited'}},collapsed:false,toolbar:false,copy:false});
+mount('workspace-tree','Tree',{items:org,expandedKeys:['workspaces','product'],checkable:true,checkedKeys:['web','finance'],showLine:true,expandOnRowClick:true});
 mount('workspace-tree-select','TreeSelect',{items:org,defaultValue:['web','finance'],multiple:true,searchable:true,clearable:true,maxVisibleTags:2,expandedKeys:['workspaces','product']});
 mount('member-transfer','Transfer',{items:items([['a','Alex Morgan'],['b','Sam Patel'],['c','Taylor Chen'],['d','Jordan Lee'],['e','Jamie Park']]),value:['a','c'],titles:['Available','Assigned'],searchable:true,sortable:true});
 mount('onboarding-steps','Steps',{current:1,clickable:true,items:[{title:'Profile'},{title:'Review'},{title:'Provision'},{title:'Finish'}]});

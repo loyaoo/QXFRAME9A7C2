@@ -22,7 +22,7 @@ function mount(id,type,opts){
  var target=el(id);
  if(!target)return null;
  try{
-   var Factory=C[type];
+   var Factory=C[type]||(Q.BuildingBlocks&&Q.BuildingBlocks[type]);
    if(!Factory||typeof Factory.create!=='function')throw new Error(type+' has no public create');
    var config=Object.assign({container:target},opts||{});
    var x=Factory.create(config);
@@ -75,7 +75,7 @@ try{if(C.Trigger&&typeof C.Trigger.create==='function'){var floating=document.cr
 mount('contract-documents','Upload',{multiple:true,drag:true,autoUpload:false,listType:'text',accept:'.pdf,.doc,.docx',beforeUpload:function(){return false}});
 mount('virtual-monitor','VirtualList',{items:Array.from({length:500},function(_,i){return item('event-'+i,'Event '+String(i+1).padStart(3,'0')+' · '+(i%7===0?'Warning':'Success'))}),estimateSize:32,height:204,overscan:6,itemRender:function(x){return x.label}});
 mount('dial-settings','WheelPicker',{columns:[{key:'year',label:'Year',items:['2026','2027','2028'].map(function(y){return item(y,y)})},{key:'month',label:'Month',items:['01','02','03','04','05','06','07','08','09','10','11','12'].map(function(m){return item(m,m)})}],value:['2026','10'],needConfirm:true,showCancel:true});
-mount('org-hierarchy','JSON',{data:{Headquarters:{Engineering:{Platform:'Active',Infra:'Active'},Operations:{Billing:'Active',Risk:'Active'}},Regional:{Europe:'Active',Americas:'Active'}},toolbar:false,collapsed:false,copy:false});
+mount('org-hierarchy','Tree',{items:[{key:'hq',value:'hq',label:'Headquarters',items:[{key:'engineering',value:'engineering',label:'Engineering',items:[{key:'platform',value:'platform',label:'Platform'},{key:'infra',value:'infra',label:'Infrastructure'}]},{key:'ops',value:'ops',label:'Operations'}]},{key:'regional',value:'regional',label:'Regional offices',items:[{key:'europe',value:'europe',label:'Europe'},{key:'americas',value:'americas',label:'Americas'}]}],expandedKeys:['hq','engineering'],showLine:true,expandOnRowClick:true});
 var meter=mount('distribution-hub','Progress',{percent:98,type:'line',status:'success'});
 var rev=mount('revenue-desk','Rate',{value:4.5,count:5,half:true,readOnly:true});
 var staticNames=['alert','avatar','badge','button','card','checkbox','control','descriptions','empty','form','grid','icon','item','layout','message','radio','ripple','scroll','switch','transition-group','transition','trigger'];
