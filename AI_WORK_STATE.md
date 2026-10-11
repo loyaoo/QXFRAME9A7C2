@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-11 Inverted Menu Picker QA highlight closeout (CI pending)
+- Only 6 affected Preview03 cards / 8 Picker regions are annotated in offline QA. All 48 previous commercial gallery creation highlights cleared; Preview01/02 accepted cards stay unchanged.
+- Underlying global Theme consumer corrections are in src/styles/main/theme-visual-v2.css, checked via 64 combinations in real Chromium. Draft PR #267 unmerged.
+
 ## CURRENT — 2026-10-11 Picker inverted Menu semantic role repair (CI pending)
 - Owner reports incorrect Picker internals in inverse Menu mode. Root cause: floating Menu popup receives --theme-menu bg/fg, nested ItemCollection/Calendar/PeriodPanel/TimePanel/ColorPanel/inputs still rebind page-level semantic/control colors under @scope universal; selected dates and wheel choices hardcode theme-primary.
 - Fixed local role chain in src/styles/main/theme-visual-v2.css for menu popup and nested items, search, groups, footer borders, input, calendar/period selected, wheel selected, presets and color panel. Popover/Dialog surface remains independent from Menu color; no new Theme tokens.
