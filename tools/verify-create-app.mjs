@@ -78,6 +78,15 @@ check('Tabs keyboard focus preserves the selected elevation on the same focus sh
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
 
+check('unwrapped native SelectGroup checkbox and radio share canonical visuals',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const base=css.slice(0,css.indexOf('/* Checkbox check / indeterminate glyph. */'));
+ assert.match(base,/selectgroup-item:not\(:has\(>\.qxframe9a7c2-selectgroup-label\)\)>\.qxframe9a7c2-selectgroup-input\[type="checkbox"\]/);
+ assert.match(base,/selectgroup-item:not\(:has\(>\.qxframe9a7c2-selectgroup-label\)\)>\.qxframe9a7c2-selectgroup-input\[type="radio"\]/);
+ for(const kind of ['checkbox','radio'])
+   assert.ok(css.includes('selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:checked)):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)) .qxframe9a7c2-selectgroup-indicator.is-'+kind),'Hover never supersedes checked, disabled, or focused '+kind);
+});
+
 check('real Focus outline and common Choice/Slider/Control Surface contracts',()=>{
  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
  const group=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
