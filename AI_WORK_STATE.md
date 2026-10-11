@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-11 Stage3 QA ledger gate follows current changed Textarea only (CI pending)
+- Previous HEAD c47e8106eb2ba336ae3767e2874a8f55ec13efd6 QXFRAME Release CSS constraint now passed, but static QA verifier still expected three old InputGroup/SelectGroup/Tabs highlights and actively banned Payout Threshold. Updated strictly to one current Payout Threshold Textarea marker, so previous highlights remain cleared. No component CSS/geometry changed by this correction; new exact-head dual CI needed. PR stays Draft.
+
 ## CURRENT — 2026-10-11 Stage3 native Focus strict rem-length correction (CI pending)
 - Previous exact HEAD a50a286606d98b6691e9b1b17ce7a226d05ace51 failed QXFRAME Release CSS constraints because bare keyboard Focus outline fallback used literal 2px; corrected to 0.125rem (still computed 2px). Static test exact consumer fallback synchronized. Other fixes and Chromium matrix unchanged. Await new exact-head dual CI; PR #265 remains Draft/unmerged.
 
