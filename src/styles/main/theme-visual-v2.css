@@ -547,11 +547,3 @@
   }
 }
 
-/* Pointer and keyboard Focus have distinct Theme colors, never the imported
- * shadcn palette ring. Validation feedback remains higher priority. */
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-button:focus-visible:not(.is-disabled):not(:disabled),
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus-visible:not(:disabled),
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus-visible:not(:disabled),
-html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus-visible:not(:disabled){
-  border-color:var(--qxframe9a7c2-theme-focus)
-}
