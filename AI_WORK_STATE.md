@@ -1,3 +1,13 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 shared Focus/Choice/Slider/Shadow contract (CI pending)
+- Parent 6ec3267fe9e1777ea1d407c253cd34c4692ce4c4 QXFRAME #38108679776 and CSS Schema #38108679788 SUCCESS, PR #265 Draft/open/unmerged.
+- Pointer Outline is now true CSS outline (2px, -1px), no faux pointer-shadow. Tabs pointer shell draws actual outline and still composes selected elevation and independent halo only in halo mode.
+- InputGroup and Button no longer consume theme-ring (imported shadcn source palette). Pointer border uses theme-pointer-focus; keyboard border theme-focus. Status feedback outranks Focus.
+- Connected InputGroup/Field retains single focus/box-shadow owner; native and JS Inputs, outline/muted SelectGroup consume the same theme-shadow-control elevation configured by Theme Shadow axis. No second shadow for hosted editor. Appearance None stays unboxed.
+- Label-backed SelectGroup input is clipped, bare input stays native and uses shared Checkbox/Radio Choice projection; label/title/description may remain adjacent. Default None Keyboard Focus projects only to Indicator/bare native input.
+- Shared Checkbox/Radio hover takes common Theme Hover border strength; V2 indeterminate state now includes form-check + SelectGroup indicator with foreground for glyph. Slider handles use real 1px border (Luma/Rhea receive input border instead of transparent), SelectGroup uses radius-item.
+- Static and browser tests aligned to true pointer outline semantics; offline annotation only current changed InputGroup, SelectGroup, Choice, FAQ Focus regions.
+- Remaining comprehensive migration: rename all form-input-group selector/class/markup usages, and consolidate the legacy private *-ring shadow slot names across repo; cannot claim complete until all references/gates updated. Keep PR Draft, no Stage 4/5.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 FAQ segmented Tabs Theme radius allocation (CI pending)
 - Previous development HEAD 2da75989ff62c96066e5b2523fab6eaee434d9b4 verified QXFRAME #38107758242 and CSS Schema #38107758253 SUCCESS; PR #265 remains Draft/unmerged.
 - Examined 528-case pinned source inner-role diagnostics with semantic/text matching. Field/title border readings reflect nonhomologous wrappers; Upcoming Payments source 27 calendar trigger vs QX unnamed nav button also different roles and must not be treated as defects.

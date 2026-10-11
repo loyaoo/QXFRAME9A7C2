@@ -84,13 +84,13 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input:focus-visible:n
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-select:focus-visible:not(:disabled),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
 html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
-  box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
+  box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-focus-shadow,0 0 0 0 transparent)
 }
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible:not(:disabled),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-select:focus-visible:not(:disabled),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-textarea:focus-visible:not(:disabled),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible:not(:disabled){
-  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
+  box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)
 }
 
 /* Theme Focus Background: zero keeps the authored control surface; 100% overlays

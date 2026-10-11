@@ -80,9 +80,9 @@ const STYLE_LOOKS = {
   maia: { overlay: 80, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'primary', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'sm', switchShadow: 'none', metaGap: 0.5, progress: 0.75 },
   lyra: { overlay: 10, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
   mira: { overlay: 80, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
-  luma: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'transparent', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.75 },
+  luma: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.75 },
   sera: { overlay: 20, switchTrack: ['input', 'input'], switchBorder: 'input/50', rail: 'input/50', thumb: 'primary', thumbBorder: 'transparent', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 0, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.375, progress: 0.125 },
-  rhea: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'transparent', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.5 }
+  rhea: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.5 }
 };
 const SLIDER_THUMB = { vega: 1, nova: 0.75, maia: 1, lyra: 0.75, mira: 0.75, luma: 1, sera: 0.75, rhea: 1 };
 
@@ -331,8 +331,7 @@ export function themeTokens(resolved) {
   // Keyboard theme explicitly changes the native focus boundary as before.
   // Pointer color never mutates the keyboard or neutral ring token.
   if (ext.keyboardFocusColor === 'theme') {
-    light.ring = light.primary;
-    dark.ring = dark.primary;
+    // Source palette ring is not an interactive CSS focus role.
   }
 
   // Typography.
@@ -575,7 +574,7 @@ export function themeTokens(resolved) {
 
   // Elevation.
   const [cardTier, popupTier, dialogTier] = SHADOW_TIERS[ext.shadow];
-  root['shadow-control'] = control.shadow ? SHADOWS.xs : 'none';
+  root['shadow-control'] = ext.shadow === 'none' ? 'none' : SHADOWS.xs;
   root['shadow-card'] = SHADOWS[cardTier];
   root['shadow-popup'] = SHADOWS[popupTier];
   root['shadow-dialog'] = SHADOWS[dialogTier];
@@ -592,13 +591,10 @@ export function themeTokens(resolved) {
   root['focus-shadow'] = ext.keyboardFocus === 'ring'
     ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
     : 'none';
-  // Pointer never consumes CSS outline: explicit "outline" means a sharp
-  // external 2px shadow edge, preserving FocusOrigin and component elevation.
+  // Outline means the actual CSS outline (2px/-1px), not a shadow.
   root['pointer-shadow'] = ext.pointerFocus === 'ring'
     ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
-    : ext.pointerFocus === 'outline'
-      ? '0 0 0 0.125rem var(--qxframe9a7c2-theme-pointer-focus)'
-      : 'none';
+    : 'none';
   root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
   root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';
   root['focus-background-strength'] = ext.focusBackground === 'parent-surface' ? '100%' : '0%';

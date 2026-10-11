@@ -42,7 +42,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'faq':['.pv-tabs .qxframe9a7c2-tabs.is-segmented']}; // current batch FAQ Tabs Shape allocation
+  const current={'savings-targets':['.qxframe9a7c2-form-input-group'],'receiving-method':['.qxframe9a7c2-selectgroup'],'notification-settings':['.qxframe9a7c2-selectgroup'],'faq':['.pv-tabs .qxframe9a7c2-tabs']}; // current batch FAQ Tabs Shape allocation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview.includes('data-card="'+id+'"'),'current Card '+id);
@@ -57,8 +57,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'one modified FAQ Tabs Theme radius region in Preview 01');
-  assert.match(ledger,/const groups = \[/,'live Tabs Radius ledger exists');
+  assert.equal(count,4,'exactly four affected Control and Choice regions in Preview 01');
+  assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -79,12 +79,35 @@ check('Tabs keyboard focus preserves the selected elevation on the same focus sh
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
 
+check('real Focus outline and common Choice/Slider/Control Surface contracts',()=>{
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const group=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
+ const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const form=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+ const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
+ const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(compiler.includes("root['shadow-control'] = ext.shadow === 'none' ? 'none' : SHADOWS.xs"),'Shadow axis has single Control elevation role');
+ assert.ok(compiler.includes("root['pointer-shadow'] = ext.pointerFocus === 'ring'"),'only explicit halo owns focus shadow');
+ assert.ok(!compiler.includes("ext.pointerFocus === 'outline'\n      ? '0 0 0"),'no shadow-simulated outline');
+ assert.doesNotMatch(group,/var\(--qxframe9a7c2-theme-ring\)/,'InputGroup no imported palette ring');
+ assert.doesNotMatch(button,/var\(--qxframe9a7c2-theme-ring\)/,'Button no imported palette ring');
+ assert.ok(group.includes('border-color:var(--qxframe9a7c2-theme-pointer-focus)'),'pointer Focus border');
+ assert.ok(group.includes('border-color:var(--qxframe9a7c2-theme-focus)'),'keyboard Focus border');
+ assert.ok(form.includes('border-radius:var(--qxframe9a7c2-theme-radius-item)'),'SelectGroup uses Item radius not Card');
+ assert.ok(form.includes('selectgroup-item:has(>.qxframe9a7c2-selectgroup-label)>.qxframe9a7c2-selectgroup-input'),'only labels hide native input');
+ assert.ok(choice.includes('selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))'),'bare SelectGroup uses shared Choice visuals');
+ assert.ok(choice.includes('var(--qxframe9a7c2-theme-hover-border-strength)'),'choice Hover consumes Theme strength');
+ assert.ok(v2.includes('.qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate'),'half-selected foreground is shared');
+ assert.ok(slider.includes('border:1px solid var(--_qxframe9a7c2-slider-handle-border)'),'all Slider handles use 1px');
+});
+
 check('Tabs pointer Focus paints once on the shell using independent Theme axes',()=>{
   const css=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
   assert.ok(css.includes('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tabs-tab:focus-within:not(.is-disabled):not(:disabled){'),'pointer Tab shell has terminal guards');
-  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:inset 0 0 0 var(--qxframe9a7c2-theme-pointer-width'),'pointer inset border uses Theme style without forbidden outline');
-  assert.ok(css.includes('var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'pointer halo composes in same ring slot');
-  assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab:focus-within[^}]*\boutline\s*:/,'pointer focus never paints an outline');
+  assert.ok(css.includes('outline:var(--qxframe9a7c2-theme-pointer-width,0px) solid color-mix('),'pointer outline paints genuine 2px/-1px CSS outline when configured');
+  assert.ok(css.includes('--_qxframe9a7c2-tabs-tab-ring:var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)'),'only explicit pointer halo uses shadow');
+  assert.match(css,/outline-offset:var\(--qxframe9a7c2-theme-pointer-offset,-1px\)/,'pointer outline offset belongs to Theme');
   assert.ok(css.includes('box-shadow:var(--_qxframe9a7c2-tabs-tab-elevation),var(--_qxframe9a7c2-tabs-tab-ring)'),'selected elevation is never replaced');
 });
 

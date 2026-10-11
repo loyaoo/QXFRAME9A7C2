@@ -98,7 +98,7 @@
   --_qxframe9a7c2-button-hover-border:var(--_qxframe9a7c2-button-hover);
   --_qxframe9a7c2-button-hover-text:var(--_qxframe9a7c2-button-on-accent);
   --_qxframe9a7c2-button-focus-bg:transparent;
-  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-ring);
+  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-pointer-focus);
   --_qxframe9a7c2-button-focus-text:var(--_qxframe9a7c2-button-on-accent);
   --_qxframe9a7c2-button-active-bg:var(--_qxframe9a7c2-button-active);
   --_qxframe9a7c2-button-active-border:var(--_qxframe9a7c2-button-active);
@@ -134,7 +134,7 @@
   --_qxframe9a7c2-button-hover-border:var(--_qxframe9a7c2-button-outline-border-hover);
   --_qxframe9a7c2-button-hover-text:var(--_qxframe9a7c2-button-hover);
   --_qxframe9a7c2-button-focus-bg:transparent;
-  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-ring);
+  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-pointer-focus);
   --_qxframe9a7c2-button-focus-text:var(--_qxframe9a7c2-button-accent);
   --_qxframe9a7c2-button-active-bg:var(--_qxframe9a7c2-button-soft-hover);
   --_qxframe9a7c2-button-active-border:var(--_qxframe9a7c2-button-active);
@@ -152,7 +152,7 @@
   --_qxframe9a7c2-button-hover-border:var(--qxframe9a7c2-theme-input);
   --_qxframe9a7c2-button-hover-text:var(--_qxframe9a7c2-button-hover);
   --_qxframe9a7c2-button-focus-bg:transparent;
-  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-ring);
+  --_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-pointer-focus);
   --_qxframe9a7c2-button-focus-text:var(--_qxframe9a7c2-button-accent);
   --_qxframe9a7c2-button-active-bg:var(--qxframe9a7c2-theme-muted);
   --_qxframe9a7c2-button-active-border:var(--qxframe9a7c2-theme-input);
@@ -409,3 +409,5 @@
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading){
   box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-pointer-shadow,none)
 }
+
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-button:focus-visible{--_qxframe9a7c2-button-focus-border:var(--qxframe9a7c2-theme-focus)}

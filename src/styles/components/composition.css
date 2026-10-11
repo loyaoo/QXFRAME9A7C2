@@ -323,8 +323,10 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
 }
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
 .qxframe9a7c2-form-input-group-field:focus-within{
-  border-color:var(--qxframe9a7c2-theme-ring);
+  border-color:var(--qxframe9a7c2-theme-pointer-focus);
 }
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):focus-within,
+html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-form-input-group-field:focus-within{border-color:var(--qxframe9a7c2-theme-focus)}
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon),
 .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input-group-field,
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input.is-warning),
@@ -399,7 +401,7 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-field.is-warnin
 .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)),
 .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-form-input:focus-visible),
 .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-keyboard-focus:not(.is-disabled)){
-  box-shadow:var(--qxframe9a7c2-theme-focus-shadow,none)
+  box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-focus-shadow,0 0 0 0 transparent)
 }
 /* A nested group is an independent composition island. Mixing connected
  * seam ownership across parent/child roots is not implicit. */
@@ -472,9 +474,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-fie
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input:focus-visible),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)),
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input-group-field:has(>.qxframe9a7c2-input.is-focused:not(.is-disabled)){
-  outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
+  outline:var(--qxframe9a7c2-theme-pointer-width) solid color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) var(--qxframe9a7c2-theme-pointer-opacity),transparent);
   outline-offset:var(--qxframe9a7c2-theme-pointer-offset);
-  box-shadow:var(--qxframe9a7c2-theme-pointer-shadow,none)
+  box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--qxframe9a7c2-theme-pointer-shadow,0 0 0 0 transparent)
 }
 
 /* Connected InputGroup must expose the same subtle hover border as a single
@@ -521,3 +523,7 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup .qxframe
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-input:focus+.qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-pointer-focus)
 }
+
+/* The connected InputGroup or Field is the single Control elevation owner. */
+.qxframe9a7c2-form-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-form-input-group-addon):not(:focus-within),
+.qxframe9a7c2-form-input-group-field:not(:focus-within){box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)}

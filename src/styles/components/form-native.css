@@ -60,7 +60,7 @@
 
 .qxframe9a7c2-selectgroup-item{position:relative;z-index:0;display:inline-block;margin:0;cursor:pointer;user-select:none}
 .qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-input:checked){z-index:var(--qxframe9a7c2-z-local-above)}
-.qxframe9a7c2-selectgroup-input{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+.qxframe9a7c2-selectgroup-item:has(>.qxframe9a7c2-selectgroup-label)>.qxframe9a7c2-selectgroup-input{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 /* SelectGroup: native input owns checked/disabled; Surface owns appearance and focus.
  * None is default (no appearance modifier, border/background/padding all zero).
  * Layout belongs to a separate inner Flex/Stack DOM, not the visual Surface. */
@@ -72,7 +72,7 @@
   position:relative;box-sizing:border-box;display:flex;min-width:0;align-items:stretch;
   justify-content:flex-start;gap:0;padding:0;overflow:visible;
   border:0 solid var(--_qxframe9a7c2-choice-border);
-  border-radius:var(--qxframe9a7c2-theme-radius-field);
+  border-radius:var(--qxframe9a7c2-theme-radius-item);
   background:var(--_qxframe9a7c2-choice-bg);color:var(--_qxframe9a7c2-choice-text);
   outline:var(--_qxframe9a7c2-choice-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);
   box-shadow:var(--_qxframe9a7c2-choice-ring);opacity:var(--_qxframe9a7c2-choice-opacity);
@@ -425,3 +425,9 @@
 .qxframe9a7c2-form-field.is-warning>.qxframe9a7c2-field-error{color:var(--qxframe9a7c2-theme-warning)}
 .qxframe9a7c2-field.is-invalid>.qxframe9a7c2-field-error,
 .qxframe9a7c2-form-field.is-invalid>.qxframe9a7c2-field-error{color:var(--qxframe9a7c2-theme-destructive)}
+
+/* Bare SelectGroup shows the native choice, not an invisible 1px input. */
+.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input{position:static;clip:auto;clip-path:none;overflow:visible;white-space:normal;margin:0}
+.qxframe9a7c2-selectgroup:not(.is-outline):not(.is-muted) .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-outline:0 solid transparent;--_qxframe9a7c2-choice-ring:none}
+.qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label,
+.qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-label{box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-choice-ring)}
