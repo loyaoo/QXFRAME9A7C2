@@ -58,7 +58,7 @@ assert.match(css,/\.qxframe9a7c2-form-input-group>\.qxframe9a7c2-form-input-grou
   'InputGroup focus must resolve stacking through the private group-stack state channel.');
 
 assert.equal(count('--_qxframe9a7c2-calendar-cell-text'),0,'Calendar must not write the retired pre-unification cell-text channel.');
-assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,
+assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\);color:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,
   'Calendar outside-month dates must project the shared date-panel text channel to the disabled/muted semantic text color.');
 
 assert.equal(count('.qxframe9a7c2-card{'),1,'Card root must not be reopened as a late override.');
