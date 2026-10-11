@@ -361,6 +361,29 @@ try {
     assert.equal(await evaluate('document.activeElement.tagName'),'BUTTON','host keyboard origin restored');
   });
 
+  await step('Stage4 real waveform microphone permission/lifecycle and InviteMembers navigation',async()=>{
+    const actual=await evaluate("(async function(){\n const doc=document.querySelector('[data-create-frame]').contentDocument;\n const frame=doc.defaultView;\n const card=doc.querySelector('[data-card=\"live-waveform\"]');\n const buttons=Object.fromEntries(['listen','process','mode'].map(k=>[k,card.querySelector('[data-pv-wave-action=\"'+k+'\"]')]));\n const status=card.querySelector('[data-pv-wave-status]');\n const visual=card.querySelector('[data-pv-wave-visual]');\n const snapshot=()=>({\n  state:visual.getAttribute('data-pv-wave-state'),\n  mode:visual.getAttribute('data-pv-wave-mode'),\n  listen:buttons.listen.textContent.trim(),\n  process:buttons.process.textContent.trim(),\n  modeLabel:buttons.mode.textContent.trim(),\n  message:status.textContent\n });\n const initial=snapshot();\n let requests=0,stopped=0,closed=0;\n const media=frame.navigator.mediaDevices;\n const original=media?.getUserMedia;\n const OriginalContext=frame.AudioContext;\n if(!media)throw new Error('mediaDevices missing in localhost test');\n media.getUserMedia=()=>{requests++;return Promise.reject(Error('test permission denied'))};\n try{\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const denied=snapshot(),afterDenied=requests;\n  media.getUserMedia=()=>{requests++;return Promise.resolve({getTracks:()=>[{stop(){stopped++}}]})};\n  frame.AudioContext=class {\n    createAnalyser(){return {frequencyBinCount:128,fftSize:256,smoothingTimeConstant:0.8,getByteFrequencyData(a){a.fill(90)}}}\n    createMediaStreamSource(){return {connect(){}}}\n    close(){closed++;return Promise.resolve()}\n  };\n  buttons.listen.click();\n  await new Promise(r=>setTimeout(r,65));\n  const live=snapshot();\n  const rect=card.querySelector('.pv-wave rect').getAttribute('height');\n  buttons.mode.click();\n  const scrolling=snapshot();\n  buttons.listen.click();\n  const stoppedState=snapshot();\n  buttons.process.click();\n  const idle=snapshot();\n  buttons.process.click();\n  const processing=snapshot();\n  const invite=doc.querySelector('[data-pv-jump-invites]');\n  const target=doc.querySelector('[data-card=\"invite-team\"] [data-pv-invite-add]');\n  invite.click();\n  const focused=doc.activeElement===target;\n  return {initial,denied,afterDenied,live,rect,scrolling,stoppedState,idle,processing,requests,stopped,closed,focused};\n }finally{\n  media.getUserMedia=original;\n  frame.AudioContext=OriginalContext;\n }\n})()");
+    assert.equal(actual.initial.state,'processing');
+    assert.equal(actual.initial.mode,'static');
+    assert.equal(actual.afterDenied,1,'microphone requested only on click');
+    assert.equal(actual.denied.state,'processing','permission denied never claims live microphone');
+    assert.match(actual.denied.message,/permission denied/,'error is visible');
+    assert.equal(actual.live.state,'listening','actual stream and analyser were started');
+    assert.equal(actual.live.listen,'Stop Listening');
+    assert.match(actual.live.message,/Live microphone input.*not recorded or uploaded/);
+    assert.equal(actual.requests,2);
+    assert.equal(actual.scrolling.mode,'scrolling');
+    assert.equal(actual.scrolling.modeLabel,'Scrolling');
+    assert.equal(actual.stoppedState.state,'idle');
+    assert.equal(actual.stopped,1,'stop releases live audio track');
+    assert.equal(actual.closed,1,'stop closes audio context');
+    assert.equal(actual.idle.state,'processing');
+    assert.equal(actual.processing.state,'idle');
+    assert.equal(actual.focused,true,'InviteMembers action focuses real InviteTeam button');
+    // Leave host keyboard origin for existing CreateApp shortcuts.
+    await evaluate('document.querySelector("button:not([disabled])").focus({preventScroll:true})');
+  });
+
   await step('import errors are reported and keep the current configuration', async () => {
     const before = JSON.stringify((await state()).config);
     await key('o');

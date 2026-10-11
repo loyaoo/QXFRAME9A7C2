@@ -31,6 +31,11 @@ Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs
 - Invite Team: Add another constructs a new QX Select instance per new row; copy link works with clipboard or selects text as fallback.
 - Current QA only these three Cards/four regions; previous round highlights erased.
 
+## Stage4 fourth functional batch (2026-10-11)
+- LiveWaveform: source-based microphone permission/start/stop lifecycle, processing simulation, static/scrolling SVG state; local-only, tracks/AudioContext stopped on stop/pagehide, permission failures not masked.
+- No Team Members: Invite Members navigates/focuses the existing Invite Team Card rather than pretending to send invitations.
+- QA marks only those two Preview 02 Cards; no pixel-level changes to accepted QX widgets.
+
 ## Follow-up
 
 - Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.

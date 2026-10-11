@@ -244,6 +244,164 @@
     });
   }
 
+  // Stage4 LiveWaveform: microphone is requested ONLY after a real user click.
+  // Process is a synthetic preview animation, never labeled microphone data.
+  // Keep media streams local, release tracks/AudioContext on stop and unload.
+  var waveCard = document.querySelector('[data-card="live-waveform"]');
+  if (waveCard) {
+    var waveVisual = waveCard.querySelector('[data-pv-wave-visual]');
+    var waveStatus = waveCard.querySelector('[data-pv-wave-status]');
+    var waveBars = Array.prototype.slice.call(waveVisual.querySelectorAll('rect'));
+    var waveStart = waveCard.querySelector('[data-pv-wave-action="listen"]');
+    var waveProcess = waveCard.querySelector('[data-pv-wave-action="process"]');
+    var waveMode = waveCard.querySelector('[data-pv-wave-action="mode"]');
+    var waveState = { active:false, processing:true, mode:'static', stream:null, context:null,
+      analyser:null, phase:0, tick:null, generation:0, disposed:false };
+    function waveMessage(value) {
+      waveStatus.hidden = !value;
+      waveStatus.textContent = value || '';
+    }
+    function waveButton(button, active) {
+      button.classList.toggle('is-primary',active);
+      button.classList.toggle('is-solid',active);
+      button.classList.toggle('is-default',!active);
+      button.classList.toggle('is-outlined',!active);
+    }
+    function syncWave() {
+      waveStart.querySelector('.qxframe9a7c2-button-label').textContent =
+        (waveState.active ? 'Stop' : 'Start') + ' Listening';
+      waveProcess.querySelector('.qxframe9a7c2-button-label').textContent =
+        (waveState.processing ? 'Stop' : 'Start') + ' Processing';
+      waveMode.querySelector('.qxframe9a7c2-button-label').textContent =
+        waveState.mode === 'static' ? 'Static' : 'Scrolling';
+      waveButton(waveStart,waveState.active);
+      waveButton(waveProcess,waveState.processing);
+      waveVisual.setAttribute('data-pv-wave-state',
+        waveState.active ? 'listening' : waveState.processing ? 'processing' : 'idle');
+      waveVisual.setAttribute('data-pv-wave-mode',waveState.mode);
+    }
+    function stopMedia() {
+      ++waveState.generation;
+      if (waveState.stream) {
+        waveState.stream.getTracks().forEach(function (track) { track.stop(); });
+        waveState.stream = null;
+      }
+      if (waveState.context) {
+        var closing = waveState.context.close();
+        if (closing && closing.catch) closing.catch(function () {});
+        waveState.context = null;
+      }
+      waveState.analyser = null;
+      waveState.active = false;
+    }
+    function paintWave() {
+      if (waveState.disposed || (!waveState.active && !waveState.processing)) return;
+      waveState.phase += 0.18;
+      var data = null;
+      if (waveState.active && waveState.analyser) {
+        data = new Uint8Array(waveState.analyser.frequencyBinCount);
+        waveState.analyser.getByteFrequencyData(data);
+      }
+      waveBars.forEach(function (rect,i) {
+        var fraction = i / Math.max(1,waveBars.length - 1);
+        var source = data ? data[Math.min(data.length - 1, Math.floor((waveState.mode === 'static'
+          ? Math.abs(fraction * 2 - 1) : 1 - fraction) * data.length))] / 255 :
+          0.16 + (Math.sin(waveState.phase + i * 0.16) + Math.cos(waveState.phase * 0.7 - i * 0.11) + 2) * 0.1;
+        var height = 4 + Math.min(1,Math.max(0,source)) * 56;
+        if (waveState.mode === 'static') height *= 0.45 + (1-Math.abs(fraction*2-1))*0.55;
+        height = Math.max(4,Math.min(64,height));
+        rect.setAttribute('height',height.toFixed(2));
+        rect.setAttribute('y',((80-height)/2).toFixed(2));
+        rect.setAttribute('opacity',(0.38+source*0.55).toFixed(2));
+      });
+    }
+    waveState.tick = window.setInterval(paintWave,120);
+    waveStart.addEventListener('click',function () {
+      if (waveState.active) {
+        stopMedia();
+        waveMessage('Microphone stopped; audio was not recorded or uploaded.');
+        syncWave();
+        return;
+      }
+      if (waveStart.disabled) return;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        waveMessage('Microphone is unavailable in this browser or context.');
+        return;
+      }
+      var version = ++waveState.generation;
+      waveStart.disabled = true;
+      navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})
+        .then(function (stream) {
+          if (waveState.disposed || version !== waveState.generation) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            return;
+          }
+          var AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtor) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            throw Error('AudioContext is unavailable');
+          }
+          var ctx;
+          try {
+            ctx = new AudioCtor();
+            var analyser = ctx.createAnalyser();
+            analyser.fftSize = 256;
+            analyser.smoothingTimeConstant = 0.8;
+            ctx.createMediaStreamSource(stream).connect(analyser);
+            waveState.stream = stream;
+            waveState.context = ctx;
+            waveState.analyser = analyser;
+          } catch (err) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            if (ctx) { try { ctx.close(); } catch (_) {} }
+            throw err;
+          }
+          waveState.active = true;
+          waveState.processing = false;
+          waveMessage('Live microphone input (local only; not recorded or uploaded).');
+        })
+        .catch(function (error) {
+          if (version !== waveState.generation || waveState.disposed) return;
+          waveMessage('Microphone not started: ' + (error && error.message || 'permission denied'));
+        })
+        .finally(function () {
+          if (version !== waveState.generation || waveState.disposed) return;
+          waveStart.disabled = false;
+          syncWave();
+        });
+    });
+    waveProcess.addEventListener('click',function () {
+      if (!waveState.processing) {
+        stopMedia();
+        waveState.processing = true;
+        waveMessage('Simulated processing animation; microphone is off.');
+      } else {
+        waveState.processing = false;
+        waveMessage('Waveform idle; microphone is off.');
+      }
+      syncWave();
+    });
+    waveMode.addEventListener('click',function () {
+      waveState.mode = waveState.mode === 'static' ? 'scrolling' : 'static';
+      syncWave();
+    });
+    window.addEventListener('pagehide',function () {
+      waveState.disposed = true;
+      stopMedia();
+      if (waveState.tick) window.clearInterval(waveState.tick);
+    },{once:true});
+    syncWave();
+  }
+  // The Preview 02 InviteMembers CTA should lead to the existing InviteTeam
+  // composition, not pretend to send an invitation without an API.
+  var inviteJump = document.querySelector('[data-pv-jump-invites]');
+  if (inviteJump) inviteJump.addEventListener('click',function () {
+    var target = document.querySelector('[data-card="invite-team"] [data-pv-invite-add]');
+    if (!target) return;
+    target.scrollIntoView({block:'nearest'});
+    target.focus({preventScroll:true});
+  });
+
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
     if (!Calendar) return;

@@ -1,14 +1,11 @@
-/** Stage4: only local file picker/drop, bug attachment, dynamic invites. */
+/** Stage4: LiveWaveform real media/processing states; InviteMembers cross-card action. */
 const groups = [
- ['file-upload','File Upload · Local Picker and Drop',[
-  ['[data-pv-file-drop]','文件选择及拖入可用','PNG/JPG/PDF 10MB 限制；反馈明确标注未上传服务器。','__QA_BUNDLE_HEAD__']
+ ['live-waveform','Live Audio Waveform · Real State',[
+  ['[data-pv-wave-visual]','真实麦克风波形或模拟处理动画','点击后才申请麦克风；权限拒绝不伪造监听；停止释放音轨、AudioContext；Static / Scrolling 可切换。','__QA_BUNDLE_HEAD__'],
+  ['.qxframe9a7c2-card-footer','三个波形按钮可操作','Start/Stop Listening、Processing 和模式状态按原组件语义切换。','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['report-bug','Report Bug · Attach File',[
-  ['[data-pv-bug-attach]','附件按钮可操作','调用原生文件选择器，显示本地附件文件名，不假报已上传。','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['invite-team','Invite Team · Dynamic Invite',[
-  ['[data-pv-invite-add]','Add another 真正新增邀请行','新角色选择框用新的 QX Select Controller 实例而非复制已挂载 DOM。','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-invite-copy]','邀请链接可复制','支持 Clipboard API；不可用时选择文本提示手动复制。','__QA_BUNDLE_HEAD__']
+ ['no-team-members','No Team Members · Invite Members',[
+  ['[data-pv-jump-invites]','邀请入口定位至 Invite Team','焦点跳转到现有 Invite Team 操作，不假装已经发送邀请。','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -72,7 +69,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 File Upload、Report Bug、Invite Team 文件与邀请操作；之前的高亮已清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Live Audio Waveform 与 No Team Members；上一轮高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

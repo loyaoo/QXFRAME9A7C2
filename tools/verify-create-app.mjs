@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'file-upload':['[data-pv-file-drop]'],'report-bug':['[data-pv-bug-attach]'],'invite-team':['[data-pv-invite-add]','[data-pv-invite-copy]']}; // Stage4 local file/invite behavior
+  const current={'live-waveform':['[data-pv-wave-visual]','.qxframe9a7c2-card-footer'],'no-team-members':['[data-pv-jump-invites]']}; // Stage4 waveform and cross-card invitation
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
@@ -72,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'only current Stage4 4 changed file/invite regions are highlighted');
+  assert.equal(count,3,'only current Stage4 waveform/invite regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -488,6 +488,22 @@ check('Stage4 local file selection, attachment, and dynamic invite use real nati
  assert.match(runtime,/C\.Select\.create\(\{\s*container: role/,'new invite row uses QX Select instance, not cloned DOM');
  assert.match(runtime,/navigator\.clipboard\.writeText/,'copy supports native browser clipboard');
  assert.match(runtime,/Invite link selected; use Ctrl\+C/,'copy failure remains actionable');
+});
+
+
+check('Stage4 waveform media lifecycle and InviteMembers cross-card focus are real behaviors',()=>{
+ const html=read('preview-02.html'),runtime=read('preview-cards.js');
+ for(const action of ['listen','process','mode'])
+   assert.ok(html.includes('data-pv-wave-action="'+action+'"'),'QX waveform button '+action);
+ assert.match(html,/data-pv-wave-visual/,'live waveform data state');
+ assert.match(html,/data-pv-jump-invites/,'invite CTA');
+ assert.match(runtime,/navigator\.mediaDevices\.getUserMedia\(\{audio:/,'microphone only on action');
+ assert.match(runtime,/getTracks\(\)\.forEach/,'stop all microphone tracks');
+ assert.match(runtime,/createMediaStreamSource\(stream\)\.connect\(analyser\)/,'actual analyser consumes live microphone stream');
+ assert.match(runtime,/window\.addEventListener\('pagehide'/,'release media and timer on unload');
+ assert.match(runtime,/waveState\.mode === 'static' \? 'scrolling' : 'static'/,'mode toggles static/scrolling');
+ assert.match(runtime,/target\.focus\(\{preventScroll:true\}\)/,'invite CTA focuses existing QX action');
+ assert.match(runtime,/not recorded or uploaded/,'local privacy disclosure');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{
