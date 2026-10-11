@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-11 Stage3 explicit FocusOrigin gate for standalone native controls (CI pending)
+- Parent 6a70f404e2eb9375f82c8fa154e68886f78b9587 QXFRAME Release failure at verify-final-focus-origin: an ungated bare :focus outline was unsafe. Moved naked Input/Select/Textarea Pointer Outline to FocusOrigin-scoped CSS with existing theme width/offset; regular :focus retains border and normal elevation only. Tightened the gate's finite allowed single-owner list to include only three standalone bare native controls and explicitly gated authored native Input/Select/Textarea, without general exemptions. Await same-head CI; PR #265 remains Draft.
+
 ## CURRENT — 2026-10-11 Stage3 QA ledger gate follows current changed Textarea only (CI pending)
 - Previous HEAD c47e8106eb2ba336ae3767e2874a8f55ec13efd6 QXFRAME Release CSS constraint now passed, but static QA verifier still expected three old InputGroup/SelectGroup/Tabs highlights and actively banned Payout Threshold. Updated strictly to one current Payout Threshold Textarea marker, so previous highlights remain cleared. No component CSS/geometry changed by this correction; new exact-head dual CI needed. PR stays Draft.
 
