@@ -1363,7 +1363,7 @@ try {
       await evaluate('window.QXFRAME9A7C2_CREATE.commit({...window.QXFRAME9A7C2_CREATE.state.config,style:"'+style+'",radius:"default",ext:{}})');
       await waitFor(frameAttr('data-create-style')+' === "'+style+'"','FAQ pointer '+style);
       for(const mode of ['light','dark']){
-        const m=await evaluate(\`(()=>{
+        const m=await evaluate(`(()=>{
           const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;
           const t=d.querySelector('[data-card="faq"] .qxframe9a7c2-tabs-tab.is-active'),a=t?.querySelector('.qxframe9a7c2-tabs-tab-action')||t;
           const wasDark=h.classList.contains('dark'),wasKeyboard=h.classList.contains('qxframe9a7c2-keyboard-focus-origin');
@@ -1380,7 +1380,7 @@ try {
           if(a)a.blur();if(t)t.classList.toggle('is-disabled',!!wasDisabled);
           vars.forEach((v,i)=>prior[i]?h.style.setProperty(v,prior[i]):h.style.removeProperty(v));
           h.classList.toggle('dark',wasDark);h.classList.toggle('qxframe9a7c2-keyboard-focus-origin',wasKeyboard);return out;
-        })()\`.replace('__DARK__',String(mode==='dark')));
+        })()`.replace('__DARK__',String(mode==='dark')));
         assert.ok(m.exists&&m.focusWithin,style+'/'+mode+' pointer focus reached shell '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('211, 67, 31'),style+'/'+mode+' pointer shadow drawn '+JSON.stringify(m));
         assert.ok(m.shadow?.includes('53, 101, 211'),style+'/'+mode+' selected elevation retained '+JSON.stringify(m));
