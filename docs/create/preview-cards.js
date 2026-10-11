@@ -101,6 +101,61 @@
     if (host.hasAttribute('data-pv-equal')) tabs.getRootElement().classList.add('is-equal');
     if (panels.length) options.onChange(tabs.activeKey || options.defaultActiveKey);
   });
+  // Stage4 source Codespaces Create button: loading feedback for 2s,
+  // with QX Button's existing spinner, disabled paint, and no new Token.
+  document.querySelectorAll('[data-pv-create-codespace]').forEach(function (button) {
+    var timer = null;
+    button.addEventListener('click', function () {
+      if (button.disabled || timer) return;
+      var indicator = button.querySelector('.qxframe9a7c2-button-indicator');
+      button.disabled = true;
+      button.classList.add('is-loading');
+      if (indicator) indicator.hidden = false;
+      timer = window.setTimeout(function () {
+        timer = null;
+        button.disabled = false;
+        button.classList.remove('is-loading');
+        if (indicator) indicator.hidden = true;
+      }, 2000);
+    });
+  });
+
+  // Both source Preview 02 examples own a real Dialog/AlertDialog.
+  // Compose existing QX field/input/select and QX Modal rather than
+  // inventing a second overlay, shadow or FocusController.
+  var dialogs = {};
+  function makeFeedback() {
+    var content = document.createElement('div');
+    content.className = 'qxframe9a7c2-field-group';
+    content.innerHTML =
+      '<p class="qxframe9a7c2-form-description">Let us know how we can improve your experience.</p>' +
+      '<div class="qxframe9a7c2-flex is-wrap is-gap-3">' +
+      '<div class="qxframe9a7c2-form-field is-composed pv-grow"><label class="qxframe9a7c2-form-label" for="pv-feedback-name">Name</label><input id="pv-feedback-name" class="qxframe9a7c2-form-input" placeholder="Your name"></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed pv-grow"><label class="qxframe9a7c2-form-label" for="pv-feedback-email">Email</label><input id="pv-feedback-email" type="email" class="qxframe9a7c2-form-input" placeholder="you@example.com"></div></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label" for="pv-feedback-category">Category</label><select id="pv-feedback-category" class="qxframe9a7c2-form-select"><option value="general">General</option><option value="bug">Bug Report</option><option value="feature">Feature Request</option><option value="improvement">Improvement</option></select></div>' +
+      '<div class="qxframe9a7c2-form-field is-composed"><label class="qxframe9a7c2-form-label" for="pv-feedback-message">Message</label><textarea id="pv-feedback-message" class="qxframe9a7c2-form-textarea" rows="4" placeholder="Tell us what\'s on your mind..."></textarea></div>';
+    return content;
+  }
+  document.querySelectorAll('[data-pv-dialog]').forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      if (!C.Modal) return;
+      var kind = trigger.getAttribute('data-pv-dialog');
+      if (!dialogs[kind]) {
+        var feedback = kind === 'feedback';
+        dialogs[kind] = C.Modal.create({
+          autoOpen: false,
+          width: feedback ? 480 : 400,
+          title: feedback ? 'Share Feedback' : 'Allow accessory to connect?',
+          content: feedback ? makeFeedback() : 'Do you want to allow the USB accessory to connect to this device and your data?',
+          buttons: feedback
+            ? [{ content:'Cancel', role:'cancel' },{ content:'Submit', role:'confirm' }]
+            : [{ content:"Don't allow", role:'cancel' },{ content:'Allow', role:'confirm' }]
+        });
+      }
+      dialogs[kind].open('preview');
+    });
+  });
+
   var Calendar = C.Calendar || (Q.BuildingBlocks && Q.BuildingBlocks.Calendar);
   document.querySelectorAll('[data-pv-calendar]').forEach(function (host) {
     if (!Calendar) return;

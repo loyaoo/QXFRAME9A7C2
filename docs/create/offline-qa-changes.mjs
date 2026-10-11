@@ -1,10 +1,17 @@
-/** Stage4: only Codespaces nested Local Tabs and BookAppointment multi-select. */
+/** Stage4 only: visible typography labels, two source dialogs and Codespaces loader. */
 const groups = [
- ['codespaces-card','Codespaces · Local Tab',[
-  ['.qxframe9a7c2-card-content','补齐 Local / HTTPS / SSH / CLI 面板','复用 QX Tabs；父级切换不干扰内层 Tabs 面板。','__QA_BUNDLE_HEAD__']
+ ['style-overview','Style Overview · Readable Font',[
+  ['[data-pv-text="style-font"]','字体示例名不再显示方块','示例使用字体类别英文名称；中文选项本身及字体栈不变。','__QA_BUNDLE_HEAD__']
  ],'02'],
- ['book-appointment','Book Appointment · Time Slots',[
-  ['[data-pv-multi-toggle="appointment"]','时间段按钮恢复多选','每个时间段独立切换，允许零个或多个选择，保持 QX Button 样式。','__QA_BUNDLE_HEAD__']
+ ['typography-specimen','Typography · Font + Feedback Dialog',[
+  ['.qxframe9a7c2-card-content','正文/标题字体名称正确显示','字体标签显示 System UI、Sans-serif、Serif、Monospace，不再依赖缺失的中文字形。','__QA_BUNDLE_HEAD__'],
+  ['[data-pv-dialog="feedback"]','恢复 Share Feedback 弹窗','复用框架 Modal、Field、原生 Select、Input、Textarea，无自制弹层 CSS。','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['ui-elements','UI Elements · Alert Dialog',[
+  ['[data-pv-dialog="alert"]','Alert Dialog 按钮恢复打开弹窗','复用框架 Modal，取消、确认和键盘关闭由原有控制器管理。','__QA_BUNDLE_HEAD__']
+ ],'02'],
+ ['codespaces-card','Codespaces · Loading Feedback',[
+  ['[data-pv-create-codespace]','Create Codespace 2 秒 Loading','使用 QX Button 现有 is-loading、禁用态与 Spinner，完成后自动恢复。','__QA_BUNDLE_HEAD__']
  ],'02']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -68,7 +75,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记 Codespaces Local 面板与 Book Appointment 多选时间段；此前高亮已清空。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：往期修改不再显示黄色边框。本轮仅标记字体预览、两个 Dialog 与 Codespaces Loading；上一轮高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

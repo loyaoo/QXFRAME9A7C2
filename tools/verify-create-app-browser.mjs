@@ -325,6 +325,24 @@ try {
       for(const item of group)assert.equal(item.pressed,String(item.active),'multiselect class/semantic state synchronized');
   });
 
+  await step('Stage4 Preview02 typography labels, QX Dialogs and Codespaces loading',async()=>{
+    const result=await evaluate("(async function(){\n      const api=window.QXFRAME9A7C2_CREATE;\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const peek=()=>({\n        style:doc.querySelector('[data-card=\"style-overview\"] [data-pv-text=\"style-font\"]').textContent,\n        type:doc.querySelector('[data-card=\"typography-specimen\"] [data-pv-text=\"heading-body\"]').textContent\n      });\n      const before=peek();\n      const feedbackTrigger=doc.querySelector('[data-pv-dialog=\"feedback\"]');\n      const alertTrigger=doc.querySelector('[data-pv-dialog=\"alert\"]');\n      feedbackTrigger.click();\n      await new Promise(resolve=>setTimeout(resolve,180));\n      const modal=()=>[...doc.querySelectorAll('.qxframe9a7c2-modal-root')]\n        .find(el=>getComputedStyle(el).display!=='none'&&!el.hidden);\n      const feedback=modal();\n      const fb={open:!!feedback,title:feedback?.querySelector('.qxframe9a7c2-modal-title')?.textContent,\n        name:!!feedback?.querySelector('#pv-feedback-name'),email:!!feedback?.querySelector('#pv-feedback-email'),\n        category:!!feedback?.querySelector('#pv-feedback-category'),message:!!feedback?.querySelector('#pv-feedback-message')};\n      const cancel=feedback&&[...feedback.querySelectorAll('button')].find(b=>b.textContent.trim()==='Cancel');\n      if(cancel)cancel.click();\n      await new Promise(resolve=>setTimeout(resolve,280));\n      alertTrigger.click();\n      await new Promise(resolve=>setTimeout(resolve,180));\n      const alert=modal();\n      const al={open:!!alert,title:alert?.querySelector('.qxframe9a7c2-modal-title')?.textContent,\n        prompt:alert?.textContent.includes('USB accessory'),\n        buttons:alert?[...alert.querySelectorAll('button')].map(x=>x.textContent.trim()).filter(Boolean):[]};\n      const reject=alert&&[...alert.querySelectorAll('button')].find(b=>b.textContent.trim()===\"Don't allow\");\n      if(reject)reject.click();\n      await new Promise(resolve=>setTimeout(resolve,280));\n      const create=doc.querySelector('[data-pv-create-codespace]');\n      const state=()=>({disabled:create.disabled,loading:create.classList.contains('is-loading'),\n        spinner:!create.querySelector('.qxframe9a7c2-button-indicator').hidden});\n      const idle=state();create.click();const active=state();create.click();const still=state();\n      await new Promise(resolve=>setTimeout(resolve,2170));const done=state();\n      return {before,fb,al,idle,active,still,done};\n    })()");
+    assert.ok(result.before.style.includes(' - '));
+    assert.ok(result.before.type.includes(' - '));
+    assert.ok(!/无衬线|等宽|跟随正文/.test(result.before.style+result.before.type),'English preview must not show missing Chinese glyph labels');
+    assert.equal(result.fb.open,true,'Feedback Modal opens from QX Button');
+    assert.equal(result.fb.title,'Share Feedback');
+    for(const key of ['name','email','category','message'])assert.equal(result.fb[key],true,'Feedback includes '+key);
+    assert.equal(result.al.open,true,'Alert Dialog opens from QX Button');
+    assert.equal(result.al.title,'Allow accessory to connect?');
+    assert.equal(result.al.prompt,true);
+    assert.ok(result.al.buttons.includes("Don't allow")&&result.al.buttons.includes('Allow'),'Alert actions');
+    assert.deepEqual(result.idle,{disabled:false,loading:false,spinner:false});
+    assert.deepEqual(result.active,{disabled:true,loading:true,spinner:true});
+    assert.deepEqual(result.still,result.active,'repeat click cannot retrigger loading');
+    assert.deepEqual(result.done,result.idle,'loading ends and button is restored');
+  });
+
   await step('import errors are reported and keep the current configuration', async () => {
     const before = JSON.stringify((await state()).config);
     await key('o');

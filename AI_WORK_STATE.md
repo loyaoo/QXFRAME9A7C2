@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-11 Stage4 practical four-card display/dialog/feedback batch (CI pending)
+- Prior Stage4 HEAD c94c1743db21b9351b709d947d28bb617e9b68fa, QXFRAME #38129351970 SUCCESS and CSS Schema #38129351952 SUCCESS; Stage4 31 cards × 16 styles 496/496 geometry.
+- Audited original pinned shadcn source: TypographySpecimen Share Feedback opens Dialog with Name/Email/Category/Message; UIElements Alert Dialog opens Allow Accessory confirmation; Codespaces Create action has 2-second loading/disabled state. Current Preview02 had both data-pv-dialog triggers disconnected and Codespaces static Button. These are actual missing functionality, not shadcn pixel differences.
+- Preview typography was showing Chinese menu labels (无衬线) inside English/system-font sample; actual screenshot rendered tofu squares. Display English readable font category names only in Preview payload; retain Chinese generator picker labels, system font stacks and all approved QX sizing.
+- Reused existing C.Modal.create and QX Field/native Select/Input/Textarea for both dialogs; no new custom Overlay or CSS. QX Button spinner and is-loading projection for Codespaces.
+- Added static and Chromium real modal open/cancel/action-content and Codespaces 2s loading sequence. Current QA highlights only 5 changes in 4 Preview02 cards: style-overview, typography-specimen, ui-elements, codespaces-card. Previous Codespaces Local and BookAppointment highlight removed.
+- Next dual CI exact HEAD and full official dist+docs Windows offline bundle. PR #266 remains Draft/no merge, main/backup unchanged. Stage4 ~25% after verified; overall ~83% estimated. Stage5 not started.
+
 ## CURRENT — 2026-10-11 Stage4 browser regression test literal syntax corrected (CI pending)
 - Prior 33b9b982632181a420d97891921891cc8e131b8a Release static gate failed due a test-internal comment inserted as literal newlines inside a JSON-escaped Runtime.evaluate argument (invalid JavaScript source), not a product defect. Removed only the inline comment, preserving target .qxframe9a7c2-tabs-tab-action and all Codespaces and BookAppointment assertions.
 - Earlier CSS Schema on c5d23c29 failed because it clicked decorative Surface instead of real QX inner action. Need exact-new-head dual-green CI, then full Windows offline bundle. Stage4 #266 remains Draft, no merge.

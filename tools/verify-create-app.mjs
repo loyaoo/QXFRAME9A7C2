@@ -58,7 +58,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const packager=fs.readFileSync(path.join(root,'tools/qa/build-offline-demo.py'),'utf8');
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
-  const current={'codespaces-card':['.qxframe9a7c2-card-content'],'book-appointment':['[data-pv-multi-toggle="appointment"]']}; // Stage4 functional batch
+  const current={'style-overview':['[data-pv-text="style-font"]'],'typography-specimen':['.qxframe9a7c2-card-content','[data-pv-dialog="feedback"]'],'ui-elements':['[data-pv-dialog="alert"]'],'codespaces-card':['[data-pv-create-codespace]']}; // Stage4 real display/interaction batch
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
@@ -72,7 +72,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only two Stage4 changed regions (Codespaces/Appointment) are highlighted');
+  assert.equal(count,5,'only five current Stage4 regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -457,6 +457,24 @@ check('Stage4 Codespaces nested QX Tabs and BookAppointment multiple button stat
  assert.match(runtime,/host\.parentNode\.children/,'QX Tabs only owns direct panels');
  assert.match(runtime,/data-pv-multi-toggle/,'delegated real multiple choice Buttons');
  assert.match(read('preview.css'),/\[data-pv-tab-panel\]\[hidden\]\s*\{\s*display:\s*none/,'nested Stack panels stay hidden');
+});
+
+
+check('Stage4 font labels, source dialogs and Codespaces loading are restored with existing QX components',()=>{
+ const app=read('app.js'),preview=read('preview-02.html'),runtime=read('preview-cards.js');
+ assert.match(app,/const previewFont = \{/,'display category names separate from Chinese Theme Picker labels');
+ for(const [id,key] of [['style-overview','style-font'],['typography-specimen','heading-body']]){
+   const card=preview.slice(preview.indexOf('<!-- @card '+id+' -->'),preview.indexOf('<!-- @end '+id+' -->'));
+   assert.ok(card.includes('data-pv-text="'+key+'"'),'live label binding in '+id);
+   assert.doesNotMatch(card,/无衬线|跟随正文/,'no missing CJK glyph labels in English sample '+id);
+ }
+ for(const kind of ['feedback','alert']) assert.ok(preview.includes('data-pv-dialog="'+kind+'"'),'source modal trigger '+kind);
+ assert.match(runtime,/C\.Modal\.create\(/,'reuse existing framework Modal, no fake overlay');
+ for(const role of ['Name','Email','Category','Message'])assert.ok(runtime.includes(role),'feedback content '+role);
+ assert.match(preview,/data-pv-create-codespace/,'Codespaces action wired');
+ assert.match(runtime,/button\.classList\.add\('is-loading'\)/,'framework Button loading state');
+ assert.match(runtime,/button\.classList\.remove\('is-loading'\)/,'loading recovery');
+ assert.match(runtime,/2000\)/,'pinned source two second action feedback');
 });
 
 check('Shared focus ring shadows, theme focus color and State ownership',()=>{

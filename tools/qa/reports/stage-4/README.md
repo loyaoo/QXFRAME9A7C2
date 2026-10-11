@@ -19,6 +19,12 @@ Stage 3 **PR #265 merged into main**, merge `0b2c9310712ad73a9f2d279a9c3cfb2bc46
 ## Stage4 genuine interaction repair batch (2026-10-11)
 Codespaces Local now owns nested HTTPS/SSH/GitHub CLI QX Tabs panels; outer Tabs only changes its own direct panel siblings. Book Appointment uses multiple Button states and supports 0..4 independently selected time slots. These are functional correctness fixes, not Card pixel realignment. Both are the only current-round highlighted Preview 02 cards.
 
+## Stage4 second functional batch (2026-10-11)
+- Restore two missing original-source Dialog interactions using QX Modal (Typography feedback; UI Elements accessory confirmation).
+- Restore Codespaces Create loading and disabled feedback for 2 seconds with QX Button Spinner.
+- Fix demo typography display labels: QX English preview now shows readable font category names instead of Chinese picklist labels rendered as missing glyphs; generator UI labels and font choices unchanged.
+- QA marks only these four Cards this batch, no pixel-matching of already approved Controls.
+
 ## Follow-up
 
 - Check Stage 4 dual CI on the exact final HEAD; fix measurement-script failures independently from actual component bugs.
