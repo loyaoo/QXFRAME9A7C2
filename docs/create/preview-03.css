@@ -45,3 +45,47 @@
 .pv3-bottom{text-align:center;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem;padding:2.5rem 0 .75rem}
 :root.dark .pv3-body{background:var(--qxframe9a7c2-theme-background)}
 @media(max-width:1100px){.pv3-canvas{min-width:72rem}}
+
+/* Expanded Preview 03 - 48 additional QX component business scenarios. Private CSS only. */
+.pv3x-expansion{margin-top:2.5rem;border-top:1px solid var(--qxframe9a7c2-theme-border);padding-top:2rem}
+.pv3x-section-heading{padding:0 0 1.75rem;max-width:48rem}
+.pv3x-section-heading h2{font-size:1.875rem;font-weight:700;margin:.5rem 0;color:var(--qxframe9a7c2-theme-foreground)}
+.pv3x-section-heading p{color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.875rem;line-height:1.55}
+.pv3x-summary,.pv3x-metrics-grid{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;min-width:0}
+.pv3x-summary .pv3-metric strong{font-size:1.375rem}
+.pv3x-summary .qxframe9a7c2-badge{font-size:.65rem;max-width:9rem;overflow:hidden;text-overflow:ellipsis}
+.pv3x-widget{min-width:0;max-width:100%;max-height:17rem;overflow-x:auto}
+.pv3x-widget:empty{min-height:2.5rem}
+.pv3x-hint{color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem}
+.pv3x-avatars,.pv3x-actions,.pv3x-tags,.pv3x-choices,.pv3x-mini-cards,.pv3x-fields,.pv3x-process,.pv3x-metrics-grid{display:flex;flex-wrap:wrap;gap:.75rem}
+.pv3x-choices,.pv3x-fields{flex-direction:column;align-items:stretch}
+.pv3x-avatars .qxframe9a7c2-avatar{display:inline-flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;border-radius:100rem;background:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground);font-size:.75rem;font-weight:700}
+.pv3x-mini-cards>.qxframe9a7c2-card{min-width:0;flex:1 1 0}
+.pv3x-mini-cards .qxframe9a7c2-card-content{display:flex;flex-direction:column;gap:.5rem;padding:1rem}
+.pv3x-mini-cards strong{font-size:1.375rem}
+.pv3x-descriptions{display:flex;flex-wrap:wrap;gap:.625rem 1rem;font-size:.8125rem}
+.pv3x-descriptions dt{flex:0 0 32%;color:var(--qxframe9a7c2-theme-muted-foreground)}
+.pv3x-descriptions dd{flex:1 1 45%;margin:0;font-weight:600}
+.pv3x-bin>.qxframe9a7c2-col{padding:.25rem}
+.pv3x-bin .qxframe9a7c2-col>span{display:block;padding:1rem;text-align:center;background:var(--qxframe9a7c2-theme-muted);border-radius:var(--qxframe9a7c2-theme-radius-item)}
+.pv3x-icon-grid{display:flex;flex-wrap:wrap;gap:1rem;font-size:1.5rem;color:var(--qxframe9a7c2-theme-primary)}
+.pv3x-row{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.75rem}
+.pv3x-layout-demo{gap:.5rem;min-height:6rem}
+.pv3x-layout-demo aside,.pv3x-layout-demo main{padding:.75rem;border-radius:var(--qxframe9a7c2-theme-radius-item);background:var(--qxframe9a7c2-theme-muted);font-size:.75rem}
+.pv3x-layout-demo main{flex:1 1 auto;background:var(--qxframe9a7c2-theme-accent)}
+.pv3x-message{padding:.875rem;background:var(--qxframe9a7c2-theme-accent);border-radius:var(--qxframe9a7c2-theme-radius-item)}
+.pv3x-message p{margin:.3rem 0 0;font-size:.75rem}
+.pv3x-feed{max-height:8rem;overflow-y:auto}
+.pv3x-feed-row,.pv3x-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;font-size:.8125rem;padding:.5rem 0;border-bottom:1px solid var(--qxframe9a7c2-theme-border)}
+.pv3x-toggle-row{cursor:pointer}
+.pv3x-toggle-row .qxframe9a7c2-switch{flex:0 0 auto}
+.pv3x-event-list{display:flex;flex-direction:column;gap:.4rem}
+.pv3x-event-list>div{padding:.5rem;background:var(--qxframe9a7c2-theme-muted);border-radius:var(--qxframe9a7c2-theme-radius-item);font-size:.75rem;transition:opacity .16s ease,transform .16s ease}
+.pv3x-process-chip{padding:.5rem .75rem;border-radius:var(--qxframe9a7c2-theme-radius-item);background:var(--qxframe9a7c2-theme-muted);font-size:.75rem;transition:background-color .2s ease}
+.pv3x-process-chip.is-current{background:var(--qxframe9a7c2-theme-primary);color:var(--qxframe9a7c2-theme-primary-foreground)}
+.pv3x-metrics-grid>span{display:flex;flex-direction:column;gap:.3rem;flex:1 1 0}
+.pv3x-metrics-grid small{color:var(--qxframe9a7c2-theme-muted-foreground)}
+.pv3x-metrics-grid strong{font-size:1.5rem}
+.pv3x-field-label{display:flex;flex-direction:column;gap:.4rem;font-size:.75rem}
+.pv3x-card [data-pv3x-status][hidden]{display:none}
+.pv3x-card [data-pv3x-status]{margin:0}

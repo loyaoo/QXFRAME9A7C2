@@ -1,0 +1,677 @@
+{
+  "version": "preview03-coverage-v2",
+  "totalCards": 66,
+  "baselineCards": 18,
+  "addedCards": 48,
+  "totalDocumentedFamilies": 66,
+  "coverage": [
+    {
+      "component": "alert",
+      "card": "alert-triage",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "autocomplete",
+      "card": "contact-lookup",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "avatar",
+      "card": "stakeholder-roster",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "badge",
+      "card": "compliance-flags",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "button",
+      "card": "trading-toolbar",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "calendar",
+      "card": "capacity-calendar",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "card",
+      "card": "revenue-surfaces",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "carousel",
+      "card": "marketing-creative",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "cascader",
+      "card": "order-routing",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "checkbox",
+      "card": "audit-checklist",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "collapse",
+      "card": "rules-automation",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "color-panel",
+      "card": "palette-laboratory",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "color-picker",
+      "card": "brand-studio",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "control",
+      "card": "field-workbench",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "date-picker",
+      "card": "release-planner",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "descriptions",
+      "card": "asset-properties",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "drawer",
+      "card": "account-drawer",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "dropdown",
+      "card": "quick-action-menu",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "empty",
+      "card": "blank-workspace",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "form",
+      "card": "vendor-intake",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "grid",
+      "card": "product-bins",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "icon",
+      "card": "icon-tokens",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "image",
+      "card": "asset-preview",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "input-number",
+      "card": "finance-approval",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "input-otp",
+      "card": "identity-otp",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "item",
+      "card": "approval-queue-item",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "json",
+      "card": "data-inspector",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "layout",
+      "card": "admin-shell-layout",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "list",
+      "card": "activity-timeline",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "loading",
+      "card": "task-processing",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "menu",
+      "card": "navigation-workspace",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "message",
+      "card": "inbox-notice",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "modal",
+      "card": "danger-dialog",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "notification",
+      "card": "alerts-center",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "option-list",
+      "card": "command-palette",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "pagination",
+      "card": "plan-governance",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "period-panel",
+      "card": "fiscal-periods",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "popconfirm",
+      "card": "delete-policy",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "popover",
+      "card": "customer-insights",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "progress",
+      "card": "service-health",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "radio",
+      "card": "fraud-decision",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "rate",
+      "card": "customer-quality",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "result",
+      "card": "transaction-outcome",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "ripple",
+      "card": "ripple-commands",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "scroll",
+      "card": "operational-feed",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "select",
+      "card": "order-routing",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "slider",
+      "card": "usage-meter",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "sort",
+      "card": "backlog-ordering",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "steps",
+      "card": "onboarding-flow",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "switch",
+      "card": "feature-flags",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "table",
+      "card": "plan-governance",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "tabs",
+      "card": "segmented-console",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "tag-input",
+      "card": "customer-quality",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "tags",
+      "card": "support-triage",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "time-panel",
+      "card": "shift-allocation",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "time-picker",
+      "card": "release-planner",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "tooltip",
+      "card": "sla-tooltip",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "transfer",
+      "card": "workforce-access",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "transition",
+      "card": "state-transitions",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "transition-group",
+      "card": "stream-animation",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "tree",
+      "card": "org-hierarchy",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "tree-select",
+      "card": "platform-tree",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "trigger",
+      "card": "context-triggers",
+      "mode": "framework-CSS-or-behavior"
+    },
+    {
+      "component": "upload",
+      "card": "contract-documents",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "virtual-list",
+      "card": "virtual-monitor",
+      "mode": "QX-runtime-or-availability-checked"
+    },
+    {
+      "component": "wheel-picker",
+      "card": "dial-settings",
+      "mode": "QX-runtime-or-availability-checked"
+    }
+  ],
+  "added": [
+    {
+      "id": "alert-triage",
+      "title": "Risk alert triage",
+      "description": "Priority detection and case routing",
+      "component": "alert",
+      "sector": "Trust & Security"
+    },
+    {
+      "id": "contact-lookup",
+      "title": "Unified customer search",
+      "description": "Search across CRM profiles and accounts",
+      "component": "autocomplete",
+      "sector": "Customer Success"
+    },
+    {
+      "id": "stakeholder-roster",
+      "title": "Stakeholder directory",
+      "description": "Owner presence and team assignments",
+      "component": "avatar",
+      "sector": "Organization"
+    },
+    {
+      "id": "compliance-flags",
+      "title": "Compliance monitoring",
+      "description": "Policy status and verification badges",
+      "component": "badge",
+      "sector": "Compliance"
+    },
+    {
+      "id": "trading-toolbar",
+      "title": "Trading desk actions",
+      "description": "Primary, destructive and quiet actions",
+      "component": "button",
+      "sector": "Finance"
+    },
+    {
+      "id": "capacity-calendar",
+      "title": "Capacity calendar",
+      "description": "Allocate availability to project teams",
+      "component": "calendar",
+      "sector": "Scheduling"
+    },
+    {
+      "id": "revenue-surfaces",
+      "title": "Revenue overview",
+      "description": "Nested commercial cards and insights",
+      "component": "card",
+      "sector": "Sales"
+    },
+    {
+      "id": "audit-checklist",
+      "title": "Audit checklist",
+      "description": "Verified compliance control selections",
+      "component": "checkbox",
+      "sector": "Compliance"
+    },
+    {
+      "id": "palette-laboratory",
+      "title": "Creative color laboratory",
+      "description": "Inspect raw and transformed palette values",
+      "component": "color-panel",
+      "sector": "Design Operations"
+    },
+    {
+      "id": "field-workbench",
+      "title": "Input control workbench",
+      "description": "Native, outlined and hosted field cases",
+      "component": "control",
+      "sector": "Operations"
+    },
+    {
+      "id": "asset-properties",
+      "title": "Asset metadata",
+      "description": "Auditable key/value business descriptions",
+      "component": "descriptions",
+      "sector": "Asset Management"
+    },
+    {
+      "id": "account-drawer",
+      "title": "Account settings drawer",
+      "description": "Edit scoped workspace information",
+      "component": "drawer",
+      "sector": "Workspace"
+    },
+    {
+      "id": "quick-action-menu",
+      "title": "Account action dropdown",
+      "description": "Actions without persistent navigation",
+      "component": "dropdown",
+      "sector": "Workspace"
+    },
+    {
+      "id": "blank-workspace",
+      "title": "Empty search results",
+      "description": "Useful next steps from zero-state view",
+      "component": "empty",
+      "sector": "Workspace"
+    },
+    {
+      "id": "vendor-intake",
+      "title": "Supplier registration",
+      "description": "Business identity and procurement form",
+      "component": "form",
+      "sector": "Procurement"
+    },
+    {
+      "id": "product-bins",
+      "title": "Warehouse shelf layout",
+      "description": "Flexible product lanes and stock groups",
+      "component": "grid",
+      "sector": "Inventory"
+    },
+    {
+      "id": "icon-tokens",
+      "title": "Operational iconography",
+      "description": "Semantic UI icons and status marks",
+      "component": "icon",
+      "sector": "Design System"
+    },
+    {
+      "id": "asset-preview",
+      "title": "Creative asset preview",
+      "description": "Artwork details with image fallback",
+      "component": "image",
+      "sector": "Marketing"
+    },
+    {
+      "id": "approval-queue-item",
+      "title": "Approval queue row",
+      "description": "Selectable action-focused work items",
+      "component": "item",
+      "sector": "Approval"
+    },
+    {
+      "id": "admin-shell-layout",
+      "title": "Application shell layout",
+      "description": "Sidebar, content and detail arrangement",
+      "component": "layout",
+      "sector": "Admin Platform"
+    },
+    {
+      "id": "activity-timeline",
+      "title": "Activity list",
+      "description": "Review recent system events",
+      "component": "list",
+      "sector": "Observability"
+    },
+    {
+      "id": "task-processing",
+      "title": "Background operation",
+      "description": "Loading feedback with non-blocking context",
+      "component": "loading",
+      "sector": "Platform"
+    },
+    {
+      "id": "navigation-workspace",
+      "title": "Navigation menu",
+      "description": "Nested teams, projects and settings",
+      "component": "menu",
+      "sector": "Workspace"
+    },
+    {
+      "id": "inbox-notice",
+      "title": "Inline message bus",
+      "description": "Transient business feedback channel",
+      "component": "message",
+      "sector": "Support"
+    },
+    {
+      "id": "danger-dialog",
+      "title": "Destructive action modal",
+      "description": "Explicit approval for irreversible changes",
+      "component": "modal",
+      "sector": "Admin Platform"
+    },
+    {
+      "id": "alerts-center",
+      "title": "Notification delivery",
+      "description": "Toast and notification composition",
+      "component": "notification",
+      "sector": "Observability"
+    },
+    {
+      "id": "command-palette",
+      "title": "Command options",
+      "description": "Keyboard-ready operational choices",
+      "component": "option-list",
+      "sector": "Workspace"
+    },
+    {
+      "id": "fiscal-periods",
+      "title": "Fiscal period selection",
+      "description": "Budget quarter and year review",
+      "component": "period-panel",
+      "sector": "Finance"
+    },
+    {
+      "id": "delete-policy",
+      "title": "Deletion confirmation",
+      "description": "Confirm dangerous changes before applying",
+      "component": "popconfirm",
+      "sector": "Compliance"
+    },
+    {
+      "id": "customer-insights",
+      "title": "Insight popover",
+      "description": "Contextual details for KPI readings",
+      "component": "popover",
+      "sector": "Analytics"
+    },
+    {
+      "id": "fraud-decision",
+      "title": "Fraud review decision",
+      "description": "Mutually exclusive verdict selection",
+      "component": "radio",
+      "sector": "Risk Management"
+    },
+    {
+      "id": "transaction-outcome",
+      "title": "Transaction outcome",
+      "description": "Successful and rejected process states",
+      "component": "result",
+      "sector": "Billing"
+    },
+    {
+      "id": "ripple-commands",
+      "title": "Tactile button feedback",
+      "description": "Themed pointer interaction on commands",
+      "component": "ripple",
+      "sector": "UI System"
+    },
+    {
+      "id": "operational-feed",
+      "title": "Scrollable activity feed",
+      "description": "Dense event stream within a card",
+      "component": "scroll",
+      "sector": "Observability"
+    },
+    {
+      "id": "backlog-ordering",
+      "title": "Backlog ordering",
+      "description": "Prioritize release work items by drag and sort",
+      "component": "sort",
+      "sector": "Product Delivery"
+    },
+    {
+      "id": "feature-flags",
+      "title": "Feature flag matrix",
+      "description": "System switches with immediate local state",
+      "component": "switch",
+      "sector": "Platform"
+    },
+    {
+      "id": "segmented-console",
+      "title": "Segmented operations console",
+      "description": "Switch between active datasets",
+      "component": "tabs",
+      "sector": "Admin Platform"
+    },
+    {
+      "id": "shift-allocation",
+      "title": "Shift time selection",
+      "description": "Pick hourly operational handover",
+      "component": "time-panel",
+      "sector": "Workforce"
+    },
+    {
+      "id": "sla-tooltip",
+      "title": "SLA explainers",
+      "description": "Reveal compact contextual help",
+      "component": "tooltip",
+      "sector": "Customer Success"
+    },
+    {
+      "id": "stream-animation",
+      "title": "Animated incident stream",
+      "description": "Insert and remove an event from live view",
+      "component": "transition-group",
+      "sector": "Observability"
+    },
+    {
+      "id": "state-transitions",
+      "title": "State transition controls",
+      "description": "Demonstrate pending, active and ready states",
+      "component": "transition",
+      "sector": "Design System"
+    },
+    {
+      "id": "context-triggers",
+      "title": "Context trigger policies",
+      "description": "Click and hover command entry points",
+      "component": "trigger",
+      "sector": "Workspace"
+    },
+    {
+      "id": "contract-documents",
+      "title": "Contract attachments",
+      "description": "Upload document drafts with QX uploader",
+      "component": "upload",
+      "sector": "Legal Ops"
+    },
+    {
+      "id": "virtual-monitor",
+      "title": "High-volume event explorer",
+      "description": "Virtualized telemetry over 500 events",
+      "component": "virtual-list",
+      "sector": "Observability"
+    },
+    {
+      "id": "dial-settings",
+      "title": "Dial picker scheduling",
+      "description": "Operational time adjustment by wheel",
+      "component": "wheel-picker",
+      "sector": "Scheduling"
+    },
+    {
+      "id": "org-hierarchy",
+      "title": "Enterprise org hierarchy",
+      "description": "Expand and inspect organizational nodes",
+      "component": "tree",
+      "sector": "Organization"
+    },
+    {
+      "id": "distribution-hub",
+      "title": "Distribution command center",
+      "description": "Cross-domain operations and delivery summary",
+      "component": "combo-dispatch",
+      "sector": "Supply Chain"
+    },
+    {
+      "id": "revenue-desk",
+      "title": "Revenue collections desk",
+      "description": "Finance-facing transaction and exception summary",
+      "component": "combo-revenue",
+      "sector": "Finance"
+    }
+  ]
+}
