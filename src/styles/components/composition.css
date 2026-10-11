@@ -527,3 +527,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-selectgroup.is-outli
 /* The connected InputGroup or Field is the single Control elevation owner. */
 .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon):not(:focus-within),
 .qxframe9a7c2-input-group-field:not(:focus-within){box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)}
+
+/* Elevation belongs to connected InputGroup/Field, not the nested native editor. */
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical):has(>.qxframe9a7c2-input-group-addon)>.qxframe9a7c2-form-select,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-form-select{box-shadow:none}

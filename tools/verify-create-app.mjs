@@ -78,6 +78,14 @@ check('Tabs keyboard focus preserves the selected elevation on the same focus sh
   assert.doesNotMatch(css,/\.qxframe9a7c2-tabs-tab\.is-keyboard-focus\{box-shadow:none/,'focused selected Tab must not lose its elevation');
 });
 
+check('Native Control elevation and nested InputGroup shadow owner, Choice Hover field border',()=>{
+ const source=p=>fs.readFileSync(path.join(root,p),'utf8');
+ const f=source('src/styles/components/form-native.css'),g=source('src/styles/components/composition.css'),c=source('src/styles/components/choice-visual.css');
+ assert.ok(f.includes('color:var(--_qxframe9a7c2-native-field-text);box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)'),'standalone native input/select gets Control elevation');
+ assert.match(g,/\.qxframe9a7c2-input-group-field>\.qxframe9a7c2-form-input,[\s\S]*?\.qxframe9a7c2-input-group-field>\.qxframe9a7c2-form-select\{box-shadow:none\}/,'inner grouped native editors do not shadow twice');
+ assert.ok(c.includes('color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))'),'Choice Hover is same field-border blend as native Input/Select');
+});
+
 check('unwrapped native SelectGroup checkbox and radio share canonical visuals',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const base=css.slice(0,css.indexOf('/* Checkbox check / indeterminate glyph. */'));

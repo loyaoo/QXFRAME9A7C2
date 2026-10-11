@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-11 CREATEAPP-V3-S3 control shadow paint-owner closeout (CI pending)
+- Parent a1845968e4679b087adcfce819fa9d5ecd85b77a; single Native Input/Select now consumes theme-shadow-control at rest and existing focus-closeout composes control elevation with keyboard/pointer halo.
+- Connected InputGroup/Field owns only one shadow; hosted native Input/Select child drops own normal shadow as it already drops border, JS child retains previous none.
+- Choice Indicator Hover now mixes theme-field-border with common hover-color/strength, matching input/select/JS, while checked/disabled/focused excluded from hover.
+- Added static tests for both; next exact-head dual CI and Chromium. InputGroup canonical class migration retained, PR #265 Draft/no merge.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S3 canonical Focus and InputGroup reconciliation (CI pending)
 - Parent dd5cb1da84c65fb5e2e8793916d73ca5301c19b1: QXFRAME Release failed static gate because verifier regex retained unprefixed form-input-group-field after new canonical class migration. Updated all active createApp verifier references (bare/prefixed) and phase-F verifier to input-group.
 - More importantly, the V2 physical Control/semantic-focus consumer still read theme-ring; replaced all V2 ring palette consumption with theme-pointer-focus, plus keyboard FocusOrigin override using theme-focus. No runtime JS modifications.
