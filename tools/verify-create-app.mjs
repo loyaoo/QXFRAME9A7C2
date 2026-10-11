@@ -12,7 +12,22 @@ const ONLINE_JS = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js';
 const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
-const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview.css', 'preview.js', 'preview-cards.js'];
+const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview.css', 'preview.js', 'preview-cards.js'];
+check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
+  const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
+  const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];
+  assert.match(index,/data-create-item="03"/,'Create switcher has third Preview');
+  assert.match(model,/'03': '\.\/preview-03\.html'/,'model routes item=03');
+  assert.deepEqual([...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]),ids,'18 independently addressable original Cards');
+  for(const id of ids)assert.ok(html.includes('data-card="'+id+'"'),'QX commercial Card '+id);
+  assert.match(js,/QXFRAME9A7C2_PREVIEW3/,'JS exports live runtime diagnostics');
+  assert.match(js,/C\[type\]\.create/,'Card widgets must be real framework runtime components');
+  assert.match(html,/preview-03\.css/);
+  assert.match(html,/preview-03\.js/);
+  assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
+  assert.match(read('offline-qa-changes.mjs'),/group\[3\]==='03'/,'offline QA locator handles third page');
+});
+
 check('all CSS private Focus shadows use focus, not ring terminology',()=>{
   const dirs=['src/styles/components','src/styles/main'];
   const found=[];
@@ -59,10 +74,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"invoice":["[data-pv-action=\"invoice-pdf\"]","[data-pv-action=\"invoice-pay\"]"],"environment-variables":["[data-pv-action=\"env-edit\"]","[data-pv-action=\"env-deploy\"]"],"activate-agent-dialog":["[data-pv-action=\"agent-cancel\"]","[data-pv-action=\"agent-enable\"]"],"observability-card":["[data-pv-action=\"obs-query\"]"],"anomaly-alert":["[data-pv-action=\"anomaly-upgrade\"]"],"bar-chart-card":["[data-pv-action=\"traffic-report\"]"],"sleep-report":["[data-pv-action=\"sleep-detail\"]"],"weekly-fitness-summary":["[data-pv-action=\"fitness-detail\"]"],"analytics-card":["[data-pv-action=\"analytics-detail\"]"],"not-found":["[data-pv-local-search]","[data-pv-action=\"notfound-home\"]"]}; // Stage4 ten actual Preview02 action fixes
+  const current={"platform-tree":["[data-pv3-component]"],"workforce-access":["[data-pv3-component]"],"onboarding-flow":["[data-pv3-component]"],"service-health":["[data-pv3-component]"],"brand-studio":["[data-pv3-component]"],"plan-governance":["[data-pv3-component]"],"release-planner":["[data-pv3-component]"],"order-routing":["[data-pv3-component]"],"finance-approval":["[data-pv3-component]"],"customer-quality":["[data-pv3-component]"],"inventory-control":["[data-pv3-component]"],"data-inspector":["[data-pv3-component]"],"marketing-creative":["[data-pv3-component]"],"identity-otp":["[data-pv3-component]"],"support-triage":["[data-pv3-component]"],"usage-meter":["[data-pv3-component]"],"rules-automation":["[data-pv3-component]"],"incident-response":["[data-pv3-component]"]}; // Stage5 Preview03 18 new commercial cards
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
+    assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -73,7 +88,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,14,'only current Stage4 ten cards/fourteen regions are highlighted');
+  assert.equal(count,18,'only current Stage5 Preview03 18 cards/regions are highlighted');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
@@ -85,7 +100,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
   assert.match(packager,/31 张 Preview 02 卡片已经用户人工验收通过/,'offline bundle must reflect Stage4 owner acceptance');
   assert.doesNotMatch(packager,/尚待人工验收/,'do not ship stale pending Stage4 copy after owner acceptance');
-  for(const page of ['index.html','preview-01.html','preview-02.html'])
+  for(const page of ['index.html','preview-01.html','preview-02.html','preview-03.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
 });

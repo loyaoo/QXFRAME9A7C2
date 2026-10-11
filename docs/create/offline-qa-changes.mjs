@@ -1,39 +1,59 @@
-/** Stage4 current batch: ten real Preview02 card-action fixes, no earlier highlights. */
+/** Stage5: Preview03 original QXFRAME business composition Cards, only this batch highlighted. */
 const groups = [
- ['invoice','Invoice · PDF / Payment',[
-  ['[data-pv-action="invoice-pdf"]','Generate actual local PDF','Creates a downloadable PDF without a backend','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-action="invoice-pay"]','Payment guard','Explains payment cannot be processed in preview','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['environment-variables','Environment Variables · Draft',[
-  ['[data-pv-action="env-edit"]','Edit public variable','Validates and stores only local public API URL draft','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-action="env-deploy"]','Deploy guard','Explicitly reports no deployment API','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['activate-agent-dialog','Agent · Activation Actions',[
-  ['[data-pv-action="agent-cancel"]','Cancel state','Shows truthful canceled state','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-action="agent-enable"]','Activation guard','No cloud activation or credit change','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['observability-card','Observability · Query',[
-  ['[data-pv-action="obs-query"]','Open QX query dialog','Local editable query, no remote execution','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['anomaly-alert','Anomaly · Upgrade',[
-  ['[data-pv-action="anomaly-upgrade"]','Locate relevant demo','Focus and scroll to Observability example, no charge','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['bar-chart-card','Traffic · Report',[
-  ['[data-pv-action="traffic-report"]','Open data detail','QX dialog with existing sample metrics','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['sleep-report','Sleep · Detail',[
-  ['[data-pv-action="sleep-detail"]','Open sleep detail','QX dialog with existing sample metrics','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['weekly-fitness-summary','Fitness · Detail',[
-  ['[data-pv-action="fitness-detail"]','Open activity detail','QX dialog with existing sample percentages','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['analytics-card','Analytics · Detail',[
-  ['[data-pv-action="analytics-detail"]','Open analytics detail','QX dialog with existing sample figures','__QA_BUNDLE_HEAD__']
- ],'02'],
- ['not-found','404 · Search / Home',[
-  ['[data-pv-local-search]','Local card search','Enter finds a Preview 02 card or shows no results','__QA_BUNDLE_HEAD__'],
-  ['[data-pv-action="notfound-home"]','Working home navigation','Go to local Create homepage','__QA_BUNDLE_HEAD__']
- ],'02']
+ ['platform-tree','Platform Tree · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['workforce-access','Workforce Access · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['onboarding-flow','Onboarding Flow · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['service-health','Service Health · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['brand-studio','Brand Studio · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['plan-governance','Plan Governance · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['release-planner','Release Planner · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['order-routing','Order Routing · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['finance-approval','Finance Approval · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['customer-quality','Customer Quality · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['inventory-control','Inventory Control · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['data-inspector','Data Inspector · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['marketing-creative','Marketing Creative · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['identity-otp','Identity Otp · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['support-triage','Support Triage · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['usage-meter','Usage Meter · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['rules-automation','Rules Automation · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['incident-response','Incident Response · QX Business',[
+  ['[data-pv3-component]','QX native runtime','Original business composition with live QX widgets and local demo actions','__QA_BUNDLE_HEAD__']
+ ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -80,7 +100,7 @@ function locate(group,change){
     setTimeout(()=>node.classList.remove('qa-jump-flash'),1800);
     return true;
   };
-  if(!preview){document.querySelector('[data-create-item="'+(group[3]==='02'?'02':'01')+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
+  if(!preview){document.querySelector('[data-create-item="'+((group[3]==='03'?'03':group[3]==='02'?'02':'01'))+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
 }
 function toggleFold(v){
   folded=!!v;
@@ -93,10 +113,10 @@ function mount(){
   const panel=document.createElement('section');
   panel.className='qa-offline-toolbar';panel.dataset.qaToolbar='';
   const markedRegions=groups.reduce((count,g)=>count+g[2].length,0);
-  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.querySelector('[data-card="book-appointment"]')?'02':'01')+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
+  panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：10 张卡片、14 处区域。往期高亮全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Preview 03 的 18 张原生 QX 商业化组合卡片。Preview 01/02 历史高亮已清空。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

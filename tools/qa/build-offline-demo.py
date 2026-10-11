@@ -21,7 +21,7 @@ artifact_arg, head, run_id, artifact_id, merge_sha, tree_sha = sys.argv[1:7]
 artifact = Path(artifact_arg).resolve()
 base = Path(sys.argv[7]).resolve() if len(sys.argv) > 7 else artifact.parent
 base.mkdir(parents=True, exist_ok=True)
-out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S4-dist-docs-LOCAL-' + head[:8] + '.zip')
+out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-' + head[:8] + '.zip')
 work = base / ('offline-QXFRAME9A7C2-' + head[:8])
 assert len(head) == len(merge_sha) == len(tree_sha) == 40
 shutil.rmtree(work, ignore_errors=True)
@@ -34,7 +34,8 @@ with zipfile.ZipFile(artifact) as outer:
     with zipfile.ZipFile(io.BytesIO(outer.read(nested[0]))) as inner:
         assert inner.testzip() is None
         required = ('docs/create/index.html', 'docs/create/preview-01.html',
-                    'docs/create/preview-02.html', 'dist/qxframe9a7c2.js',
+                    'docs/create/preview-02.html', 'docs/create/preview-03.html',
+                    'docs/create/preview-03.js', 'docs/create/preview-03.css', 'dist/qxframe9a7c2.js',
                     'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css')
         assert set(required).issubset(inner.namelist()), 'Missing Create or QA script in Actions artifact'
         inner.extractall(work)
@@ -51,10 +52,12 @@ active_summary = ', '.join(name for _, name in active_cards)
 # The acceptance batch may belong to Preview 01, Preview 02, or both.
 preview02_html = (work/'docs/create/preview-02.html').read_text('utf-8')
 preview02_changed = any(('data-card="' + card + '"') in preview02_html for card, _ in active_cards)
+preview03_html = (work/'docs/create/preview-03.html').read_text('utf-8')
+preview03_changed = any(('data-card="' + card + '"') in preview03_html for card, _ in active_cards)
 ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
 
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
-for name in ('index.html', 'preview-01.html', 'preview-02.html'):
+for name in ('index.html', 'preview-01.html', 'preview-02.html', 'preview-03.html'):
     file = work / 'docs/create' / name
     html = file.read_text('utf-8')
     assert html.count(online) == 1, name
@@ -104,25 +107,25 @@ http.createServer((req,res)=>{
     '\nSame Git tree: ' + tree_sha + '\nQXFRAME run: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n', encoding='utf-8')
 (work / 'README-本地验收.md').write_text(
-    '# QXFRAME9A7C2 Stage4 Windows 离线验收\n\n'
+    '# QXFRAME9A7C2 Stage5 Windows 离线验收\n\n'
     '开发 HEAD: ' + head + '\nPR CI 合成 SHA: ' + merge_sha +
     '\n同一 Git tree: ' + tree_sha + '\nQXFRAME CI: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n\n'
     '## 启动\n\n双击 START-DEMO.cmd（Node.js 18+ 或 Python 3 即可），无需 npm、git 或网络。'
     '访问 http://127.0.0.1:4173/docs/create/ 。'
-    '单独的 Preview 01、02 分别在 docs/create/preview-01.html、preview-02.html。\n\n'
+    '单独 Preview 01/02/03 分别在 docs/create/preview-01.html、preview-02.html、preview-03.html。\n\n'
     '## 改动高亮定位（仅离线版）\n\n'
     '默认开启。Create 右下角的「验收标注 · 离线专用」清单列出卡片、'
     '具体改变和提交号；橙色实线框是修改过的 Card，虚线是内部改动区域。'
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
-    '独立打开 Preview 01、02 也有同样的清单。所有改动标记只注入此本地包副本，'
+    '独立打开 Preview 01、02、03 也有同样的清单。所有改动标记只注入此本地包副本，'
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
     ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
-    ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')
+    ('本轮仅 Preview 03 有新卡片。' if preview03_changed else ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。'))
     '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
-    'Stage 3 已合并；Stage 4 Preview 02 全部 31 张卡片已通过用户人工验收。此验收包来自 Draft PR #266，未经单独授权仍未合并 main，Stage 5 未启动。\n', encoding='utf-8')
+    'Stage 3/4 已合并；Preview 01/02 已通过用户验收。Preview 03 是新开发内容，来自 Stage 5 Draft PR #267，未合并 main，尚待验收。\n', encoding='utf-8')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
@@ -132,7 +135,7 @@ cwd = os.getcwd()
 os.chdir(work)
 server = Server(('127.0.0.1', 0), Quiet)
 threading.Thread(target=server.serve_forever, daemon=True).start()
-checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html',
+checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html', 'docs/create/preview-03.html', 'docs/create/preview-03.js', 'docs/create/preview-03.css',
           'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css',
           'docs/theme-playground.html', 'dist/qxframe9a7c2.js', 'dist/qxframe9a7c2.css')
 try:

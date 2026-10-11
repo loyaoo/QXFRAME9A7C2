@@ -305,6 +305,37 @@ try {
     assert.match((await state()).search, /item=02/);
   });
 
+  await step('Stage5 Preview03 original QX business Cards: 18 live composites, actions and 16 visual modes',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-03.html")','Preview03 route',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','Preview03 runtime',15000);
+    const result=await evaluate("(() => {\n"+
+      "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,state=w.QXFRAME9A7C2_PREVIEW3;\n"+
+      "const cards=[...d.querySelectorAll('[data-card]')],initial=state.componentCount,mountErrors=state.mountErrors.slice();\n"+
+      "d.querySelector('[data-pv3-action=onboarding-next]').click();const progressed=d.querySelector('[data-card=onboarding-flow] [data-pv3-status]').textContent;\n"+
+      "d.querySelector('[data-pv3-action=finance-submit]').click();const finance=d.querySelector('[data-card=finance-approval] [data-pv3-status]').textContent;\n"+
+      "d.querySelector('[data-pv3-action=automation-test]').click();const automation=d.querySelector('[data-card=rules-automation] [data-pv3-status]').textContent;\n"+
+      "const html=d.documentElement,existing=d.getElementById('qxframe9a7c2-create-theme'),oldCss=existing.textContent,oldDark=html.classList.contains('dark'),oldStyle=html.getAttribute('data-create-style');const samples=[];\n"+
+      "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){html.classList.toggle('dark',dark);html.setAttribute('data-create-style',style);existing.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;\n"+
+      "const r=cards.map(c=>c.getBoundingClientRect()),bg=w.getComputedStyle(cards[0]).backgroundColor; samples.push({style,dark,visible:r.filter(x=>x.width>0&&x.height>0).length,bg});}\n"+
+      "existing.textContent=oldCss;html.classList.toggle('dark',oldDark);html.setAttribute('data-create-style',oldStyle);\n"+
+      "return {cardCount:cards.length,componentCount:initial,mountErrors,progressed,finance,automation,samples};\n"+
+      "})()");
+    assert.equal(result.cardCount,18,'Preview03 contains all 18 commercial Cards');
+    assert.ok(result.componentCount>=20,'Preview03 must mount at least 20 real QX component instances');
+    assert.deepEqual(result.mountErrors,[],'No QX component may silently fail mounting');
+    assert.match(result.progressed,/stage 3 of 4/,'Step controller advances live demo');
+    assert.match(result.finance,/local budget limit/,'Finance draft checks without remote approval');
+    assert.match(result.automation,/Dry test/,'Automation runs local dry test');
+    assert.equal(result.samples.length,16,'8 Styles × light/dark');
+    for(const sample of result.samples) {
+      assert.equal(sample.visible,18,sample.style+'/'+sample.dark+' all Cards render');
+      assert.ok(sample.bg&&sample.bg!=='rgba(0, 0, 0, 0)',sample.style+'/'+sample.dark+' Theme Card background');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore existing Preview02',15000);
+  });
+
   await step('Stage4 real Preview02 Codespaces nested QX Tabs and Appointment multiselect',async()=>{
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.querySelector("[data-card=codespaces-card] .qxframe9a7c2-tabs-tab")','Codespaces mounted QX Tabs');
     const actual=await evaluate("(function(){\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const codespaces=doc.querySelector('[data-card=\"codespaces-card\"]');\n      const appointment=doc.querySelector('[data-card=\"book-appointment\"]');\n      const panel=(name)=>codespaces.querySelector('[data-pv-tab-panel=\"'+name+'\"]');\n      const shown=name=>Boolean(panel(name)&&!panel(name).hidden);\n      const tab=(group,name)=>{\n        const host=codespaces.querySelector('[data-pv-tab-group=\"'+group+'\"]');\n        const button=[...host.querySelectorAll('.qxframe9a7c2-tabs-tab-action')].find(x=>x.textContent.trim()===name);\n        if(!button)throw new Error('Missing QX Tabs '+group+'/'+name);\n        button.click();\n      };\n      const first=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const local=[shown('codespaces'),shown('local'),shown('https'),shown('ssh'),shown('cli'),panel('https').querySelector('input').value];\n      tab('codespaces-local','SSH');\n      const ssh=[shown('https'),shown('ssh'),shown('cli'),panel('ssh').querySelector('input').value];\n      tab('codespaces-local','GitHub CLI');\n      const cli=[shown('https'),shown('ssh'),shown('cli'),panel('cli').querySelector('input').value];\n      tab('codespaces','Codespaces');\n      const back=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const reopen=[shown('local'),shown('cli')];\n      tab('codespaces','Codespaces');\n      const slots=[...appointment.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')];\n      const snapshot=()=>slots.map(b=>({active:b.classList.contains('is-active'),pressed:b.getAttribute('aria-pressed')}));\n      const start=snapshot();\n      slots[1].click();const add=snapshot();\n      slots[0].click();const single=snapshot();\n      slots[1].click();const none=snapshot();\n      slots[2].click();slots[3].click();const multiple=snapshot();\n      return {first,local,ssh,cli,back,reopen,start,add,single,none,multiple,count:slots.length};\n    })()");
