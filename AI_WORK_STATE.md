@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-11 Stage4 microphone pending permission cancellation race (CI pending)
+- Parent 10e4385403b2750b629bb28d6a4349907b5524bc added real LiveWaveform microphone and InviteMembers cross-card interaction.
+- Pre-CI race identified: switching to Processing while getUserMedia permission is pending invalidates request generation but its finally skips UI reset; Start Listening could remain disabled. Fixed stopMedia to re-enable Start immediately, added Chromium deferred permission promise test: cancel, check button active, stop late stream, preserve Processing state.
+- Exact-head dual-green CI / official Windows artifact required. PR #266 Draft/unmerged; main/backup untouched.
+
 ## CURRENT — 2026-10-11 Stage4 real waveform/audio media and cross-card invite CTA (CI pending)
 - Previous exact green Stage4 15bcdfc91374e40728bd8a7ac3549e44e313f994: QXFRAME #38132983920 and CSS Schema #38132983937 both SUCCESS, 31x16 = 496 source-preview cards collected.
 - Owner prohibits pixel-perfect changes to approved QX controls. New functional source gap: Live Audio Waveform source actually requests microphone on Start, stops tracks, toggles simulated Processing, and switches Static/Scrolling. QX preview previously had a fixed SVG and three inert Buttons. Implemented stateful local SVG waveform using native getUserMedia+WebAudio analyser only after user click, no recording or upload. Permission denial shows real error; stopping/unloading releases tracks and AudioContext. Processing is explicitly marked simulated, not falsely claimed microphone audio.

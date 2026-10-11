@@ -282,6 +282,8 @@
     }
     function stopMedia() {
       ++waveState.generation;
+      // Cancel a pending permission prompt without stranding Start disabled.
+      waveStart.disabled = false;
       if (waveState.stream) {
         waveState.stream.getTracks().forEach(function (track) { track.stop(); });
         waveState.stream = null;
