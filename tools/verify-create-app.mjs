@@ -377,7 +377,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   for(const key of axes)assert.equal(fromHeader.config.ext[key],seven.ext[key],key+' CSS header roundtrip');
   const baseline=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
   assert.match(baseline,/--qxframe9a7c2-theme-focus-shadow:\s*0 0 0 0 transparent/,'baseline keyboard halo is visually absent and comma-safe');
-  assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*none/,'baseline pointer default unchanged');
+  assert.match(baseline,/--qxframe9a7c2-theme-pointer-shadow:\s*0 0 0 0 transparent/,'baseline pointer halo has no visible paint and is comma-safe');
   assert.doesNotMatch(source('docs/create/compiler.js'),/light\.ring\s*=\s*light\.primary/,'Theme Focus may not mutate imported shadcn palette ring');
   assert.match(source('src/styles/components/focus-closeout.css'),/theme-pointer-shadow/,'native pointer ring');
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
