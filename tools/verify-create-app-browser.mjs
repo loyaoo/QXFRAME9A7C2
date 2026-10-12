@@ -121,12 +121,12 @@ try {
       "const host=d.createElement('div'),sheet=d.createElement('style');"+
       "host.style.cssText='position:absolute;left:-10000px;top:0;width:18rem';"+
       "host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+"+
-      "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
-      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-plain\">Normal</button><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-hover\">Hover</div><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
+      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-plain\">Normal</button><button class=\"qxframe9a7c2-date-panel-cell is-hover\">Hover</button><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
       "'<div class=\"qxframe9a7c2-period-panel\"><button class=\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\">Q4</button></div>'+"+
       "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item\">09</div><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div>'+"+
       "'<button class=\"qxframe9a7c2-date-picker-preset\">Today</button>'+"+
-      "'<div class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"></div></div>'+"+
+      "'<div class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"><button class=\"qxframe9a7c2-color-panel-format\">HEX</button><button class=\"qxframe9a7c2-color-panel-eye\">Eye</button><input type=\"range\" class=\"qxframe9a7c2-color-panel-hue\" min=\"0\" max=\"360\" value=\"180\"></div><div class=\"qxframe9a7c2-slider\"><div class=\"qxframe9a7c2-slider-rail\"></div><button class=\"qxframe9a7c2-slider-handle\"></button></div><i data-menu-soft style=\"background:var(--_qxframe9a7c2-v2-menu-hover-soft);border:1px solid var(--_qxframe9a7c2-v2-menu-border-neutral)\"></i></div>'+"+
       "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
       "'<i data-menu-fg style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-menu-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-popover-fg style=\"color:var(--qxframe9a7c2-theme-popover-foreground)\"></i>';"+
       "d.head.append(sheet);d.body.append(host);"+
@@ -135,11 +135,11 @@ try {
       "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
       "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
       "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
-      "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
+      "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,hover:css(query('.qxframe9a7c2-item-surface.is-hover')).color,hoverBg:css(query('.qxframe9a7c2-item-surface.is-hover')).backgroundColor,softBg:css(query('[data-menu-soft]')).backgroundColor,neutralBorder:css(query('[data-menu-soft]')).borderTopColor,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
       "accentFg:accent.color,accentBg:accent.backgroundColor,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
-      "dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
+      "dateHoverBg:css(query('.qxframe9a7c2-date-panel-cell.is-hover')).backgroundColor,dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
       "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelBg:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).backgroundColor,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,wheelRowsZ:css(query('.qxframe9a7c2-wheel-panel-columns')).zIndex,wheelGuideZ:css(query('.qxframe9a7c2-wheel-panel-center-guide')).zIndex,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
-      "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
+      "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,colorInputBorder:css(query('.qxframe9a7c2-color-panel-input')).borderTopColor,colorFormatBorder:css(query('.qxframe9a7c2-color-panel-format')).borderTopColor,colorEyeBorder:css(query('.qxframe9a7c2-color-panel-eye')).borderTopColor,wheelGuideBorder:css(query('.qxframe9a7c2-wheel-panel-center-guide')).borderTopColor,hueRail:css(query('.qxframe9a7c2-color-panel-hue'),'::-webkit-slider-runnable-track').height,sliderRail:css(query('.qxframe9a7c2-slider-rail')).height,hueThumb:css(query('.qxframe9a7c2-color-panel-hue'),'::-webkit-slider-thumb').width,sliderThumb:css(query('.qxframe9a7c2-slider-handle')).width,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
       "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
     assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
     for(const r of result){
@@ -149,6 +149,15 @@ try {
       assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
       assert.equal(r.wheel,r.menuFg,id+' TimePicker uses TimePanel selected text role');
       assert.equal(r.wheelBg,'rgba(0, 0, 0, 0)',id+' TimePicker leaves selected wheel background to TimePanel guide');
+      assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
+      assert.equal(r.hoverBg,r.softBg,id+' hover Item uses neutral Menu mix, not selected paint');
+      assert.equal(r.dateHoverBg,r.softBg,id+' Calendar hover uses the same neutral Menu mix');
+      assert.equal(r.colorInputBorder,r.neutralBorder,id+' ColorPanel input uses passive Menu border');
+      assert.equal(r.colorFormatBorder,r.neutralBorder,id+' ColorPanel format uses the same passive border');
+      assert.equal(r.colorEyeBorder,r.neutralBorder,id+' ColorPanel eye uses the same passive border');
+      assert.equal(r.wheelGuideBorder,r.neutralBorder,id+' WheelPanel guide uses passive border');
+      assert.equal(r.hueRail,r.sliderRail,id+' ColorPanel native hue track matches Slider rail');
+      assert.equal(r.hueThumb,r.sliderThumb,id+' ColorPanel native hue thumb matches Slider handle');
       assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
       assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
       assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');
