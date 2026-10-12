@@ -1657,6 +1657,10 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  assert.ok(picker.includes('.qxframe9a7c2-color-panel-format,.qxframe9a7c2-color-panel-eye,.qxframe9a7c2-color-panel-input{box-sizing:border-box;'),'ColorPanel source must paint all three fields together');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-webkit-slider-runnable-track,.qxframe9a7c2-color-panel-alpha::-webkit-slider-runnable-track{box-sizing:border-box;height:var(--qxframe9a7c2-slider-rail,0.25rem);'),'WebKit native range track must consume Slider rail size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-track,.qxframe9a7c2-color-panel-alpha::-moz-range-track{box-sizing:border-box;height:var(--qxframe9a7c2-slider-rail,0.25rem);'),'Gecko native range track must consume Slider rail size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-webkit-slider-thumb,.qxframe9a7c2-color-panel-alpha::-webkit-slider-thumb{box-sizing:border-box;width:var(--qxframe9a7c2-slider-handle-width,'),'WebKit native range thumb must consume Slider thumb size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{box-sizing:border-box;width:var(--qxframe9a7c2-slider-handle-width,'),'Gecko native range thumb must consume Slider thumb size');
  assert.doesNotMatch(css,/\.qxframe9a7c2-color-panel-input\[class\]/,'Theme V2 must not duplicate ColorPanel leaf field skin');
  const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
