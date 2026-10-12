@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 popup foreground, OTP controls and Switch Preview03 repair (CI pending)
+- Baseline b5d93511: QXFRAME #38184967129 and CSS Schema #38184967133 Success; complete official dist+docs #11719416911 was packaged and independently verified (CRC, SHA256, 13 HTTP local routes). This package is the previous approved CI HEAD, not evidence for new edits.
+- Fixed shared Menu popup text consumers: DatePicker normal day and wheel unselected state now pair with Menu foreground while preserving selected/current/outside and public DatePanel text overrides. Popover/Dialog remain independent.
+- InputOTP segments consume standard Theme control background/border/foreground rather than generic surface; Preview03 feature-flags now uses actual QX Switch input/track/thumb markup, retaining native checkbox truth and local status.
+- Extended 64-case Chrome menu contrast regression to normal days and normal wheel rows; Stage5 browser gallery now asserts 3 real Switch tracks, track width and click interaction. Offline QA ledger reset: only this batch's 4 cards/5 regions.
+- Branch redesign/create-stage5; PR #267 remains Draft and unmerged. NEXT: verify exact new HEAD dual CI, inspect failure logs if any, build exact-head official Windows offline ZIP; extend remaining 66-family state/color/spacing/shadow visual QA without touching accepted Preview01/02.
+
 ## CURRENT — 2026-10-12 Stage5 shape parity follow-up: Tabs and ColorPanel (CI pending)
 - Earlier 608-case radius audit and complete Windows build at 39e22a12 were green. Further CSS review found Tabs indicator/badge/close and ColorPanel hue/alpha/gradient tracks still locked to 50%/100rem. Fixed only these six ordinary UI shapes to consume the existing Theme radius-track/badge/button slots while keeping public per-component override priority.
 - New Chromium matrix: 8 Styles × light/dark × none/default radius × 25 sampled component parts = 800 computed corners. Offline QA highlights only the 13 affected Preview03 Cards, 13 regions (previous Picker/creation highlights cleared).

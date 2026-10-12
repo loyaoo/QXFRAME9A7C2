@@ -16,3 +16,10 @@ The 66/66 coverage mapping is a **documentation/demo inventory**, not 66/66 visu
 ## Gate
 
 Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must both be success on the final HEAD; otherwise inspect failed workflow logs, correct the source, rerun. Keep main unchanged.
+
+## 2026-10-12 Stage5 follow-up — Theme popup normal-state + native Switch commercial composition
+
+- Reviewed the owner's actual Preview03 screenshots. Confirmed Feature flag matrix used a bare native `input.qxframe9a7c2-switch` instead of the framework's `Switch > SwitchInput + SwitchTrack > SwitchThumb` contract. Replaced all three instances without replacing native checkbox state or simulated backend calls.
+- The prior 64-case popup browser test checked today/selected dates and selected wheel rows but omitted **normal calendar dates and nonselected wheel rows**. The matrix now checks both additional foreground consumers under 8 Styles × 2 modes × 4 Menu variants, without changing the fixture's Popover isolation test.
+- InputOTP now uses the existing Control family color roles for background, border and text in the shared component stylesheet; no Preview03-specific coloring, extra Theme tokens, or unsafe mix formulas.
+- Visual QA highlights: release-planner (two controls), dial-settings (one), identity-otp (one), feature-flags (one) = **4 Cards / 5 regions**. Prior 13 regions cleared. This is not yet full all-family visual signoff; CI and official package must correspond to the new HEAD.

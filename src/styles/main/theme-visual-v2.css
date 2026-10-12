@@ -448,6 +448,19 @@
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
   }
+  /* Picker popup foreground contract: normal day/period cells and wheel rows
+     must use the popup Menu ink even when their nested panel owns color.
+     Keep explicit date-panel text overrides, selected/today and outside-day
+     projection independent. Never apply Menu paint to Popover/Dialog. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel {
+    --_qxframe9a7c2-date-panel-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.is-selected):not(.is-outside):not(.is-today):not(.is-current):not(.is-disabled):not(:disabled) {
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-item:not(.is-selected):not(.is-disabled) {
+    --_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected {
     --_qxframe9a7c2-date-panel-cell-bg: var(--qxframe9a7c2-theme-menu-accent);

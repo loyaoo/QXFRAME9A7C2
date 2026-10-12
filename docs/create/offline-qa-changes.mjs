@@ -1,44 +1,18 @@
-/** Stage5 current batch: QX-only Theme visual parity; only this batch's 13 component regions.
- * No previous Preview01/02 card or the older 48-card expansion stays highlighted. */
+/** Stage5 current visual batch: Picker normal-state ink, OTP control colors and
+ * real Preview03 Switch structures. Previous 13 radius QA highlights cleared. */
 const groups = [
- ['navigation-workspace','Menu 角样式',[
-  ['[data-pv3x-widget="navigation-workspace"]','Menu 角样式','菜单项圆角改为 radius-item','__QA_BUNDLE_HEAD__']
+ ['release-planner','DatePicker / TimePicker 前景',[
+  ['[data-pv3-component="release-date"]','DatePicker 普通日期','反色菜单下普通日期文字从 Menu 前景色读取','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','TimePicker 普通滚轮','反色菜单下滚轮普通条目从 Menu 前景色读取','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['activity-timeline','List 容器',[
-  ['[data-pv3x-widget="activity-timeline"]','List 容器','List 与分组圆角统一','__QA_BUNDLE_HEAD__']
+ ['dial-settings','WheelPicker 文字',[
+  ['[data-pv3x-widget="dial-settings"]','WheelPicker 滚轮','滚轮与 Picker 的 Menu 文字角色一致','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['onboarding-flow','Steps 标记',[
-  ['[data-pv3-component="onboarding-steps"]','Steps 标记','步骤主标记与小圆点遵循 radius-item','__QA_BUNDLE_HEAD__']
+ ['identity-otp','InputOTP 分段',[
+  ['[data-pv3-component="otp-input"]','OTP 分段','分段背景、边框和文字消费与其他 Control 相同的 Theme 角色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['org-hierarchy','Tree 控制',[
-  ['[data-pv3x-widget="org-hierarchy"]','Tree 控制','树展开按钮遵循 radius-button','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['marketing-creative','Carousel 按钮',[
-  ['[data-pv3-component="campaign-carousel"]','Carousel 按钮','轮播箭头和分页指示遵循 button/track','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['service-health','Progress 轨道',[
-  ['[data-pv3-component="service-progress"]','Progress 轨道','进度分段跟随 radius-track','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['asset-preview','ImagePreview 控件',[
-  ['[data-pv3x-widget="asset-preview"]','ImagePreview 控件','预览标签工具条和操作按钮遵循 popup/button','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['stakeholder-roster','Avatar 形状',[
-  ['.pv3x-avatars','Avatar 形状','商用头像不再强行锁死圆角','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['compliance-flags','Badge 标签',[
-  ['.qxframe9a7c2-badge','Badge 标签','标签计数及装饰形态遵循 badge 主题','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['revenue-surfaces','Card 内部形态',[
-  ['[data-pv3x-card-skeleton]','Card 骨架圆角','真实骨架行现已按 Theme radius-item 统一','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['usage-meter','Slider 标记',[
-  ['[data-pv3-component="usage-slider"]','Slider 标记','Slider 标记遵循 thumb 形状策略','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['segmented-console','Tabs 指示、徽标与关闭按钮',[
-  ['[data-pv3x-widget="segmented-console"]','Tabs 圆角','Tabs indicator / badge / close consume Theme radius-track, badge and button','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['palette-laboratory','ColorPanel 滑轨形状',[
-  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel 轨道','Hue, alpha and gradient tracks consume Theme radius-track','__QA_BUNDLE_HEAD__']
+ ['feature-flags','Switch 真实控件',[
+  ['.pv3x-choices','Switch 三层结构','三个功能开关使用 QX Switch Input / Track / Thumb 而非裸 checkbox','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -102,7 +76,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：全组件 Theme 形态统一 13 张卡片、13 处控件区域；上轮反色 Picker 高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：本轮 Theme 颜色和真实 Switch 结构：4 张卡片、5 处控件区域；上一轮 13 处高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

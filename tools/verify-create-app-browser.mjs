@@ -122,9 +122,9 @@ try {
       "host.style.cssText='position:absolute;left:-10000px;top:0;width:18rem';"+
       "host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+"+
       "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
-      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-plain\">Normal</button><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
       "'<div class=\"qxframe9a7c2-period-panel\"><button class=\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\">Q4</button></div>'+"+
-      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div>'+"+
+      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-item\">09</div><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div>'+"+
       "'<button class=\"qxframe9a7c2-date-picker-preset\">Today</button>'+"+
       "'<div class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"></div></div>'+"+
       "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
@@ -136,15 +136,15 @@ try {
       "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
       "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
       "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
-      "accentFg:accent.color,accentBg:accent.backgroundColor,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
+      "accentFg:accent.color,accentBg:accent.backgroundColor,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
       "dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
-      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
+      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
       "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
       "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
     assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
     for(const r of result){
       const id=r.style+'/'+r.dark+'/'+r.menuColor;
-      for(const field of ['rows','search','today','wheel','preset','colorInput'])
+      for(const field of ['rows','search','normal','today','wheel','wheelNormal','preset','colorInput'])
         assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
       assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
       assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
@@ -360,9 +360,15 @@ try {
       "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){html.classList.toggle('dark',dark);html.setAttribute('data-create-style',style);existing.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;\n"+
       "const r=cards.map(c=>c.getBoundingClientRect()),bg=w.getComputedStyle(cards[0]).backgroundColor; samples.push({style,dark,visible:r.filter(x=>x.width>0&&x.height>0).length,bg});}\n"+
       "existing.textContent=oldCss;html.classList.toggle('dark',oldDark);html.setAttribute('data-create-style',oldStyle);\n"+
-      "return {cardCount:cards.length,componentCount:initial,mountErrors,progressed,finance,automation,samples};\n"+
+      "const flag=d.querySelector('[data-card=feature-flags]'),switchInputs=[...flag.querySelectorAll('.qxframe9a7c2-switch-input')],switchTracks=[...flag.querySelectorAll('.qxframe9a7c2-switch-track')];\n"+
+      "const switchWidths=switchTracks.map(n=>w.getComputedStyle(n).width);const firstSwitchBefore=switchInputs[0].checked;switchInputs[0].click();const firstSwitchAfter=switchInputs[0].checked;switchInputs[0].click();\n"+
+      "return {cardCount:cards.length,componentCount:initial,mountErrors,progressed,finance,automation,samples,switchCount:switchInputs.length,switchWidths,firstSwitchBefore,firstSwitchAfter};\n"+
       "})()");
     assert.equal(result.cardCount,66,'Preview03 contains all 66 commercial Cards');
+    assert.equal(result.switchCount,3,'Feature flags render three framework Switch inputs');
+    assert.ok(result.switchWidths.every(w=>parseFloat(w)>=20),'Feature flag controls render real switch tracks');
+    assert.equal(result.firstSwitchBefore,true,'Audit logging starts checked');
+    assert.equal(result.firstSwitchAfter,false,'Feature flag switch remains interactive');
     assert.ok(result.componentCount>=45,'Preview03 must mount at least 45 real QX component instances');
     assert.deepEqual(result.mountErrors,[],'No QX component may silently fail mounting');
     assert.match(result.progressed,/stage 3 of 4/,'Step controller advances live demo');
