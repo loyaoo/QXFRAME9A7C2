@@ -89,10 +89,14 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
         var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
-        // Columns form a bounded, contiguous flex row. No horizontal Scroll
-        // owner: its injected padding/viewport/rail caused gaps and clipping.
-        // Each ItemCollection retains its independent vertical list viewport.
-        var columnsScroll = null;
+        // PopupFrame remains the shared resource owner. The columns never
+        // scroll horizontally; nested ItemCollections own vertical option scroll.
+        var columnsScroll = popupFrame.attachViewport({
+          root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
+          axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden',
+          focusable: false, keyboard: false, controller: instance
+        });
+        scope.add(function () { if (columnsScroll) columnsScroll.destroy(); columnsScroll = null; });
         var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, interactionController = null, tagNavigation = null;
         var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
