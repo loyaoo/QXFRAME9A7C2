@@ -130,7 +130,7 @@ try {
       "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
       "'<i data-menu-fg style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-menu-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-popover-fg style=\"color:var(--qxframe9a7c2-theme-popover-foreground)\"></i>';"+
       "d.head.append(sheet);d.body.append(host);"+
-      "const css=x=>d.defaultView.getComputedStyle(x);const query=x=>host.querySelector(x);"+
+      "const css=(x,pseudo)=>d.defaultView.getComputedStyle(x,pseudo);const query=x=>host.querySelector(x);"+
       "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
       "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
       "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
