@@ -91,7 +91,8 @@
 
 .qxframe9a7c2-select{--_qxframe9a7c2-select-min-width:var(--qxframe9a7c2-select-min-width,0px);--_qxframe9a7c2-select-tag-max-width:var(--qxframe9a7c2-select-tag-max-width,12rem);--_qxframe9a7c2-select-tag-bg:var(--qxframe9a7c2-select-tag-bg,var(--_qxframe9a7c2-semantic-surface-muted));--_qxframe9a7c2-select-tag-border:var(--qxframe9a7c2-select-tag-border,var(--_qxframe9a7c2-semantic-border-subtle));min-width:var(--_qxframe9a7c2-select-min-width)}
 .qxframe9a7c2-select:not(.is-searchable):not(.is-disabled):not(.is-readonly){--_qxframe9a7c2-state-cursor:pointer}
-.qxframe9a7c2-select-values{display:flex;align-items:center;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-2);min-width:0}
+.qxframe9a7c2-select-values{display:flex;align-items:center;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-1);min-width:0}
+.qxframe9a7c2-select.is-multiple>.qxframe9a7c2-input-control{height:var(--_qxframe9a7c2-compound-item-height)}
 .qxframe9a7c2-select:not(.is-multiple) .qxframe9a7c2-select-values{display:none;flex:1 1 auto;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .qxframe9a7c2-select:not(.is-multiple).has-single-value:not(.is-searching) .qxframe9a7c2-select-values,.qxframe9a7c2-select:not(.is-multiple).is-value .qxframe9a7c2-select-values{display:flex}
 .qxframe9a7c2-select:not(.is-multiple).has-single-value:not(.is-searching) .qxframe9a7c2-input-control{min-width:1px;width:1px;flex:0 1 1px;padding-inline:0;opacity:0}
