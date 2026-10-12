@@ -324,7 +324,7 @@
   .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled { opacity: .5; }
 
   /* control: same owner for native Input and all existing Picker Controls. */
-  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-color-panel-input, .qxframe9a7c2-pagination-input {
+  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
     --_qxframe9a7c2-v2-control-bg: var(--qxframe9a7c2-theme-field);
     --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-field-border);
     background-color: var(--_qxframe9a7c2-v2-control-bg);
