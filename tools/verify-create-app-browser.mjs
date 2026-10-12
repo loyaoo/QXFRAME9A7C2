@@ -124,7 +124,7 @@ try {
       "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
       "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-plain\">Normal</button><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
       "'<div class=\"qxframe9a7c2-period-panel\"><button class=\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\">Q4</button></div>'+"+
-      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-item\">09</div><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div>'+"+
+      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item\">09</div><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div>'+"+
       "'<button class=\"qxframe9a7c2-date-picker-preset\">Today</button>'+"+
       "'<div class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"></div></div>'+"+
       "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
@@ -138,7 +138,7 @@ try {
       "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
       "accentFg:accent.color,accentBg:accent.backgroundColor,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
       "dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
-      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
+      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,wheelRowsZ:css(query('.qxframe9a7c2-wheel-panel-columns')).zIndex,wheelGuideZ:css(query('.qxframe9a7c2-wheel-panel-center-guide')).zIndex,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
       "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
       "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
     assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
@@ -146,6 +146,7 @@ try {
       const id=r.style+'/'+r.dark+'/'+r.menuColor;
       for(const field of ['rows','search','normal','today','wheel','wheelNormal','preset','colorInput'])
         assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
+      assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
       assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
       assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
       assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');

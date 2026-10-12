@@ -23,3 +23,8 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 - The prior 64-case popup browser test checked today/selected dates and selected wheel rows but omitted **normal calendar dates and nonselected wheel rows**. The matrix now checks both additional foreground consumers under 8 Styles × 2 modes × 4 Menu variants, without changing the fixture's Popover isolation test.
 - InputOTP now uses the existing Control family color roles for background, border and text in the shared component stylesheet; no Preview03-specific coloring, extra Theme tokens, or unsafe mix formulas.
 - Visual QA highlights: release-planner (two controls), dial-settings (one), identity-otp (one), feature-flags (one) = **4 Cards / 5 regions**. Prior 13 regions cleared. This is not yet full all-family visual signoff; CI and official package must correspond to the new HEAD.
+
+### 2026-10-12 CI feedback and WheelPanel layer
+
+- QXFRAME workflow #38191006431 failed at a stale static QA ledger gate referring to the prior 13 highlighted radius consumers. The current 4-Card / 5-region selectors are now asserted instead, with explicit rejection of previous 13 regions. No gate disabled.
+- TimePicker and Year/Month WheelPicker selection-guide element was at z-local-above (2), overpainted the scroll rows. Wheel columns now own z-local-above (2); guide is behind at z-local-raised (1), preserving the highlight background but allowing text to remain visible. The existing 64-case inverse Menu fixture now checks guide-versus-row stacking.

@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 CI first failure and WheelPanel foreground occlusion follow-up (CI pending)
+- New HEAD 72032740 QXFRAME CI #38191006431 failed at verify:create-app, NOT build: the static verifier still demanded the previous 13-radius Card QA marker list after current ledger intentionally reset to 4 Cards / 5 regions. Updated the strict expected Card/region selectors and added source checks for 3 actual Switch Input/Track/Thumb triples; old 13 highlights explicitly rejected.
+- Owner's screenshots also showed the WheelPicker selection-guide band painting over the selected row text (including TimePicker and Year/Month). Fixed in shared picker-family.css by painting wheel columns above the center guide (z-local-above vs z-local-raised); extend 64-menu-mode Chromium fixture to assert text painting layer above guide.
+- Keep original 800 radius and 64 inverse Menu tests; two workflows must be success for NEW HEAD before any offline archive. PR #267 Draft/unmerged. Resume remaining full-component visual audit after successful CI.
+
 ## CURRENT — 2026-10-12 Stage5 popup foreground, OTP controls and Switch Preview03 repair (CI pending)
 - Baseline b5d93511: QXFRAME #38184967129 and CSS Schema #38184967133 Success; complete official dist+docs #11719416911 was packaged and independently verified (CRC, SHA256, 13 HTTP local routes). This package is the previous approved CI HEAD, not evidence for new edits.
 - Fixed shared Menu popup text consumers: DatePicker normal day and wheel unselected state now pair with Menu foreground while preserving selected/current/outside and public DatePanel text overrides. Popover/Dialog remain independent.

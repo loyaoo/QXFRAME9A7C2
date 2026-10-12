@@ -62,7 +62,7 @@
 .qxframe9a7c2-wheel-picker-popup{min-width:15rem}
 .qxframe9a7c2-wheel-panel{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .qxframe9a7c2-wheel-panel:focus-visible{outline:none}
-.qxframe9a7c2-wheel-panel-columns{display:flex;align-items:stretch;min-width:0;gap:0}
+.qxframe9a7c2-wheel-panel-columns{position:relative;z-index:var(--qxframe9a7c2-z-local-above);display:flex;align-items:stretch;min-width:0;gap:0}
 .qxframe9a7c2-wheel-panel-column{position:relative;display:flex;flex:1 1 0;min-width:0;flex-direction:column}
 .qxframe9a7c2-wheel-panel-column-title{flex:0 0 auto;padding:calc(var(--_qxframe9a7c2-control-gap) * .75) var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);font-weight:600;color:var(--_qxframe9a7c2-semantic-text-secondary);text-align:center}
 .qxframe9a7c2-wheel-panel-scroll{position:relative;min-width:0;overflow:hidden}
@@ -74,7 +74,7 @@
 .qxframe9a7c2-wheel-panel.is-readonly .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-cursor:default}
 .qxframe9a7c2-wheel-panel-item.is-disabled,.qxframe9a7c2-wheel-panel.is-disabled .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:not-allowed;--_qxframe9a7c2-wheel-item-opacity:.5}
 .qxframe9a7c2-wheel-panel-pad{flex:0 0 auto;pointer-events:none}
-.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0;top:50%;height:var(--qxframe9a7c2-wheel-item-height,2.25rem);transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--_qxframe9a7c2-semantic-accent-border);background:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
+.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);inset-inline:0;top:50%;height:var(--qxframe9a7c2-wheel-item-height,2.25rem);transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--_qxframe9a7c2-semantic-accent-border);background:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
 
 .qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border)}
 

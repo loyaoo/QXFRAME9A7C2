@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"navigation-workspace":["[data-pv3x-widget=\"navigation-workspace\"]"],"activity-timeline":["[data-pv3x-widget=\"activity-timeline\"]"],"onboarding-flow":["[data-pv3-component=\"onboarding-steps\"]"],"org-hierarchy":["[data-pv3x-widget=\"org-hierarchy\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]"],"service-health":["[data-pv3-component=\"service-progress\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"stakeholder-roster":[".pv3x-avatars"],"compliance-flags":[".qxframe9a7c2-badge"],"revenue-surfaces":["[data-pv3x-card-skeleton]"],"usage-meter":["[data-pv3-component=\"usage-slider\"]"],"segmented-console":["[data-pv3x-widget=\"segmented-console\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"]}; // Stage5 full QX shape parity, 13 modified Cards
+  const current={"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"dial-settings":["[data-pv3x-widget=\"dial-settings\"]"],"identity-otp":["[data-pv3-component=\"otp-input\"]"],"feature-flags":[".pv3x-choices"]}; // Stage5 current batch: 4 Cards / 5 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -127,10 +127,15 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console','palette-laboratory',
+    'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,13,'only current 13 QX-only component Card regions are highlighted');
+  assert.equal(count,5,'only current 4 Stage5 Cards / 5 component regions are highlighted');
+  const feature=read('preview-03.html').match(/<article[^>]*data-card="feature-flags"[\\s\\S]*?<\\/article>/)?.[0] || '';
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-track"/g)||[]).length,3,'each real QX Switch input has its track');
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-thumb"/g)||[]).length,3,'each real QX Switch track has its thumb');
   assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
