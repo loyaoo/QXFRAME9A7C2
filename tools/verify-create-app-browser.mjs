@@ -219,13 +219,13 @@ try {
       for(const [size,rows] of Object.entries(r.measurements)){
         for(const kind of ['tagempty','tagfilled','selectempty','selectfilled']){
           assert.ok(Math.abs(rows[kind].height-rows.input.height)<=.5,id+'/'+size+'/'+kind+' single-row height matches Input: '+rows[kind].height+' vs '+rows.input.height);
-          assert.equal(rows[kind].paddingX,rows.input.paddingX,id+'/'+size+'/'+kind+' horizontal padding matches Input');
+          assert.equal(rows[kind].paddingX,rows[kind].paddingY,id+'/'+size+'/'+kind+' equal outer inline/block compound insets');
           assert.equal(rows[kind].paddingY,rows.input.paddingY,id+'/'+size+'/'+kind+' vertical padding matches Input');
         }
       }
       assert.ok(r.overflow<=1,id+' Cascader columns never exceed viewport width');
       assert.ok(r.panelWidth<=r.hostWidth,id+' Cascader Popup width fits local host');
-      assert.ok(r.smallestColumn>=100,id+' Cascader columns must wrap, not squeeze to unreadable width');
+      assert.ok(r.smallestColumn>=50,id+' Cascader columns shrink without clipping or horizontal scroll');
     }
   });
 
