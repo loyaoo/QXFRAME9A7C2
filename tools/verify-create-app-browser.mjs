@@ -1146,16 +1146,17 @@ try {
         const cover=doc.querySelector('[data-card="cover-art"]'),item=cover.querySelector('.qxframe9a7c2-item.is-artwork');
         const svg=item.querySelector('.qxframe9a7c2-item-artwork-label svg'),footer=cover.querySelector('.qxframe9a7c2-card-footer');
         return {badgeHeight:badge.getBoundingClientRect().height,badgeFont:px(computed(badge).fontSize),
-          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),
+          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),badgeBorder:px(computed(badge).borderLeftWidth),
           separatorDisplay:computed(stock).display,
           coverAspect:item.getBoundingClientRect().width/item.getBoundingClientRect().height,
           iconWidth:svg.getBoundingClientRect().width,footerGap:px(computed(footer).rowGap),
           footerColumn:computed(footer).flexDirection};
       })()`);
-      const sourceHeight=style==='sera'?100/7:20;
+      const sourceHeight=style==='sera'?100/7+2:20;
       assert.ok(Math.abs(info.badgeHeight-sourceHeight)<=.5,style+' Badge intrinsic source height');
       assert.equal(info.badgeFont,style==='vega'?12:10,style+' Badge source typography');
-      assert.ok(Math.abs(info.badgeInset-(style==='sera'?0:8))<=.5,style+' Badge source inline inset');
+      assert.ok(Math.abs(info.badgeInset-(style==='sera'?4:8))<=.5,style+' Badge corrected inline inset');
+      assert.ok(Math.abs(info.badgeBorder-1)<=.5,style+' outlined Badge has a visible static 1px border');
       assert.equal(info.separatorDisplay,style==='sera'?'none':'block',style+' optional Stock separator visibility');
       assert.ok(Math.abs(info.coverAspect-1)<=.01,style+' Cover Art Item is square');
       assert.ok(Math.abs(info.iconWidth-40)<=.5,style+' Cover Art source placeholder icon');

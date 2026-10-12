@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 OutlineBadge source-sized border acceptance (new CI pending)
+- CSS Schema #38208424273 failed old Preview01 Sera claimable-balance Badge source geometry expectation. Legacy status label Sera editorial mode had no border and 0px horizontal padding. User explicitly requires all outlineBadge variants to have real border and nonzero padding (and no Hover).
+- Browser fixture now checks Sera expected intrinsic height (100/7+2px for the new two 1px borders), 4px inline inset, and actual borderLeftWidth=1px; Vega/Mira existing 20px height/8px inset remain, all typography and unrelated layout assertions unchanged. This is an improved stricter new Badge visual contract, not a gate bypass.
+- Source changes unchanged: neutral List/Tree surface, OTP container, Tag close, base64 images, Tooltip pair, shared TimePanel, Message, Notification and authorized Overlay JS. PR Draft/unmerged. Need both new same-HEAD CI green, then official Windows ZIP CRC/SHA/HTTP.
+
 ## CURRENT — 2026-10-12 Stage5 browser focus regression aligned with sequential mask leave (CI pending)
 - At exact HEAD ca0a85b442369ada758c76542a0da0eece66b850, CSS Schema #38208098300 failed Stage4 real modal focus restore assertion because the old test assumed 280ms from close click until Overlay fully hidden; new authorized two-stage panel->mask exit needs actual lifecycle completion.
 - Replaced fixed 280ms delay only in Stage4 browser test with bounded wait until visible Modal root is hidden; focus assertion remains STRICT and still checks restoration to obs-query after anomaly action.
