@@ -12,6 +12,7 @@ import os
 import re
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import threading
 import urllib.request
@@ -55,6 +56,12 @@ preview02_changed = any(('data-card="' + card + '"') in preview02_html for card,
 preview03_html = (work/'docs/create/preview-03.html').read_text('utf-8')
 preview03_changed = any(('data-card="' + card + '"') in preview03_html for card, _ in active_cards)
 ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
+# A syntactically broken QA module renders no annotation while static count
+# checks and HTTP 200 still pass. Validate the exact transformed ZIP payload.
+node = shutil.which('node')
+assert node, 'Node.js is required to syntax-check the offline QA artifact'
+subprocess.run([node, '--check', str(ledger_path)], check=True)
+assert ledger_path.read_text('utf-8').count('__QA_BUNDLE_HEAD__') == 0
 
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
 for name in ('index.html', 'preview-01.html', 'preview-02.html', 'preview-03.html'):
