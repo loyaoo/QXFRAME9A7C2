@@ -55,3 +55,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 CI owner boundary correction
 - QXFRAME #38199405323 failed strict token duplicate-owner guard: Theme V2 attempted to write --_color-panel-field-* on ColorPanel itself, duplicating component source ownership. Removed this duplicate declaration; field/format/eye now directly read existing public component field vars with Menu fallback in their actual paint. No gate suppression, default CSS token count remains controlled. 64-mode Chromium contract retained.
+
+### 2026-10-12 no duplicate Date private owners
+- Replaced Theme V2 extra nav/selected Date private token declarations with final scoped paint CSS. Source Date components remain unique private token owners. This responds to strict QXFRAME token verifier 34->38 failure without disabling the check.

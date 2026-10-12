@@ -544,19 +544,19 @@
   /* Inverted Picker: navigation idle/hover and selected cells own paired menu paint. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:not(:disabled) {
-    --_qxframe9a7c2-date-panel-action-bg: transparent;
-    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+    background: transparent;
+    color: var(--qxframe9a7c2-theme-menu-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
-    --_qxframe9a7c2-date-panel-action-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    background: var(--qxframe9a7c2-theme-menu-accent);
+    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected:not(:disabled) {
-    --_qxframe9a7c2-date-panel-cell-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-date-panel-cell-border: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    background: var(--qxframe9a7c2-theme-menu-accent);
+    border-color: var(--qxframe9a7c2-theme-menu-accent);
+    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
   /* Centre guide does not cover wheel selection text and its own background. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {

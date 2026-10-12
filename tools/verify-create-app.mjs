@@ -1667,8 +1667,8 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  for(const marker of [
    '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
-   '--_qxframe9a7c2-date-panel-action-bg: var(--qxframe9a7c2-theme-menu-accent)',
-   '--_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground)',
+   'background: var(--qxframe9a7c2-theme-menu-accent)',
+   'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
    '.qxframe9a7c2-tree-check:indeterminate:not(:disabled) + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',

@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 Date private owner fix (CI pending)
+- QXFRAME #38199547276 failed strict verify:theme-tokens: added Theme V2 private Date state assignments produced four extra duplicate owners (34 to 38) even after removing the ColorPanel private duplicates.
+- New DatePicker/PeriodPanel nav/selected overrides now write only final painted background/color/border-color in scoped picker popup CSS, leaving private state slots owned by components. Hover remains a matched Menu accent/background pair. No weakening of verifier, existing 64-case Chromium and Stage5/Stage4/Stage3 gates retained.
+- PR #267 Draft/unmerged, main unchanged. NEXT exact-head dual green CI and official complete Windows dist+docs offline ZIP CRC/SHA256/HTTP.
+
 ## CURRENT — 2026-10-12 Stage5 ColorPanel duplicate-owner closeout (new CI pending)
 - QXFRAME CI #38199405323 on fe00f197 failed at strict verify:theme-tokens: duplicate private variable owners in Theme V2 rose 34->41. Root cause was new .picker-field-panel .color-panel declarations of component-private --_color-panel-field-bg/border/text on a second owner; existing source already owns those.
 - Removed the extra private ownership block. Picker-local ColorPanel input/format/eye now read the already-public --qxframe9a7c2-component-color-panel-field-{bg,border,text} directly, with Menu defaults; same output, no additional private owners. Static test updated to ensure that read-path. Existing keyboard Focus, Shape and Popover/Dialog scope unchanged.
