@@ -1,24 +1,7 @@
-/** Stage5 current batch: 6 Preview03 Cards / 8 regions; previous highlights cleared. */
+/** Stage5 current batch: 1 Preview03 Card / 1 changed region; previous QA highlights cleared. */
 const groups = [
- ['customer-quality','TagInput compound geometry',[
-  ['[data-pv3-component="customer-tags"]','TagInput','输入控件等高、左右 padding 与单行输入框一致','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['order-routing','Select / Cascader',[
-  ['[data-pv3-component="routing-select"]','Select','统一多选尺寸配方；Popup Hover 与 Selected 半透明','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="routing-cascader"]','Cascader','列宽自适应无横向滚动；Open 前景对比度正确','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['platform-tree','TreeSelect',[
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Popup Hover、Selected、Open 使用共同透明度状态','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['release-planner','DatePicker / TimePicker',[
-  ['[data-pv3-component="release-date"]','DatePicker','Calendar Hover 和 Selected 叠加透明色','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','TimePicker','Picker 内部背景随 Popup 模式协调','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['contact-lookup','Autocomplete',[
-  ['[data-pv3x-widget="contact-lookup"]','Autocomplete','统一 Popup 透明度配方','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['quick-action-menu','Dropdown',[
-  ['[data-pv3x-widget="quick-action-menu"]','Dropdown','透明 Hover / Selected，保持菜单文字对比','__QA_BUNDLE_HEAD__']
+ ['revenue-surfaces','Card Skeleton motion',[
+  ['[data-pv3x-card-skeleton]','Card Skeleton','保留 shimmer；主题 skeleton-animation=none 时与 Skeleton 同时停用动画','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -82,7 +65,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：复合输入高度、Cascader 列宽与 Open、Popup 半透明状态；清除上一轮高亮。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Card Skeleton 共享动效关闭开关；清除上一轮高亮。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
