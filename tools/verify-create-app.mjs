@@ -142,7 +142,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"revenue-surfaces":["[data-pv3x-card-skeleton]"]}; // Current batch: 1 Card / 1 region
+  const current={"customer-quality":["[data-pv3-component=\"customer-tags\"]"],"order-routing":["[data-pv3-component=\"routing-cascader\"]","[data-pv3-component=\"routing-select\"]"],"platform-tree":["[data-pv3-component=\"workspace-tree-select\"]"],"navigation-workspace":[".qxframe9a7c2-menu"]}; // Current batch: 4 Cards / 5 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -157,7 +157,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only current 1 Stage5 Card / 1 changed region is highlighted');
+  assert.equal(count,5,'only current 4 Stage5 Cards / 5 changed regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
