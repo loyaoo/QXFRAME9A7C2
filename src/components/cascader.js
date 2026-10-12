@@ -89,12 +89,10 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
         var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
-        var columnsScroll = popupFrame.attachViewport({
-          root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
-          axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility: 'auto',
-          focusable: false, keyboard: false, controller: instance
-        });
-        scope.add(function () { if (columnsScroll) columnsScroll.destroy(); columnsScroll = null; });
+        // Columns form a bounded, contiguous flex row. No horizontal Scroll
+        // owner: its injected padding/viewport/rail caused gaps and clipping.
+        // Each ItemCollection retains its independent vertical list viewport.
+        var columnsScroll = null;
         var fieldControl = null, triggerSession = null, searchList = null, keyboard = null, focusController = null, interactionController = null, tagNavigation = null;
         var capabilityController = CapabilityController.create({ getState:function () { return opts; } });
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if(destroyed)return; if(triggerSession&&triggerSession.getState().open)renderColumns(); syncControl(); var payload={searchValue:value,reason:meta.reason||'search',originalEvent:meta.originalEvent||null,cascader:instance}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(!destroyed&&meta.silent!==true)emitter.emit('search',payload); } });
@@ -418,7 +416,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
         function ensureColumnVisible(record) {
           if (!record || !record.host || !columnsHost) return false;
-          return ScrollVisibility.ensureVisible(columnsHost, record.host, { axis:'x', align:'nearest' });
+          return true; // each column is always fitted, never horizontally scrolled
         }
         function bindListVirtualFocus(record) {
           if (!record || !record.list || !keyboard || !keyboard.virtualFocus || !record.list.bindVirtualFocus) return null;
@@ -597,6 +595,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var pathItems = pathByKeys(activePathKeys);
           var levels = [currentItems];
           for (var p = 0; p < pathItems.length; p += 1) { var nested = childrenOf(pathItems[p]); if (nested.length) levels.push(nested); else break; }
+          panel.style.setProperty('--qxframe9a7c2-cascader-column-count',String(levels.length));
           levels.forEach(function (items, index) {
             var column = doc.createElement('div'); column.className = 'qxframe9a7c2-cascader-column'; DOM.setPrivate(column, 'cascaderColumn', String(index)); columnsHost.appendChild(column);
             var record = { index: index, items: items, host: column, list: null };
@@ -635,7 +634,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var activeRecord = columnRecords[activeColumnIndex];
           if (activeRecord && keyboardCursorKey) { activeRecord.list.setActiveKey(keyboardCursorKey, { source: 'instance', reason: 'restore-keyboard-cursor', silent: true }); if (keyboard && keyboard.virtualFocus && keyboard.virtualFocus.getState().modality === 'keyboard') activateRecordVirtualFocus(activeRecord, 'restore-keyboard-cursor', null); }
           refreshSelectionSurfaces();
-          if (columnsScroll) columnsScroll.refresh('cascader-columns');
+          // No horizontal refresh: flex sizing fits the available popup width.
           syncSemanticRegistry();
         }
     
