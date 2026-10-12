@@ -1,3 +1,12 @@
+## CURRENT CORRECTION — 2026-10-12 Stage5 shared ownership + default Theme (CI pending)
+- Input Look compiler/Theme changed together: `outline` transparent in both modes, `subtle` 12%, `tinted` 35%, `soft` 50%. Canonical `src/styles/main/theme.css` root/dark defaults updated to match compiled output; do not loosen Theme equivalence gate.
+- Popup Menu Hover stays neutral. Open is theme-menu-accent and menu-accent-foreground; menuAccent `subtle` = primary/14 with primary ink, `bold` = primary with primary foreground. User requested Open vs Hover distinction across Menu/TreeSelect/Cascader.
+- User-requested bold Open checkbox inversion is implemented in **canonical Choice** (`src/styles/components/choice-visual.css`) scoped to Popup Open Item; no Menu ownership of Tree checkbox paint, no change to normal Tree states. Global Choice/Tree ownership verifier remains strict.
+- Cascader multi-column is contiguous flex nowrap with popup width driven by column count; search is one column. `PopupFrame.attachViewport` resource ownership is retained to satisfy 11-controller contract, but axis is **y** and scrollbarVisibility `hidden`; no horizontal scroll. CSS explicitly resets `qxframe9a7c2-scroll` / viewport height and overflow to prevent trailing gaps/crop.
+- TagInput/Select multiple outer horizontal padding equals vertical compound inset; hosted tags inset is 0. Ordinary Input unaffected.
+- Only current 4 Preview03 Cards / 5 regions highlighted. `tools/verify-create-app.mjs` static + `tools/verify-create-app-browser.mjs` Chromium matrices changed with no relaxed theme or ownership guard.
+- Latest green baseline before fixes: `b5c53913`; latest tests for this batch must be checked against exact current HEAD. PR #267 Draft/Open; do not merge main or backup. Produce new complete Windows dist+docs official CI offline ZIP only after two green workflows.
+
 ## CURRENT — 2026-10-12 Stage5 Input Appearance / Menu Open / Cascader Layout (CI pending)
 - PR #267 remains Draft/Open. Main and backup untouched. Previous accepted green baseline `b5c53913dd8d` (QXFRAME #38251165246, CSS Schema #38251165185).
 - Input Look compiler: outlined field is transparent in both light and dark; subtle / tinted / soft use distinct 12% / 35% / 50% base Input alpha strength on both themes. Theme source is unchanged; no style-specific CSS rule or third-party framework.
