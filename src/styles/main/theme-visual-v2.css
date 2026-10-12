@@ -695,6 +695,7 @@
     --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
     --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
     --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb);
   }
   .qxframe9a7c2-slider-handle { box-sizing: border-box; }
   .qxframe9a7c2-progress[class] {
