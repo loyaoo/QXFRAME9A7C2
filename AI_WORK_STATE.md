@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-12 Stage5 64-mode Chromium popup paint regression added (CI pending)
+- CSS/theme source fix a76b731e... kept intact. Added real Chromium computed-style 64-case matrix (8 Styles x 2 light/dark x 4 Menu modes): DatePicker idle text + selected date pair, Wheel centre guide transparency, Tree checked/indeterminate ink/background pairs, ColorPanel HEX input/format/eye paired Menu background/ink, focus border = pointer-focus.
+- Static Theme source contract and 4 Cards / 6 QA regions remain. PR #267 must stay Draft, no main changes or Stage3/Stage4 rewrite. Next exact HEAD full dual CI, repair errors if needed, official Actions artifact Windows complete dist+docs offline package and 13-route HTTP + CRC/SHA256.
+
 ## CURRENT — 2026-10-12 Stage5 inverted popup visual paint closeout (new CI pending)
 - Resumed full green HEAD 596ae1f521e9106653554864d9afa7f78a1d3624, QXFRAME CI #38196035371 / CSS Schema #38196035325 success, PR #267 Draft/unmerged, main unchanged.
 - Owner screenshots identify paired-background/foreground failures: DatePicker idle/hover nav and selected cell, TimePicker selection guide, TreeSelect checked/mixed glyph, and ColorPanel HEX input vs neighboring controls.

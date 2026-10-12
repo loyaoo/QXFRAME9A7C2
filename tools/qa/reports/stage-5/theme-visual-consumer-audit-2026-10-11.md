@@ -49,3 +49,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 ## 2026-10-12 owner screenshots: popup foreground/background/border
 - Root-cause fixes in shared Theme V2: DatePicker idle navigation foreground uses Menu, hovered nav uses Menu accent + accent foreground together; selected date/period similarly paired. TimePicker centre guide no longer covers the selected item's own paint. Tree Choice active/mixed checkbox paint follows Menu pair AFTER the global V2 Choice skin. ColorPanel HEX input/format/eyedropper pair background/border/text from the same popup with public field overrides first; focused HEX border stays pointer-focus, keyboard outline unchanged.
 - Scope: only 4 Preview03 cards / 6 regions in offline QA; production preview never gains QA CSS. PR Draft/unmerged and all existing regression gates retained. New CI/artifact pending.
+
+### 2026-10-12 Chromium paired-paint extension
+- New 64-case browser computed-style gate (8 Styles × 2 mode × 4 menu colors) checks genuine calculated Date/Time/Tree Choice/ColorPanel paint, including checked and indeterminate native glyphs, HEX focusing and pointer border. Existing source and other browser tests are retained; no new token/mixing rules.
