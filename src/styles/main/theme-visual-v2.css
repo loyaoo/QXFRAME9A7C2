@@ -689,7 +689,9 @@
   .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
   .qxframe9a7c2-switch .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track,
   .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
-  .qxframe9a7c2-slider[class] {
+  /* Shared Slider geometry applies to the real Slider and ColorPanel native
+     hue/alpha controls; neither owns a separate Style/density mapping. */
+  .qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {
     --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
     --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
     --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
