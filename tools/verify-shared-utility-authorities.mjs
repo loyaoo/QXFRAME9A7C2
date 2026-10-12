@@ -59,8 +59,12 @@ assert.match(tagsSource,/standaloneTagNavigation\.handleKeydown\(event\)/, 'Stan
 assert.ok(!/var\s+preferred\s*=\s*moveVirtualTag\(currentKey,\s*key\s*===\s*['"]Delete['"]\s*\?\s*1\s*:\s*-1\)/.test(tagsSource), 'Tags must not re-own TagNavigation delete reconciliation.');
 
 const cascaderSource=read('src/components/cascader.js');
-assert.match(cascaderSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Cascader must import ScrollVisibility.');
-assert.match(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost,\s*record\.host,\s*\{\s*axis:['"]x['"],\s*align:['"]nearest['"]\s*\}\)/, 'Cascader column reveal must use ScrollVisibility.');
+// Cascader columns are now a bounded flex row, not a horizontal scroller.
+// The original horizontal reveal contract no longer applies. Keep the
+// PopupFrame scroll owner and ban ad hoc scroll geometry or x-axis revival.
+assert.match(cascaderSource,/popupFrame\.attachViewport\s*\(/,'Cascader Scroll stays PopupFrame-owned');
+assert.match(cascaderSource,/axis:\s*'y',\s*wheelAxis:\s*'y',\s*wheelPropagation:\s*true,\s*scrollbarVisibility:\s*'hidden'/,'Cascader horizontal scrollbar and x-wheel are disabled');
+assert.doesNotMatch(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost|axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader must never fall back to horizontal reveal');
 assert.ok(!/column\.offsetLeft|viewport\.scrollLeft\s*=/.test(cascaderSource), 'Cascader must not re-own horizontal scroll visibility geometry.');
 
 const periodPanelSource=read('src/components/period-panel.js');
