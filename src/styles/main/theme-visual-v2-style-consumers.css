@@ -3,14 +3,16 @@
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-input[class],.qxframe9a7c2-text-field[class],
   .qxframe9a7c2-form-input[class],.qxframe9a7c2-form-select[class],.qxframe9a7c2-form-textarea[class],
-  .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-color-panel-input[class],.qxframe9a7c2-pagination-input[class]{
+  .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-pagination-input[class]{
     --_qxframe9a7c2-control-border-width:var(--qxframe9a7c2-theme-border-width);
   }
 
-  /* One shared Control Appearance recipe. The theme chooses the profile through
+  /* One shared Control Appearance recipe for true Control owners. ColorPanel owns
+     its input/format/eye as one field family; never repaint only its input here.
+     The theme chooses the profile through
      field / field-border / field-sides (underline = sides 0%, bottom edge kept). */
   .qxframe9a7c2-input[class],.qxframe9a7c2-form-input[class],.qxframe9a7c2-form-select[class],.qxframe9a7c2-form-textarea[class],
-  .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-color-panel-input[class],.qxframe9a7c2-pagination-input[class]{
+  .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-pagination-input[class]{
     background-color:var(--_qxframe9a7c2-v2-control-bg);
     border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
     border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
@@ -21,7 +23,6 @@
   .qxframe9a7c2-form-select:focus,.qxframe9a7c2-form-select.is-focused,.qxframe9a7c2-form-select.is-invalid,
   .qxframe9a7c2-form-textarea:focus,.qxframe9a7c2-form-textarea.is-focused,.qxframe9a7c2-form-textarea.is-invalid,
   .qxframe9a7c2-input-otp-segment:focus,.qxframe9a7c2-input-otp-segment.is-focused,.qxframe9a7c2-input-otp-segment.is-invalid,
-  .qxframe9a7c2-color-panel-input:focus,.qxframe9a7c2-color-panel-input.is-focused,.qxframe9a7c2-color-panel-input.is-invalid,
   .qxframe9a7c2-pagination-input:focus,.qxframe9a7c2-pagination-input.is-focused,.qxframe9a7c2-pagination-input.is-invalid{
     border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
     border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
@@ -38,7 +39,6 @@
   .qxframe9a7c2-form-select:focus:not(.is-invalid),.qxframe9a7c2-form-select.is-focused:not(.is-invalid),
   .qxframe9a7c2-form-textarea:focus:not(.is-invalid),.qxframe9a7c2-form-textarea.is-focused:not(.is-invalid),
   .qxframe9a7c2-input-otp-segment:focus:not(.is-invalid),.qxframe9a7c2-input-otp-segment.is-focused:not(.is-invalid),
-  .qxframe9a7c2-color-panel-input:focus:not(.is-invalid),.qxframe9a7c2-color-panel-input.is-focused:not(.is-invalid),
   .qxframe9a7c2-pagination-input:focus:not(.is-invalid),.qxframe9a7c2-pagination-input.is-focused:not(.is-invalid){
     border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
     border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-v2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
@@ -52,7 +52,6 @@
   .qxframe9a7c2-form-select:disabled,.qxframe9a7c2-form-select.is-disabled,
   .qxframe9a7c2-form-textarea:disabled,.qxframe9a7c2-form-textarea.is-disabled,
   .qxframe9a7c2-input-otp-segment:disabled,.qxframe9a7c2-input-otp-segment.is-disabled,
-  .qxframe9a7c2-color-panel-input:disabled,.qxframe9a7c2-color-panel-input.is-disabled,
   .qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-pagination-input.is-disabled{
     background-color:var(--_qxframe9a7c2-v2-control-bg);
   }
