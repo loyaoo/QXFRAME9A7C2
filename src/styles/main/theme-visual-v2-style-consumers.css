@@ -133,7 +133,7 @@
     --_qxframe9a7c2-switch-track-radius:var(--qxframe9a7c2-switch-track-radius,var(--qxframe9a7c2-theme-radius-switch));
     --_qxframe9a7c2-switch-thumb-radius:var(--qxframe9a7c2-switch-thumb-radius,var(--qxframe9a7c2-theme-radius-switch-thumb));
   }
-  .qxframe9a7c2-slider[class]{
+  .qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{
     --_qxframe9a7c2-slider-rail-radius:var(--qxframe9a7c2-slider-rail-radius,var(--qxframe9a7c2-theme-radius-track));
     --_qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-slider-handle-radius,var(--qxframe9a7c2-theme-radius-thumb));
   }
