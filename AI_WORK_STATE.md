@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 Skeleton Motion closeout (CI pending)
+- PR #267 remains Draft/Open. Main and backup untouched.
+- After last green HEAD `63dfb2269be8`, downloaded matching official dist+docs Actions artifact (run 38248224044, artifact 11747206951) and packaged complete Windows offline ZIP; ZIP CRC, Node QA syntax and 13 HTTP paths passed. Exact old-HEAD package is `QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-63dfb226.zip` (does **not** include the current Skeleton edit).
+- Confirmed Card Skeleton mismatched shared `theme-skeleton-animation` disable: native Skeleton consumed `none`; Card shimmer did not. Current edit keeps Card shimmer (1.3s) when enabled; CSS inherited Theme style query disables Card animation when the shared Skeleton theme token is `none`. No new Theme token or swapped pulse behavior.
+- Browser gate added in `tools/verify-create-app-browser.mjs`: normal pulse/shimmer identity, shared `none` disabled for both, restore identity; static test locks CSS source. Update offline QA highlight to this batch only: Preview03 `revenue-surfaces` Card skeleton (1 Card / 1 region).
+- TODO: verify CSS Schema + QXFRAME browser CI on final HEAD, troubleshoot any failures, create exact latest-head official Windows offline ZIP, test node syntax + HTTP + CRC. Do not merge PR #267. Stage5 overall is not yet visually accepted; no unsubstantiated percentages.
+
 ## CURRENT — 2026-10-12 Stage5 Token 审计纠错与离线 QA 修复（本次 HEAD 的 CI 待验证）
 - PR #267 保持 Draft/Open，禁止合并；main / backup 不变。
 - 用户提供的第三方 Token 扰动审计已分类复核，报告：`tools/qa/reports/stage-5/theme-token-coverage-triage-2026-10-12.md`。不能将「计算值未变」等价于「源码未消费 Token」。211 注册 Token = 77 颜色 + 134 其他；无组件消费的 Chart/Sidebar 槽位是否删减必须先核对 Theme 导出 API 的用途。
