@@ -1749,9 +1749,11 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
  assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
  const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
- assert.ok(menu.includes('--_qxframe9a7c2-menu-context-expanded,var(--qxframe9a7c2-theme-menu-accent)'), 'Menu Open must consume its expanded Menu accent, not hover first');
- assert.ok(menu.includes('--_qxframe9a7c2-menu-context-expanded-text,var(--qxframe9a7c2-theme-menu-accent-foreground)'), 'Menu Open must pair accent background and ink');
- assert.ok(theme.includes('--_qxframe9a7c2-menu-render-background: var(--_qxframe9a7c2-menu-recipe-expanded, var(--qxframe9a7c2-theme-menu-accent))'),'Menu Open must override actual Menu render channel, preserving recipe precedence');
+ assert.ok(menu.includes('--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-accent)'), 'Menu Open must consume the compiled Menu accent, not the hover or legacy expanded recipe');
+ assert.ok(menu.includes('--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-accent-foreground)'), 'Menu Open must pair theme accent background and ink');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-background: var(--qxframe9a7c2-theme-menu-accent);'),'Menu Open must override rendered surface using the actual compiled soft/bold accent');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Menu Open rendered ink must pair with the accent foreground');
+ assert.doesNotMatch(theme,/--_qxframe9a7c2-menu-render-background:\s*var\(--_qxframe9a7c2-menu-recipe-expanded/,'legacy static expanded recipes cannot override the dynamic Menu accent');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
  assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'standalone Tree Open uses shared Menu accent without painting Tree root');
