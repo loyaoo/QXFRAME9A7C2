@@ -65,9 +65,10 @@ check('menu-inverted Picker descendants consume matched Menu surface roles',()=>
     'semantic-surface','semantic-border-subtle','navigation-bg','control-bg','control-text','control-border'])
     assert.match(v2,new RegExp('--_qxframe9a7c2-'+role+':'),'nested popup semantic role '+role);
   for(const component of ['item-surface.is-selected','date-panel-cell.is-selected','date-panel-cell.is-today',
-    'date-picker-preset','wheel-panel-item.is-selected','color-panel'])
+    'date-picker-preset','color-panel'])
     assert.ok(v2.includes('qxframe9a7c2-'+component),'nested Picker state '+component);
   assert.ok(v2.includes('qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container'),'Popover stays on non-menu surface');
+  assert.doesNotMatch(v2,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-item\.is-selected/,'TimePicker must not paint a second TimePanel selected skin');
 });
 
 check('all CSS private Focus shadows use focus, not ring terminology',()=>{
@@ -1707,6 +1708,21 @@ check('Stage5 TreeSelect checked/mixed/unchecked checkbox must use global Choice
  assert.match(theme,/\.qxframe9a7c2-tree-check:indeterminate \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 mixed Choice');
  assert.match(select,/tree = Tree\.create\(\{/,'TreeSelect shares the Tree renderer');
  assert.doesNotMatch(tree,/theme-menu(?:-accent|-foreground)?/,'Tree itself cannot own Menu palette');
+});
+
+
+check('Stage5 neutral List/Tree, OTP container, Badge static and shared TimePanel',()=>{
+ const source=p=>fs.readFileSync(path.join(root,p),'utf8');
+ const list=source('src/styles/components/list.css'),v2=source('src/styles/main/theme-visual-v2.css');
+ const otp=source('src/components/input-otp.js'),badge=source('src/styles/components/badge.css');
+ const tags=source('src/styles/components/tags.css');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color:/,'parent controls list/tree surface');
+ assert.doesNotMatch(list,/max-width:100%;color:var\(--_qxframe9a7c2-semantic-text\);background:/,'list is not a painted card');
+ assert.match(otp,/otpRoot\.classList\.remove\('qxframe9a7c2-input'\)/,'OTP container must not carry Input root class');
+ assert.match(badge,/border:1px solid transparent/,'outlined badge owns border geometry');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-badge\.is-outlined:hover/,'Badge is static');
+ assert.match(tags,/--qxframe9a7c2-tag-close-icon-size,0\.625rem/,'Tag icon uses smaller scale');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-tooltip-container, \.qxframe9a7c2-tooltip-arrow/,'Arrow consumes Tooltip root');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

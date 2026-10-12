@@ -76,7 +76,7 @@ jobs:
           path: .qxframe-main
           persist-credentials: false
 
-      - name: qxframe.js build artifacts match main
+      - name: JS build integrity (main parity or approved component source changes)
         if: github.event_name == 'pull_request'
         shell: bash
         run: |

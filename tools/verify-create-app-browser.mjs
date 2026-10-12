@@ -147,8 +147,8 @@ try {
       for(const field of ['rows','search','normal','today','wheelNormal','preset','colorInput'])
         assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
       assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
-      assert.equal(r.wheel,r.accentFg,id+' selected Wheel foreground pairs with highlight');
-      assert.equal(r.wheelBg,r.accentBg,id+' selected Wheel background pairs with foreground');
+      assert.equal(r.wheel,r.menuFg,id+' TimePicker uses TimePanel selected text role');
+      assert.equal(r.wheelBg,'rgba(0, 0, 0, 0)',id+' TimePicker leaves selected wheel background to TimePanel guide');
       assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
       assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
       assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');

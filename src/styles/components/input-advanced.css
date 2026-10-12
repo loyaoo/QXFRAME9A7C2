@@ -2,7 +2,7 @@
 .qxframe9a7c2-tag-input .qxframe9a7c2-input-values{align-items:center}
 
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-control{display:none}
-.qxframe9a7c2-input-otp{min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.qxframe9a7c2-input-otp{--_qxframe9a7c2-control-local-height:var(--_qxframe9a7c2-control-height);box-sizing:border-box;display:block;min-width:0;min-height:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .qxframe9a7c2-input-otp.is-focused,.qxframe9a7c2-input-otp.is-expanded{border-color:transparent;box-shadow:none}
 .qxframe9a7c2-input-otp.is-keyboard-focus{--_qxframe9a7c2-state-outline:none;outline:none}
 .qxframe9a7c2-input-otp .qxframe9a7c2-input-segments{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);width:100%;overflow:visible}

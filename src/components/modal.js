@@ -71,6 +71,9 @@ function createModalController(instance, options) {
     if (direct) return direct;
     var opts = ctx.options();
     var origin = typeof opts.origin === 'function' ? opts.origin(ctx.api) : opts.origin;
+    // triggerTarget remains stable before the first mount/measurement.
+    if (!origin) origin = typeof opts.triggerTarget === 'function' ? opts.triggerTarget(ctx.api) : opts.triggerTarget;
+    if (typeof origin === 'string' && origin.trim()) origin = ctx.document.querySelector(origin);
     if (origin && origin.nodeType === 1 && origin.getBoundingClientRect) {
       var rect = origin.getBoundingClientRect();
       return { x:rect.left + rect.width / 2, y:rect.top + rect.height / 2 };
