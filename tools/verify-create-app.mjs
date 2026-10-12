@@ -110,6 +110,13 @@ check('Chromium acceptance module must parse before any heavy browser workflow',
   execFileSync(process.execPath,['--check',path.join(root,'tools/verify-create-app-browser.mjs')],{stdio:'pipe'});
 });
 
+check('offline QA annotation module must parse before packaging',()=>{
+ const modulePath=path.join(root,'docs/create/offline-qa-changes.mjs');
+ execFileSync(process.execPath,['--check',modulePath],{stdio:'pipe'});
+ const source=fs.readFileSync(modulePath,'utf8');
+ assert.match(source,/<\/p><\/div>'/,'QA caption must close both paragraph and container');
+});
+
 check('offline changes ledger and packaging are opt-in and do not contaminate production Create HTML', () => {
   const ledger=read('offline-qa-changes.mjs');
   const overlay=read('offline-qa-changes.css');
