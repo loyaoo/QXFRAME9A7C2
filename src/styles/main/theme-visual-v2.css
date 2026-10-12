@@ -216,7 +216,7 @@
   .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg); border-color: var(--_qxframe9a7c2-color-panel-field-border); color: var(--_qxframe9a7c2-color-panel-field-text); }
   .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
@@ -419,14 +419,18 @@
     --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-menu);
-    --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-subtle-hover: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-menu-accent);
+    /* The menu accent is reserved for selection. Hover and ordinary outlines
+       use neutral blends of the actual menu surface/foreground, even inverted. */
+    --_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%, var(--qxframe9a7c2-theme-menu-foreground) 12%);
+    --_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%, var(--qxframe9a7c2-theme-menu-foreground) 26%);
+    --_qxframe9a7c2-semantic-surface-muted: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-surface-hover: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-border: var(--_qxframe9a7c2-v2-menu-border-neutral);
+    --_qxframe9a7c2-semantic-border-subtle: var(--_qxframe9a7c2-v2-menu-border-neutral);
     --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
-    --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
     --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-menu);
@@ -437,26 +441,31 @@
     --_qxframe9a7c2-control-border-hover: var(--_qxframe9a7c2-semantic-border);
     --_qxframe9a7c2-control-border-disabled: var(--_qxframe9a7c2-semantic-border-subtle);
   }
-  /* Pair selected/hover fills with their own foreground. In particular,
-     a page-primary ink is not readable against an inverted Menu surface. */
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-hover,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface:hover,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected.is-hover {
+  /* Hover is a neutral highlight; selected rows alone consume the saturated
+     Menu accent/foreground pair. This applies to all shared ItemSurface users. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-hover:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface:hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
-  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected,
-  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-hover {
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-semantic-subtle-hover);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-popover-foreground);
   }
   /* Expanded/partial Tree items always consume paired Menu colors. */
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-open:not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected) {
-    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
   /* Picker popup foreground contract: normal day/period cells and wheel rows
      must use the popup Menu ink even when their nested panel owns color.
@@ -480,11 +489,11 @@
     --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected) {
-    --_qxframe9a7c2-date-panel-cell-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-date-panel-cell-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
-    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
 
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-picker-preset {
@@ -492,7 +501,7 @@
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel {
     --_qxframe9a7c2-color-panel-field-bg: var(--_qxframe9a7c2-control-bg);
-    --_qxframe9a7c2-color-panel-field-border: var(--_qxframe9a7c2-control-border);
+    --_qxframe9a7c2-color-panel-field-border: var(--qxframe9a7c2-component-color-panel-field-border, var(--_qxframe9a7c2-v2-menu-border-neutral));
     --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
 
@@ -501,16 +510,8 @@
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-time-picker-now {
     --_qxframe9a7c2-time-picker-now-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input,
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-format,
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-eye {
-    color: var(--qxframe9a7c2-theme-menu-foreground);
-    background-color: var(--qxframe9a7c2-theme-menu);
-    border-color: var(--qxframe9a7c2-theme-menu-accent);
-  }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input:focus:not(:disabled) {
-    border-color: var(--qxframe9a7c2-theme-pointer-focus);
-  }
+  /* Embedded ColorPanel already owns its field paint. Do not repaint its
+     children per Picker type: public ColorPanel overrides remain authoritative. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button.is-active {
     --_qxframe9a7c2-color-picker-mode-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-color-picker-mode-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
@@ -537,8 +538,8 @@
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
-    background: var(--qxframe9a7c2-theme-menu-accent);
-    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    background: var(--_qxframe9a7c2-v2-menu-hover-soft);
+    color: var(--qxframe9a7c2-theme-menu-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected:not(:disabled) {
@@ -549,19 +550,9 @@
   /* Centre guide does not cover wheel selection text and its own background. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
     background: transparent;
-    border-block-color: var(--qxframe9a7c2-theme-menu-accent);
+    border-block-color: var(--_qxframe9a7c2-v2-menu-border-neutral);
   }
-  /* Preserve public ColorPanel field overrides; default to the Popup Menu pair. */
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input[class]:not(:disabled),
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-format:not(:disabled),
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-eye:not(:disabled) {
-    background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu));
-    border-color: var(--qxframe9a7c2-component-color-panel-field-border, var(--qxframe9a7c2-theme-menu-accent));
-    color: var(--qxframe9a7c2-component-color-panel-field-text, var(--qxframe9a7c2-theme-menu-foreground));
-  }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input[class]:focus:not(:disabled) {
-    border-color: var(--qxframe9a7c2-theme-pointer-focus);
-  }
+  /* Shared ColorPanel control source handles idle, hover and keyboard focus. */
 
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
