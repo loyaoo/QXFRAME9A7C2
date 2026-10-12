@@ -1748,7 +1748,9 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
  assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
- assert.ok(theme.includes('background-color: var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Checkbox reverses on colored open row');
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
