@@ -1,18 +1,14 @@
-/** Stage5 current visual batch: Picker normal-state ink, OTP control colors and
- * real Preview03 Switch structures. Previous 13 radius QA highlights cleared. */
+/** Stage5 current batch: Table filter, Transfer and JSON Theme consumer states.
+ * Prior 4 Card / 5 region picker, OTP and Switch highlights removed. */
 const groups = [
- ['release-planner','DatePicker / TimePicker 前景',[
-  ['[data-pv3-component="release-date"]','DatePicker 普通日期','反色菜单下普通日期文字从 Menu 前景色读取','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','TimePicker 普通滚轮','反色菜单下滚轮普通条目从 Menu 前景色读取','__QA_BUNDLE_HEAD__']
+ ['plan-governance','Table 筛选组件',[
+  ['[data-pv3-component="governance-table"]','Table 筛选状态','筛选选中/禁用态、复选框以及弹层搜索颜色统一','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['dial-settings','WheelPicker 文字',[
-  ['[data-pv3x-widget="dial-settings"]','WheelPicker 滚轮','滚轮与 Picker 的 Menu 文字角色一致','__QA_BUNDLE_HEAD__']
+ ['workforce-access','Transfer 状态与边界',[
+  ['[data-pv3-component="member-transfer"]','Transfer 面板','公开面板边框覆盖标题与页脚，禁用前景色统一','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['identity-otp','InputOTP 分段',[
-  ['[data-pv3-component="otp-input"]','OTP 分段','分段背景、边框和文字消费与其他 Control 相同的 Theme 角色','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['feature-flags','Switch 真实控件',[
-  ['.pv3x-choices','Switch 三层结构','三个功能开关使用 QX Switch Input / Track / Thumb 而非裸 checkbox','__QA_BUNDLE_HEAD__']
+ ['data-inspector','JSON 字体与编辑',[
+  ['[data-pv3-component="api-json"]','JSON 主题映射','代码字号消费 Control 尺寸，光标颜色匹配当前文本','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -76,7 +72,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：本轮 Theme 颜色和真实 Switch 结构：4 张卡片、5 处控件区域；上一轮 13 处高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Table、Transfer、JSON 的 Theme 状态消费，3 张卡片、3 处区域；旧 Picker、OTP、Switch 高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

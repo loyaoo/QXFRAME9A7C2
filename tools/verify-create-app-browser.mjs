@@ -2661,6 +2661,37 @@ try {
     }
   });
 
+
+  await step('Stage5 Table Filter / Transfer / JSON 8 Style x 2 mode Theme consumer matrix',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector(\'[data-create-frame]\').contentDocument?.querySelector(\'[data-card="plan-governance"]\')','Preview03 Table visual consumer');
+    const rows=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement,old=h.classList.contains('dark'),config=api.state.config;
+      const box=d.createElement('section'),sheet=d.createElement('style');box.style.cssText='position:absolute;left:-9000px;top:0;width:480px';
+      box.innerHTML='<div class="qxframe9a7c2-table-filter-popup" data-s5-popup><div class="qxframe9a7c2-table-filter-search"><input class="qxframe9a7c2-input-control" placeholder="Filter"></div><label class="qxframe9a7c2-table-filter-option is-selected" data-s5-selected><input class="qxframe9a7c2-form-check-input" type="checkbox" checked><span>Chosen</span></label><label class="qxframe9a7c2-table-filter-option is-disabled" data-s5-disabled><input class="qxframe9a7c2-form-check-input" type="checkbox" disabled><span>Disabled</span></label></div><div class="qxframe9a7c2-transfer is-disabled" data-s5-transfer style="--qxframe9a7c2-transfer-panel-border:rgb(19,33,55)"><div class="qxframe9a7c2-transfer-panel"><header class="qxframe9a7c2-transfer-header"><span class="qxframe9a7c2-transfer-title">Disabled</span></header><footer class="qxframe9a7c2-transfer-footer">0 items</footer></div></div><div class="qxframe9a7c2-json-root" data-s5-json><span class="qxframe9a7c2-json-string">code</span><input class="qxframe9a7c2-json-editor qxframe9a7c2-json-string" value="code"></div><span data-s5-font style="font-size:var(--_qxframe9a7c2-control-font-size)">Text</span><span data-s5-muted style="color:var(--qxframe9a7c2-theme-muted-foreground)">Muted</span>';
+      d.head.append(sheet);d.body.append(box);const c=s=>getComputedStyle(box.querySelector(s)),result=[];
+      for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){
+        h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...config,style},{generatedAt:''}).body;
+        const popup=c('[data-s5-popup]'),input=c('[data-s5-popup] input'),disabled=c('[data-s5-disabled]'),panel=c('.qxframe9a7c2-transfer-panel'),header=c('.qxframe9a7c2-transfer-header'),footer=c('.qxframe9a7c2-transfer-footer'),j=c('[data-s5-json]'),editor=c('.qxframe9a7c2-json-editor');
+        result.push({style,dark,popupText:popup.color,inputText:input.color,popupBg:popup.backgroundColor,inputBg:input.backgroundColor,selectedBg:c('[data-s5-selected]').backgroundColor,disabledText:disabled.color,disabledCursor:disabled.cursor,muted:c('[data-s5-muted]').color,panelBorder:panel.borderTopColor,headerBorder:header.borderBottomColor,footerBorder:footer.borderTopColor,title:c('.qxframe9a7c2-transfer-title').color,jsonFont:j.fontSize,controlFont:c('[data-s5-font]').fontSize,jsonInk:c('.qxframe9a7c2-json-string').color,editorInk:editor.color,caret:editor.caretColor});
+      }h.classList.toggle('dark',old);sheet.remove();box.remove();return result;
+    })()`);
+    assert.equal(rows.length,16);
+    for(const r of rows){
+      const note=r.style+'/'+r.dark;
+      assert.equal(r.popupText,r.inputText,note+' popup search foreground');
+      assert.equal(r.popupBg,r.inputBg,note+' popup search background');
+      assert.notEqual(r.selectedBg,'rgba(0, 0, 0, 0)',note+' selected filter row');
+      assert.equal(r.disabledCursor,'not-allowed',note+' disabled filter cursor');
+      assert.equal(r.disabledText,r.muted,note+' disabled filter text');
+      for(const prop of ['panelBorder','headerBorder','footerBorder'])assert.equal(r[prop],'rgb(19, 33, 55)',note+' Transfer border '+prop);
+      assert.equal(r.title,r.muted,note+' Transfer disabled title');
+      assert.equal(r.jsonFont,r.controlFont,note+' JSON consumes Theme Control size');
+      assert.equal(r.editorInk,r.jsonInk,note+' JSON editor retains syntax color');
+      assert.equal(r.caret,r.editorInk,note+' JSON caret follows ink');
+    }
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

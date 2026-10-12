@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-12 Stage5 Table, Transfer and JSON cross-state batch (CI pending)
+- Verified prior HEAD 2e170d9fc11a0307b42277acbc780236ae9352ba on Draft PR #267, previous QXFRAME CI #38191413763 and CSS Schema #38191413767 success. Preview01/02 not reopened.
+- Table filter now uses real QX styled checks and marks selected/disabled label states with live draft changes, menu-independent popup search foreground/background/focus Theme roles. Transfer panel border public override propagates to header/footer/pagination and its disabled text. JSON typography consumes Control size with public override and current-color caret.
+- Added static contract and 8 Styles x light/dark (16 case) real computed-style assertions, keeping previous 64 inverse Picker and 800 radius gate. Offline QA ledger resets to only 3 current affected Preview03 Cards / 3 regions: plan-governance, workforce-access, data-inspector. Old four-card highlights removed.
+- Next: wait new exact-HEAD dual CI; repair any failures and build complete official same-HEAD Windows dist+docs ZIP with CRC/SHA256/local HTTP. Further full 66-family state/density/shadow QA remains.
+
 ## CURRENT — 2026-10-12 Stage5 static gate syntax hotfix (CI pending)
 - Exact QXFRAME #38191190048 failed at a malformed literal RegExp in newly added strict Preview03 3-Switch static gate. Replaced with deterministic split on data-card and </article> plus explicit presence assertion; all strict checks for 3 Input/Track/Thumb and the current 4 Card/5-region QA ledger remain. Source/Theme/Preview code unchanged. NEXT: await new same-HEAD double CI, package latest official artifact only if both success; PR #267 stays Draft/unmerged.
 

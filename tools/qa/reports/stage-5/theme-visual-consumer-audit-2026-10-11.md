@@ -28,3 +28,9 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 - QXFRAME workflow #38191006431 failed at a stale static QA ledger gate referring to the prior 13 highlighted radius consumers. The current 4-Card / 5-region selectors are now asserted instead, with explicit rejection of previous 13 regions. No gate disabled.
 - TimePicker and Year/Month WheelPicker selection-guide element was at z-local-above (2), overpainted the scroll rows. Wheel columns now own z-local-above (2); guide is behind at z-local-raised (1), preserving the highlight background but allowing text to remain visible. The existing 64-case inverse Menu fixture now checks guide-versus-row stacking.
+
+## 2026-10-12 Stage5 Table / Transfer / JSON follow-up
+- Table filter options were native unthemed checks, and disabled option labels retained pointer/hover affordances. Selected draft values did not project into a row state. Fixed the source Table renderer and component CSS; popup search now pairs with popup background/foreground and pointer focus.
+- Transfer did not apply its public panel-border override, while header/footer/pagination independently used page-level borders; disabled root text remained normal. Unified the existing source roles, status color priority stays higher.
+- JSON monospace root fixed its font at 0.875rem rather than consuming shared Control size. It now supports public JSON font override with shared default and a currentColor caret without altering edit events.
+- 16 browser computed-style cases added (8 styles x 2 modes), plus strict source static gates. Existing 800 radius and 64 Menu inversion regressions unchanged. QA offline highlights: exactly 3 actual Preview03 business Card regions. New dual CI/artifact still required before claiming full acceptance.
