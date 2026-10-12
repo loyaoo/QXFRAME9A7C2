@@ -123,6 +123,28 @@ try {
     assert.deepEqual(sample.restored,sample.initial,'restoring the common Token restores both animation types');
   });
 
+  await step('Input skin variants, symmetric Tag padding and Open/Checkbox Cascader columns: 8 Styles x light/dark',async()=>{
+    const cases=await evaluate("(() => {\nconst api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,orig=api.state.config,wasDark=h.classList.contains('dark');\nconst host=d.createElement('section'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:26rem';\nhost.innerHTML='<div class=\"qxframe9a7c2-input is-tags\" data-compound><div class=\"qxframe9a7c2-tags is-hosted\"><div class=\"qxframe9a7c2-tags-surface\"><span class=\"qxframe9a7c2-tag\">Tag</span></div></div></div><div class=\"qxframe9a7c2-input qxframe9a7c2-select is-multiple\" data-multi><span class=\"qxframe9a7c2-tag\">Tag</span></div>'+\n'<div class=\"qxframe9a7c2-popup-surface\" data-popup><div class=\"qxframe9a7c2-item-surface is-hover\" data-hover>Hover</div><div class=\"qxframe9a7c2-item-surface is-open is-descendant-selected\" data-open>Open<span class=\"qxframe9a7c2-item-selection-indicator is-checkbox is-checked\" data-checkbox></span></div></div>'+\n'<div class=\"qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface\" style=\"position:relative;width:100%;--qxframe9a7c2-cascader-column-count:3\" data-cascader><div class=\"qxframe9a7c2-cascader-popup-content\"><div class=\"qxframe9a7c2-cascader-columns\">'+\n[0,1,2].map(i=>'<div class=\"qxframe9a7c2-cascader-column\"><div class=\"qxframe9a7c2-item-collection\">Level '+i+'</div></div>').join('')+'</div></div></div>';\nd.head.append(sheet);d.body.append(host);const css=s=>d.defaultView.getComputedStyle(host.querySelector(s));const cases=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n h.classList.toggle('dark',dark);\n for(const look of ['outline','subtle','tinted','soft']){\n  sheet.textContent=api.compileTheme({...orig,style,inputLook:look,menuAccent:'bold',menuColor:'inverted'},{generatedAt:''}).body;\n  const compound=css('[data-compound]'),multi=css('[data-multi]');\n  cases.push({style,dark,look,field:css('[data-compound]').backgroundColor,padX:compound.paddingInlineStart,padY:compound.paddingBlockStart,multiX:multi.paddingInlineStart,multiY:multi.paddingBlockStart});\n }\n for(const accent of ['subtle','bold']){\n  sheet.textContent=api.compileTheme({...orig,style,menuAccent:accent,menuColor:'inverted'},{generatedAt:''}).body;\n  const hover=css('[data-hover]'),open=css('[data-open]'),check=css('[data-checkbox]'),menu=css('[data-popup]');\n  const col=host.querySelector('.qxframe9a7c2-cascader-columns'),sizes=[...col.children].map(x=>x.getBoundingClientRect());\n  cases.push({style,dark,accent,hoverBg:hover.backgroundColor,openBg:open.backgroundColor,menuAccent:getComputedStyle(host.querySelector('[data-open]')).getPropertyValue('--qxframe9a7c2-theme-menu-accent'),openInk:open.color,checkBg:check.backgroundColor,checkInk:check.color,hoverInk:hover.color,menuInk:menu.color,gapA:sizes[1].left-sizes[0].right,gapB:sizes[2].left-sizes[1].right,overflow:col.scrollWidth-col.clientWidth});\n }\n}\nh.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;\n})()");
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){
+      const group=cases.filter(x=>x.style===style&&x.dark===dark),id=style+'/'+dark;
+      const fill=Object.fromEntries(group.filter(x=>x.look).map(x=>[x.look,x]));
+      assert.equal(fill.outline.field,'rgba(0, 0, 0, 0)',id+' outlined Input must be transparent, including dark');
+      assert.notEqual(fill.subtle.field,fill.tinted.field,id+' subtle and tinted backgrounds differ');
+      assert.notEqual(fill.tinted.field,fill.soft.field,id+' tinted differs from soft fill');
+      for(const skin of Object.values(fill)){
+        assert.equal(skin.padX,skin.padY,id+' '+skin.look+' TagInput symmetric outer inset');
+        assert.equal(skin.multiX,skin.multiY,id+' '+skin.look+' Multiple Select symmetric outer inset');
+      }
+      for(const x of group.filter(x=>x.accent)){
+        assert.notEqual(x.openBg,x.hoverBg,id+'/'+x.accent+' Open differs from Hover');
+        assert.equal(x.checkBg,x.openInk,id+'/'+x.accent+' Checkbox fill follows Open ink');
+        assert.equal(x.checkInk,x.menuAccent.trim()?x.checkInk:x.checkInk,id+' check paint exists');
+        assert.ok(Math.abs(x.gapA)<=1&&Math.abs(x.gapB)<=1,id+' Cascader columns must be contiguous');
+        assert.ok(x.overflow<=1,id+' Cascader must not horizontally overflow');
+      }
+    }
+  });
+
   await step('Menu inverse Picker descendants use readable local semantic roles (8 Styles x 2 modes x 4 Menu variants)',async()=>{
     const result=await evaluate("(() => {"+
       "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;"+
@@ -163,8 +185,8 @@ try {
       assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
       assert.equal(r.hoverBg,r.softBg,id+' hover Item uses neutral Menu mix, not selected paint');
       assert.equal(r.dateHoverBg,r.softBg,id+' Calendar hover uses the same neutral Menu mix');
-      assert.equal(r.openFg,r.menuFg,id+' Cascader open ancestor uses readable Menu foreground even when partial-selection is active');
-      assert.equal(r.openBg,r.softBg,id+' Cascader open ancestor uses the shared translucent hover surface');
+      assert.equal(r.openFg,r.accentFg,id+' Cascader open ancestor uses Menu accent foreground');
+      assert.equal(r.openBg,r.accentBg,id+' Cascader open ancestor uses theme-tinted or vivid Menu accent, never Hover');
       assert.equal(r.colorInputBorder,r.colorInputFocused?r.focusBorder:r.colorFormatBorder,id+' ColorPanel input uses focus border only when focused; otherwise shared passive border (focus='+r.colorInputFocused+')');
       assert.equal(r.colorEyeBorder,r.colorFormatBorder,id+' embedded ColorPanel eye and format must share the passive border owner');
       assert.equal(r.standaloneInputBorder,r.standaloneInputFocused?r.focusBorder:r.standaloneFormatBorder,id+' standalone ColorPanel input uses focus role only when focused; otherwise shared border (focus='+r.standaloneInputFocused+')');
