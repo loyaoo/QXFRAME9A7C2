@@ -140,9 +140,9 @@ const CONTROL_LOOK = {
 };
 // Input look: [light bg, dark bg], rest border, side/top weight.
 const INPUT_LOOK = {
-  outline: { bg: ['transparent', 'input/30'], border: 'input', sides: 100 },
-  tinted: { bg: ['input/30', 'input/30'], border: 'input', sides: 100 },
-  subtle: { bg: ['input/20', 'input/30'], border: 'input', sides: 100 },
+  outline: { bg: ['transparent', 'transparent'], border: 'input', sides: 100 },
+  tinted: { bg: ['input/35', 'input/35'], border: 'input', sides: 100 },
+  subtle: { bg: ['input/12', 'input/12'], border: 'input', sides: 100 },
   soft: { bg: ['input/50', 'input/50'], border: 'transparent', sides: 100 },
   underline: { bg: ['transparent', 'transparent'], border: 'input', sides: 0 },
   borderless: { bg: ['transparent', 'transparent'], border: 'transparent', sides: 100 } // QX
@@ -269,8 +269,10 @@ export function themeTokens(resolved) {
     const src = menuSource[mode];
     target.menu = translucent ? alpha(src.popover, 80) : src.popover;
     target['menu-foreground'] = src['popover-foreground'];
-    target['menu-accent'] = src.accent;
-    target['menu-accent-foreground'] = src['accent-foreground'];
+    // One Menu accent axis controls both selected and expanded rows. Subtle
+    // means a light primary tint; bold uses the saturated primary + on-primary.
+    target['menu-accent'] = resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14);
+    target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src.primary;
   }
   root['menu-blur'] = translucent ? '1.5rem' : '0';
 
