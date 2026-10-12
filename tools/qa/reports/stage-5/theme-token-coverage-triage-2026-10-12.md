@@ -1,3 +1,9 @@
+
+## 2026-10-12 follow-up — Card Skeleton shared disable implementation
+
+- **Now implemented, awaiting current-HEAD CI**: preserved Card's `qxframe9a7c2-card-skeleton` shimmer animation; inherited CSS style query `@container style(--qxframe9a7c2-theme-skeleton-animation: none)` disables it when the same Theme `none` already disables base Skeleton pulse. No additional Theme tokens or conditional Style-specific selectors.
+- Chromium computed-style contract tests regular `pulse` + Card `shimmer`, both `none` after Theme override, and restoration; static verifier guards the independent Card animation identity.
+- Previous status in this document noting Card Skeleton as “尚未解决” is superseded **only for Chromium-compatible Theme `none` support**; consumer states and remaining external token audit still need work.
 # Stage 5 — Theme Token 覆盖审计分流记录（2026-10-12）
 
 > 对外部审计结论进行源码核对。此记录不是完成证明，不覆盖运行时 60 组件族的全部状态。开发分支 `redesign/create-stage5`；PR #267 保持 Draft；不得合并或改动 main/backup。
