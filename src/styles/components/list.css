@@ -10,7 +10,7 @@
   --_qxframe9a7c2-list-group-text:var(--qxframe9a7c2-list-group-text,var(--_qxframe9a7c2-semantic-text-secondary));
   --_qxframe9a7c2-list-group-radius:var(--qxframe9a7c2-list-group-radius,var(--qxframe9a7c2-theme-radius-item));
   --_qxframe9a7c2-list-focus-shadow:none;
-  box-sizing:border-box;display:flex;flex-direction:column;min-width:0;max-width:100%;font-size:var(--_qxframe9a7c2-control-font-size);line-height:1.4;overflow:visible
+  box-sizing:border-box;display:flex;flex-direction:column;min-width:0;max-width:100%;border-radius:var(--_qxframe9a7c2-list-radius);font-size:var(--_qxframe9a7c2-control-font-size);line-height:1.4;overflow:visible
 }
 .qxframe9a7c2-list-body{position:relative;min-height:0;flex:1 1 auto}
 .qxframe9a7c2-list-viewport{box-sizing:border-box;position:relative;max-height:var(--_qxframe9a7c2-list-max-height);min-height:0;overflow:auto;outline:none;overscroll-behavior:auto}

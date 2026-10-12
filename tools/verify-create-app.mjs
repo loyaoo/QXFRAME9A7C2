@@ -117,7 +117,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Stage5 current batch: 1 Card / 2 changed Tree regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]"],"identity-otp":["[data-pv3-component=\"otp-input\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]","[data-pv3-component=\"campaign-tags\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"alerts-center":["[data-pv3x-widget=\"alerts-center\"]"],"inbox-notice":[".pv3x-message",".qxframe9a7c2-badge.is-outline"],"danger-dialog":["[data-pv3x-widget=\"danger-dialog\"]"],"account-drawer":["[data-pv3x-widget=\"account-drawer\"]"],"sla-tooltip":["[data-pv3x-widget=\"sla-tooltip\"]"],"release-planner":["[data-pv3-component=\"release-time\"]"],"shift-allocation":["[data-pv3x-widget=\"shift-allocation\"]"],"customer-quality":["[data-pv3-component=\"customer-tags\"]"],"support-triage":["[data-pv3-component=\"support-tags\"]"]}; // Stage5 current batch: 13 Cards / 15 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -131,8 +131,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const previous of ['release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
-    assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only current 1 Stage5 Card / 2 Tree regions are highlighted');
+    if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
+  assert.equal(count,15,'only current 13 Stage5 Cards / 15 changed regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1658,7 +1658,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  for(const marker of ['.qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected)', '.qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
-   '--_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground)',
+   '.qxframe9a7c2-date-panel-cell.is-selected',
    '.qxframe9a7c2-color-panel-input:focus:not(:disabled)'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
@@ -1723,6 +1723,17 @@ check('Stage5 neutral List/Tree, OTP container, Badge static and shared TimePane
  assert.doesNotMatch(v2,/\.qxframe9a7c2-badge\.is-outlined:hover/,'Badge is static');
  assert.match(tags,/--qxframe9a7c2-tag-close-icon-size,0\.625rem/,'Tag icon uses smaller scale');
  assert.doesNotMatch(v2,/\.qxframe9a7c2-tooltip-container, \.qxframe9a7c2-tooltip-arrow/,'Arrow consumes Tooltip root');
+});
+
+
+check('Stage5 static Outline Badge alias and inherited List radius',()=>{
+ const css=p=>fs.readFileSync(path.join(root,p),'utf8');
+ const badge=css('src/styles/components/badge.css'),list=css('src/styles/components/list.css'),theme=css('src/styles/main/theme-visual-v2.css');
+ assert.match(badge,/\.qxframe9a7c2-badge\.is-outlined,\.qxframe9a7c2-badge\.is-outline/,'Badge supports both outline spellings in existing demos');
+ assert.match(theme,/\.qxframe9a7c2-badge\.is-outline \{ background-color: transparent/,'Theme Outline Badge retains visible border');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-badge\.is-outline:hover/,'Badge does not implement control hover');
+ assert.match(list,/border-radius:var\(--_qxframe9a7c2-list-radius\)/,'List keeps Shape Policy geometry while being unpainted');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color/,'List and Tree inherit container colors');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

@@ -1,8 +1,45 @@
-/** Stage5 current batch: same canonical Tree DOM and line configuration in Tree and TreeSelect. */
+/** Stage5 2026-10-12 current real component batch: 13 cards, 15 regions. */
 const groups = [
- ['platform-tree','Tree / TreeSelect 同源视觉',[
-  ['[data-pv3-component="workspace-tree"]','Tree','与 TreeSelect 使用同一 Tree 节点和 Tree 样式，showLine:true','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','内部 checkbox 的空选、勾选与半选都消费全局 Choice 颜色；只有 Tree 行文字依弹层语义','__QA_BUNDLE_HEAD__']
+ ['platform-tree','List / Tree 容器透明',[
+  ['[data-pv3-component="workspace-tree"]','Tree','Root 不强制背景、前景、边框；可嵌入任意容器','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['identity-otp','InputOTP 容器职责',[
+  ['[data-pv3-component="otp-input"]','OTP','移除 Input 视觉根类，保留分段输入','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['marketing-creative','Carousel / Tags',[
+  ['[data-pv3-component="campaign-carousel"]','Carousel','有效本地 base64 图片','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="campaign-tags"]','Tag Close','图标比输入框控制图标小','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['asset-preview','Image Preview',[
+  ['[data-pv3x-widget="asset-preview"]','Image','离线 base64 占位图','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['alerts-center','Notification',[
+  ['[data-pv3x-widget="alerts-center"]','Notification','改正公开 API 参数和按钮触发','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['inbox-notice','Message / OutlineBadge',[
+  ['.pv3x-message','Message','暗色消息背景边框阴影','__QA_BUNDLE_HEAD__'],
+  ['.qxframe9a7c2-badge.is-outline','OutlineBadge','静态 Badge 非交互描边和内边距','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['danger-dialog','Modal',[
+  ['[data-pv3x-widget="danger-dialog"]','Modal','首次打开从 trigger origin 放大、遮罩延后退场','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['account-drawer','Drawer',[
+  ['[data-pv3x-widget="account-drawer"]','Drawer','遮罩跟随 panel 退出阶段','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['sla-tooltip','Tooltip',[
+  ['[data-pv3x-widget="sla-tooltip"]','Tooltip','气泡与箭头统一用一套表面配色','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['release-planner','TimePicker',[
+  ['[data-pv3-component="release-time"]','TimePicker','消费 TimePanel 的选中外观','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['shift-allocation','TimePanel',[
+  ['[data-pv3x-widget="shift-allocation"]','TimePanel','与 Picker 内容同一视觉样式','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['customer-quality','Tags',[
+  ['[data-pv3-component="customer-tags"]','Tags','缩小 tag 内 close 图标','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['support-triage','Tags',[
+  ['[data-pv3-component="support-tags"]','Tags','缩小 tag 内 close 图标','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -66,7 +103,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Workspace Explorer 中 Tree 与 TreeSelect 同源视觉，两处改动区域；上一轮标注全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：List/Tree、InputOTP、Tag Close、Image/Carousel、Modal/Drawer、Notice、Tooltip、TimePanel、OutlineBadge；只保留本轮改动高亮。
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

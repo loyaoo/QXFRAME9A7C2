@@ -73,3 +73,8 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 remove TreeSelect Popup-specific Checkbox paint
 - Two Popup-scoped rulesets in theme-visual-v2.css changed Tree checkbox colors to Menu theme (unchecked, checked, indeterminate), creating visible mismatch against Tree's global Choice. Deleted both; native checkbox projection is global Choice irrespective of Popup. Popup still controls Tree row text/hover. Regression tests compare popup vs standalone Tree checkbox calculated background, border, glyph for all three states across theme modes; public Shape & focus retained, no JS changes.
+
+## 2026-10-12 Stage5 current multi-family consumer batch
+- Explicit User approval allows JS fixes. List/Tree root never paint backgrounds, text or borders; preserve List shape radius (corner QA). OutlineBadge supports is-outline and is-outlined variants with real border, padding and no interactive hover, according to actual Preview03 HTML class usage.
+- OTP Control mode segments keeps Value/Focus but root no longer carries .input class; Tag close icon uses tag scale; Carousel and Image use valid offline base64 SVG; Notification public API now gets options object; TimePicker shares TimePanel selected role; Message surface contrast; tooltip arrow same surface; Modal origin and Overlay sequential mask leave.
+- QA only actual ${cardCount} current cards / ${regionCount} regions; previous highlights reset. Existing browser gates updated to test shared component ownership rather than obsolete Picker-specific styling.

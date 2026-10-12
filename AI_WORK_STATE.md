@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 batch C contract/visual QA (CI pending)
+- HEAD dbfb0b69049804d50db8a46be2d73f748257ffae; PR #267 Draft/unmerged.
+- Corrected accidental List corner regression: List stays UNPAINTED (no forced background/foreground/border), but keeps theme-radius-item so Shape Policy and 800-radius gate remain valid. Tree no root paint.
+- Critical OutlineBadge demo uses class is-outline, whereas source/theme only targeted is-outlined; now both spellings consume a real 1px border and static non-hover appearance. Tag and Message improvements preserved.
+- Static existing TimePicker-specific visual assertion removed; the real component style now consumes the same TimePanel selected role. Test remains on shared source and no duplicate Picker skin.
+- Offline QA reset to 13 current changed Preview03 cards/15 individual regions, from last round platform-tree only; no production QA.
+- JS changes already authorized: InputOTP only container skin, Modal trigger origin, shared Overlay staggered mask leave. Overlay browser test awaits both sequential lifecycle phases. QXFRAME/CSS Schema exact-current-head tests pending; if failure, fix real source/test without disabling any gate.
 ## CURRENT — 2026-10-12 Stage5 sequential overlay mask settle regression (CI pending)
 - QXFRAME #38207570765 at 7dd3a5a2 failed existing phase-e-modal-drawer test "modal resource releases after settled leave": the legacy settle() awaited mask and surface concurrently, but new intentional close sequence starts mask leave after surface leave finishes. Thus the first mask.whenSettled() completed before the mask fade even started.
 - Updated strict browser test settle() to await shared surface/mask and then mask again, with ALL previous resource-close assertions retained. Added a first-open origin regression using triggerTarget on first appearance and resource release after the staggered leave.

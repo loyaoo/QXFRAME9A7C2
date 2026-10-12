@@ -155,7 +155,7 @@
   }
   .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
   /* Outline Badge is a static label: a visible border, never a hoverable action. */
-  .qxframe9a7c2-badge.is-outlined { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border:1px solid var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border:1px solid var(--qxframe9a7c2-theme-border); }
   .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent); }
   .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-v2-solid-hover); }
   .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
