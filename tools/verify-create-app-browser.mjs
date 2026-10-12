@@ -138,7 +138,7 @@ try {
       for(const x of group.filter(x=>x.accent)){
         assert.notEqual(x.openBg,x.hoverBg,id+'/'+x.accent+' Open differs from Hover');
         assert.equal(x.checkBg,x.openInk,id+'/'+x.accent+' Checkbox fill follows Open ink');
-        assert.equal(x.checkInk,x.menuAccent.trim()?x.checkInk:x.checkInk,id+' check paint exists');
+        assert.notEqual(x.checkInk,x.checkBg,id+'/'+x.accent+' Checkbox mark ink contrasts with its foreground-colored fill');
         assert.ok(Math.abs(x.gapA)<=1&&Math.abs(x.gapB)<=1,id+' Cascader columns must be contiguous');
         assert.ok(x.overflow<=1,id+' Cascader must not horizontally overflow');
       }
