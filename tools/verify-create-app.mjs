@@ -1656,11 +1656,13 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-format,.qxframe9a7c2-color-panel-eye,.qxframe9a7c2-color-panel-input{box-sizing:border-box;'),'ColorPanel source must paint all three fields together');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-color-panel-input\[class\]/,'Theme V2 must not duplicate ColorPanel leaf field skin');
  for(const marker of ['.qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected)', '.qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
    '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
-   '.qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg)'])
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
 });
@@ -1676,7 +1678,7 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
    '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%',
    '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
-   '.qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg)'
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 
