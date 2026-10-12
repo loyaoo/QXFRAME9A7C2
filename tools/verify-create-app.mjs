@@ -119,6 +119,15 @@ check('font-mono and Alert radius consume registered Theme mapping',()=>{
  assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
 });
 
+check('Card Skeleton preserves shimmer but follows shared Skeleton disable',()=>{
+ const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+ const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
+ assert.ok(card.includes('animation:qxframe9a7c2-card-skeleton 1.3s ease-in-out infinite'),'Card keeps its distinct shimmer animation');
+ assert.ok(card.includes('@container style(--qxframe9a7c2-theme-skeleton-animation: none){'),'inherited Theme token controls Card animation shutdown');
+ assert.ok(card.includes('.qxframe9a7c2-card-skeleton-line{animation:none}'),'Card must disable shimmer on shared none');
+ assert.ok(tokens.includes("L('skeleton-animation'"),'shared Skeleton name remains registered Theme input');
+});
+
 check('offline QA annotation module must parse before packaging',()=>{
  const modulePath=path.join(root,'docs/create/offline-qa-changes.mjs');
  execFileSync(process.execPath,['--check',modulePath],{stdio:'pipe'});
