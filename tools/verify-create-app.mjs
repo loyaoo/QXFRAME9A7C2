@@ -1702,9 +1702,9 @@ check('Stage5 compound Input geometry and no horizontal Cascader overflow',()=>{
  assert.ok(select.includes('min-height:var(--_qxframe9a7c2-compound-item-height,'),'Select chips follow available inner row height');
  assert.ok(native.includes('var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-control-padding-block))'),'compound inset must follow Input padding-block for all sizes');
  assert.ok(native.includes('.qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:inherit;'),'hosted Tags must inherit parent Control size, not reset to default md');
- assert.ok(select.includes('.qxframe9a7c2-select.is-multiple .qxframe9a7c2-tag{font-size:inherit;line-height:1.25}'),'Multiple Select chip typography follows the input size');
+ assert.ok(select.includes('.qxframe9a7c2-select.is-multiple .qxframe9a7c2-tag{font-size:inherit;line-height:1}'),'Multiple Select chip typography follows the input size');
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
- assert.ok(tags.includes('font-size:inherit;line-height:1.25}'),'hosted Tags chips and editor stay within Control inner height');
+ assert.ok(tags.includes('font-size:inherit;line-height:1}'),'hosted Tags chips and editor stay within Control inner height');
  assert.ok(picker.includes('.qxframe9a7c2-cascader-column{') && picker.includes('flex:1 1 13rem;min-width:min(13rem,100%);max-width:none'),'Cascader columns shrink within available width');
  assert.ok(picker.includes('.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;flex-wrap:wrap;width:100%;min-width:0;align-items:stretch;overflow-x:hidden}'),'Cascader does not expose horizontal scrollbar');
  assert.doesNotMatch(picker,/\.qxframe9a7c2-cascader-columns\{[^}]*overflow-x:auto/,'Cascader cannot revert to horizontal scrolling');
