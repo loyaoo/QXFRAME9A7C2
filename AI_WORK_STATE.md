@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-12 Stage5 computed-style transition fixture stabilization (CI pending)
+- CSS Schema #38199875395 failed strict 64-case on Vega/light/inverted Tree checked background, actual oklab(0.97 0 0) vs final Menu accent oklch(0.269 0 0). Investigated with Chromium page.set_content + exact canonical CSS and Chrome DevTools matched style rules.
+- Root cause: Choice Visual Surface transitions background-color, and rapid compileTheme loops read interpolated in-flight color. Exact same CSS and DOM with indicator transition:none only within a synthetic style-test fixture resolves final computed accent background oklch(0.269 0 0), foreground oklch(0.985 0 0). The production motion stays unchanged, and other animation/motion regression gates retained.
+- Updated ONLY two synthetic indicator elements to transition:none in the new 64-case computed style fixture; no app/source CSS or tests assertions weakened. All 64 stable final-paint comparisons and previous test gates remain strict.
+- Latest source paint HEAD bcc503f3530c5b2a239bfd26275e68f262d67f69 unchanged; new test HEAD needs two green CI workflows and official Windows full dist+docs package. PR #267 Draft and main untouched.
+
 ## CURRENT — 2026-10-12 Stage5 Tree Choice computed-style diagnosis (new CI pending)
 - CSS Schema #38199875395 progressed through prior 64 inverse Menu regression and failed new 64-case on Vega/light/inverted: Tree checked background actual oklab(0.97 0 0), expected Menu accent oklch(0.269 0 0). Source has matching high-specificity scoped rule; root cause not yet established.
 - Added read-only instrument to the SAME strict assertion (not weakened): matched selector test, computed inherited --_v2-choice-bg and --theme-menu-accent, plus full actual case only on mismatch. This will identify whether CSS selector reach or cascade is at fault before further source change.

@@ -61,3 +61,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 centre guide single CSS owner
 - A second identical selector for wheel-panel-center-guide duplicated background and border-block-color; removing the older rule restores a single owner and retains transparent paint with Menu border. Gate was left strict.
+
+### 2026-10-12 intermediate CSS transition falsely read by fast Theme matrix
+- Chrome computed-tree diagnosed with local `set_content` and canonical framework dist: Tree Choice background transitions between menu color pairs. Fast style-switch fixture snapshots an intermediate oklab() color; disabling transition for ONLY the two synthetic Choice indicators produces exact final CSS accent oklch() and foreground without modifying production component motion. 64-case final-paint assertions remain strict and all real motion tests retained.
