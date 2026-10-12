@@ -113,7 +113,7 @@ check('Chromium acceptance module must parse before any heavy browser workflow',
 check('font-mono and Alert radius consume registered Theme mapping',()=>{
  const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
  const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
- const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style.css'),'utf8');
  assert.ok(json.includes('font-family:var(--qxframe9a7c2-font-mono,var(--_qxframe9a7c2-fixed-font-family-mono,'),'JSON must preserve public font-mono override then shared theme-mono mapping');
  assert.match(v2,/--_qxframe9a7c2-fixed-font-family-mono:\s*var\(--qxframe9a7c2-theme-font-mono\)/,'Theme V2 maps registered mono font to consumers');
  assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
