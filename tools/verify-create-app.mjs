@@ -1750,6 +1750,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
+ assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'standalone Tree Open uses shared Menu accent without painting Tree root');
+ assert.ok(choice.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator'),'standalone Tree inverted check belongs to Choice');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 
