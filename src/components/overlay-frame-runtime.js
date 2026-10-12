@@ -242,8 +242,9 @@ function create(config = {}) {
     pendingLeaveDetail = { reason:reason || 'close', originalEvent:event || null };
     leaveMaskDone = false;
     leaveSurfaceDone = false;
-    // Surface closes first; only afterward fade the mask. A shorter mask fade
-    // otherwise completes mid-dialog leave and flashes the page behind it.
+    // Begin both exit motions in the same rendering turn. The shared motion
+    // styles hold mask opacity until the panel has exited; no second-stage flash.
+    maskTransition.setVisible(false, Utils.assignOwn({ reason:reason || 'close', originalEvent:event || null }, presenceOptions('mask', false, reason, event)));
     surfaceTransition.setVisible(false, Utils.assignOwn({ reason:reason || 'close', originalEvent:event || null }, presenceOptions('surface', false, reason, event)));
     return controller;
   }
@@ -324,10 +325,6 @@ function create(config = {}) {
     onAfterLeave() {
       if (typeof surfaceTransitionOptions.onAfterLeave === 'function') surfaceTransitionOptions.onAfterLeave.apply(null, arguments);
       leaveSurfaceDone = true;
-      if (!destroyed && !opened && pendingLeaveDetail && !leaveMaskDone) {
-        const detail = pendingLeaveDetail;
-        maskTransition.setVisible(false, Utils.assignOwn({ reason:detail.reason || 'close', originalEvent:detail.originalEvent || null }, presenceOptions('mask', false, detail.reason, detail.originalEvent)));
-      }
       finalizeLeave();
     }
   });
