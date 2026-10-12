@@ -474,8 +474,16 @@
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.is-selected) {
-    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
-    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* In an expanded colored row, reverse the Checkbox ink/background pair.
+     This keeps checked, mixed and empty projections legible on bold accents. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator {
+    background-color: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    border-color: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    color: var(--qxframe9a7c2-theme-menu-accent);
   }
   /* Picker popup foreground contract: normal day/period cells and wheel rows
      must use the popup Menu ink even when their nested panel owns color.
@@ -590,9 +598,20 @@
     color: var(--_qxframe9a7c2-v2-navigation-text);
     border-color: transparent;
   }
-  .qxframe9a7c2-menu-item:hover, .qxframe9a7c2-menu-item.is-hover, .qxframe9a7c2-menu-item.is-selected, .qxframe9a7c2-menu-item.is-descendant-selected, .qxframe9a7c2-menu-item.is-open {
-    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-accent);
-    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-accent-foreground);
+  /* Hover is neutral, expanded uses Menu accent, selection remains separate. */
+  .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-menu-foreground) 12%,transparent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open) {
+    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
+    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-menu-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-menu-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
   .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
