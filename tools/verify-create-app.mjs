@@ -117,7 +117,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]"],"identity-otp":["[data-pv3-component=\"otp-input\"]"],"marketing-creative":["[data-pv3-component=\"campaign-carousel\"]","[data-pv3-component=\"campaign-tags\"]"],"asset-preview":["[data-pv3x-widget=\"asset-preview\"]"],"alerts-center":["[data-pv3x-widget=\"alerts-center\"]"],"inbox-notice":[".pv3x-message",".qxframe9a7c2-badge.is-outline"],"danger-dialog":["[data-pv3x-widget=\"danger-dialog\"]"],"account-drawer":["[data-pv3x-widget=\"account-drawer\"]"],"sla-tooltip":["[data-pv3x-widget=\"sla-tooltip\"]"],"release-planner":["[data-pv3-component=\"release-time\"]"],"shift-allocation":["[data-pv3x-widget=\"shift-allocation\"]"],"customer-quality":["[data-pv3-component=\"customer-tags\"]"],"support-triage":["[data-pv3-component=\"support-tags\"]"]}; // Stage5 current batch: 13 Cards / 15 changed regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree-select\"]"],"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"order-routing":["[data-pv3-component=\"routing-select\"]","[data-pv3-component=\"routing-cascader\"]"],"contact-lookup":["[data-pv3x-widget=\"contact-lookup\"]"],"quick-action-menu":["[data-pv3x-widget=\"quick-action-menu\"]"],"navigation-workspace":[".qxframe9a7c2-menu"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"palette-laboratory":[".qxframe9a7c2-color-panel-fields",".qxframe9a7c2-color-panel-sliders"],"danger-dialog":["[data-pv3x-widget=\"danger-dialog\"]"],"account-drawer":["[data-pv3x-widget=\"account-drawer\"]"]}; // Stage5 current batch: 10 Cards / 13 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -132,7 +132,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,15,'only current 13 Stage5 Cards / 15 changed regions are highlighted');
+  assert.equal(count,13,'only current 10 Stage5 Cards / 13 changed regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
