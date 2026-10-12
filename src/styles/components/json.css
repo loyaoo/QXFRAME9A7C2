@@ -1,4 +1,4 @@
-.qxframe9a7c2-json-root{--_qxframe9a7c2-json-radius:var(--qxframe9a7c2-json-radius,var(--_qxframe9a7c2-data-radius));box-sizing:border-box;min-width:0;color:var(--_qxframe9a7c2-semantic-text);font-family:var(--qxframe9a7c2-font-mono,ui-monospace,SFMono-Regular,Consolas,monospace);font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))}
+.qxframe9a7c2-json-root{--_qxframe9a7c2-json-radius:var(--qxframe9a7c2-json-radius,var(--_qxframe9a7c2-data-radius));box-sizing:border-box;min-width:0;color:var(--_qxframe9a7c2-semantic-text);font-family:var(--qxframe9a7c2-font-mono,var(--_qxframe9a7c2-fixed-font-family-mono,ui-monospace,SFMono-Regular,Consolas,monospace));font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))}
 
 .qxframe9a7c2-json-root:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);box-shadow:none;border-radius:var(--_qxframe9a7c2-json-radius)}
 .qxframe9a7c2-json-root.is-virtual-focus-owner:focus-visible{outline:none}
