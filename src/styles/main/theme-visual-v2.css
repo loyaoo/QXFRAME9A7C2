@@ -524,7 +524,8 @@
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop.is-active {
     border-color: var(--qxframe9a7c2-theme-menu-accent);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active) {
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active) {
     border-color: var(--_qxframe9a7c2-v2-menu-border-neutral);
   }
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-selection-indicator.is-check {
