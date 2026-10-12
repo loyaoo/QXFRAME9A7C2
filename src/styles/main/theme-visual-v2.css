@@ -616,6 +616,13 @@
     --_qxframe9a7c2-menu-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-menu-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
+  /* Menu source paints --menu-render-background (not the generic navigation
+     channel). Project Open onto that actual single paint owner, keeping any
+     explicit expanded recipe before the generated Menu accent fallback. */
+  .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled):not(.is-danger) {
+    --_qxframe9a7c2-menu-render-background: var(--_qxframe9a7c2-menu-recipe-expanded, var(--qxframe9a7c2-theme-menu-accent));
+    --_qxframe9a7c2-menu-render-text: var(--_qxframe9a7c2-menu-recipe-expanded-text, var(--qxframe9a7c2-theme-menu-accent-foreground));
+  }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
   .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
   .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-v2-navigation-bg: transparent; --_qxframe9a7c2-v2-navigation-text: inherit; opacity: .5; }
