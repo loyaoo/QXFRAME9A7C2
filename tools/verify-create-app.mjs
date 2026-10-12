@@ -1743,7 +1743,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
  assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14)"),'Menu subtle/bold uses existing accent channel');
  assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:0px'),'hosted tag inset cannot add back mismatched inline gap');
- assert.ok(cascader.includes("var columnsScroll = null;"),'Cascader never attaches horizontal Scroll viewport');
+ assert.ok(cascader.includes("var columnsScroll = popupFrame.attachViewport({"),'Cascader keeps PopupFrame scroll ownership');
+ assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
  assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
