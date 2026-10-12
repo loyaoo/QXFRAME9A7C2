@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-12 Stage5 Chromium selected-state and Transfer role chain follow-up (CI pending)
+- HEAD e540f8ff previous QXFRAME CI #38193245643 still running; CSS Schema #38193245580 failed only at the newly added Stage5 Chromium fixture: Vega/light Table filter selected row background computed transparent. The earlier SyntaxError was fixed and Chromium reached the new assertions with existing prior steps passing.
+- Table filter selected now uses existing solid --_qxframe9a7c2-semantic-subtle-active (Theme muted) like shared Table/Item selection, not a potentially transparent accent-soft formula; no new mixing or tokens.
+- Inspection of shared Theme V2 revealed its generic .transfer-panel selector replaced the component-owned public panel border and disabled typography. Split List/Tree vs Transfer surface handling, preserving Transfer local background/border and inherited disabled foreground, with strict static gate.
+- Next: exact HEAD dual green CI, then official dist+docs Windows ZIP and 13 HTTP route / CRC / SHA256. PR #267 Draft, no main changes.
+
 ## CURRENT — 2026-10-12 Stage5 static verifier syntax fix (CI pending)
 - QXFRAME #38193126439 failed during full release at tools/verify-create-app.mjs: the new current-round QA selector matrix had an unterminated quoted string for data-inspector. Corrected the string literal; no new component source or Theme changes. Previous entire 9-file implementation is retained.
 - Need rerun both CI workflows on resulting exact HEAD and only package the successful official artifact. PR #267 remains Draft/unmerged.

@@ -34,3 +34,7 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 - Transfer did not apply its public panel-border override, while header/footer/pagination independently used page-level borders; disabled root text remained normal. Unified the existing source roles, status color priority stays higher.
 - JSON monospace root fixed its font at 0.875rem rather than consuming shared Control size. It now supports public JSON font override with shared default and a currentColor caret without altering edit events.
 - 16 browser computed-style cases added (8 styles x 2 modes), plus strict source static gates. Existing 800 radius and 64 Menu inversion regressions unchanged. QA offline highlights: exactly 3 actual Preview03 business Card regions. New dual CI/artifact still required before claiming full acceptance.
+
+### 2026-10-12 CI feedback on first Stage5 Table/Transfer/JSON Chromium matrix
+- CSS Schema #38193245580 failed only in newly added matrix: Vega/light selected filter row computed transparent. Selected state now consumes existing solid Theme-muted derived semantic-subtle-active, matching QX Table selection instead of relying on transient accent-soft, without new formulas.
+- Found higher-level Theme V2 source overriding Transfer component's explicit panel border and disabled foreground. Its shared List/Tree/Transfer selector is now split, with Transfer consuming existing local panel roles and inheriting text from owner. Both are actual framework fixes; 16-case browser assertion retained.

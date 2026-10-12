@@ -188,7 +188,10 @@
   .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
   .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-item-surface.is-disabled, .qxframe9a7c2-item-surface:disabled, .qxframe9a7c2-list.is-disabled .qxframe9a7c2-item-surface, .qxframe9a7c2-tree.is-disabled .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; opacity: .5; }
-  .qxframe9a7c2-list, .qxframe9a7c2-tree, .qxframe9a7c2-transfer-panel { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-list, .qxframe9a7c2-tree { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  /* Transfer's public/local panel roles win over generic surface Theme paint.
+     In particular, disabled foreground must inherit from its Transfer owner. */
+  .qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }
 
   .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-v2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-success); }
   .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }

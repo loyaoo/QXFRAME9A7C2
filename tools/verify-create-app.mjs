@@ -1637,11 +1637,13 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   const runtime=fs.readFileSync(path.join(root,'src/components/table.js'),'utf8');
   const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
   const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
-  for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected{background:var(--_qxframe9a7c2-semantic-accent-soft)',
+  for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected{background:var(--_qxframe9a7c2-semantic-subtle-active)',
     '.qxframe9a7c2-table-filter-option.is-disabled{color:var(--_qxframe9a7c2-semantic-text-disabled)',
     'color:var(--_qxframe9a7c2-popup-text);outline:0'])assert.ok(table.includes(marker),marker);
   for(const marker of ["input.className = 'qxframe9a7c2-form-check-input'","row.classList.toggle('is-selected', input.checked)","row.classList.add('is-disabled')"])assert.ok(runtime.includes(marker),marker);
   assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'));
+  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  assert.ok(v2.includes('.qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }'),'Transfer Theme paint must preserve public border and disabled text');
   assert.ok(transfer.includes('--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled);color:var(--_qxframe9a7c2-semantic-text-disabled)'));
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
