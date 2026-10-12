@@ -135,7 +135,7 @@ try {
       "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
       "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
       "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
-      "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
+      "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,collectionBg:css(query('.qxframe9a7c2-item-collection')).backgroundColor,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
       "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,hover:css(query('.qxframe9a7c2-item-surface.is-hover')).color,hoverBg:css(query('.qxframe9a7c2-item-surface.is-hover')).backgroundColor,openBg:css(query('.qxframe9a7c2-cascader-item.is-open')).backgroundColor,openFg:css(query('.qxframe9a7c2-cascader-item.is-open')).color,softSelectedBg:css(query('[data-menu-accent-soft]')).backgroundColor,softBg:css(query('[data-menu-soft]')).backgroundColor,neutralBorder:css(query('[data-menu-soft]')).borderTopColor,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
       "accentFg:accent.color,accentBg:accent.backgroundColor,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
       "dateHoverBg:css(query('.qxframe9a7c2-date-panel-cell.is-hover')).backgroundColor,dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
@@ -150,6 +150,7 @@ try {
       assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
       assert.equal(r.wheel,r.menuFg,id+' TimePicker uses TimePanel selected text role');
       assert.equal(r.wheelBg,'rgba(0, 0, 0, 0)',id+' TimePicker leaves selected wheel background to TimePanel guide');
+      assert.equal(r.collectionBg,'rgba(0, 0, 0, 0)',id+' nested collection is transparent; only Popup owns Menu backdrop opacity');
       assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
       assert.equal(r.hoverBg,r.softBg,id+' hover Item uses neutral Menu mix, not selected paint');
       assert.equal(r.dateHoverBg,r.softBg,id+' Calendar hover uses the same neutral Menu mix');
