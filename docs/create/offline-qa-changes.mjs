@@ -1,23 +1,18 @@
-/** Stage5 current batch: Tree, Cascader, TimePicker, ColorPanel, Table native input states. */
+/** Stage5 current: inverted Date/Time/Tree Choice/ColorPanel controls. */
 const groups = [
- ['platform-tree','Tree / TreeSelect',[
-  ['[data-pv3-component="workspace-tree"]','Tree ancestors','Open and indeterminate nodes consume paired Menu ink','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Checked and mixed glyphs consume Menu colors and Shape Policy','__QA_BUNDLE_HEAD__']
+ ['release-planner','Date/Time',[ 
+  ['[data-pv3-component="release-date"]','DatePicker','Navigation and selected-date Menu color pairing','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','TimePicker','Transparent guide leaves selected wheel row readable','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['order-routing','Cascader viewport',[
-  ['[data-pv3-component="routing-cascader"]','Cascader first column','Popup minimum width fits a complete first column','__QA_BUNDLE_HEAD__']
+ ['platform-tree','Tree Choice',[
+  ['[data-pv3-component="workspace-tree"]','Tree','Checked and mixed indicator contrast on inverted Menu','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Checked and mixed indicator contrast on inverted Menu','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['release-planner','TimePicker selected band',[
-  ['[data-pv3-component="release-time"]','Wheel item contrast','Selected text paints above guide using paired Menu accent','__QA_BUNDLE_HEAD__']
+ ['brand-studio','ColorPicker HEX',[
+  ['[data-pv3-component="brand-color"]','HEX field','Input, format and eye consume the same Menu colors','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['brand-studio','ColorPicker HEX input',[
-  ['[data-pv3-component="brand-color"]','ColorPanel HEX','Focused border follows pointer-focus','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['palette-laboratory','ColorPanel field',[
-  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel field','Same Theme focus role in standalone ColorPanel','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['plan-governance','Table filter native states',[
-  ['[data-pv3-component="governance-table"]','Table filter','Checked and disabled native inputs styled without runtime fork','__QA_BUNDLE_HEAD__']
+ ['dial-settings','WheelPicker',[
+  ['[data-pv3x-widget="dial-settings"]','Wheel selection','Selected row owns paint, not centre guide','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -81,7 +76,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Tree / TreeSelect、Cascader、TimePicker、ColorPanel、Table，共 6 张卡片、7 处区域；旧高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：DatePicker、TimePicker、Tree/TreeSelect、ColorPicker、WheelPicker，共 4 张卡片、6 处区域；上一轮标注已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

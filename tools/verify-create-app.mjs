@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"],"order-routing":["[data-pv3-component=\"routing-cascader\"]"],"release-planner":["[data-pv3-component=\"release-time\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"],"plan-governance":["[data-pv3-component=\"governance-table\"]"]}; // Stage5 current batch: 6 Cards / 7 changed regions
+  const current={"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"dial-settings":["[data-pv3x-widget=\"dial-settings\"]"]}; // Stage5 current batch: 4 Cards / 6 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -127,11 +127,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,7,'only current 6 Stage5 Cards / 7 component regions are highlighted');
+  assert.equal(count,6,'only current 4 Stage5 Cards / 6 component regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1662,4 +1662,18 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
 });
+
+check('Stage5 popup state color pairs are explicit source consumers',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ for(const marker of [
+   '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
+   '--_qxframe9a7c2-date-panel-action-bg: var(--qxframe9a7c2-theme-menu-accent)',
+   '--_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground)',
+   '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
+   '.qxframe9a7c2-tree-check:indeterminate:not(:disabled) + .qxframe9a7c2-tree-check-indicator',
+   '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',
+   '--_qxframe9a7c2-color-panel-field-bg: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
+ ])assert.ok(css.includes(marker),'popup role '+marker);
+});
+
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

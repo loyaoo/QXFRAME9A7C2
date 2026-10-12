@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 inverted popup visual paint closeout (new CI pending)
+- Resumed full green HEAD 596ae1f521e9106653554864d9afa7f78a1d3624, QXFRAME CI #38196035371 / CSS Schema #38196035325 success, PR #267 Draft/unmerged, main unchanged.
+- Owner screenshots identify paired-background/foreground failures: DatePicker idle/hover nav and selected cell, TimePicker selection guide, TreeSelect checked/mixed glyph, and ColorPanel HEX input vs neighboring controls.
+- Corrected shared Theme V2 source (no Preview private CSS): nav idle and hover paired Menu semantic roles; selected date/period background/ink paired; wheel guide transparent, selected row still owns paint; active/mixed Tree Choice final paint after generic Choice rules; ColorPanel public field overrides with Menu defaults, input/format/eye paired, pointer-focus border and keyboard outline preserved. Does not repaint Popover/Dialog or disabled Tree Choice.
+- QA overlay reset to this round's 4 Preview03 Cards / 6 changed regions. Added strict source contract. Existing 64 inverse Picker, 16 Table/Transfer/JSON, 800 radius regression retained.
+- NEXT same-HEAD dual CI with new Chromium popup paint regression, then official complete Windows dist+docs artifact, CRC/SHA256 and local HTTP. Stage5 full 66-family final state matrix remains incomplete.
+
 ## CURRENT — 2026-10-12 Stage5 screenshot batch test expectation correction (CI pending)
 - On top of source fix 0ea109cd, updated old 64-case inverse Menu browser expectation: selected Wheel foreground/background now must match Menu accent pair, while normal wheel items still match Menu foreground. Old test expected selected Wheel normal foreground and would reject the new paired consumer. Selection-guide stacking assertion remains.
 - Adjusted strict Table filter static contract to the new native-state + existing is-disabled selector list. Did not weaken gates or alter runtime/preview styles.
