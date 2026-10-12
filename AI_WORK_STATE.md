@@ -1,3 +1,8 @@
+## FOLLOW-UP — 2026-10-12 Stage5 standalone Tree Open visual alignment (CI pending)
+- The previous Popup-only Open color consumer missed standalone Tree. Added `.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)` in Theme V2 consumer: the **item only** gets Menu theme Open accent/foreground. Tree/list root still has no forced background/border/foreground.
+- Canonical `choice-visual.css` now projects reverse Checkbox colors for standalone Tree Open as well as Popup Open, while ordinary Tree Choice states remain global. Added Chromium computed-style checks for standalone Tree Open, ink, Checkbox background across Style/light-dark/Menu bold/subtle, and static owner checks.
+- Final CI must be green on the exact updated HEAD before packaging. No merge main/backup; PR #267 stays Draft.
+
 ## CURRENT CORRECTION — 2026-10-12 Stage5 shared ownership + default Theme (CI pending)
 - Input Look compiler/Theme changed together: `outline` transparent in both modes, `subtle` 12%, `tinted` 35%, `soft` 50%. Canonical `src/styles/main/theme.css` root/dark defaults updated to match compiled output; do not loosen Theme equivalence gate.
 - Popup Menu Hover stays neutral. Open is theme-menu-accent and menu-accent-foreground; menuAccent `subtle` = primary/14 with primary ink, `bold` = primary with primary foreground. User requested Open vs Hover distinction across Menu/TreeSelect/Cascader.
