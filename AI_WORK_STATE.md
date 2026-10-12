@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 sequential overlay mask settle regression (CI pending)
+- QXFRAME #38207570765 at 7dd3a5a2 failed existing phase-e-modal-drawer test "modal resource releases after settled leave": the legacy settle() awaited mask and surface concurrently, but new intentional close sequence starts mask leave after surface leave finishes. Thus the first mask.whenSettled() completed before the mask fade even started.
+- Updated strict browser test settle() to await shared surface/mask and then mask again, with ALL previous resource-close assertions retained. Added a first-open origin regression using triggerTarget on first appearance and resource release after the staggered leave.
+- InputOTP remains structural container, CSS fixes and source-only JS allowance (plus current-HEAD reproducible build) unchanged. Next exact HEAD dual CI and official offline ZIP; PR #267 Draft/unmerged, main untouched.
+
 ## CURRENT — 2026-10-12 Stage5 batch B: authorized component JS / Overlay synchronization (new CI pending)
 - Resumed dd85e90b2a333723b5d6d27526190590b4ca68d0. Previous QXFRAME CI #38207105605 failed only at obsolete Stage5 static test requiring Picker-only wheel selected state (removed intentionally to match standalone TimePanel). Updated source/Chromium tests to enforce shared TimePanel style, no separate Popup highlight paint.
 - InputOTP: canonical Control segments/focus/value preserved, but InputOTP root explicitly drops .qxframe9a7c2-input Input skin, remains a structural container; segment height token restored locally; hidden generic input remains detached in segmented mode.
