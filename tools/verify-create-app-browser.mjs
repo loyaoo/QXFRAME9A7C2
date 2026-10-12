@@ -153,9 +153,10 @@ try {
       assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
       assert.equal(r.hoverBg,r.softBg,id+' hover Item uses neutral Menu mix, not selected paint');
       assert.equal(r.dateHoverBg,r.softBg,id+' Calendar hover uses the same neutral Menu mix');
-      assert.equal(r.colorInputBorder,r.standaloneInputBorder,id+' embedded ColorPanel input matches standalone ColorPanel border');
-      assert.equal(r.colorFormatBorder,r.standaloneFormatBorder,id+' embedded ColorPanel format matches standalone ColorPanel border');
-      assert.equal(r.colorEyeBorder,r.standaloneEyeBorder,id+' embedded ColorPanel eye matches standalone ColorPanel border');
+      assert.equal(r.colorInputBorder,r.colorFormatBorder,id+' embedded ColorPanel input and format must share the passive border owner');
+      assert.equal(r.colorEyeBorder,r.colorFormatBorder,id+' embedded ColorPanel eye and format must share the passive border owner');
+      assert.equal(r.standaloneInputBorder,r.standaloneFormatBorder,id+' standalone ColorPanel input and format must share their border owner');
+      assert.equal(r.standaloneEyeBorder,r.standaloneFormatBorder,id+' standalone ColorPanel eye and format must share their border owner');
       assert.notEqual(r.colorInputBorder,r.accentBg,id+' passive ColorPanel border never becomes Menu accent');
       assert.notEqual(r.presetHoverBorder,r.presetActiveBorder,id+' native ColorPanel preset hover border differs from selected');
       assert.equal(r.presetHoverBorder,r.neutralBorder,id+' ColorPanel preset hover uses neutral border');
