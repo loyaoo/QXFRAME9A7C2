@@ -41,3 +41,7 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 Transfer status overrides vs public border
 - CSS Schema #38193867512 progressed beyond Table selection but failed on Transfer explicit panel border in disabled state: observed default Theme border instead of caller-provided rgb(19,33,55). Identified .is-disabled private slot assignment overriding root's public border, also shared by is-status-error/warning. Corrected all three status mappings to resolve user-public border first, fall back to existing state semantic only when not supplied. Source + static regression updated; browser gate remains strict.
+
+## 2026-10-12 owner screenshots and JS parity closeout
+- Exact prior QXFRAME CI failure was built JS parity with main after Stage5 had changed src/components/table.js; restored its original main blob. Native Table filter selection/disabled visuals use :has(>input:checked/disabled) CSS so Stage5 does not fork framework JS.
+- Screenshot regressions: Tree ancestry and native checkbox Menu contrast, Cascader first-column 13rem minimum popup width, selected TimePicker wheel text/background above guide, ColorPanel HEX focus border. All fixed in shared source CSS, not Preview03-specific overrides. Offline QA resets to six real cards/seven regions; Popover/Dialog independent; existing source gate preserved. New CI needed.

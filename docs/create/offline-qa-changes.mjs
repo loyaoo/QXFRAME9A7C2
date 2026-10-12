@@ -1,14 +1,23 @@
-/** Stage5 current batch: Table filter, Transfer and JSON Theme consumer states.
- * Prior 4 Card / 5 region picker, OTP and Switch highlights removed. */
+/** Stage5 current batch: Tree, Cascader, TimePicker, ColorPanel, Table native input states. */
 const groups = [
- ['plan-governance','Table 筛选组件',[
-  ['[data-pv3-component="governance-table"]','Table 筛选状态','筛选选中/禁用态、复选框以及弹层搜索颜色统一','__QA_BUNDLE_HEAD__']
+ ['platform-tree','Tree / TreeSelect',[
+  ['[data-pv3-component="workspace-tree"]','Tree ancestors','Open and indeterminate nodes consume paired Menu ink','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Checked and mixed glyphs consume Menu colors and Shape Policy','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['workforce-access','Transfer 状态与边界',[
-  ['[data-pv3-component="member-transfer"]','Transfer 面板','公开面板边框覆盖标题与页脚，禁用前景色统一','__QA_BUNDLE_HEAD__']
+ ['order-routing','Cascader viewport',[
+  ['[data-pv3-component="routing-cascader"]','Cascader first column','Popup minimum width fits a complete first column','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['data-inspector','JSON 字体与编辑',[
-  ['[data-pv3-component="api-json"]','JSON 主题映射','代码字号消费 Control 尺寸，光标颜色匹配当前文本','__QA_BUNDLE_HEAD__']
+ ['release-planner','TimePicker selected band',[
+  ['[data-pv3-component="release-time"]','Wheel item contrast','Selected text paints above guide using paired Menu accent','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['brand-studio','ColorPicker HEX input',[
+  ['[data-pv3-component="brand-color"]','ColorPanel HEX','Focused border follows pointer-focus','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['palette-laboratory','ColorPanel field',[
+  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel field','Same Theme focus role in standalone ColorPanel','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['plan-governance','Table filter native states',[
+  ['[data-pv3-component="governance-table"]','Table filter','Checked and disabled native inputs styled without runtime fork','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -72,7 +81,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Table、Transfer、JSON 的 Theme 状态消费，3 张卡片、3 处区域；旧 Picker、OTP、Switch 高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Tree / TreeSelect、Cascader、TimePicker、ColorPanel、Table，共 6 张卡片、7 处区域；旧高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

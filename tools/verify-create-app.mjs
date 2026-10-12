@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"plan-governance":["[data-pv3-component=\"governance-table\"]"],"workforce-access":["[data-pv3-component=\"member-transfer\"]"],"data-inspector":["[data-pv3-component=\"api-json\"]"]}; // Stage5 current batch: 3 Cards / 3 changed regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"],"order-routing":["[data-pv3-component=\"routing-cascader\"]"],"release-planner":["[data-pv3-component=\"release-time\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"],"plan-governance":["[data-pv3-component=\"governance-table\"]"]}; // Stage5 current batch: 6 Cards / 7 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -127,11 +127,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['release-planner','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console','palette-laboratory',
+  for(const previous of ['dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'only current 3 Stage5 Cards / 3 component regions are highlighted');
+  assert.equal(count,7,'only current 6 Stage5 Cards / 7 component regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1637,10 +1637,12 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   const runtime=fs.readFileSync(path.join(root,'src/components/table.js'),'utf8');
   const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
   const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
-  for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected{background:var(--_qxframe9a7c2-semantic-subtle-active)',
+  for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected,.qxframe9a7c2-table-filter-option:has(>input:checked){background:var(--_qxframe9a7c2-semantic-subtle-active)',
     '.qxframe9a7c2-table-filter-option.is-disabled{color:var(--_qxframe9a7c2-semantic-text-disabled)',
     'color:var(--_qxframe9a7c2-popup-text);outline:0'])assert.ok(table.includes(marker),marker);
-  for(const marker of ["input.className = 'qxframe9a7c2-form-check-input'","row.classList.toggle('is-selected', input.checked)","row.classList.add('is-disabled')"])assert.ok(runtime.includes(marker),marker);
+  assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:checked)'),'Table native selected state does not require JS changes');
+  assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:disabled)'),'Table native disabled state does not require JS changes');
+  assert.ok(runtime.includes("input.checked = filterDraftValues.some("),'original Table draft projection remains');
   assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'));
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   assert.ok(v2.includes('.qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }'),'Transfer Theme paint must preserve public border and disabled text');
@@ -1649,5 +1651,15 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
     assert.ok(transfer.includes('.qxframe9a7c2-transfer.'+state+'{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'),'explicit Transfer border must survive '+state);
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
+});
+check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ for(const marker of ['.qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected)', '.qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)',
+   '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
+   '--_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground)',
+   '.qxframe9a7c2-color-panel-input:focus:not(:disabled)'])
+   assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
+ assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
 });
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

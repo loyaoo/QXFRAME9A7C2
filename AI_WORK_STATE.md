@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 owner screenshot fixes and runtime parity recovery (CI pending)
+- Baseline HEAD 7538401cfc90529879705209fcca73502d7b5b61, Draft PR #267. CSS Schema #38194398636 success, QXFRAME #38194398630 failed at JS build artifacts match main: six outputs changed by Stage5 Table JS edits.
+- Restored src/components/table.js to exact main blob 430ff9e7b40b761f999a302ec20a701b0da5d295. Table native checked/disabled inputs now drive :has() CSS visuals; no new JS runtime fork or relaxed gate.
+- Fixed shared source CSS for owner screenshots: Tree ancestor menu foreground/background paired even when open/partial, Tree checked/indeterminate checkbox glyphs consume Menu colors, Cascader popup minimum first-column width 13rem, TimePicker selected wheel row above guide with Menu paired contrast, ColorPanel focused HEX border uses pointer-focus. Do not interpret overlay on Automation Studio card as its own Tree.
+- Offline QA only 6 truly changed Preview03 Cards/7 regions. Static gate updated; previous 16-case Chromium Table/Transfer/JSON, 64 Menu inversion and 800 radius gates retained. Preview01/02 unchanged.
+- NEXT exact-head dual CI green then official dist+docs Windows full ZIP, CRC/SHA256 and 13 HTTP routes; Stage5 66-family full state acceptance still incomplete.
+
 ## CURRENT — 2026-10-12 Stage5 Transfer explicit border vs status precedence (new CI pending)
 - Exact HEAD f4acb82 CSS Schema #38193867512 failed in newly added Chromium matrix at Transfer public border override under .is-disabled: expected explicit rgb(19,33,55), actual Theme input (oklch 0.922...). Table selected background previously failed but now passed up to Transfer assertion.
 - Root cause: .transfer.is-disabled independently reassigned private panel-border, defeating the public slot. The same priority bug existed for status-error and status-warning. All three now use var(--qxframe9a7c2-transfer-panel-border, state-default) preserving explicit public overrides, and retain their status fallback. Shared Theme V2 Transfer rendering still consumes that private resolved slot.

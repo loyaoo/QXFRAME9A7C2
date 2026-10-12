@@ -191,7 +191,7 @@
 
 .qxframe9a7c2-cascader{--_qxframe9a7c2-cascader-arrow-transform:none;min-width:0;max-width:100%}
 .qxframe9a7c2-cascader-control{width:100%}
-.qxframe9a7c2-cascader-panel{--_qxframe9a7c2-cascader-panel-border:var(--_qxframe9a7c2-popup-border);--_qxframe9a7c2-cascader-panel-bg:var(--_qxframe9a7c2-popup-bg);--_qxframe9a7c2-cascader-panel-shadow:var(--qxframe9a7c2-theme-shadow-popup);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-cascader-panel-border);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-cascader-panel-bg);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-cascader-panel-shadow);position:absolute;max-width:min(calc(16rem * 3 + 4rem),calc(100% - 2rem));overflow:hidden;}
+.qxframe9a7c2-cascader-panel{--_qxframe9a7c2-cascader-panel-border:var(--_qxframe9a7c2-popup-border);--_qxframe9a7c2-cascader-panel-bg:var(--_qxframe9a7c2-popup-bg);--_qxframe9a7c2-cascader-panel-shadow:var(--qxframe9a7c2-theme-shadow-popup);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-cascader-panel-border);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-cascader-panel-bg);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-cascader-panel-shadow);position:absolute;min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem);max-width:min(calc(16rem * 3 + 4rem),calc(100% - 2rem));overflow:hidden;}
 .qxframe9a7c2-cascader-panel[hidden]{display:none}
 .qxframe9a7c2-cascader-popup-content.qxframe9a7c2-scroll{width:100%;height:auto;min-width:0;max-width:inherit}
 .qxframe9a7c2-cascader-columns{display:flex;align-items:stretch;max-width:inherit;overflow-x:auto}

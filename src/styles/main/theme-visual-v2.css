@@ -451,6 +451,13 @@
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
   }
+  /* Expanded/partial Tree items always consume paired Menu colors. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-open:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
   /* Picker popup foreground contract: normal day/period cells and wheel rows
      must use the popup Menu ink even when their nested panel owns color.
      Keep explicit date-panel text overrides, selected/today and outside-day
@@ -483,7 +490,10 @@
     --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-item.is-selected {
-    --_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-wheel-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    position: relative;
+    z-index: var(--qxframe9a7c2-z-local-raised);
+    background-color: var(--qxframe9a7c2-theme-menu-accent);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-picker-preset {
     --_qxframe9a7c2-date-picker-preset-text: var(--qxframe9a7c2-theme-menu-foreground);
@@ -510,6 +520,9 @@
     background-color: var(--qxframe9a7c2-theme-menu);
     border-color: var(--qxframe9a7c2-theme-menu-accent);
   }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input:focus:not(:disabled) {
+    border-color: var(--qxframe9a7c2-theme-pointer-focus);
+  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button.is-active {
     --_qxframe9a7c2-color-picker-mode-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-color-picker-mode-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
@@ -525,6 +538,18 @@
   }
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-selection-indicator.is-check {
     color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Native Tree checkbox state stays in the input; glyph pairs to Menu surface. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check-indicator {
+    --_qxframe9a7c2-v2-choice-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-menu-foreground);
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
+    --_qxframe9a7c2-v2-choice-bg: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-menu-foreground);
+    color: var(--qxframe9a7c2-theme-menu);
   }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);

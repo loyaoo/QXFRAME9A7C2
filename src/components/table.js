@@ -1879,22 +1879,15 @@ function setupTable(instance) {
           var value = filterOptionValue(option), label = filterOptionLabel(option);
           var row = doc.createElement('label'); row.className = 'qxframe9a7c2-table-filter-option'; row.style.setProperty('--qxframe9a7c2-table-filter-depth', String(depth));
           if (children.length) row.classList.add('has-children');
-          if (option && typeof option === 'object' && option.disabled === true) row.classList.add('is-disabled');
           if (value !== undefined && value !== null) {
             var input = doc.createElement('input'); input.type = multiple ? 'checkbox' : 'radio'; input.name = multiple ? '' : 'qxframe9a7c2-table-filter-' + tableId + '-' + column.key; input.value = String(value);
             input.checked = filterDraftValues.some(function (current) { return sameFilterValue(current, value); });
-            input.className = 'qxframe9a7c2-form-check-input';
-            row.classList.toggle('is-selected', input.checked);
             input.disabled = option && typeof option === 'object' && option.disabled === true;
             scope.add(DOM.listen(input, 'change', function () {
               if (multiple) {
                 if (input.checked && !filterDraftValues.some(function (current) { return sameFilterValue(current, value); })) filterDraftValues.push(value);
                 if (!input.checked) filterDraftValues = filterDraftValues.filter(function (current) { return !sameFilterValue(current, value); });
-              } else {
-                filterDraftValues = input.checked ? [value] : [];
-                list.querySelectorAll('.qxframe9a7c2-table-filter-option.is-selected').forEach(function (entry) { entry.classList.remove('is-selected'); });
-              }
-              row.classList.toggle('is-selected', input.checked);
+              } else filterDraftValues = input.checked ? [value] : [];
             }));
             row.appendChild(input);
           } else {
