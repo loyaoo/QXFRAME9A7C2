@@ -14,9 +14,9 @@
 .qxframe9a7c2-motion-fade-appear-to,.qxframe9a7c2-motion-fade-enter-to,.qxframe9a7c2-motion-fade-leave-from{opacity:1}
 .qxframe9a7c2-motion-fade-appear-active,.qxframe9a7c2-motion-fade-enter-active,.qxframe9a7c2-motion-fade-leave-active{transition:opacity var(--_qxframe9a7c2-fixed-motion-duration-3) linear}
 .qxframe9a7c2-modal-mask.qxframe9a7c2-motion-fade-appear-active,.qxframe9a7c2-modal-mask.qxframe9a7c2-motion-fade-enter-active{transition-duration:var(--qxframe9a7c2-motion-modal-mask-enter-duration);transition-timing-function:var(--qxframe9a7c2-motion-modal-mask-enter-easing)}
-.qxframe9a7c2-modal-mask.qxframe9a7c2-motion-fade-leave-active{transition-duration:var(--qxframe9a7c2-motion-modal-mask-leave-duration);transition-timing-function:var(--qxframe9a7c2-motion-modal-mask-leave-easing)}
+.qxframe9a7c2-modal-mask.qxframe9a7c2-motion-fade-leave-active{transition-duration:max(var(--qxframe9a7c2-motion-modal-mask-leave-duration),var(--qxframe9a7c2-motion-modal-dialog-leave-duration));transition-timing-function:var(--qxframe9a7c2-motion-modal-mask-leave-easing)}
 .qxframe9a7c2-drawer-mask.qxframe9a7c2-motion-fade-appear-active,.qxframe9a7c2-drawer-mask.qxframe9a7c2-motion-fade-enter-active{transition-duration:var(--qxframe9a7c2-motion-drawer-mask-enter-duration);transition-timing-function:var(--qxframe9a7c2-motion-drawer-mask-enter-easing)}
-.qxframe9a7c2-drawer-mask.qxframe9a7c2-motion-fade-leave-active{transition-duration:var(--qxframe9a7c2-motion-drawer-mask-leave-duration);transition-timing-function:var(--qxframe9a7c2-motion-drawer-mask-leave-easing)}
+.qxframe9a7c2-drawer-mask.qxframe9a7c2-motion-fade-leave-active{transition-duration:max(var(--qxframe9a7c2-motion-drawer-mask-leave-duration),var(--qxframe9a7c2-motion-drawer-panel-leave-duration));transition-timing-function:var(--qxframe9a7c2-motion-drawer-mask-leave-easing)}
 
 /* directional fade: the name describes the entering travel direction. */
 .qxframe9a7c2-motion-fade-up-appear-from,.qxframe9a7c2-motion-fade-up-enter-from{opacity:0;transform:translate3d(0,var(--qxframe9a7c2-motion-distance),0)}
