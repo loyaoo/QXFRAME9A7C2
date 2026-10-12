@@ -49,7 +49,9 @@
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator{
   background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
   border-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
-  color:var(--qxframe9a7c2-theme-menu-accent)
+  /* Subtle accent can carry alpha: keep its mark opaque; bold accent retains
+     the same theme hue. Checkbox box always uses the paired foreground. */
+  color:oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)
 }
 
 /* Shared interaction skin. Item keyboard focus remains owned by the Item surface itself. */
