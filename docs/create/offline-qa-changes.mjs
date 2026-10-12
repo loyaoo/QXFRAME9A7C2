@@ -1,37 +1,24 @@
-/** Stage5 2026-10-12 current menu/ColorPanel/Overlay batch: 10 Cards, 13 regions. */
+/** Stage5 current batch: 6 Preview03 Cards / 8 regions; previous highlights cleared. */
 const groups = [
- ['platform-tree','TreeSelect Popup Hover',[
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','仅 Selected 使用菜单强调色，Hover 使用浅色','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['release-planner','DatePicker / TimePicker',[
-  ['[data-pv3-component="release-date"]','DatePicker','CalendarPanel Hover 浅色、Selected 保留强调色','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','TimePicker','WheelPanel 中线边框恢复中性角色','__QA_BUNDLE_HEAD__']
+ ['customer-quality','TagInput compound geometry',[
+  ['[data-pv3-component="customer-tags"]','TagInput','输入控件等高、左右 padding 与单行输入框一致','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['order-routing','Select / Cascader',[
-  ['[data-pv3-component="routing-select"]','Select','选项悬停与选中分色','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="routing-cascader"]','Cascader','级联项悬停使用浅色角色','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="routing-select"]','Select','统一多选尺寸配方；Popup Hover 与 Selected 半透明','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="routing-cascader"]','Cascader','列宽自适应无横向滚动；Open 前景对比度正确','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['platform-tree','TreeSelect',[
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Popup Hover、Selected、Open 使用共同透明度状态','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['release-planner','DatePicker / TimePicker',[
+  ['[data-pv3-component="release-date"]','DatePicker','Calendar Hover 和 Selected 叠加透明色','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','TimePicker','Picker 内部背景随 Popup 模式协调','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['contact-lookup','Autocomplete',[
-  ['[data-pv3x-widget="contact-lookup"]','Autocomplete','下拉项悬停不使用饱和强调色','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="contact-lookup"]','Autocomplete','统一 Popup 透明度配方','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['quick-action-menu','Dropdown',[
-  ['[data-pv3x-widget="quick-action-menu"]','Dropdown','菜单项悬停与选中分色','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['navigation-workspace','Menu',[
-  ['.qxframe9a7c2-menu','Menu','反色菜单强调模式的浅色 Hover','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['brand-studio','ColorPicker',[
-  ['[data-pv3-component="brand-color"]','ColorPicker','复用 ColorPanel 中性边框，不重绘输入/格式按钮','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['palette-laboratory','ColorPanel',[
-  ['.qxframe9a7c2-color-panel-fields','ColorPanel Fields','格式、输入、吸管按钮共用字段边框','__QA_BUNDLE_HEAD__'],
-  ['.qxframe9a7c2-color-panel-sliders','ColorPanel Range','原生 range 轨道和滑块同 Slider 尺寸形状','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['danger-dialog','Modal',[
-  ['[data-pv3x-widget="danger-dialog"]','Modal','同步 mask 和 dialog 退出，减轻缩放冲击','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['account-drawer','Drawer',[
-  ['[data-pv3x-widget="account-drawer"]','Drawer','同步 panel 与 mask 退场，不二次闪烁','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="quick-action-menu"]','Dropdown','透明 Hover / Selected，保持菜单文字对比','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -95,7 +82,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Menu Hover、Picker 边框、ColorPanel Range、Modal/Drawer 动画；只保留本轮改动高亮。
+    '<p class="qa-toolbar-caption">只标本轮：复合输入高度、Cascader 列宽与 Open、Popup 半透明状态；清除上一轮高亮。
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
