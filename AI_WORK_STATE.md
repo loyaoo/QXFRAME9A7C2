@@ -1,3 +1,9 @@
+## FINAL GATE CORRECTION — 2026-10-12 (await latest dual CI)
+- Open / Hover CSS has explicit **standalone Tree** background/color paint (generic item paint previously resolved neutral accent instead of its local Menu theme accent). Disabled/check-disabled remain protected.
+- Menu root Open priority was incorrectly Hover first: `src/styles/components/menu.css` now resolves expanded accent+foreground before Hover; explicit Menu recipe override still has priority. Added Chromium local-palette Menu and Tree Open/Hover checks rather than cross-comparing inverted Popup and page-local Tree.
+- Choice Open Checkbox mark uses `oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)` to remove soft accent alpha while retaining exactly the Menu theme hue; no extra Theme token. CSS token verifier now narrowly recognizes this exact **registered Theme-token-only relative color** as nonliteral (physical hard-coded color gate unchanged). Previous release CI failed only because it counted this expression as a fixed color.
+- User-visible deliverable is blocked until latest QXFRAME + CSS Schema jobs succeed on the exact SHA. PR #267 stays Draft, no merge; must use official artifact corresponding to that SHA and 4 Cards / 5 QA regions.
+
 ## CURRENT — 2026-10-12 Stage5 Input / Menu Open / Cascader QA closeout (final CI pending)
 - PR #267 Draft/Open, do not merge; main/backup unchanged. Last accepted Stage5 offline baseline was b5c53913, which predates this visual batch.
 - Implemented: Input outlined background transparent in both themes, subtle/tinted/soft at 12/35/50% Input alpha; compiler output and canonical theme.css kept in sync. Hosted TagInput and Select Multiple equal inline/block compound inset.
