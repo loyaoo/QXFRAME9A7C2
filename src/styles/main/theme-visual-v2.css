@@ -477,6 +477,12 @@
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
+  /* Standalone Tree shares the Menu Open color axis without painting Tree root.
+     TreeSelect Popup already follows the popup-specific Open rule above. */
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
   /* Choice owns Checkbox paint; Open/Popup projection lives in choice-visual.css. */
   /* Picker popup foreground contract: normal day/period cells and wheel rows
      must use the popup Menu ink even when their nested panel owns color.
