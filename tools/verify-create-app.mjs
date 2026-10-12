@@ -110,6 +110,15 @@ check('Chromium acceptance module must parse before any heavy browser workflow',
   execFileSync(process.execPath,['--check',path.join(root,'tools/verify-create-app-browser.mjs')],{stdio:'pipe'});
 });
 
+check('font-mono and Alert radius consume registered Theme mapping',()=>{
+ const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(json.includes('font-family:var(--qxframe9a7c2-font-mono,var(--_qxframe9a7c2-fixed-font-family-mono,'),'JSON must preserve public font-mono override then shared theme-mono mapping');
+ assert.ok(v2.includes('--_qxframe9a7c2-fixed-font-family-mono:var(--qxframe9a7c2-theme-font-mono)'),'Theme V2 maps registered mono font to consumers');
+ assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
+});
+
 check('offline QA annotation module must parse before packaging',()=>{
  const modulePath=path.join(root,'docs/create/offline-qa-changes.mjs');
  execFileSync(process.execPath,['--check',modulePath],{stdio:'pipe'});
