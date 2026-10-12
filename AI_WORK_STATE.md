@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-12 Stage5 component-consumer cleanup, batch A (CI pending)
+- Exact baseline 549876de60261e313fa4a9d3d10657cd84e0a0e4 on Draft PR #267. User approved changes to component JS but this batch limits changes to CSS + docs demo and does not alter main.
+- List/Tree root surfaces: removed automatic background/foreground/border in Theme V2 and List root; inherit arbitrary parent colors/surface, keep ItemSurface states separate.
+- Badge: nonzero horizontal padding and real outlined border; removed interactive hover-specific V2 badge skin while keeping Tag hover. Tag close uses independent smaller icon and hit target, no control-height scaling.
+- Tooltip arrow: removed Theme V2 forced background on both tooltip/arrow; source tooltip root now owns same field color for bubble and arrow.
+- TimePicker/TimePanel: removed Picker-only selected/normal Wheel styling, so embedded TimePanel consumes same selected-text role as standalone. Message: dark-mode visible popover surface, border and popup shadow, preserving public overrides.
+- Preview03: Notification.info now receives documented object API; Modal receives stable origin:modalBtn on first open. Image uses base64 SVG data source; Carousel real images are local base64 SVG images, no broken remote URLs.
+- Not yet completed this batch: InputOTP DOM architecture, actual Drawer/Modal mask exit synchronization, Modal generic first-trigger origin, Notification interaction Chromium assertion, tooltip arrow advanced variants, full 66-family state matrix. Next address JS runtime and CI gates separately.
 ## CURRENT — 2026-10-12 Stage5 Global Tree checkbox visual contract (new CI pending)
 - Resume from green 604a0f076b3a64f771c1e8dc5370b00ccd165aef; PR #267 Draft/unmerged, main untouched.
 - Owner's screenshot: TreeSelect popup checkboxes used dark Menu-accent/foreground while direct Tree checked/indeterminate showed global Primary, though TreeSelect uses canonical Tree.create and same classes. Root cause found: TWO groups of Popup-special Tree checkbox paint overrides in src/styles/main/theme-visual-v2.css (private choice slots and direct CSS properties).
