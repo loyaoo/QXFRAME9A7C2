@@ -477,14 +477,7 @@
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
-  /* In an expanded colored row, reverse the Checkbox ink/background pair.
-     This keeps checked, mixed and empty projections legible on bold accents. */
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator {
-    background-color: var(--qxframe9a7c2-theme-menu-accent-foreground);
-    border-color: var(--qxframe9a7c2-theme-menu-accent-foreground);
-    color: var(--qxframe9a7c2-theme-menu-accent);
-  }
+  /* Choice owns Checkbox paint; Open/Popup projection lives in choice-visual.css. */
   /* Picker popup foreground contract: normal day/period cells and wheel rows
      must use the popup Menu ink even when their nested panel owns color.
      Keep explicit date-panel text overrides, selected/today and outside-day
