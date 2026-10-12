@@ -31,6 +31,10 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   alpha(t,[10,20,30,40,70,80,90]);alpha(p+'muted',[50]);alpha(p+'destructive',[10,20,50]);
   alpha(p+'primary',[10,20,30,80]);alpha(p+'pointer-focus',[50]);alpha(p+'success',[10,20]);alpha(p+'info',[10,20]);alpha(p+'warning',[20]);
   allowed.add('color-mix(inoklch,var('+p+'secondary)95%,var('+p+'foreground)5%)');
+  // Explicit, non-style-specific menu foreground blends. An inverted surface
+  // must use its own ink for passive Hover and 1px border, not the primary accent.
+  allowed.add('color-mix(inoklab,var('+p+'menu)88%,var('+p+'menu-foreground)12%)');
+  allowed.add('color-mix(inoklab,var('+p+'menu)74%,var('+p+'menu-foreground)26%)');
   const fill='var('+p+'radio-fill)';
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',transparent)');
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',var('+p+'foreground))');
