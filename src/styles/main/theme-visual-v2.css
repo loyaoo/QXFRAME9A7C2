@@ -479,9 +479,13 @@
   }
   /* Standalone Tree shares the Menu Open color axis without painting Tree root.
      TreeSelect Popup already follows the popup-specific Open rule above. */
-  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) {
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected):not(.is-disabled):not(.is-check-disabled) {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    /* Standalone Tree has a later item surface paint owner than the Popup.
+       Project these local state values onto its actual painted properties. */
+    background-color: var(--_qxframe9a7c2-item-bg);
+    color: var(--_qxframe9a7c2-item-text);
   }
   /* Choice owns Checkbox paint; Open/Popup projection lives in choice-visual.css. */
   /* Picker popup foreground contract: normal day/period cells and wheel rows
