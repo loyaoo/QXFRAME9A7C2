@@ -1,3 +1,12 @@
+## CURRENT — 2026-10-12 Stage5 Input Appearance / Menu Open / Cascader Layout (CI pending)
+- PR #267 remains Draft/Open. Main and backup untouched. Previous accepted green baseline `b5c53913dd8d` (QXFRAME #38251165246, CSS Schema #38251165185).
+- Input Look compiler: outlined field is transparent in both light and dark; subtle / tinted / soft use distinct 12% / 35% / 50% base Input alpha strength on both themes. Theme source is unchanged; no style-specific CSS rule or third-party framework.
+- `menuAccent=bold` compiles existing Menu Accent channels to strong primary + primary foreground; `subtle` compiles to a light primary 14% tint + primary ink. Hover is menu ink 12%-alpha neutral, Open ancestor is Menu accent+foreground, Selected retains separate shared channel. Checkbox projection nested in a colored Open row reverses to foreground-colored box with Menu accent glyph, including checked/indeterminate.
+- Compound TagInput / Select multiple: outer padding-inline equals padding-block (shared compound inset), hosted tags no longer add a second inline inset; no changes to ordinary Input geometry.
+- Cascader: Ant Design-inspired adjacent columns (no grid, vw/vh/fr), single row flex: 1 1 0; dynamic --qxframe9a7c2-cascader-column-count determines popup width. Removed obsolete horizontal Scroll viewport attachment, scrollbar and ensureVisible x; each ItemCollection continues vertical scroll. Search resets count to 1. Label text uses ellipsis; no wrapping or gap from Scroll.
+- Gate: source contract + 8 Styles × light/dark Chromium calculated state/geometry tests; old horizontal-wrap and unequal compound inset expectations updated. Only 4 Preview03 Cards / 5 regions highlighted in offline QA. Test the user-specified Lyra/Red/Mono/radius-none/Menu inverted/bold URL.
+- TODO: current-HEAD dual CI green; repair any failures, produce exact HEAD Windows dist+docs ZIP from successful official artifact. Overall Stage5 interactive visual acceptance pending, no invented percentage.
+
 ## CURRENT — 2026-10-12 Stage5 Skeleton Motion closeout (CI pending)
 - PR #267 remains Draft/Open. Main and backup untouched.
 - After last green HEAD `63dfb2269be8`, downloaded matching official dist+docs Actions artifact (run 38248224044, artifact 11747206951) and packaged complete Windows offline ZIP; ZIP CRC, Node QA syntax and 13 HTTP paths passed. Exact old-HEAD package is `QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-63dfb226.zip` (does **not** include the current Skeleton edit).
