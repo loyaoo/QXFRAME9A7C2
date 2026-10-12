@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-12 Stage5 browser focus regression aligned with sequential mask leave (CI pending)
+- At exact HEAD ca0a85b442369ada758c76542a0da0eece66b850, CSS Schema #38208098300 failed Stage4 real modal focus restore assertion because the old test assumed 280ms from close click until Overlay fully hidden; new authorized two-stage panel->mask exit needs actual lifecycle completion.
+- Replaced fixed 280ms delay only in Stage4 browser test with bounded wait until visible Modal root is hidden; focus assertion remains STRICT and still checks restoration to obs-query after anomaly action.
+- List radius restored without painting root, is-outline Badge border alias fixed, InputOTP structural root, user-authorized Overlay JS modifications, 13 cards/15 regions QA retained. Await exact new-head dual CI.
 ## CURRENT — 2026-10-12 Stage5 batch C contract/visual QA (CI pending)
 - HEAD dbfb0b69049804d50db8a46be2d73f748257ffae; PR #267 Draft/unmerged.
 - Corrected accidental List corner regression: List stays UNPAINTED (no forced background/foreground/border), but keeps theme-radius-item so Shape Policy and 800-radius gate remain valid. Tree no root paint.
