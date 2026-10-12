@@ -1667,11 +1667,11 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.ok(appearance.includes('.qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{'),'Slider and ColorPanel must share Style-derived rail/thumb Shape Policy');
  assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
- for(const marker of ['.qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected)', '.qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)',
+ for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
-   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%'])
+   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
 });
@@ -1680,17 +1680,30 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  for(const marker of [
    '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
-   'background: var(--qxframe9a7c2-theme-menu-accent)',
+   'background: var(--_qxframe9a7c2-v2-menu-selected-soft)',
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%',
-   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%'
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',
+   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 
+
+check('Stage5 compound Input geometry and no horizontal Cascader overflow',()=>{
+ const native=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(native.includes('.qxframe9a7c2-input.is-tags,.qxframe9a7c2-select.is-multiple{'),'TagInput and Select multiple share one sizing owner');
+ assert.ok(native.includes('padding-inline:var(--_qxframe9a7c2-control-padding-inline);padding-block:var(--_qxframe9a7c2-compound-inset)'),'compound shell horizontal padding matches regular Input');
+ assert.ok(select.includes('.qxframe9a7c2-select.is-multiple>.qxframe9a7c2-input-control{height:var(--_qxframe9a7c2-compound-item-height)}'),'Select multiple editor cannot expand single-line Input height');
+ assert.ok(select.includes('min-height:var(--_qxframe9a7c2-compound-item-height,'),'Select chips follow available inner row height');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-column{') && picker.includes('flex:1 1 13rem;min-width:0;max-width:none'),'Cascader columns shrink within available width');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;width:100%;min-width:0;align-items:stretch;overflow-x:hidden}'),'Cascader does not expose horizontal scrollbar');
+ assert.doesNotMatch(picker,/\.qxframe9a7c2-cascader-columns\{[^}]*overflow-x:auto/,'Cascader cannot revert to horizontal scrolling');
+});
 
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
   const js=read('preview-03.js');
