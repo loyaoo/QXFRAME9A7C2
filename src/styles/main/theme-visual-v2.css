@@ -571,17 +571,6 @@
     border-color: var(--qxframe9a7c2-theme-pointer-focus);
   }
 
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check-indicator {
-    --_qxframe9a7c2-v2-choice-bg: var(--qxframe9a7c2-theme-menu);
-    --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-menu-foreground);
-    color: var(--qxframe9a7c2-theme-menu-foreground);
-  }
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
-    --_qxframe9a7c2-v2-choice-bg: var(--qxframe9a7c2-theme-menu-foreground);
-    --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-menu-foreground);
-    color: var(--qxframe9a7c2-theme-menu);
-  }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
     border-color: var(--_qxframe9a7c2-v2-popup-border);
@@ -620,18 +609,7 @@
   .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-v2-choice-bg); border-color: var(--_qxframe9a7c2-v2-choice-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled { background-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
 
-  /* Active/mixed Tree Choice final paint: after the generic Choice V2 contract. */
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:not(:disabled) + .qxframe9a7c2-tree-check-indicator {
-    background-color: var(--qxframe9a7c2-theme-menu);
-    border-color: var(--qxframe9a7c2-theme-menu-foreground);
-    color: var(--qxframe9a7c2-theme-menu-foreground);
-  }
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:checked:not(:disabled) + .qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-tree-check:indeterminate:not(:disabled) + .qxframe9a7c2-tree-check-indicator {
-    background-color: var(--qxframe9a7c2-theme-menu-accent);
-    border-color: var(--qxframe9a7c2-theme-menu-accent);
-    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
-  }
+  /* Tree Choice is global: Popup Menu never changes checkbox painting. */
 
   /* Radio fill (theme input): 100% = filled type color, 0% = outlined foreground ring + dot (Sera). */
   .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,

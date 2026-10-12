@@ -2,7 +2,7 @@
 const groups = [
  ['platform-tree','Tree / TreeSelect 同源视觉',[
   ['[data-pv3-component="workspace-tree"]','Tree','与 TreeSelect 使用同一 Tree 节点和 Tree 样式，showLine:true','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','内部 Tree.create 复用相同节点 CSS 和 showLine:true；弹层颜色独立消费 Menu 语义','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','内部 checkbox 的空选、勾选与半选都消费全局 Choice 颜色；只有 Tree 行文字依弹层语义','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

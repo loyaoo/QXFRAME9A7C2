@@ -1670,7 +1670,7 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    'background: var(--qxframe9a7c2-theme-menu-accent)',
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
-   '.qxframe9a7c2-tree-check:indeterminate:not(:disabled) + .qxframe9a7c2-tree-check-indicator',
+   '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',
    'background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
  ])assert.ok(css.includes(marker),'popup role '+marker);
@@ -1692,6 +1692,21 @@ check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo op
   assert.ok(direct.includes('showLine:true') && nested.includes('showLine:true'),'both commercial examples use the same Tree line option');
   assert.match(treeCSS,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-check-indicator/,'one Tree checkbox CSS owner');
   assert.doesNotMatch(previewCSS,/\.qxframe9a7c2-tree-(?:item|check|toggle|label|line-unit)\b/,'Preview03 cannot fake another Tree visual skin');
+});
+
+
+check('Stage5 TreeSelect checked/mixed/unchecked checkbox must use global Choice',()=>{
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu cannot own Tree checkbox appearance');
+ assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
+ assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
+ assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
+ assert.match(theme,/\.qxframe9a7c2-tree-check:indeterminate \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 mixed Choice');
+ assert.match(select,/tree = Tree\.create\(\{/,'TreeSelect shares the Tree renderer');
+ assert.doesNotMatch(tree,/theme-menu(?:-accent|-foreground)?/,'Tree itself cannot own Menu palette');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

@@ -70,3 +70,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 - Preview03 supplied different Tree line options: direct Tree showLine:true, nested TreeSelect omitted it (default false). Aligned demonstration with showLine:true via existing documented forwarded option. No changes to runtime JS or framework CSS needed.
 - Differing checkbox hue is theme-menu inversion vs card surface (expected context-specific palette), not a second selector implementation; the shared visual semantics must remain paired to each local background.
 - Added static no-parallel-skin/matched-options gate, current-round QA reset to workspace-tree and workspace-tree-select only; preserve existing full CI regressions and don't modify main or accept PR.
+
+### 2026-10-12 remove TreeSelect Popup-specific Checkbox paint
+- Two Popup-scoped rulesets in theme-visual-v2.css changed Tree checkbox colors to Menu theme (unchecked, checked, indeterminate), creating visible mismatch against Tree's global Choice. Deleted both; native checkbox projection is global Choice irrespective of Popup. Popup still controls Tree row text/hover. Regression tests compare popup vs standalone Tree checkbox calculated background, border, glyph for all three states across theme modes; public Shape & focus retained, no JS changes.

@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-12 Stage5 Global Tree checkbox visual contract (new CI pending)
+- Resume from green 604a0f076b3a64f771c1e8dc5370b00ccd165aef; PR #267 Draft/unmerged, main untouched.
+- Owner's screenshot: TreeSelect popup checkboxes used dark Menu-accent/foreground while direct Tree checked/indeterminate showed global Primary, though TreeSelect uses canonical Tree.create and same classes. Root cause found: TWO groups of Popup-special Tree checkbox paint overrides in src/styles/main/theme-visual-v2.css (private choice slots and direct CSS properties).
+- Deleted both groups. The global Choice and shared Theme V2 selectors remain the ONLY checked/mixed/unchecked paint for both Tree and TreeSelect; Menu coloring still applies to Tree rows/labels but not checkbox. Global Shape and focus remain.
+- Static no-Menu-checkbox rule and 64-case Chromium compare TreeSelect popup and standalone Tree checkbox computed background/border/text for checked, mixed and unchecked. Existing tests remain (Menu, radius 800, interactive); no runtime JS or main changes.
+- NEXT dual green CI on this commit, official complete dist+docs Windows offline ZIP with SHA256/CRC/HTTP. Stage 5 66-family all-state visual acceptance pending.
+
 ## CURRENT — 2026-10-12 Stage5 Workspace Explorer Tree/TreeSelect shared visual options (CI pending)
 - Resumed fully green HEAD 65051ddbd83480cac5626814e52c709933c1739c, Draft PR #267 unmerged. User reports Tree standalone vs TreeSelect mismatch in same Workspace Explorer card.
 - Source diagnosis: TreeSelect imports Tree from ./tree.js, constructs its content with Tree.create({container:treeHost,...,showLine:opts.showLine}); it does NOT have a second Tree implementation or node CSS. Both use .qxframe9a7c2-tree-* from src/styles/components/tree.css and shared Choice + Item skin. TreeSelect has separate outer input/Popup classes as required by its role.
