@@ -1698,7 +1698,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
    '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
    '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
- assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
+ assert.ok(picker.includes('width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem)'), 'Cascader popup follows rendered column count');
 });
 
 check('Stage5 popup state color pairs are explicit source consumers',()=>{
@@ -1722,7 +1722,7 @@ check('Stage5 compound Input geometry and no horizontal Cascader overflow',()=>{
  const select=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  assert.ok(native.includes('.qxframe9a7c2-input.is-tags,.qxframe9a7c2-select.is-multiple{'),'TagInput and Select multiple share one sizing owner');
- assert.ok(native.includes('padding-inline:var(--_qxframe9a7c2-control-padding-inline);padding-block:var(--_qxframe9a7c2-compound-inset)'),'compound shell horizontal padding matches regular Input');
+ assert.ok(native.includes('padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)'),'compound shell horizontal and vertical padding must match');
  assert.ok(select.includes('.qxframe9a7c2-select.is-multiple>.qxframe9a7c2-input-control{height:var(--_qxframe9a7c2-compound-item-height)}'),'Select multiple editor cannot expand single-line Input height');
  assert.ok(select.includes('min-height:var(--_qxframe9a7c2-compound-item-height,'),'Select chips follow available inner row height');
  assert.ok(native.includes('var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-control-padding-block))'),'compound inset must follow Input padding-block for all sizes');
@@ -1730,9 +1730,24 @@ check('Stage5 compound Input geometry and no horizontal Cascader overflow',()=>{
  assert.ok(select.includes('.qxframe9a7c2-select.is-multiple .qxframe9a7c2-tag{font-size:inherit;line-height:1}'),'Multiple Select chip typography follows the input size');
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
  assert.ok(tags.includes('font-size:inherit;line-height:1}'),'hosted Tags chips and editor stay within Control inner height');
- assert.ok(picker.includes('.qxframe9a7c2-cascader-column{') && picker.includes('flex:1 1 13rem;min-width:min(13rem,100%);max-width:none'),'Cascader columns shrink within available width');
- assert.ok(picker.includes('.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;flex-wrap:wrap;width:100%;min-width:0;align-items:stretch;overflow-x:hidden}'),'Cascader does not expose horizontal scrollbar');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-column{') && picker.includes('flex:1 1 0%;min-width:0;max-width:100%'),'Cascader columns shrink within available width');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;flex-wrap:nowrap;width:100%;min-width:0;align-items:stretch;overflow:hidden}'),'Cascader does not expose horizontal scrollbar');
  assert.doesNotMatch(picker,/\.qxframe9a7c2-cascader-columns\{[^}]*overflow-x:auto/,'Cascader cannot revert to horizontal scrolling');
+});
+
+check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
+ const compiler=read('compiler.js');
+ const native=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+ const cascader=fs.readFileSync(path.join(root,'src/components/cascader.js'),'utf8');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
+ assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14)"),'Menu subtle/bold uses existing accent channel');
+ assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:0px'),'hosted tag inset cannot add back mismatched inline gap');
+ assert.ok(cascader.includes("var columnsScroll = null;"),'Cascader never attaches horizontal Scroll viewport');
+ assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
+ assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
+ assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
+ assert.ok(theme.includes('background-color: var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Checkbox reverses on colored open row');
 });
 
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
