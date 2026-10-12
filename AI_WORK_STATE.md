@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-12 Stage5 static verifier syntax fix (CI pending)
+- QXFRAME #38193126439 failed during full release at tools/verify-create-app.mjs: the new current-round QA selector matrix had an unterminated quoted string for data-inspector. Corrected the string literal; no new component source or Theme changes. Previous entire 9-file implementation is retained.
+- Need rerun both CI workflows on resulting exact HEAD and only package the successful official artifact. PR #267 remains Draft/unmerged.
+
 ## CURRENT — 2026-10-12 Stage5 Table, Transfer and JSON cross-state batch (CI pending)
 - Verified prior HEAD 2e170d9fc11a0307b42277acbc780236ae9352ba on Draft PR #267, previous QXFRAME CI #38191413763 and CSS Schema #38191413767 success. Preview01/02 not reopened.
 - Table filter now uses real QX styled checks and marks selected/disabled label states with live draft changes, menu-independent popup search foreground/background/focus Theme roles. Transfer panel border public override propagates to header/footer/pagination and its disabled text. JSON typography consumes Control size with public override and current-color caret.

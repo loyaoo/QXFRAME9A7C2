@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"plan-governance":["[data-pv3-component=\"governance-table\"]"],"workforce-access":["[data-pv3-component=\"member-transfer\"]"],"data-inspector":["[data-pv3-component=\"api-json\"]}; // Stage5 current batch: 3 Cards / 3 changed regions
+  const current={"plan-governance":["[data-pv3-component=\"governance-table\"]"],"workforce-access":["[data-pv3-component=\"member-transfer\"]"],"data-inspector":["[data-pv3-component=\"api-json\"]"]}; // Stage5 current batch: 3 Cards / 3 changed regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
