@@ -137,6 +137,14 @@
 .qxframe9a7c2-card.is-loading .qxframe9a7c2-card-body,.qxframe9a7c2-card.is-loading .qxframe9a7c2-card-content{pointer-events:none}
 .qxframe9a7c2-card-skeleton{display:flex;flex-direction:column;gap:0.625rem}
 .qxframe9a7c2-card-skeleton-line{height:0.75rem;border-radius:var(--qxframe9a7c2-theme-radius-item);background:linear-gradient(90deg,var(--_qxframe9a7c2-semantic-subtle),var(--_qxframe9a7c2-semantic-subtle-active),var(--_qxframe9a7c2-semantic-subtle));background-size:200% 100%;animation:qxframe9a7c2-card-skeleton 1.3s ease-in-out infinite}
+/* The shared Skeleton token is the motion enable/disable authority. Card
+ * preserves its existing shimmer recipe while the common Token is enabled.
+ * Style query reads the inherited Theme value on the skeleton parent, so
+ * changing --theme-skeleton-animation to none also turns off Card shimmer.
+ * Do not substitute the generic pulse motion for the Card-specific shimmer. */
+@container style(--qxframe9a7c2-theme-skeleton-animation: none){
+  .qxframe9a7c2-card-skeleton-line{animation:none}
+}
 .qxframe9a7c2-card-skeleton-line.is-title{width:42%;height:var(--_qxframe9a7c2-card-skeleton-title-height)}
 .qxframe9a7c2-card-skeleton-line.is-short{width:68%}
 @keyframes qxframe9a7c2-card-skeleton{to{background-position-x:-200%}}
