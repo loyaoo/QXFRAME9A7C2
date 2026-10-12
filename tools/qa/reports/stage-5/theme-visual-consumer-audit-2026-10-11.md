@@ -58,3 +58,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 no duplicate Date private owners
 - Replaced Theme V2 extra nav/selected Date private token declarations with final scoped paint CSS. Source Date components remain unique private token owners. This responds to strict QXFRAME token verifier 34->38 failure without disabling the check.
+
+### 2026-10-12 centre guide single CSS owner
+- A second identical selector for wheel-panel-center-guide duplicated background and border-block-color; removing the older rule restores a single owner and retains transparent paint with Menu border. Gate was left strict.

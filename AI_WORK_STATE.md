@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 Wheel guide duplicate CSS owner closeout (CI pending)
+- Strict QXFRAME #38199720173 failed theme token duplicate-owner 34 -> 36. Verified the exact css-gates.mjs key contract: (selector,property), not private tokens only. Two additions came from an older .picker-field-panel .wheel-panel-center-guide rule for background and border-block-color plus the new matching selector.
+- Removed only the obsolete older two-property block. The newer single center-guide rule retains background:transparent and menu-accent border; no extra tokens, no suppression. Actual other paired color changes and 64-case browser gate unchanged.
+- PR #267 Draft, main untouched; exact-HEAD dual CI then verified official Windows dist+docs ZIP pending.
+
 ## CURRENT — 2026-10-12 Stage5 Date private owner fix (CI pending)
 - QXFRAME #38199547276 failed strict verify:theme-tokens: added Theme V2 private Date state assignments produced four extra duplicate owners (34 to 38) even after removing the ColorPanel private duplicates.
 - New DatePicker/PeriodPanel nav/selected overrides now write only final painted background/color/border-color in scoped picker popup CSS, leaving private state slots owned by components. Hover remains a matched Menu accent/background pair. No weakening of verifier, existing 64-case Chromium and Stage5/Stage4/Stage3 gates retained.

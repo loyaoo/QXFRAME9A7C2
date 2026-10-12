@@ -509,10 +509,6 @@
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-time-picker-now {
     --_qxframe9a7c2-time-picker-now-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
-    background: var(--qxframe9a7c2-theme-menu-accent);
-    border-block-color: var(--_qxframe9a7c2-semantic-border);
-  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-format,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-eye {
