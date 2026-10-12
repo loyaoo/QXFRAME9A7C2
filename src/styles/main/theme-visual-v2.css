@@ -216,7 +216,7 @@
   .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg); border-color: var(--_qxframe9a7c2-color-panel-field-border); color: var(--_qxframe9a7c2-color-panel-field-text); }
+  /* ColorPanel source paints input, format and eye as one field family. */
   .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
