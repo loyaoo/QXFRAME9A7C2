@@ -45,7 +45,8 @@
  * in Choice (including checked/mixed glyphs), never in Menu or Tree skins.
  * All other Tree/Item Checkbox states keep their canonical global paint. */
 .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,
-.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator{
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator,
+.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator{
   background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
   border-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
   color:var(--qxframe9a7c2-theme-menu-accent)
