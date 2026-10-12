@@ -1659,7 +1659,8 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  for(const marker of ['.qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected)', '.qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
-   '.qxframe9a7c2-color-panel-input:focus:not(:disabled)'])
+   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
+   '.qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg)'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('min-width:var(--qxframe9a7c2-cascader-panel-min-width,13rem)'),'Cascader first column visible');
 });
@@ -1672,8 +1673,10 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
-   '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',
-   'background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
+   '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
+   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 88%',
+   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu) 74%',
+   '.qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-color-panel-field-bg)'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 
