@@ -21,7 +21,6 @@ import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
-import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
