@@ -57,6 +57,11 @@ function stripVarNames(value) {
 
 export function hasColorLiteral(prop, value) {
   if (NON_COLOR_PROPS.test(prop)) return false;
+  // Relative CSS colors derived *solely* from a registered Theme token are
+  // not hard-coded palette values. This narrow form makes translucent Menu
+  // accent marks opaque without introducing physical colors in components.
+  // Keep all numeric/literal physical colors subject to the ordinary gate.
+  if (/^oklch\(from\s+var\(--qxframe9a7c2-theme-[a-z0-9-]+\)\s+l\s+c\s+h\s*\/\s*1\s*\)$/i.test(value.trim())) return false;
   const v = stripVarNames(value);
   return COLOR_FUNCTION.test(v) || HEX_COLOR.test(v) || NAMED_COLOR.test(v);
 }
