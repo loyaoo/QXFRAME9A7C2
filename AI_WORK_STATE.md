@@ -1,3 +1,9 @@
+## FOLLOW-UP — 2026-10-12 Stage5 Cascader ScrollVisibility ratchet migration (CI pending)
+- Cascader no longer needs horizontal column reveal. Removed obsolete `ScrollVisibility` import and x-axis ensureVisible. It remains `PopupFrame.attachViewport`-owned with y-axis/hidden scrollbar, and adjacent flex columns are bounded by Popup width.
+- Updated `tools/verify-shared-utility-authorities.mjs` to assert correct **new architecture** rather than require deleted horizontal behavior: PopupFrame ownership must exist; axis/wheel y only, custom scrollbar hidden; no horizontal reveal and no direct scrollLeft geometry. The previous strict guard against duplicate scroll geometry remains.
+- Other prior phase checks for PeriodPanel/WheelPanel still assert their shared ScrollVisibility ownership. This migration is Cascader only.
+- PR #267 remains Draft; latest dual CI and Windows dist+docs offline ZIP require exact current-head evidence before delivery.
+
 ## FOLLOW-UP — 2026-10-12 Stage5 standalone Tree Open visual alignment (CI pending)
 - The previous Popup-only Open color consumer missed standalone Tree. Added `.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)` in Theme V2 consumer: the **item only** gets Menu theme Open accent/foreground. Tree/list root still has no forced background/border/foreground.
 - Canonical `choice-visual.css` now projects reverse Checkbox colors for standalone Tree Open as well as Popup Open, while ordinary Tree Choice states remain global. Added Chromium computed-style checks for standalone Tree Open, ink, Checkbox background across Style/light-dark/Menu bold/subtle, and static owner checks.
