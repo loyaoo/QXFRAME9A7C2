@@ -52,3 +52,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 Chromium paired-paint extension
 - New 64-case browser computed-style gate (8 Styles × 2 mode × 4 menu colors) checks genuine calculated Date/Time/Tree Choice/ColorPanel paint, including checked and indeterminate native glyphs, HEX focusing and pointer border. Existing source and other browser tests are retained; no new token/mixing rules.
+
+### 2026-10-12 CI owner boundary correction
+- QXFRAME #38199405323 failed strict token duplicate-owner guard: Theme V2 attempted to write --_color-panel-field-* on ColorPanel itself, duplicating component source ownership. Removed this duplicate declaration; field/format/eye now directly read existing public component field vars with Menu fallback in their actual paint. No gate suppression, default CSS token count remains controlled. 64-mode Chromium contract retained.

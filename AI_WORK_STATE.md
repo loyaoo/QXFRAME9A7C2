@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 ColorPanel duplicate-owner closeout (new CI pending)
+- QXFRAME CI #38199405323 on fe00f197 failed at strict verify:theme-tokens: duplicate private variable owners in Theme V2 rose 34->41. Root cause was new .picker-field-panel .color-panel declarations of component-private --_color-panel-field-bg/border/text on a second owner; existing source already owns those.
+- Removed the extra private ownership block. Picker-local ColorPanel input/format/eye now read the already-public --qxframe9a7c2-component-color-panel-field-{bg,border,text} directly, with Menu defaults; same output, no additional private owners. Static test updated to ensure that read-path. Existing keyboard Focus, Shape and Popover/Dialog scope unchanged.
+- Strict 64-mode computed-style Chromium and all baseline tests retained. Rerun two CI workflows on exact new head, then official same-head Windows dist+docs and CRC/SHA256/HTTP. PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-12 Stage5 64-mode Chromium popup paint regression added (CI pending)
 - CSS/theme source fix a76b731e... kept intact. Added real Chromium computed-style 64-case matrix (8 Styles x 2 light/dark x 4 Menu modes): DatePicker idle text + selected date pair, Wheel centre guide transparency, Tree checked/indeterminate ink/background pairs, ColorPanel HEX input/format/eye paired Menu background/ink, focus border = pointer-focus.
 - Static Theme source contract and 4 Cards / 6 QA regions remain. PR #267 must stay Draft, no main changes or Stage3/Stage4 rewrite. Next exact HEAD full dual CI, repair errors if needed, official Actions artifact Windows complete dist+docs offline package and 13-route HTTP + CRC/SHA256.

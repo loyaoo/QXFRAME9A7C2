@@ -564,17 +564,12 @@
     border-block-color: var(--qxframe9a7c2-theme-menu-accent);
   }
   /* Preserve public ColorPanel field overrides; default to the Popup Menu pair. */
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel {
-    --_qxframe9a7c2-color-panel-field-bg: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu));
-    --_qxframe9a7c2-color-panel-field-border: var(--qxframe9a7c2-component-color-panel-field-border, var(--qxframe9a7c2-theme-menu-accent));
-    --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-component-color-panel-field-text, var(--qxframe9a7c2-theme-menu-foreground));
-  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input[class]:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-format:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-eye:not(:disabled) {
-    background-color: var(--_qxframe9a7c2-color-panel-field-bg);
-    border-color: var(--_qxframe9a7c2-color-panel-field-border);
-    color: var(--_qxframe9a7c2-color-panel-field-text);
+    background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu));
+    border-color: var(--qxframe9a7c2-component-color-panel-field-border, var(--qxframe9a7c2-theme-menu-accent));
+    color: var(--qxframe9a7c2-component-color-panel-field-text, var(--qxframe9a7c2-theme-menu-foreground));
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input[class]:focus:not(:disabled) {
     border-color: var(--qxframe9a7c2-theme-pointer-focus);

@@ -1672,7 +1672,7 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
    '.qxframe9a7c2-tree-check:indeterminate:not(:disabled) + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',
-   '--_qxframe9a7c2-color-panel-field-bg: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
+   'background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 
