@@ -1,45 +1,37 @@
-/** Stage5 2026-10-12 current real component batch: 13 cards, 15 regions. */
+/** Stage5 2026-10-12 current menu/ColorPanel/Overlay batch: 10 Cards, 13 regions. */
 const groups = [
- ['platform-tree','List / Tree 容器透明',[
-  ['[data-pv3-component="workspace-tree"]','Tree','Root 不强制背景、前景、边框；可嵌入任意容器','__QA_BUNDLE_HEAD__']
+ ['platform-tree','TreeSelect Popup Hover',[
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','仅 Selected 使用菜单强调色，Hover 使用浅色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['identity-otp','InputOTP 容器职责',[
-  ['[data-pv3-component="otp-input"]','OTP','移除 Input 视觉根类，保留分段输入','__QA_BUNDLE_HEAD__']
+ ['release-planner','DatePicker / TimePicker',[
+  ['[data-pv3-component="release-date"]','DatePicker','CalendarPanel Hover 浅色、Selected 保留强调色','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','TimePicker','WheelPanel 中线边框恢复中性角色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['marketing-creative','Carousel / Tags',[
-  ['[data-pv3-component="campaign-carousel"]','Carousel','有效本地 base64 图片','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="campaign-tags"]','Tag Close','图标比输入框控制图标小','__QA_BUNDLE_HEAD__']
+ ['order-routing','Select / Cascader',[
+  ['[data-pv3-component="routing-select"]','Select','选项悬停与选中分色','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="routing-cascader"]','Cascader','级联项悬停使用浅色角色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['asset-preview','Image Preview',[
-  ['[data-pv3x-widget="asset-preview"]','Image','离线 base64 占位图','__QA_BUNDLE_HEAD__']
+ ['contact-lookup','Autocomplete',[
+  ['[data-pv3x-widget="contact-lookup"]','Autocomplete','下拉项悬停不使用饱和强调色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['alerts-center','Notification',[
-  ['[data-pv3x-widget="alerts-center"]','Notification','改正公开 API 参数和按钮触发','__QA_BUNDLE_HEAD__']
+ ['quick-action-menu','Dropdown',[
+  ['[data-pv3x-widget="quick-action-menu"]','Dropdown','菜单项悬停与选中分色','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['inbox-notice','Message / OutlineBadge',[
-  ['.pv3x-message','Message','暗色消息背景边框阴影','__QA_BUNDLE_HEAD__'],
-  ['.qxframe9a7c2-badge.is-outline','OutlineBadge','静态 Badge 非交互描边和内边距','__QA_BUNDLE_HEAD__']
+ ['navigation-workspace','Menu',[
+  ['.qxframe9a7c2-menu','Menu','反色菜单强调模式的浅色 Hover','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['brand-studio','ColorPicker',[
+  ['[data-pv3-component="brand-color"]','ColorPicker','复用 ColorPanel 中性边框，不重绘输入/格式按钮','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['palette-laboratory','ColorPanel',[
+  ['.qxframe9a7c2-color-panel-fields','ColorPanel Fields','格式、输入、吸管按钮共用字段边框','__QA_BUNDLE_HEAD__'],
+  ['.qxframe9a7c2-color-panel-sliders','ColorPanel Range','原生 range 轨道和滑块同 Slider 尺寸形状','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['danger-dialog','Modal',[
-  ['[data-pv3x-widget="danger-dialog"]','Modal','首次打开从 trigger origin 放大、遮罩延后退场','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="danger-dialog"]','Modal','同步 mask 和 dialog 退出，减轻缩放冲击','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['account-drawer','Drawer',[
-  ['[data-pv3x-widget="account-drawer"]','Drawer','遮罩跟随 panel 退出阶段','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['sla-tooltip','Tooltip',[
-  ['[data-pv3x-widget="sla-tooltip"]','Tooltip','气泡与箭头统一用一套表面配色','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['release-planner','TimePicker',[
-  ['[data-pv3-component="release-time"]','TimePicker','消费 TimePanel 的选中外观','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['shift-allocation','TimePanel',[
-  ['[data-pv3x-widget="shift-allocation"]','TimePanel','与 Picker 内容同一视觉样式','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['customer-quality','Tags',[
-  ['[data-pv3-component="customer-tags"]','Tags','缩小 tag 内 close 图标','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['support-triage','Tags',[
-  ['[data-pv3-component="support-tags"]','Tags','缩小 tag 内 close 图标','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="account-drawer"]','Drawer','同步 panel 与 mask 退场，不二次闪烁','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -103,7 +95,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：List/Tree、InputOTP、Tag Close、Image/Carousel、Modal/Drawer、Notice、Tooltip、TimePanel、OutlineBadge；只保留本轮改动高亮。
+    '<p class="qa-toolbar-caption">只标本轮：Menu Hover、Picker 边框、ColorPanel Range、Modal/Drawer 动画；只保留本轮改动高亮。
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
