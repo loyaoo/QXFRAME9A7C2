@@ -132,7 +132,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
   assert.equal(count,5,'only current 4 Stage5 Cards / 5 component regions are highlighted');
-  const feature=read('preview-03.html').match(/<article[^>]*data-card="feature-flags"[\\s\\S]*?<\\/article>/)?.[0] || '';
+  const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
+  assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-track"/g)||[]).length,3,'each real QX Switch input has its track');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-thumb"/g)||[]).length,3,'each real QX Switch track has its thumb');

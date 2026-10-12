@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-12 Stage5 static gate syntax hotfix (CI pending)
+- Exact QXFRAME #38191190048 failed at a malformed literal RegExp in newly added strict Preview03 3-Switch static gate. Replaced with deterministic split on data-card and </article> plus explicit presence assertion; all strict checks for 3 Input/Track/Thumb and the current 4 Card/5-region QA ledger remain. Source/Theme/Preview code unchanged. NEXT: await new same-HEAD double CI, package latest official artifact only if both success; PR #267 stays Draft/unmerged.
+
 ## CURRENT — 2026-10-12 Stage5 CI first failure and WheelPanel foreground occlusion follow-up (CI pending)
 - New HEAD 72032740 QXFRAME CI #38191006431 failed at verify:create-app, NOT build: the static verifier still demanded the previous 13-radius Card QA marker list after current ledger intentionally reset to 4 Cards / 5 regions. Updated the strict expected Card/region selectors and added source checks for 3 actual Switch Input/Track/Thumb triples; old 13 highlights explicitly rejected.
 - Owner's screenshots also showed the WheelPicker selection-guide band painting over the selected row text (including TimePicker and Year/Month). Fixed in shared picker-family.css by painting wheel columns above the center guide (z-local-above vs z-local-raised); extend 64-menu-mode Chromium fixture to assert text painting layer above guide.
