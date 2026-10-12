@@ -575,6 +575,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function destroySearchList() { if (searchList) searchList.destroy('cascader-search-refresh'); searchList = null; }
         function renderSearchResults() {
           destroyColumns(); destroySearchList();
+          panel.style.setProperty('--qxframe9a7c2-cascader-column-count','1');
           var hostNode = doc.createElement('div'); hostNode.className = 'qxframe9a7c2-cascader-search-results'; columnsHost.appendChild(hostNode);
           var results = searchPaths();
           searchList = ItemCollection.create({ container: hostNode, scrollAdapter:popupFrame.createAdapter(), items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
