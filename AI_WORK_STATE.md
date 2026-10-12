@@ -1,3 +1,12 @@
+## CURRENT — 2026-10-12 Stage5 Token 审计纠错与离线 QA 修复（本次 HEAD 的 CI 待验证）
+- PR #267 保持 Draft/Open，禁止合并；main / backup 不变。
+- 用户提供的第三方 Token 扰动审计已分类复核，报告：`tools/qa/reports/stage-5/theme-token-coverage-triage-2026-10-12.md`。不能将「计算值未变」等价于「源码未消费 Token」。211 注册 Token = 77 颜色 + 134 其他；无组件消费的 Chart/Sidebar 槽位是否删减必须先核对 Theme 导出 API 的用途。
+- 实锤缺陷 #1：上一轮本地完整 ZIP 的 `docs/create/offline-qa-changes.mjs` 字符串没闭合，QA 标注没有运行。已修复，并加源码 Node 语法门禁 + 最终离线 ZIP 模块 Node 语法门禁；旧包 `b4a1cb17` **不得再称完全通过**。
+- 实锤缺陷 #2：JSON 根等宽字体没有消费 `theme-font-mono`；按 public override → Theme 派生映射 → fallback 修复。
+- 审计中 Alert、Table、Notification/Message close、TimePanel 的主 radius/shadow 源规则其实已经消费 Theme 映射；ImagePreview 黑白半透明属于媒体可读性的候选例外，不能盲改。
+- 已识别未解决：Card Skeleton shimmer 独立 1.3s，不受统一 Skeleton animation 禁止开关；应按共同性设计共享关停机制，保留 shimmer/pulse 差异；Popup、状态矩阵、尺寸/间距扰动未完工。
+- TODO：等当前最终 HEAD 两条 CI 成功后，从同一 CI 合成 SHA 官方完整 dist+docs 包重新制作 Windows 离线验收包，校验 QA 浏览器加载、CRC 和 HTTP；不要重复打包旧 b4a1 产物。整体 Stage5 未完成，不报虚构百分比。
+
 ## CURRENT — 2026-10-12 Stage5 compound input / Cascader / translucent Menu (CI acceptance pending)
 - PR #267 remains Draft/Open, main and backup untouched. Exact code progress: all four requested code areas changed (TagInput + Multiple Select geometry; Cascader wrapping; Cascader Open foreground; alpha-composited Menu state backgrounds). This is **not** full Stage5 visual acceptance.
 - TagInput / Select Multiple now share parent Input horizontal/vertical inset and inner height. Chromium scratch measurement against same CSS: single-row sm/md/lg Input, empty/filled TagInput and empty/filled Select all measure **28/32/36 px** after correction. Tags hosted inherits parent size instead of resetting to default; reduced chip/editor line box fits small controls, flex wrap still grows for multiple rows.
