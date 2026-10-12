@@ -41,6 +41,16 @@
 .qxframe9a7c2-native-form input[type="radio"]:checked,.qxframe9a7c2-form-check-input[type="radio"]:checked,.qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input[type="radio"]:checked{border-color:var(--qxframe9a7c2-theme-primary);background-color:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-native-form input[type="radio"]:checked::before,.qxframe9a7c2-form-check-input[type="radio"]:checked::before,.qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio::before,.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input[type="radio"]:checked::before{opacity:1;transform:scale(1)}
 
+/* Contextual Choice projection for colored Open rows. Checkbox ownership stays
+ * in Choice (including checked/mixed glyphs), never in Menu or Tree skins.
+ * All other Tree/Item Checkbox states keep their canonical global paint. */
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator{
+  background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
+  border-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
+  color:var(--qxframe9a7c2-theme-menu-accent)
+}
+
 /* Shared interaction skin. Item keyboard focus remains owned by the Item surface itself. */
 .qxframe9a7c2-native-form input[type="checkbox"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-native-form input[type="radio"]:hover:not(:disabled):not(:focus),.qxframe9a7c2-form-check-input:hover:not(:disabled):not(:focus),.qxframe9a7c2-item-surface.is-hover .qxframe9a7c2-item-selection-indicator.is-checkbox:not(.is-disabled),.qxframe9a7c2-tree-check-wrap:hover>.qxframe9a7c2-tree-check:not(:disabled)+.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:checked)):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)) .qxframe9a7c2-selectgroup-indicator.is-checkbox,.qxframe9a7c2-selectgroup-item:hover:not(:focus-within):not(:has(>.qxframe9a7c2-selectgroup-input:checked)):not(:has(>.qxframe9a7c2-selectgroup-input:disabled)) .qxframe9a7c2-selectgroup-indicator.is-radio,.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input[type="radio"]:hover:not(:disabled):not(:focus){border-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border),var(--qxframe9a7c2-theme-hover-color) var(--qxframe9a7c2-theme-hover-border-strength))}
 .qxframe9a7c2-native-form input[type="checkbox"]:focus-visible,.qxframe9a7c2-native-form input[type="radio"]:focus-visible,.qxframe9a7c2-form-check-input:focus-visible,
