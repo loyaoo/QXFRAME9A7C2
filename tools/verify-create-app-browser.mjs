@@ -114,6 +114,15 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Card skeleton retains shimmer while shared Skeleton animation none disables both families',async()=>{
+    const sample=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const h=d.documentElement,slot=d.createElement('section');\n slot.innerHTML='<div class=\"qxframe9a7c2-skeleton\" style=\"width:5rem;height:1rem\"></div><div class=\"qxframe9a7c2-card-skeleton\"><span class=\"qxframe9a7c2-card-skeleton-line is-title\"></span></div>';\n slot.style.cssText='position:absolute;left:-9999px;top:0';\n d.body.append(slot);\n const primitive=slot.querySelector('.qxframe9a7c2-skeleton'),card=slot.querySelector('.qxframe9a7c2-card-skeleton-line');\n const old=h.style.getPropertyValue('--qxframe9a7c2-theme-skeleton-animation');\n const initial={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n h.style.setProperty('--qxframe9a7c2-theme-skeleton-animation','none');\n const off={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n if(old)h.style.setProperty('--qxframe9a7c2-theme-skeleton-animation',old);else h.style.removeProperty('--qxframe9a7c2-theme-skeleton-animation');\n const restored={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n slot.remove();\n return {initial,off,restored};\n})()");
+    assert.equal(sample.initial.primitive,'qxframe9a7c2-skeleton-pulse','base Skeleton retains pulse');
+    assert.equal(sample.initial.card,'qxframe9a7c2-card-skeleton','Card retains shimmer, not pulse');
+    assert.equal(sample.off.primitive,'none','global Skeleton none must stop base Skeleton');
+    assert.equal(sample.off.card,'none','global Skeleton none must also stop Card shimmer');
+    assert.deepEqual(sample.restored,sample.initial,'restoring the common Token restores both animation types');
+  });
+
   await step('Menu inverse Picker descendants use readable local semantic roles (8 Styles x 2 modes x 4 Menu variants)',async()=>{
     const result=await evaluate("(() => {"+
       "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;"+
