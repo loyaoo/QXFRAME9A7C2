@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 Transfer explicit border vs status precedence (new CI pending)
+- Exact HEAD f4acb82 CSS Schema #38193867512 failed in newly added Chromium matrix at Transfer public border override under .is-disabled: expected explicit rgb(19,33,55), actual Theme input (oklch 0.922...). Table selected background previously failed but now passed up to Transfer assertion.
+- Root cause: .transfer.is-disabled independently reassigned private panel-border, defeating the public slot. The same priority bug existed for status-error and status-warning. All three now use var(--qxframe9a7c2-transfer-panel-border, state-default) preserving explicit public overrides, and retain their status fallback. Shared Theme V2 Transfer rendering still consumes that private resolved slot.
+- Static gate verifies all three state override contracts; existing 16-case Chromium remains strict (not weakened), preexisting 64 inverse Picker and 800 radius remain. NEXT dual exact-HEAD CI then official Windows dist+docs. PR #267 Draft/unmerged, main untouched.
+
 ## CURRENT — 2026-10-12 Stage5 Chromium selected-state and Transfer role chain follow-up (CI pending)
 - HEAD e540f8ff previous QXFRAME CI #38193245643 still running; CSS Schema #38193245580 failed only at the newly added Stage5 Chromium fixture: Vega/light Table filter selected row background computed transparent. The earlier SyntaxError was fixed and Chromium reached the new assertions with existing prior steps passing.
 - Table filter selected now uses existing solid --_qxframe9a7c2-semantic-subtle-active (Theme muted) like shared Table/Item selection, not a potentially transparent accent-soft formula; no new mixing or tokens.

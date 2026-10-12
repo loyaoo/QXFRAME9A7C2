@@ -38,3 +38,6 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 ### 2026-10-12 CI feedback on first Stage5 Table/Transfer/JSON Chromium matrix
 - CSS Schema #38193245580 failed only in newly added matrix: Vega/light selected filter row computed transparent. Selected state now consumes existing solid Theme-muted derived semantic-subtle-active, matching QX Table selection instead of relying on transient accent-soft, without new formulas.
 - Found higher-level Theme V2 source overriding Transfer component's explicit panel border and disabled foreground. Its shared List/Tree/Transfer selector is now split, with Transfer consuming existing local panel roles and inheriting text from owner. Both are actual framework fixes; 16-case browser assertion retained.
+
+### 2026-10-12 Transfer status overrides vs public border
+- CSS Schema #38193867512 progressed beyond Table selection but failed on Transfer explicit panel border in disabled state: observed default Theme border instead of caller-provided rgb(19,33,55). Identified .is-disabled private slot assignment overriding root's public border, also shared by is-status-error/warning. Corrected all three status mappings to resolve user-public border first, fall back to existing state semantic only when not supplied. Source + static regression updated; browser gate remains strict.
