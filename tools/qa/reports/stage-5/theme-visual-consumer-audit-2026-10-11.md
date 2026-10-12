@@ -64,3 +64,9 @@ Draft PR #267; do not merge until owner accepts. QXFRAME CI and CSS Schema must 
 
 ### 2026-10-12 intermediate CSS transition falsely read by fast Theme matrix
 - Chrome computed-tree diagnosed with local `set_content` and canonical framework dist: Tree Choice background transitions between menu color pairs. Fast style-switch fixture snapshots an intermediate oklab() color; disabling transition for ONLY the two synthetic Choice indicators produces exact final CSS accent oklch() and foreground without modifying production component motion. 64-case final-paint assertions remain strict and all real motion tests retained.
+
+## 2026-10-12 Workspace Explorer same Tree engine: not duplicate implementations
+- Investigated user screenshot comparing standalone Tree with TreeSelect popup. TreeSelect imports and invokes canonical Tree.create; internal node classes, Choice glyph paint and ItemSurface state resolution reuse src/styles/components/tree.css / choice-visual.css / item-surface.css. Separate TreeSelect control and Popup wrappers are correct responsibility boundaries and should not be merged into Tree-node CSS.
+- Preview03 supplied different Tree line options: direct Tree showLine:true, nested TreeSelect omitted it (default false). Aligned demonstration with showLine:true via existing documented forwarded option. No changes to runtime JS or framework CSS needed.
+- Differing checkbox hue is theme-menu inversion vs card surface (expected context-specific palette), not a second selector implementation; the shared visual semantics must remain paired to each local background.
+- Added static no-parallel-skin/matched-options gate, current-round QA reset to workspace-tree and workspace-tree-select only; preserve existing full CI regressions and don't modify main or accept PR.

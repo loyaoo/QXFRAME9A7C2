@@ -1,18 +1,8 @@
-/** Stage5 current: inverted Date/Time/Tree Choice/ColorPanel controls. */
+/** Stage5 current batch: same canonical Tree DOM and line configuration in Tree and TreeSelect. */
 const groups = [
- ['release-planner','Date/Time',[ 
-  ['[data-pv3-component="release-date"]','DatePicker','Navigation and selected-date Menu color pairing','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','TimePicker','Transparent guide leaves selected wheel row readable','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['platform-tree','Tree Choice',[
-  ['[data-pv3-component="workspace-tree"]','Tree','Checked and mixed indicator contrast on inverted Menu','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','Checked and mixed indicator contrast on inverted Menu','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['brand-studio','ColorPicker HEX',[
-  ['[data-pv3-component="brand-color"]','HEX field','Input, format and eye consume the same Menu colors','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['dial-settings','WheelPicker',[
-  ['[data-pv3x-widget="dial-settings"]','Wheel selection','Selected row owns paint, not centre guide','__QA_BUNDLE_HEAD__']
+ ['platform-tree','Tree / TreeSelect 同源视觉',[
+  ['[data-pv3-component="workspace-tree"]','Tree','与 TreeSelect 使用同一 Tree 节点和 Tree 样式，showLine:true','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','内部 Tree.create 复用相同节点 CSS 和 showLine:true；弹层颜色独立消费 Menu 语义','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -76,7 +66,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：DatePicker、TimePicker、Tree/TreeSelect、ColorPicker、WheelPicker，共 4 张卡片、6 处区域；上一轮标注已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Workspace Explorer 中 Tree 与 TreeSelect 同源视觉，两处改动区域；上一轮标注全部清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

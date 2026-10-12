@@ -36,7 +36,7 @@ var org=[
 ];
 // UMD Components exposes TreeSelect but not the standalone Tree constructor; QX JSON uses Tree internally.
 mount('workspace-tree','Tree',{items:org,expandedKeys:['workspaces','product'],checkable:true,checkedKeys:['web','finance'],showLine:true,expandOnRowClick:true});
-mount('workspace-tree-select','TreeSelect',{items:org,defaultValue:['web','finance'],multiple:true,searchable:true,clearable:true,maxVisibleTags:2,expandedKeys:['workspaces','product']});
+mount('workspace-tree-select','TreeSelect',{items:org,defaultValue:['web','finance'],multiple:true,searchable:true,clearable:true,maxVisibleTags:2,expandedKeys:['workspaces','product'],showLine:true});
 mount('member-transfer','Transfer',{items:items([['a','Alex Morgan'],['b','Sam Patel'],['c','Taylor Chen'],['d','Jordan Lee'],['e','Jamie Park']]),value:['a','c'],titles:['Available','Assigned'],searchable:true,sortable:true});
 mount('onboarding-steps','Steps',{current:1,clickable:true,items:[{title:'Profile'},{title:'Review'},{title:'Provision'},{title:'Finish'}]});
 mount('onboarding-progress','Progress',{percent:67,status:'active',type:'line'});

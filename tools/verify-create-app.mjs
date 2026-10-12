@@ -116,7 +116,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"dial-settings":["[data-pv3x-widget=\"dial-settings\"]"]}; // Stage5 current batch: 4 Cards / 6 changed regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Stage5 current batch: 1 Card / 2 changed Tree regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -127,11 +127,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,6,'only current 4 Stage5 Cards / 6 component regions are highlighted');
+  assert.equal(count,2,'only current 1 Stage5 Card / 2 Tree regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1674,6 +1674,24 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    '.qxframe9a7c2-color-panel-input[class]:not(:disabled)',
    'background-color: var(--qxframe9a7c2-component-color-panel-field-bg, var(--qxframe9a7c2-theme-menu))'
  ])assert.ok(css.includes(marker),'popup role '+marker);
+});
+
+
+check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
+  const js=read('preview-03.js');
+  const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
+  const treeCSS=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
+  const previewCSS=read('preview-03.css');
+  assert.match(select,/import \{ Tree \} from '\.\/tree\.js'/,'TreeSelect imports canonical Tree');
+  assert.match(select,/tree = Tree\.create\(\{/,'TreeSelect renders the canonical Tree runtime');
+  assert.match(select,/showLine: opts\.showLine/,'TreeSelect forwards shared Tree line policy');
+  assert.match(tree,/root\.classList\.toggle\('is-show-line', opts\.showLine === true\)/,'Tree owns the line DOM state');
+  const direct=js.match(/mount\('workspace-tree','Tree',\{[^\n]*\}\);/)?.[0]||'';
+  const nested=js.match(/mount\('workspace-tree-select','TreeSelect',\{[^\n]*\}\);/)?.[0]||'';
+  assert.ok(direct.includes('showLine:true') && nested.includes('showLine:true'),'both commercial examples use the same Tree line option');
+  assert.match(treeCSS,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-check-indicator/,'one Tree checkbox CSS owner');
+  assert.doesNotMatch(previewCSS,/\.qxframe9a7c2-tree-(?:item|check|toggle|label|line-unit)\b/,'Preview03 cannot fake another Tree visual skin');
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
