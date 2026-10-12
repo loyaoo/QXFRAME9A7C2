@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 Tree Choice computed-style diagnosis (new CI pending)
+- CSS Schema #38199875395 progressed through prior 64 inverse Menu regression and failed new 64-case on Vega/light/inverted: Tree checked background actual oklab(0.97 0 0), expected Menu accent oklch(0.269 0 0). Source has matching high-specificity scoped rule; root cause not yet established.
+- Added read-only instrument to the SAME strict assertion (not weakened): matched selector test, computed inherited --_v2-choice-bg and --theme-menu-accent, plus full actual case only on mismatch. This will identify whether CSS selector reach or cascade is at fault before further source change.
+- PR #267 Draft/unmerged; no framework runtime or main modifications. Next identify real cascade root, repair CSS, rerun exact-head dual CI then Windows official ZIP.
+
 ## CURRENT — 2026-10-12 Stage5 Wheel guide duplicate CSS owner closeout (CI pending)
 - Strict QXFRAME #38199720173 failed theme token duplicate-owner 34 -> 36. Verified the exact css-gates.mjs key contract: (selector,property), not private tokens only. Two additions came from an older .picker-field-panel .wheel-panel-center-guide rule for background and border-block-color plus the new matching selector.
 - Removed only the obsolete older two-property block. The newer single center-guide rule retains background:transparent and menu-accent border; no extra tokens, no suppression. Actual other paired color changes and 64-case browser gate unchanged.
