@@ -138,15 +138,17 @@ try {
       "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
       "accentFg:accent.color,accentBg:accent.backgroundColor,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,"+
       "dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
-      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,wheelRowsZ:css(query('.qxframe9a7c2-wheel-panel-columns')).zIndex,wheelGuideZ:css(query('.qxframe9a7c2-wheel-panel-center-guide')).zIndex,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
+      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelBg:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).backgroundColor,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,wheelRowsZ:css(query('.qxframe9a7c2-wheel-panel-columns')).zIndex,wheelGuideZ:css(query('.qxframe9a7c2-wheel-panel-center-guide')).zIndex,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
       "colorInput:css(query('.qxframe9a7c2-color-panel-input')).color,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
       "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
     assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
     for(const r of result){
       const id=r.style+'/'+r.dark+'/'+r.menuColor;
-      for(const field of ['rows','search','normal','today','wheel','wheelNormal','preset','colorInput'])
+      for(const field of ['rows','search','normal','today','wheelNormal','preset','colorInput'])
         assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
       assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
+      assert.equal(r.wheel,r.accentFg,id+' selected Wheel foreground pairs with highlight');
+      assert.equal(r.wheelBg,r.accentBg,id+' selected Wheel background pairs with foreground');
       assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
       assert.equal(r.selectedBg,r.accentBg,id+' selected Item uses Menu accent background');
       assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');

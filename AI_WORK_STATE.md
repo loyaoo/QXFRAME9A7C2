@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-12 Stage5 screenshot batch test expectation correction (CI pending)
+- On top of source fix 0ea109cd, updated old 64-case inverse Menu browser expectation: selected Wheel foreground/background now must match Menu accent pair, while normal wheel items still match Menu foreground. Old test expected selected Wheel normal foreground and would reject the new paired consumer. Selection-guide stacking assertion remains.
+- Adjusted strict Table filter static contract to the new native-state + existing is-disabled selector list. Did not weaken gates or alter runtime/preview styles.
+- NEXT exact current commit dual CI, then new official artifact and full Windows offline validation. PR Draft/unmerged.
+
 ## CURRENT — 2026-10-12 Stage5 owner screenshot fixes and runtime parity recovery (CI pending)
 - Baseline HEAD 7538401cfc90529879705209fcca73502d7b5b61, Draft PR #267. CSS Schema #38194398636 success, QXFRAME #38194398630 failed at JS build artifacts match main: six outputs changed by Stage5 Table JS edits.
 - Restored src/components/table.js to exact main blob 430ff9e7b40b761f999a302ec20a701b0da5d295. Table native checked/disabled inputs now drive :has() CSS visuals; no new JS runtime fork or relaxed gate.

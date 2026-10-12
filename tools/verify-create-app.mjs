@@ -1638,7 +1638,7 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
   const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
   for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected,.qxframe9a7c2-table-filter-option:has(>input:checked){background:var(--_qxframe9a7c2-semantic-subtle-active)',
-    '.qxframe9a7c2-table-filter-option.is-disabled{color:var(--_qxframe9a7c2-semantic-text-disabled)',
+    '.qxframe9a7c2-table-filter-option.is-disabled,.qxframe9a7c2-table-filter-option:has(>input:disabled){color:var(--_qxframe9a7c2-semantic-text-disabled)',
     'color:var(--_qxframe9a7c2-popup-text);outline:0'])assert.ok(table.includes(marker),marker);
   assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:checked)'),'Table native selected state does not require JS changes');
   assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:disabled)'),'Table native disabled state does not require JS changes');
