@@ -211,6 +211,7 @@ try {
       "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
       "'<i class=\"qxframe9a7c2-popup-surface\" data-menu-accent-soft style=\"background:var(--_qxframe9a7c2-v2-menu-selected-soft)\"></i><i data-menu-solid style=\"color:oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)\"></i><i data-menu-focus style=\"color:var(--qxframe9a7c2-theme-pointer-focus)\"></i><i data-menu-fg style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-menu-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-popover-fg style=\"color:var(--qxframe9a7c2-theme-popover-foreground)\"></i>';"+
       "d.head.append(sheet);d.body.append(host);"+
+      "const panel=host.querySelector('.qxframe9a7c2-picker-field-panel');['accent-soft','solid','fg','accent'].forEach(name=>panel.append(host.querySelector('[data-menu-'+name+']')));"+
       "const css=(x,pseudo)=>d.defaultView.getComputedStyle(x,pseudo);const query=x=>host.querySelector(x);"+
       "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
       "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
