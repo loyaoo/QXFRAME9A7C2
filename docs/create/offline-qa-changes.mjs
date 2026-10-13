@@ -1,7 +1,8 @@
-/** Stage5 current batch: 1 Preview03 Card / 1 region. Prior highlights cleared. */
+/** Stage5 current batch: 1 Preview03 Card / 2 regions. Prior highlights cleared. */
 const groups = [
- ['customer-quality','TagInput',[
-  ['[data-pv3-component="customer-tags"]','TagInput','恢复 Tag 标签内文字与左右边框间距；TagInput 外壳 padding 保持不变','__QA_BUNDLE_HEAD__']
+ ['platform-tree','Tree / TreeSelect',[
+  ['[data-pv3-component="workspace-tree"]','Tree Open','展开节点与子级勾选只表达结构，未选中节点保持透明背景与正常文字','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect Open','嵌套 TreeSelect 同样采用中性展开态，Selected 与 Hover 单独显示','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -65,7 +66,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：TagInput 内部 Tag 恢复左右 padding；其他已修复位置不再高亮。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Tree 与 TreeSelect 的 Open/Selected/Checkbox 状态分离；其他已修复位置不再高亮。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

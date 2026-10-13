@@ -1,3 +1,9 @@
+## CURRENT — Stage5 Tree Open vs Selected visual fix (2026-10-13; CI pending)
+- User's Preview03 Workspace Explorer showed Company/Product solid blue despite merely expanded and partially checked. Canonical Tree Open/descendant/indeterminate must be structural and visually neutral; only Selected receives selection highlight.
+- Fixed Theme V2 Tree row state mapping (standalone and embedded TreeSelect), preserves neutral hover, independent selected+open and existing Menu/Cascader popup rules. Choice projection no longer inverts canonical Tree checkboxes merely because ancestors are expanded.
+- Offline QA current batch: only Preview03 platform-tree Card's workspace-tree + workspace-tree-select regions (1 Card / 2 regions); prior highlights cleared. Static/Chromium state regressions and exact-head GitHub CI plus Windows dist+docs artifact are next.
+- PR #267 stays Draft/Open; main and backup untouched. Baseline `f3898829d6963be64288baa58e4f874765f16c31` previously had both workflows successful; Stage5 still pending owner acceptance.
+
 ## CURRENT — Stage5 hosted Tag chip horizontal padding regression fix (2026-10-13; CI pending)
 - PR #267 remains Draft/Open on `redesign/create-stage5`, no main/backup edits, do not merge. Started from previously verified head `32ce4173526b47e188ff0feaa3b4270be8dcf780` with both earlier workflows green.
 - Owner reported TagInput outer padding now correct but internal Tag text sits against chip borders. Root cause: `src/styles/components/native-input.css` set hosted `--_qxframe9a7c2-compound-item-inset:0px`; `tags.css` uses that slot for actual chip `padding-inline`. The earlier shell-padding fix conflated two independent insets.

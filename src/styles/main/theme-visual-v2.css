@@ -477,15 +477,27 @@
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
-  /* Standalone Tree shares the Menu Open color axis without painting Tree root.
-     TreeSelect Popup already follows the popup-specific Open rule above. */
-  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected):not(.is-disabled):not(.is-check-disabled) {
-    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
-    /* Standalone Tree has a later item surface paint owner than the Popup.
-       Project these local state values onto its actual painted properties. */
+  /* Tree disclosure and partial child checks are structural, never Selected.
+     This canonical Tree rule covers standalone Tree and nested TreeSelect.
+     Cascader and Menu retain their independent Popup semantics. */
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-descendant-selected:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected):not(.is-disabled):not(.is-check-disabled) {
+    --_qxframe9a7c2-item-bg: transparent;
+    --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-semantic-text);
+    /* Preserve paint priority even when ItemSurface CSS emits later. */
     background-color: var(--_qxframe9a7c2-item-bg);
     color: var(--_qxframe9a7c2-item-text);
+  }
+  /* Actual Hover stays neutral and visible on an expanded ancestor. */
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open.is-hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-descendant-selected.is-hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-indeterminate.is-hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-descendant-selected:hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled),
+  .qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-indeterminate:hover:not(.is-selected):not(.is-disabled):not(.is-check-disabled) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-semantic-subtle-hover);
+    background-color: var(--_qxframe9a7c2-item-bg);
   }
   /* Choice owns Checkbox paint; Open/Popup projection lives in choice-visual.css. */
   /* Picker popup foreground contract: normal day/period cells and wheel rows
