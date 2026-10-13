@@ -1805,7 +1805,7 @@ check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical 
  assert.ok(css.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-actions'),'Tree action visuals belong to component');
  assert.ok(parity.includes("'src/components/tree.js'")&&parity.includes("'src/components/tree-select.js'"),'JS parity allowlist is explicit');
  assert.ok(qa.includes('virtual:true')&&qa.includes('loadMore:function')&&qa.includes('loadChildren:function'),'demo exercises all three paths');
- assert.doesNotMatch(css,/display:grid|@layer|:where\\(|:is\\(/,'CSS restrictions remain enforced');
+ assert.doesNotMatch(css,/display:grid|@layer|:where\(|:is\(/,'CSS restrictions remain enforced');
 });
 
 check('Stage5 TreeSelect checked/mixed/unchecked checkbox must use global Choice',()=>{
