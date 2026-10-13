@@ -2,7 +2,7 @@
 .pv3-body{--pv3-gap:1.5rem;--pv3-column:calc((100% - 2 * var(--pv3-gap))/3);background:var(--qxframe9a7c2-theme-muted)}
 .pv3-canvas{width:100%;max-width:105rem;min-width:74rem;margin:0 auto;padding:2rem 2rem 3rem;box-sizing:border-box}
 .pv3-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:3rem;margin:0 0 2rem;padding:0.25rem 0 1.5rem;border-bottom:1px solid var(--qxframe9a7c2-theme-border)}
-.pv3-hero>div{min-width:0}.pv3-hero h1{font-size:2.375rem;line-height:1.15;letter-spacing:-0.075rem;font-weight:750;color:var(--qxframe9a7c2-theme-foreground);margin:.5rem 0 .75rem}
+.pv3-hero>div{min-width:0}.pv3-hero h1{font-family:var(--qxframe9a7c2-theme-font-heading,inherit);font-size:2.375rem;line-height:1.15;letter-spacing:-0.075rem;font-weight:750;color:var(--qxframe9a7c2-theme-foreground);margin:.5rem 0 .75rem}
 .pv3-hero p{color:var(--qxframe9a7c2-theme-muted-foreground);margin:0;line-height:1.65;max-width:42rem;font-size:.875rem}
 .pv3-kicker,.pv3-eyebrow{color:var(--qxframe9a7c2-theme-primary);font-size:.6875rem;letter-spacing:.09em;font-weight:750}
 .pv3-hero .pv3-kicker{color:var(--qxframe9a7c2-theme-foreground)}
@@ -49,7 +49,7 @@
 /* Expanded Preview 03 - 48 additional QX component business scenarios. Private CSS only. */
 .pv3x-expansion{margin-top:2.5rem;border-top:1px solid var(--qxframe9a7c2-theme-border);padding-top:2rem}
 .pv3x-section-heading{padding:0 0 1.75rem;max-width:48rem}
-.pv3x-section-heading h2{font-size:1.875rem;font-weight:700;margin:.5rem 0;color:var(--qxframe9a7c2-theme-foreground)}
+.pv3x-section-heading h2{font-family:var(--qxframe9a7c2-theme-font-heading,inherit);font-size:1.875rem;font-weight:700;margin:.5rem 0;color:var(--qxframe9a7c2-theme-foreground)}
 .pv3x-section-heading p{color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.875rem;line-height:1.55}
 .pv3x-summary,.pv3x-metrics-grid{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;min-width:0}
 .pv3x-summary .pv3-metric strong{font-size:1.375rem}
@@ -80,8 +80,8 @@
 .pv3x-toggle-row{cursor:pointer}
 .pv3x-toggle-row .qxframe9a7c2-switch{flex:0 0 auto}
 .pv3x-event-list{display:flex;flex-direction:column;gap:.4rem}
-.pv3x-event-list>div{padding:.5rem;background:var(--qxframe9a7c2-theme-muted);border-radius:var(--qxframe9a7c2-theme-radius-item);font-size:.75rem;transition:opacity .16s ease,transform .16s ease}
-.pv3x-process-chip{padding:.5rem .75rem;border-radius:var(--qxframe9a7c2-theme-radius-item);background:var(--qxframe9a7c2-theme-muted);font-size:.75rem;transition:background-color .2s ease}
+.pv3x-event-list>div{padding:.5rem;background:var(--qxframe9a7c2-theme-muted);border-radius:var(--qxframe9a7c2-theme-radius-item);font-size:.75rem;transition:opacity var(--qxframe9a7c2-theme-duration-sm) ease,transform var(--qxframe9a7c2-theme-duration-sm) ease}
+.pv3x-process-chip{padding:.5rem .75rem;border-radius:var(--qxframe9a7c2-theme-radius-item);background:var(--qxframe9a7c2-theme-muted);font-size:.75rem;transition:background-color var(--qxframe9a7c2-theme-duration-md) ease}
 .pv3x-process-chip.is-current{background:var(--qxframe9a7c2-theme-primary);color:var(--qxframe9a7c2-theme-primary-foreground)}
 .pv3x-metrics-grid>span{display:flex;flex-direction:column;gap:.3rem;flex:1 1 0}
 .pv3x-metrics-grid small{color:var(--qxframe9a7c2-theme-muted-foreground)}
