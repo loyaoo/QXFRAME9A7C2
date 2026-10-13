@@ -483,8 +483,15 @@ try {
       "d.querySelector('[data-pv3-action=finance-submit]').click();const finance=d.querySelector('[data-card=finance-approval] [data-pv3-status]').textContent;\n"+
       "d.querySelector('[data-pv3-action=automation-test]').click();const automation=d.querySelector('[data-card=rules-automation] [data-pv3-status]').textContent;\n"+
       "const html=d.documentElement,existing=d.getElementById('qxframe9a7c2-create-theme'),oldCss=existing.textContent,oldDark=html.classList.contains('dark'),oldStyle=html.getAttribute('data-create-style');const samples=[];\n"+
-      "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){html.classList.toggle('dark',dark);html.setAttribute('data-create-style',style);existing.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;\n"+
-      "const r=cards.map(c=>c.getBoundingClientRect()),bg=w.getComputedStyle(cards[0]).backgroundColor; samples.push({style,dark,visible:r.filter(x=>x.width>0&&x.height>0).length,bg});}\n"+
+      "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){html.classList.toggle('dark',dark);html.setAttribute('data-create-style',style);existing.textContent=api.compileTheme({...api.state.config,style,ext:{...api.state.config.ext,motion:'standard'}},{generatedAt:''}).body;\n"+
+      "const r=cards.map(c=>c.getBoundingClientRect()),bg=w.getComputedStyle(cards[0]).backgroundColor;\n"+
+      "const ref=d.createElement('span');ref.style.fontFamily='var(--qxframe9a7c2-theme-font-heading)';d.body.append(ref);const expectedFont=w.getComputedStyle(ref).fontFamily;ref.remove();\n"+
+      "const heroFont=w.getComputedStyle(d.querySelector('.pv3-hero h1')).fontFamily,sectionFont=w.getComputedStyle(d.querySelector('.pv3x-section-heading h2')).fontFamily;\n"+
+      "const event=d.querySelector('[data-card=stream-animation] .pv3x-event-list>div'),process=d.querySelector('[data-card=state-transitions] .pv3x-process-chip');\n"+
+      "const durations=[w.getComputedStyle(event).transitionDuration,w.getComputedStyle(process).transitionDuration];\n"+
+      "existing.textContent=api.compileTheme({...api.state.config,style,ext:{...api.state.config.ext,motion:'none'}},{generatedAt:''}).body;\n"+
+      "const noneDurations=[w.getComputedStyle(event).transitionDuration,w.getComputedStyle(process).transitionDuration];\n"+
+      "samples.push({style,dark,visible:r.filter(x=>x.width>0&&x.height>0).length,bg,expectedFont,heroFont,sectionFont,durations,noneDurations});}\n"+
       "existing.textContent=oldCss;html.classList.toggle('dark',oldDark);html.setAttribute('data-create-style',oldStyle);\n"+
       "const flag=d.querySelector('[data-card=feature-flags]'),switchInputs=[...flag.querySelectorAll('.qxframe9a7c2-switch-input')],switchTracks=[...flag.querySelectorAll('.qxframe9a7c2-switch-track')];\n"+
       "const switchWidths=switchTracks.map(n=>w.getComputedStyle(n).width);const firstSwitchBefore=switchInputs[0].checked;switchInputs[0].click();const firstSwitchAfter=switchInputs[0].checked;switchInputs[0].click();\n"+
@@ -504,6 +511,10 @@ try {
     for(const sample of result.samples) {
       assert.equal(sample.visible,66,sample.style+'/'+sample.dark+' all Cards render');
       assert.ok(sample.bg&&sample.bg!=='rgba(0, 0, 0, 0)',sample.style+'/'+sample.dark+' Theme Card background');
+      assert.equal(sample.heroFont,sample.expectedFont,sample.style+'/'+sample.dark+' hero font');
+      assert.equal(sample.sectionFont,sample.expectedFont,sample.style+'/'+sample.dark+' section font');
+      for(const duration of sample.durations)assert.ok(duration.split(',').some(s=>parseFloat(s)>0),sample.style+'/'+sample.dark+' standard motion');
+      for(const duration of sample.noneDurations)assert.ok(duration.split(',').every(s=>parseFloat(s)===0),sample.style+'/'+sample.dark+' no motion');
     }
     await click('document.querySelector(\'[data-create-item="02"]\')');
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore existing Preview02',15000);
