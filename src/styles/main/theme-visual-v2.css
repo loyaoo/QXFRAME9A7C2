@@ -460,13 +460,13 @@
      decoration must consume Menu foreground contrast, not page colors. */
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-scroll {
     --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent));
-    --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 52%, transparent));
+    --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent));
   }
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-scroll-thumb:hover {
-    background: var(--qxframe9a7c2-scroll-thumb-hover-color, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 76%, transparent));
+    background: var(--qxframe9a7c2-scroll-thumb-hover-color, var(--qxframe9a7c2-theme-menu-foreground));
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
-    border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 36%, transparent);
+    border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent);
     background: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected):not(.is-disabled)::after,
