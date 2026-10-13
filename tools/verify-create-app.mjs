@@ -1749,6 +1749,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
  assert.ok(jsParity.includes('unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))'),'JS main parity must still reject any unrelated JS source changes');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
+ const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
+ assert.ok(browser.includes('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click'),'Cascader real Popup pointer-expansion Chromium guard must remain');
  assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
  assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
  const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');

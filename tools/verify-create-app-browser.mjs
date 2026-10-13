@@ -463,6 +463,54 @@ try {
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore existing Preview02',15000);
   });
 
+
+  await step('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','real Cascader Preview03 runtime',15000);
+    const probe=await evaluate(`(async()=>{
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const instance=d.defaultView.QXFRAME9A7C2_PREVIEW3.instances['routing-cascader'];
+      const fail=reason=>({ok:false,reason});
+      if(!instance||typeof instance.open!=='function')return fail('missing public QX Cascader runtime');
+      instance.open('qa-actual-popup');
+      await new Promise(resolve=>setTimeout(resolve,60));
+      const panel=instance.getPopupElement();
+      if(!panel||panel.hidden)return fail('real PopupFrame not visible after public open');
+      for(const [index,label] of [[0,'United States'],[1,'East']]){
+        const column=panel.querySelectorAll('.qxframe9a7c2-cascader-column')[index];
+        if(!column)return fail('missing actual interactive Cascader column '+index);
+        const item=[...column.querySelectorAll('.qxframe9a7c2-cascader-item,.qxframe9a7c2-cascader-option')]
+          .find(node=>node.textContent.trim().startsWith(label));
+        if(!item)return fail('missing real Cascader option '+label);
+        item.click();
+        await new Promise(resolve=>setTimeout(resolve,60));
+      }
+      const host=panel.querySelector('.qxframe9a7c2-cascader-columns');
+      if(!host)return fail('missing public Cascader columns');
+      const cols=[...host.querySelectorAll('.qxframe9a7c2-cascader-column')];
+      const rects=cols.map(node=>node.getBoundingClientRect());
+      const result={ok:true,open:instance.getState().open,pathKeys:instance.getState().activePathKeys,
+        columnCount:cols.length,columnCountToken:panel.style.getPropertyValue('--qxframe9a7c2-cascader-column-count'),
+        gaps:rects.slice(1).map((r,i)=>r.left-rects[i].right),widths:rects.map(r=>r.width),
+        overflow:host.scrollWidth-host.clientWidth,display:getComputedStyle(host).display,
+        flexWrap:getComputedStyle(host).flexWrap,overflowX:getComputedStyle(host).overflowX};
+      instance.close('qa-actual-popup-finished');
+      return result;
+    })()`);
+    assert.equal(probe.ok,true,'real Cascader interaction must be available: '+JSON.stringify(probe));
+    assert.equal(probe.open,true,'real PopupFrame remains open while parent columns expand');
+    assert.deepEqual(probe.pathKeys,['us','east'],'pointer activation expands genuine US > East cascade');
+    assert.equal(probe.columnCount,3,'real Cascader shows exactly three levels');
+    assert.equal(probe.columnCountToken,'3','runtime column count controls actual popup width');
+    assert.equal(probe.display,'flex','actual columns use Flex layout');
+    assert.equal(probe.flexWrap,'nowrap','real multicolumn Cascader never wraps');
+    assert.ok(probe.gaps.every(gap=>Math.abs(gap)<=1),'real Popup columns have no gaps/cropping: '+JSON.stringify(probe));
+    assert.ok(probe.widths.every(width=>width>=50),'real Popup columns remain legible: '+JSON.stringify(probe));
+    assert.ok(probe.overflow<=1,'real Popup columns have no horizontal scrollbar: '+JSON.stringify(probe));
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02 after real Cascader',15000);
+  });
+
   await step('Stage5 QX-only shape parity: 8 styles × two modes × zero/default radius × 25 component parts',async()=>{
     await click('document.querySelector(\'[data-create-item="03"]\')');
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-03.html")','shape Preview03');

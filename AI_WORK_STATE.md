@@ -1,3 +1,8 @@
+## CURRENT — Stage5 real Cascader Popup Chromium gate (2026-10-13, dual CI pending)
+- Existing 90/90 browser checks on cea35914 predecessor passed; a new browser assertion now opens the actual Preview03 Cascader, clicks United States > East, verifies 3 adjacent columns and no horizontal overflow. This addresses user requirement previously only covered by synthetic three-column checks.
+- Real interaction gate adds no relaxing of existing Chromium assertions; PR #267 Draft/Open; no main or backup writes. Local Chromium direct navigation is blocked by runtime policy (ERR_BLOCKED_BY_ADMINISTRATOR), so exact-head GitHub Actions Chromium is the authority.
+- Next: dual CI green on this final HEAD; matching official Actions full dist+docs -> Windows QA ZIP, verify node syntax, 14 HTTP paths, CRC; owner visual acceptance still pending.
+
 ## CURRENT — Stage5 explicit Cascader runtime authorization (2026-10-13; dual CI rerun pending)
 - QXFRAME CI 38327606362 completed all 90 Create Chromium browser assertions; failed the next JS build gate `verify-js-build-matches-main` solely because `src/components/cascader.js` was missing from Stage5's explicit authorized deviation list. CSS Schema CI 38327606305 succeeded.
 - User explicitly authorized this Cascader multi-column, hidden vertical Scroll and PopupFrame runtime fix. Updated the *exact* JS authorized source list with Cascader only; unrelated JS must still equal main, all emitted names and deterministic current-head rebuild must still match. Strict separate static test asserts both Cascader y-axis ownership and the narrow authorization presence. Do not revert Cascader to old horizontal scroll just to pass parity.
