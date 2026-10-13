@@ -195,6 +195,7 @@
   --qxframe9a7c2-theme-shadow-thumb: none;
   --qxframe9a7c2-theme-shadow-switch-thumb: none;
   --qxframe9a7c2-theme-menu-blur: 0;
+  --qxframe9a7c2-theme-dialog-mask-blur: 0;
   --qxframe9a7c2-theme-focus-width: 0.125rem;
   --qxframe9a7c2-theme-focus-opacity: 100%;
   --qxframe9a7c2-theme-focus-offset: -0.0625rem;
@@ -409,6 +410,7 @@
   --qxframe9a7c2-theme-shadow-thumb: none;
   --qxframe9a7c2-theme-shadow-switch-thumb: none;
   --qxframe9a7c2-theme-menu-blur: 0;
+  --qxframe9a7c2-theme-dialog-mask-blur: 0;
   --qxframe9a7c2-theme-focus-width: 0.125rem;
   --qxframe9a7c2-theme-focus-opacity: 100%;
   --qxframe9a7c2-theme-focus-offset: -0.0625rem;

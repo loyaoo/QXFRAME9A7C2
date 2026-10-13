@@ -223,6 +223,7 @@ export const THEME_TOKENS = [
   L('shadow-thumb', 'Slider thumb', 'shadow'),
   L('shadow-switch-thumb', 'Switch thumb', 'shadow'),
   L('menu-blur', 'Translucent menu backdrop blur'),
+  L('dialog-mask-blur', 'Modal / Drawer backdrop blur, independent of Menu'),
 
   // Focus (v3 §4.6). Outline-drawn so component shadows survive; ring = wide translucent outline.
   L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),

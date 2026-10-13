@@ -278,6 +278,7 @@ export function themeTokens(resolved) {
     target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover;
   }
   root['menu-blur'] = translucent ? '1.5rem' : '0';
+  root['dialog-mask-blur'] = translucent ? '0.375rem' : '0';
 
   // Surface edge + partition.
   const [edgeLight, edgeDark] = EDGE[ext.edge];
