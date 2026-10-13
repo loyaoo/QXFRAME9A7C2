@@ -1,27 +1,14 @@
-/** Stage5 owner screenshot visual fixes: Menu/Pickers/Cascader/Radius/Modal/Tabs. */
-/** 2026-10-13 owner screenshot batch — new highlights only. */
+/** Stage5 latest owner screenshot: Picker Primary, ColorPicker focus, TreeSelect popup. */
 const groups = [
- ['release-planner','Inverse Picker',[
-  ['[data-pv3-component="release-date"]','Today / Selected','Readable today dot and selected state','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','Wheel guide','Dark menu scroll and guide visibility','__QA_BUNDLE_HEAD__']
+ ['release-planner','Picker Menu Primary',[
+  ['[data-pv3-component="release-date"]','Today dot','Neutral and colored Menu Primary instead of forced white','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','Wheel guide','Menu Primary-tinted guide','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['order-routing','Cascader spacing',[
-  ['[data-pv3-component="routing-cascader"]','Column inset','Shared menu column padding','__QA_BUNDLE_HEAD__']
+ ['brand-studio','ColorPicker outline',[
+  ['[data-pv3-component="brand-color"]','ColorPanel focus','Readable keyboard/pointer focus and preset border','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['workforce-access','Transfer radius',[
-  ['.qxframe9a7c2-transfer-panel','Panel corner','Shared Theme item radius','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['contract-documents','Upload radius',[
-  ['.qxframe9a7c2-upload-dropzone','Dropzone corner','Shared Theme item radius','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['segmented-console','Tabs spacing and default',[
-  ['.qxframe9a7c2-tabs-tab-action','Tab action','Restored vertical padding, segmented default','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['danger-dialog','Modal origin',[
-  ['[data-pv3x-widget="danger-dialog"]','Trigger origin','Delayed trigger-centered Modal animation','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['quick-action-menu','Inverse Menu selection',[
-  ['[data-pv3x-widget="quick-action-menu"]','Menu selected','Higher-contrast shared Menu selected role','__QA_BUNDLE_HEAD__']
+ ['platform-tree','TreeSelect Choice',[
+  ['[data-pv3-component="workspace-tree-select"]','Inverse checkbox','Checked, mixed and unchecked popup contrast','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -85,7 +72,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：反色 Menu/Picker、日历、滚动条、Wheel、Cascader、Transfer/Upload、Modal、Tabs。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Today 主题色、Wheel Guide、ColorPicker 焦点与 TreeSelect 复选框。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
