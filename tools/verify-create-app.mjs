@@ -142,7 +142,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"customer-quality":["[data-pv3-component=\"customer-tags\"]"]}; // Current batch: 1 Card / 1 region
+  const current={"platform-tree":["[data-pv3-component=\\\"workspace-tree\\\"]","[data-pv3-component=\\\"workspace-tree-select\\\"]"]}; // Current: 1 Card / 2 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -157,7 +157,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only current Stage5 TagInput Card / 1 changed region is highlighted');
+  assert.equal(count,2,'only current Tree/TreeSelect Card regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1766,8 +1766,12 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
  assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
  assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
- assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'standalone Tree Open uses shared Menu accent without painting Tree root');
- assert.ok(choice.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator'),'standalone Tree inverted check belongs to Choice');
+ assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'Tree disclosure keeps independent visual owner');
+ assert.ok(theme.includes('--_qxframe9a7c2-item-bg: transparent;\n    --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-semantic-text);'),'Tree open and partial-check rows stay neutral');
+ assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)'),'partial-check state never paints Selected');
+ assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open.is-hover:not(.is-selected)'),'Tree expanded hover remains neutral');
+ assert.doesNotMatch(choice,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-item\.is-open[^\n]*\.qxframe9a7c2-tree-check-indicator/,'Tree Open cannot invert global Checkbox');
+ assert.ok(choice.includes(':not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'TreeSelect popup must not invert canonical Choice Checkbox');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 

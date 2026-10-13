@@ -138,9 +138,8 @@ try {
       for(const x of group.filter(x=>x.accent)){
         assert.notEqual(x.openBg,x.hoverBg,id+'/'+x.accent+' Open differs from Hover');
         assert.equal(x.checkBg,x.openInk,id+'/'+x.accent+' Checkbox fill follows Open ink');
-        assert.equal(x.treeBg,x.treeLocalAccent,id+'/'+x.accent+' standalone Tree Open uses its own Menu accent (Popup inverted context may differ)');
-        assert.equal(x.treeInk,x.treeLocalAccentFg,id+'/'+x.accent+' standalone Tree Open uses its own Menu accent foreground');
-        assert.equal(x.treeCheckBg,x.treeInk,id+'/'+x.accent+' standalone Tree Check fill reverses via Choice');
+        assert.equal(x.treeBg,'rgba(0, 0, 0, 0)',id+'/'+x.accent+' standalone Tree Open must not use Menu Selected paint');
+        if(x.accent==='bold')assert.notEqual(x.treeBg,x.treeLocalAccent,id+' Tree Open is independent of saturated accent');
         assert.equal(x.menuOpenBg,x.menuLocalAccent,id+'/'+x.accent+' Menu Open consumes its local Menu accent');
         assert.equal(x.menuOpenInk,x.menuLocalAccentFg,id+'/'+x.accent+' Menu Open ink pairs with accent');
         assert.notEqual(x.menuOpenBg,x.menuHoverBg,id+'/'+x.accent+' Menu Open must differ from neutral Hover');
@@ -148,6 +147,52 @@ try {
         assert.ok(Math.abs(x.gapA)<=1&&Math.abs(x.gapB)<=1,id+' Cascader columns must be contiguous');
         assert.ok(x.overflow<=1,id+' Cascader must not horizontally overflow');
       }
+    }
+  });
+
+  await step('Tree disclosure never looks selected, including partial ancestors and TreeSelect Popup',async()=>{
+    const samples=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;
+      const root=d.documentElement,original=api.state.config,wasDark=root.classList.contains('dark');
+      const host=d.createElement('section'),sheet=d.createElement('style');
+      host.style.cssText='position:absolute;left:-10000px;top:0;width:24rem';
+      const check='<span class="qxframe9a7c2-tree-check-wrap"><input type="checkbox" class="qxframe9a7c2-tree-check" checked><span class="qxframe9a7c2-tree-check-indicator"></span></span>';
+      const row=(classes,key)=>'<div data-row="'+key+'" class="qxframe9a7c2-item-surface qxframe9a7c2-tree-item '+classes+'">'+check+'<span>Node</span></div>';
+      const items=row('','normal')+row('is-open','open')+row('is-open is-descendant-selected is-indeterminate','partial')+
+        row('is-descendant-selected','descendant')+row('is-open is-hover','hover')+
+        row('is-selected','selected')+row('is-selected is-open','selectedOpen');
+      host.innerHTML='<div class="qxframe9a7c2-tree" data-tree-test="page">'+items+'</div>'+
+        '<div class="qxframe9a7c2-popup-surface" data-tree-test="popup"><div class="qxframe9a7c2-tree">'+items+'</div></div>';
+      d.head.append(sheet);d.body.append(host);
+      const cases=[];
+      for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
+        for(const dark of [false,true])for(const accent of ['subtle','bold']){
+          root.classList.toggle('dark',dark);
+          sheet.textContent=api.compileTheme({...original,style,menuAccent:accent,menuColor:'inverted'},{generatedAt:''}).body;
+          const scopes={};
+          for(const context of ['page','popup']){
+            const scope=host.querySelector('[data-tree-test="'+context+'"]'),rows={};
+            for(const key of ['normal','open','partial','descendant','hover','selected','selectedOpen']){
+              const el=scope.querySelector('[data-row="'+key+'"]'),cs=getComputedStyle(el);
+              rows[key]={bg:cs.backgroundColor,fg:cs.color,check:getComputedStyle(el.querySelector('.qxframe9a7c2-tree-check-indicator')).backgroundColor};
+            }
+            scopes[context]=rows;
+          }
+          cases.push({style,dark,accent,scopes});
+        }
+      root.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;
+    })()`);
+    assert.equal(samples.length,32,'8 Styles x light/dark x subtle/bold Menu Accent');
+    for(const x of samples)for(const context of ['page','popup']){
+      const row=x.scopes[context],id=x.style+'/'+x.dark+'/'+x.accent+'/'+context;
+      for(const key of ['open','partial','descendant']){
+        assert.equal(row[key].bg,row.normal.bg,id+' '+key+' has neutral background');
+        assert.equal(row[key].fg,row.normal.fg,id+' '+key+' has normal foreground');
+        assert.equal(row[key].check,row.normal.check,id+' '+key+' Choice check is unchanged by disclosure');
+      }
+      assert.notEqual(row.hover.bg,row.normal.bg,id+' hover remains independently visible');
+      assert.notEqual(row.selected.bg,row.normal.bg,id+' selected retains accent');
+      assert.equal(row.selectedOpen.bg,row.selected.bg,id+' selected wins when also open');
     }
   });
 
