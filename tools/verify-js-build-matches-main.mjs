@@ -1,5 +1,5 @@
 // Stage 5 explicit user authorization: InputOTP root semantics, Overlay/Modal
-// lifecycle and Cascader geometry only. Tree, TreeSelect and contracts must equal main.
+// lifecycle, Cascader geometry, and Popconfirm's requested compact buttons only. Tree, TreeSelect and contracts must equal main.
 // All unrelated JS sources must still match main exactly.
 // Verify all other JS sources, enforce exact allowlist, and compare two builds
 // of this HEAD byte-for-byte (rather than incorrectly claiming JS == main).
@@ -14,7 +14,7 @@ if(!refArg){console.error('usage: --reference=<main checkout>/dist');process.exi
 const reference=path.resolve(refArg.slice('--reference='.length));
 const mainRoot=path.dirname(reference),dist=path.join(root,'dist');
 const EXCLUDED=new Set(['qxframe9a7c2.css']);
-const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js']);
+const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/popconfirm.js']);
 function walk(dir,base=dir){
  if(!fs.existsSync(dir))return[];
  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
