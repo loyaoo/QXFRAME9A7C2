@@ -28,41 +28,15 @@ function note(id,message){
 }
 function items(values){return values.map(function(v){return {key:v[0],value:v[0],label:v[1]};});}
 var org=[
-  {key:'workspaces',value:'workspaces',label:'Company',items:[
-    {key:'product',value:'product',label:'Product',items:[{key:'web',value:'web',label:'Web app'},{key:'mobile',value:'mobile',label:'Mobile'}]},
-    {key:'operations',value:'operations',label:'Operations',items:[{key:'finance',value:'finance',label:'Finance'},{key:'support',value:'support',label:'Support'}]}
-  ]},
-  {key:'partners',value:'partners',label:'Partners',items:[],hasChildren:true,lazy:true}
+ {key:'workspaces',value:'workspaces',label:'Company',items:[
+   {key:'product',value:'product',label:'Product',items:[{key:'web',value:'web',label:'Web app'},{key:'mobile',value:'mobile',label:'Mobile'}]},
+   {key:'operations',value:'operations',label:'Operations',items:[{key:'finance',value:'finance',label:'Finance'},{key:'support',value:'support',label:'Support'}]}
+ ]},
+ {key:'partners',value:'partners',label:'Partners',items:[{key:'agency',value:'agency',label:'Agency'},{key:'reseller',value:'reseller',label:'Resellers'}]}
 ];
-// UMD Components exposes TreeSelect but not the standalone Tree constructor; QX JSON uses Tree internally.
-function loadWorkspaceNode(item){
- return item.key==='partners'?new Promise(function(resolve){setTimeout(function(){resolve([{key:'agency',value:'agency',label:'Agency'},{key:'reseller',value:'reseller',label:'Resellers'}]);},150);}):[];
-}
-function operateWorkspaceTree(detail){
- function apply(rows){
-   for(var i=0;i<rows.length;i++){
-     var row=rows[i];
-     if(row.key===detail.key){
-       if(detail.type==='rename')row.label=detail.label;
-       else if(detail.type==='remove')rows.splice(i,1);
-       else if(detail.type==='add'){
-         var key='workspace-new-'+Date.now();
-         if(!row.items)row.items=[];
-         row.items.push({key:key,value:key,label:'New team'});
-       }
-       return true;
-     }
-     if(Array.isArray(row.items)&&apply(row.items))return true;
-   }
-   return false;
- }
- if(!apply(org))return false;
- live['workspace-tree'].setItems(org);
- note('platform-tree','Tree '+detail.type+' updated in demo data.');
- return true;
-}
-mount('workspace-tree','Tree',{items:org,expandedKeys:['workspaces','product'],checkable:true,checkedKeys:['web','finance'],showLine:true,expandOnRowClick:true,lazy:true,loadChildren:loadWorkspaceNode,editable:true,onOperate:operateWorkspaceTree});
-mount('workspace-tree-select','TreeSelect',{items:org,defaultValue:['web','finance'],multiple:true,searchable:true,clearable:true,maxVisibleTags:2,expandedKeys:['workspaces','product'],showLine:true,lazy:true,loadChildren:loadWorkspaceNode});
+// Published main Tree/TreeSelect API only; no Stage5 experimental edits or paging.
+mount('workspace-tree','Tree',{items:org,expandedKeys:['workspaces','product'],checkable:true,checkedKeys:['web','finance'],showLine:true,expandOnRowClick:true});
+mount('workspace-tree-select','TreeSelect',{items:org,defaultValue:['web','finance'],multiple:true,searchable:true,clearable:true,maxVisibleTags:2,expandedKeys:['workspaces','product'],showLine:true});
 mount('member-transfer','Transfer',{items:items([['a','Alex Morgan'],['b','Sam Patel'],['c','Taylor Chen'],['d','Jordan Lee'],['e','Jamie Park']]),value:['a','c'],titles:['Available','Assigned'],searchable:true,sortable:true});
 mount('onboarding-steps','Steps',{current:1,clickable:true,items:[{title:'Profile'},{title:'Review'},{title:'Provision'},{title:'Finish'}]});
 mount('onboarding-progress','Progress',{percent:67,status:'active',type:'line'});

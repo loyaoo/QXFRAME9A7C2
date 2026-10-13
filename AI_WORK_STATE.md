@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-13 Restore Tree to production main (CI pending)
+- User rejected experimental Stage5 Tree as buggy; authoritative main HEAD 718da2a6be0bc71520adb0451429cd3d3d8320b3; previous Stage5 HEAD 6ddbb3118289e012a2c10c3197d7874a8d0a3b27; PR #267 remains Draft/Open, never merge.
+- Restored exact Git blobs from main for Tree JS, TreeSelect JS, componentContracts, Tree CSS; removed Stage5-only Tree state-paint rules; Preview03 uses only existing official API and static children. All other components and P1 Notice/Menu edits untouched.
+- IMPORTANT next: update Stage5 Tree-only static/Chromium gates and 3000-row QA to official capabilities, verify CI and package successful exact-head Actions dist+docs. Do not reintroduce retryLoad, inline Tree editing or loadMore paging.
+
 ## CHECKPOINT — 2026-10-13 P1 computed ink CSS Color4 browser gate correction
 - CSS Schema run 38346639362 validated earlier browser gates, then failed our new P1 check because Chromium returns modern computed colors as `oklch(...)` rather than `rgb(...)`; visual ink not confirmed defective. New test now dynamically compares resolved Menu accent ink to resolved Popover foreground on the same actual iframe element, both color modes and radius values, without assuming legacy serialized color syntax. All previously passed real Notice radius zero/nonzero computed tests retained. New exact-head dual CI needed. PR #267 Draft/Open.
 
