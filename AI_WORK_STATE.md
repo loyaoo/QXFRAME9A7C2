@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 TreeSelect generated Docs API synchronization
+- QXFRAME run 38340428457 reached verify:docs-api and detected stale generated contract params block after Schema extension. Rebuilt docs/assets/qxframe9a7c2-component-api.js generated block using the exact tools/sync-docs-api-contracts.mjs algorithm and current docs/generated/component-api.json, without touching handwritten API docs. Next: exact head dual CI / Chromium / full dist+docs artifact.
+
 ## CHECKPOINT — Stage5 TreeSelect strict schema (2026-10-13)
 - Live Theme Studio CI identified concrete Preview03 mount failure: TreeSelect does not accept unknown option 'lazy'. The public ComponentContract was updated to register lazy/edit callbacks and paged scrolling options, forwarded to canonical inner Tree. Do not remove lazy from Preview03 or disable strict option contracts.
 - Next: check exact-head CI and actual Chromium Tree 3000 virtual stress; official ZIP only on green. PR #267 remains Draft.
