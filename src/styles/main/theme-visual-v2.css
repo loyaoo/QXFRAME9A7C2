@@ -592,15 +592,15 @@
   }
   /* Hover is neutral, expanded uses Menu accent, selection remains separate. */
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
-    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-sidebar-foreground) 12%,transparent);
+    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-active:not(.is-open) {
-    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
-    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
     --_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-v2-navigation-bg);
     --_qxframe9a7c2-menu-item-text: var(--_qxframe9a7c2-v2-navigation-text);
@@ -609,7 +609,7 @@
      channel). Project Open onto that actual single paint owner, keeping any
      explicit expanded recipe before the generated Menu accent fallback. */
   .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled):not(.is-danger) {
-    --_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
