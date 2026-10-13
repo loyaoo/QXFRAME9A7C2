@@ -1750,7 +1750,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
  const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
- assert.ok(jsParity.includes('unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))'),'JS main parity must still reject any unrelated JS source changes');
+ assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)||(x==='src/core/componentContracts.js'&&!coreContractAllowed))"),'JS main parity rejects all unrelated source changes including non-TreeSelect contract edits');
+ assert.ok(jsParity.includes('function authorizedTreeSelectContractOnly()'),'TreeSelect contract exception must be verified against main, not blanket-allowed');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
  assert.ok(browser.includes('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click'),'Cascader real Popup pointer-expansion Chromium guard must remain');

@@ -1,3 +1,7 @@
+## CHECKPOINT — 2026-10-13 Stage5 static verifier adapts to narrowly authorized TreeSelect contract
+- QXFRAME run 38344117231 failed in verify:create-app at a stale literal string requiring old unauthorized-source filter. Updated the assertion to require the new stricter filter with `coreContractAllowed` and the exact TreeSelect schema-only guard. Separately compared main/current core file: only 12 new options, 85 old options same order, byte-identical remainder.
+- Retry dual CI; do not merge PR #267. Full 3000-node Chromium suite already passed on preceding source; only JS parity closure remains.
+
 ## CHECKPOINT — 2026-10-13 QXFRAME JS parity after full Tree browser pass
 - CSS Schema Acceptance success and QXFRAME createApp / 3000-row Tree Chromium successfully passed on prior HEAD `75772db529af906ce015b676b36e62f67e2dfd97`.
 - QXFRAME release failed only on unauthorized source diff `src/core/componentContracts.js`. The user authorized exactly 12 new TreeSelect public options; verified narrow allowlist now checks added keys exactly, ensures original key order unchanged and compares all other file bytes to main with only that schema segment normalized. No blanket componentContracts exception.
