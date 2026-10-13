@@ -191,7 +191,7 @@
 
   /* Selection item paint is source Command/Select highlight, not feedback soft. */
   .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
-  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-item-surface.is-disabled, .qxframe9a7c2-item-surface:disabled, .qxframe9a7c2-list.is-disabled .qxframe9a7c2-item-surface, .qxframe9a7c2-tree.is-disabled .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; opacity: .5; }
   /* Transfer's public/local panel roles win over generic surface Theme paint.
      In particular, disabled foreground must inherit from its Transfer owner. */
@@ -460,11 +460,11 @@
     --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-v2-menu-hover-soft);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected {
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
     --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-v2-menu-selected-soft);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
-  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected {
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
   }
@@ -476,8 +476,8 @@
      including Cascader/TreeSelect, keep readable Menu foreground on transparent
      hover/ancestor paint even with inverted bold accents. */
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected),
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected),
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.is-selected) {
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.qxframe9a7c2-tree-item):not(.is-selected) {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
     --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
@@ -583,34 +583,34 @@
 
   /* navigation: shadcn item highlighting uses accent, not primary. */
   .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
-  .qxframe9a7c2-menu-item {
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item {
     --_qxframe9a7c2-v2-navigation-bg: transparent;
-    --_qxframe9a7c2-v2-navigation-text: inherit;
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground));
     background-color: var(--_qxframe9a7c2-v2-navigation-bg);
     color: var(--_qxframe9a7c2-v2-navigation-text);
     border-color: transparent;
   }
   /* Hover is neutral, expanded uses Menu accent, selection remains separate. */
-  .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
-    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-menu-foreground) 12%,transparent);
-    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-foreground);
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-sidebar-foreground) 12%,transparent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
-  .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open) {
-    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-active:not(.is-open) {
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
-  .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
-    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
-    --_qxframe9a7c2-menu-item-bg: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-menu-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
+    --_qxframe9a7c2-v2-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
+    --_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-v2-navigation-bg);
+    --_qxframe9a7c2-menu-item-text: var(--_qxframe9a7c2-v2-navigation-text);
   }
   /* Menu source paints --menu-render-background (not the generic navigation
      channel). Project Open onto that actual single paint owner, keeping any
      explicit expanded recipe before the generated Menu accent fallback. */
   .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled):not(.is-danger) {
-    --_qxframe9a7c2-menu-render-background: var(--qxframe9a7c2-theme-menu-accent);
-    --_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);
+    --_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
   .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
