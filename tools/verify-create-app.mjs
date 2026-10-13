@@ -163,7 +163,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"brand-studio":["[data-pv3-component=\"brand-color\"]"],"platform-tree":["[data-pv3-component=\"workspace-tree-select\"]"]}; // owner screenshot: 3 Cards / 4 regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree-select\"]"]}; // screenshot: only actual TreeSelect popup context
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -178,7 +178,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'only the 4 current Preview03 Picker regions highlighted');
+  assert.equal(count,1,'only current TreeSelect popup region highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1827,7 +1827,10 @@ check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection ar
  assert.ok(css.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel border matches Menu Primary');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
- assert.ok(css.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup Tree checkbox covers indeterminate');
+ assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup Tree checkbox covers indeterminate');
+ assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),'real popup checked indicator');
+ assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) {\n    --_qxframe9a7c2-v2-menu-primary-solid:'),'Menu solid color belongs to shared Popup root, not Date-only Picker');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-tree-check/,'do not repeat unreachable synthetic PickerField Tree selectors');
  assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
 });
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
@@ -1865,7 +1868,7 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
- assert.ok(theme.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check-indicator {'),'Picker owns only the contextual checkbox paint');
+ assert.ok(theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'Only the real TreeSelect portal owns the contextual checkbox paint');
  assert.ok(theme.includes('--_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
