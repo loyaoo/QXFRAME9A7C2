@@ -2,6 +2,8 @@
 // `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
 // qxframe.css and every createApp export) writes the whole list: `:root` holds
 // every token, `.dark` also contains every token (with dark values for colors).
+// Local [data-qxframe9a7c2-scheme="inverse"] is grouped into those SAME
+// two declarations. No third palette, no duplicated or component-only tokens.
 // New tokens are added here only (registered), never ad hoc in CSS.
 //
 // kind:  color | length | number | percent | font | keyword | shadow | time
