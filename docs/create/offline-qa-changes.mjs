@@ -7,7 +7,7 @@ const groups = [
   ['[data-pv3x-widget="dial-settings"]','WheelPicker','WheelPicker 不再覆盖 WheelPanel 标尺','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['operational-feed','Scroll',[
-  ['[data-pv3x-widget="operational-feed"]','Scroll','滑块改为主题前景色混合的半透明中性色','__QA_BUNDLE_HEAD__']
+  ['.qxframe9a7c2-card-content','Scroll','滑块改为主题前景色混合的半透明中性色','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['org-hierarchy','Tree Open',[
   ['[data-pv3x-widget="org-hierarchy"]','Tree Open','展开状态不再有专属背景与文字染色','__QA_BUNDLE_HEAD__']
@@ -16,7 +16,7 @@ const groups = [
   ['[data-pv3x-widget="palette-laboratory"]','ColorPanel','预览色块圆角随全局 Shape','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['inbox-notice','Message',[
-  ['[data-card="inbox-notice"] .qxframe9a7c2-card-content','Message','Message 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
+  ['.qxframe9a7c2-card-content','Message','Message 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['alerts-center','Notification',[
   ['[data-pv3x-widget="alerts-center"]','Notification','Notification 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
