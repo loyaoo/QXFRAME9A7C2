@@ -1745,7 +1745,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
  assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14)"),'Menu subtle/bold uses existing accent channel');
- assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:0px'),'hosted tag inset cannot add back mismatched inline gap');
+ assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}'),'hosted Tag chip inset must be independent of outer Input shell padding and match Select chips');
  assert.ok(cascader.includes("var columnsScroll = popupFrame.attachViewport({"),'Cascader keeps PopupFrame scroll ownership');
  assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
  const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
