@@ -2,11 +2,11 @@
 /** 2026-10-13 owner screenshot batch — new highlights only. */
 const groups = [
  ['release-planner','Inverse Picker',[
-  ['.qxframe9a7c2-date-panel-cell','Today / Selected','Readable today dot and selected state','__QA_BUNDLE_HEAD__'],
-  ['.qxframe9a7c2-wheel-panel-center-guide','Wheel guide','Dark menu scroll and guide visibility','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="release-date"]','Today / Selected','Readable today dot and selected state','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="release-time"]','Wheel guide','Dark menu scroll and guide visibility','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['order-routing','Cascader spacing',[
-  ['.qxframe9a7c2-cascader-column','Column inset','Shared menu column padding','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="routing-cascader"]','Column inset','Shared menu column padding','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['workforce-access','Transfer radius',[
   ['.qxframe9a7c2-transfer-panel','Panel corner','Shared Theme item radius','__QA_BUNDLE_HEAD__']
@@ -18,10 +18,10 @@ const groups = [
   ['.qxframe9a7c2-tabs-tab-action','Tab action','Restored vertical padding, segmented default','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['danger-dialog','Modal origin',[
-  ['.qxframe9a7c2-modal-container','Trigger origin','Delayed trigger-centered Modal animation','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="danger-dialog"]','Trigger origin','Delayed trigger-centered Modal animation','__QA_BUNDLE_HEAD__']
  ],'03'],
  ['quick-action-menu','Inverse Menu selection',[
-  ['.qxframe9a7c2-item-surface','Menu selected','Higher-contrast shared Menu selected role','__QA_BUNDLE_HEAD__']
+  ['[data-pv3x-widget="quick-action-menu"]','Menu selected','Higher-contrast shared Menu selected role','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
