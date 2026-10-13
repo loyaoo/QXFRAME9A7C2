@@ -163,7 +163,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"release-planner":[".qxframe9a7c2-date-panel-cell",".qxframe9a7c2-wheel-panel-center-guide"],"order-routing":[".qxframe9a7c2-cascader-column"],"workforce-access":[".qxframe9a7c2-transfer-panel"],"contract-documents":[".qxframe9a7c2-upload-dropzone"],"segmented-console":[".qxframe9a7c2-tabs-tab-action"],"danger-dialog":[".qxframe9a7c2-modal-container"],"quick-action-menu":[".qxframe9a7c2-item-surface"]}; // screenshot batch: 7 Cards / 8 regions
+  const current={"release-planner":["[data-pv3-component=\"release-date\"]","[data-pv3-component=\"release-time\"]"],"order-routing":["[data-pv3-component=\"routing-cascader\"]"],"workforce-access":[".qxframe9a7c2-transfer-panel"],"contract-documents":[".qxframe9a7c2-upload-dropzone"],"segmented-console":[".qxframe9a7c2-tabs-tab-action"],"danger-dialog":["[data-pv3x-widget=\"danger-dialog\"]"],"quick-action-menu":["[data-pv3x-widget=\"quick-action-menu\"]"]}; // screenshot batch: 7 Cards / 8 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
