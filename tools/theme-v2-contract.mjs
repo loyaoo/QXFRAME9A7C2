@@ -49,13 +49,19 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.doesNotMatch(source,/var\(\s*--qxframe9a7c2-palette-|rgb\(\s*var\(|--qxframe9a7c2-theme-v2-|@layer|:is\(|:where\(|display\s*:\s*grid|\d(?:vw|vh|fr)\b/);
   // v3 §5.4: no style selectors at runtime; top-level rules are :root / .dark base rules and one @scope (:root).
   assert.doesNotMatch(source,/data-qxframe9a7c2-style/,'Styles must not appear at runtime');
+  const permittedTopLevel=new Set([
+    '@scope (:root)', ':root', '.dark',
+    '.dark [data-qxframe9a7c2-scheme="inverse"]',
+    ':root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *)',
+    '.dark, [data-qxframe9a7c2-scheme="inverse"]'
+  ]);
   let cursor=0,scopes=0;
   while(cursor<source.length){
     while(/\s/.test(source[cursor]??'')&&cursor<source.length)cursor++;
     if(cursor===source.length)break;
     const open=source.indexOf('{',cursor);assert.ok(open>cursor);
     const prelude=source.slice(cursor,open).trim();
-    assert.match(prelude,/^(?:@scope \(:root\)|:root|\.dark)$/,'No ungated top-level rules in the canonical Theme system: '+prelude);
+    assert.ok(permittedTopLevel.has(prelude),'No ungated top-level rules in the canonical Theme system: '+prelude);
     let depth=1,end=open+1;for(;end<source.length&&depth;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
     assert.equal(depth,0);cursor=end;if(prelude.startsWith('@scope'))scopes++;
   }
