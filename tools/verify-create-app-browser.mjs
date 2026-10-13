@@ -2870,7 +2870,7 @@ try {
       assert.equal(v.navText,v.menuText,k+' idle Date nav foreground');
       assert.equal(v.dateText,v.accentText,k+' selected date foreground');
       assert.equal(v.dateBg,v.selectedSoftBg,k+' selected date uses alpha Menu accent background');
-      assert.equal(v.guideBg,'rgba(0, 0, 0, 0)',k+' wheel guide cannot cover selected row');
+      assert.notEqual(v.guideBg,'rgba(0, 0, 0, 0)',k+' canonical WheelPanel guide keeps its translucent primary paint');
       assert.equal(v.fieldText,v.menuText,k+' HEX foreground');
       assert.equal(v.fieldBg,v.menuBg,k+' HEX background');
       assert.equal(v.fieldBorder,v.pointer,k+' HEX focus border');
