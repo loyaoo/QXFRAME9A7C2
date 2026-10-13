@@ -1802,8 +1802,8 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.922 0 0 / 0.28)'),'generated dark menu accent synchronized');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
   assert.ok(theme.includes('background: var(--qxframe9a7c2-theme-menu-foreground);'),'Today marker reads Menu foreground');
-  assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 52%'),'Scroll thumb reads Menu foreground');
-  assert.ok(theme.includes('border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 36%'),'Wheel guide contrast uses Menu');
+  assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
+  assert.ok(theme.includes('border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Wheel guide contrast uses Menu');
 });
 check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
   const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
