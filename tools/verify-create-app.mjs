@@ -1232,6 +1232,18 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
+check('Local inverse scheme aliases the actual full light/dark theme token blocks',()=>{
+  const theme=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
+  const light=':root,\\n.dark [data-qxframe9a7c2-scheme="inverse"] {';
+  const dark='.dark,\\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {';
+  assert.ok(theme.startsWith(light),'local inverse in dark context reuses light declarations');
+  assert.ok(theme.includes(dark),'local inverse in light context reuses dark declarations');
+  assert.equal((theme.match(/--qxframe9a7c2-theme-background:/g)||[]).length,2,'no duplicated full Theme token blocks');
+  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  assert.ok(css.includes(':root, .dark [data-qxframe9a7c2-scheme="inverse"] { color-scheme: light; }'));
+  assert.ok(css.includes('.dark, :root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) { color-scheme: dark; }'));
+  assert.ok(css.includes('.dark, [data-qxframe9a7c2-scheme="inverse"] { color: var(--qxframe9a7c2-theme-foreground); }'));
+});
 check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode inventory', () => {
   const token = (css, key) => css.match(new RegExp('--qxframe9a7c2-theme-' + key + ':\\s*([^;]+);'))?.[1];
   for (const style of data.STYLES.map(s => s.value)) {
@@ -1241,7 +1253,7 @@ check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode invento
         style + '/' + switchLook + ' thumb width must follow switchLook, not style name');
     }
     const body = model.compileTheme(model.normalizeConfig({style})).body;
-    const blocks = body.match(/^:root \{([\s\S]*?)\}\n\.dark \{([\s\S]*?)\}\n$/);
+    const blocks = body.match(/^:root,\n\.dark \[data-qxframe9a7c2-scheme="inverse"\] \{([\s\S]*?)\}\n\.dark,\n:root:not\(\.dark\) \[data-qxframe9a7c2-scheme="inverse"\]:not\(\.dark \*\) \{([\s\S]*?)\}\n$/);
     assert.ok(blocks, style + ' light/dark blocks');
     const names = s => [...s.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m => m[0]);
     assert.deepEqual(names(blocks[2]), names(blocks[1]), style + ' .dark must contain full ordered token registry');
@@ -1525,7 +1537,7 @@ check('every option of every extension axis changes a theme token that qxframe.c
   const dist = path.join(root, 'dist/qxframe9a7c2.css');
   const consumers = (fs.existsSync(dist) ? fs.readFileSync(dist, 'utf8') : '') + read('preview.css');
   const tokens = body => {
-    const [rootBlock, darkBlock = ''] = body.split('.dark {');
+    const [rootBlock, darkBlock = ''] = body.split('.dark,\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {');
     const pick = (text, prefix) => [...text.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+): ([^;]+);/g)].map(m => [prefix + m[1], m[2]]);
     return Object.fromEntries([...pick(rootBlock, ''), ...pick(darkBlock, 'dark:')]);
   };
