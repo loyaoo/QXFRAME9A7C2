@@ -163,7 +163,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"stream-animation":[".pv3x-event-list"],"state-transitions":[".pv3x-process"]}; // P2 theme consumer batch: 2 Cards / 2 regions
+  const current={"release-planner":[".qxframe9a7c2-date-panel-cell",".qxframe9a7c2-wheel-panel-center-guide"],"order-routing":[".qxframe9a7c2-cascader-column"],"workforce-access":[".qxframe9a7c2-transfer-panel"],"contract-documents":[".qxframe9a7c2-upload-dropzone"],"segmented-console":[".qxframe9a7c2-tabs-tab-action"],"danger-dialog":[".qxframe9a7c2-modal-container"],"quick-action-menu":[".qxframe9a7c2-item-surface"]}; // screenshot batch: 7 Cards / 8 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -178,7 +178,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only 2 current Preview03 Theme Motion regions highlighted');
+  assert.equal(count,8,'only 8 current Preview03 screenshot regions highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1764,7 +1764,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  const cascader=fs.readFileSync(path.join(root,'src/components/cascader.js'),'utf8');
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
- assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14)"),'Menu subtle/bold uses existing accent channel');
+ assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'Menu subtle/bold uses existing accent channel');
  assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}'),'hosted Tag chip inset must be independent of outer Input shell padding and match Select chips');
  assert.ok(cascader.includes("var columnsScroll = popupFrame.attachViewport({"),'Cascader keeps PopupFrame scroll ownership');
  assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
@@ -1792,6 +1792,33 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 
+
+check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
+  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+  assert.ok(compiler.includes('const menuSource = inverted ? { light: palette.dark, dark: palette.dark } : palette'),'inverse must share dark Menu source');
+  assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
+  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.205 0 0 / 0.28)'),'generated light menu accent synchronized');
+  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.922 0 0 / 0.28)'),'generated dark menu accent synchronized');
+  for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
+  assert.ok(theme.includes('background: var(--qxframe9a7c2-theme-menu-foreground);'),'Today marker reads Menu foreground');
+  assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 52%'),'Scroll thumb reads Menu foreground');
+  assert.ok(theme.includes('border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 36%'),'Wheel guide contrast uses Menu');
+});
+check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
+  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+  const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
+  const upload=fs.readFileSync(path.join(root,'src/styles/components/upload.css'),'utf8');
+  const tabsCSS=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  const tabsJS=fs.readFileSync(path.join(root,'src/components/tabs.js'),'utf8');
+  const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+  assert.ok(picker.includes('max-width:100%;padding:var(--_qxframe9a7c2-fixed-space-2);border-inline-end'),'Cascader gets column inset');
+  assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-radius:var(--qxframe9a7c2-transfer-panel-radius,var(--qxframe9a7c2-theme-radius-item))'),'Transfer uses nested radius');
+  assert.ok(upload.includes('border-radius:var(--qxframe9a7c2-upload-dropzone-radius,var(--qxframe9a7c2-upload-radius,var(--qxframe9a7c2-theme-radius-item)))'),'Upload dropzone uses nested radius');
+  assert.ok(tabsCSS.includes('height:100%;padding:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-tabs-pad-x)'),'Tabs action vertical inset restored');
+  assert.ok(tabsJS.includes("placement: 'top', type: 'segmented', activationMode: 'auto'"),'Tabs segmented is default');
+  assert.ok(modal.includes('recentPointer.time <= 2500')&&modal.includes('focusedRect.width > 0 && focusedRect.height > 0'),'Modal delayed click/focused trigger origin');
+});
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
   const js=read('preview-03.js');
   const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
