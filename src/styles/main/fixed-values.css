@@ -757,9 +757,9 @@
   
 
   /* Color-dependent global utility tokens from Original UIKit. */
-  --qxframe9a7c2-scroll-track-color: var(--_qxframe9a7c2-token-scroll-track);
-  --qxframe9a7c2-scroll-thumb-color: var(--_qxframe9a7c2-token-scroll-thumb);
-  --qxframe9a7c2-scroll-thumb-hover-color: var(--_qxframe9a7c2-token-scroll-thumb-hover);
+  --qxframe9a7c2-scroll-track-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 14%,transparent);
+  --qxframe9a7c2-scroll-thumb-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 42%,transparent);
+  --qxframe9a7c2-scroll-thumb-hover-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 62%,transparent);
   --qxframe9a7c2-scroll-track-size: 0.5rem;
   --qxframe9a7c2-scroll-track-inset: var(--_qxframe9a7c2-size-1);
   --qxframe9a7c2-scroll-track-radius: 100rem;

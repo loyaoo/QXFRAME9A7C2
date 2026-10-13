@@ -165,11 +165,14 @@
   .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
 
   /* Feedback uses source Alert card/type text, not a per-status background matrix. */
-  .qxframe9a7c2-alert-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root {
+  .qxframe9a7c2-alert-root, .qxframe9a7c2-notification {
     background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-v2-type);
     border-color: var(--qxframe9a7c2-theme-border);
   }
-  .qxframe9a7c2-message-root, .qxframe9a7c2-notification-root { border-color: var(--qxframe9a7c2-theme-card-edge); }
+  .qxframe9a7c2-notification-root {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-v2-type);
+    border-color: var(--qxframe9a7c2-theme-card-edge);
+  }
   .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
   .qxframe9a7c2-alert-description { color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 90%, transparent); }
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
@@ -575,7 +578,7 @@
     color: var(--qxframe9a7c2-theme-popover-foreground);
     border: 1px solid var(--_qxframe9a7c2-v2-popup-border);
     box-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
-    filter: drop-shadow(var(--qxframe9a7c2-dialog-depth-shadow,0 1.125rem 1.75rem oklch(0 0 0 / 0.3)));
+    filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
   }
 
   /* navigation: shadcn item highlighting uses accent, not primary. */
