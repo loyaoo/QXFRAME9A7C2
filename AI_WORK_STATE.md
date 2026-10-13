@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 P1 computed ink CSS Color4 browser gate correction
+- CSS Schema run 38346639362 validated earlier browser gates, then failed our new P1 check because Chromium returns modern computed colors as `oklch(...)` rather than `rgb(...)`; visual ink not confirmed defective. New test now dynamically compares resolved Menu accent ink to resolved Popover foreground on the same actual iframe element, both color modes and radius values, without assuming legacy serialized color syntax. All previously passed real Notice radius zero/nonzero computed tests retained. New exact-head dual CI needed. PR #267 Draft/Open.
+
 ## CHECKPOINT — 2026-10-13 P1 generator source of truth (CI fix)
 - QXFRAME run 38346425250 failed verify:theme-default because first P1 commit updated compiler but left generated src/styles/main/theme.css stale. Nova/neutral Popover foreground = light oklch(0.145 0 0), dark oklch(0.985 0 0). These differ from old Primary 0.205/0.922. Matched generated output for two changed Token values; kept Scheme A: subtle=Popover ink, bold=Primary ink. Updated static expectations. Handoff 0.205/0.922 values reflected old Primary and cannot simultaneously equal compiler's new Popover ink. Verify canonical builder CI and browser.
 - Next exact-head dual CI and Message/Notification real-radius/browser evidence. No merge.

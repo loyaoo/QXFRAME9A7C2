@@ -170,8 +170,10 @@ try {
           const values=selectors.map(selector=>{const el=d.querySelector(selector);return el?d.defaultView.getComputedStyle(el).borderTopLeftRadius:null});
           const probe=d.createElement('i');probe.style.cssText='color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)';
           d.body.append(probe);
-          const ink=d.defaultView.getComputedStyle(probe).color;probe.remove();
-          samples.push({dark,radius,values,ink});
+          const ink=d.defaultView.getComputedStyle(probe).color;
+          probe.style.color='var(--qxframe9a7c2-theme-popover-foreground)';
+          const expectedInk=d.defaultView.getComputedStyle(probe).color;probe.remove();
+          samples.push({dark,radius,values,ink,expectedInk});
         }
       }
       try{q.Components.Message.closeAll();q.Components.Notification.closeAll()}catch(_){}
@@ -183,7 +185,7 @@ try {
     for(const sample of out.samples){
       assert.equal(sample.values.length,6,'card, slot and close selectors');
       sample.values.forEach((radius,i)=>assert.equal(radius,sample.radius==='0rem'?'0px':'14px','Notice real shape '+i+'/'+JSON.stringify(sample)));
-      assert.ok(/^rgb\(/.test(sample.ink),'subtle ink resolves to opaque readable color');
+      assert.equal(sample.ink,sample.expectedInk,'subtle ink resolves to Popover foreground in actual CSS Color 4 syntax');
     }
   });
 
