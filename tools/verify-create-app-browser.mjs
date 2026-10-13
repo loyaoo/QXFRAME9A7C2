@@ -2897,6 +2897,61 @@ try {
     }
   });
 
+  await step('Tree 3000-row real virtual DOM, lazy retry, inline rename and streamed scroll pages',async()=>{
+    await s('Page.navigate',{url:origin+'/docs/qa/tree-large-data.html'});
+    await waitFor('!!(window.QXFRAME9A7C2_TREE_QA?.tree?.getState().virtual)','3k Tree virtual mount',10000);
+    const initial=await evaluate(`(() => {
+      const s=window.QXFRAME9A7C2_TREE_QA.tree.getState();
+      return {total:s.visibleKeys.length,rendered:s.renderedCount,virtual:s.virtual,more:s.pageHasMore,
+        viewport:!!document.querySelector('.qxframe9a7c2-virtual-list-viewport')};
+    })()`);
+    assert.ok(initial.total>=3000,'all 3000 roots are indexed');
+    assert.equal(initial.virtual,true,'Tree uses canonical ItemCollection VirtualList');
+    assert.ok(initial.rendered<150,'virtual Tree avoids thousands of DOM rows');
+    assert.equal(initial.viewport,true,'Tree viewport is a real virtual scroller');
+    assert.equal(initial.more,true,'Tree can stream more pages');
+    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.expand('lazy-root')");
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().loadErrorKeys.includes('lazy-root')",'first lazy branch failure',5000);
+    const pending=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.retryLoad('lazy-root')");
+    assert.equal(pending,true,'retry requests failed branch');
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().loadedKeys.includes('lazy-root')",'lazy retry success',5000);
+    const loaded=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState()");
+    assert.ok(loaded.visibleKeys.length>=3020,'loaded descendants joined visible Tree rows');
+    assert.equal(loaded.loadErrorKeys.length,0,'retry clears lazy error');
+    const rename=await evaluate(`(() => {
+      const tree=window.QXFRAME9A7C2_TREE_QA.tree;
+      const action=document.querySelector('.qxframe9a7c2-tree-action[data-tree-action="rename"]');
+      if(!action)return {found:false};
+      action.click();
+      const input=document.querySelector('.qxframe9a7c2-tree-edit-input');
+      if(!input)return {found:true,editing:false};
+      input.value='Renamed lazy branch';
+      input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));
+      return {found:true,editing:true,label:tree.getItem('lazy-root')?.label};
+    })()`);
+    assert.equal(rename.found,true,'Tree actions render on visible nodes');
+    assert.equal(rename.editing,true,'Tree offers inline rename field');
+    assert.equal(rename.label,'Renamed lazy branch','Tree operation callback applies proposed edit');
+    const manual=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.loadNextPage({source:'browser-test'})");
+    assert.equal(manual,true,'explicit page request starts');
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length>=3170",'appended virtual page',6000);
+    const scrolled=await evaluate(`(() => {
+      const viewport=document.querySelector('.qxframe9a7c2-virtual-list-viewport');
+      viewport.scrollTop=viewport.scrollHeight;
+      viewport.dispatchEvent(new Event('scroll'));
+      return {top:viewport.scrollTop,height:viewport.scrollHeight,client:viewport.clientHeight};
+    })()`);
+    assert.ok(scrolled.height>scrolled.client,'virtual pane has scrollable content');
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length>=3320",'second page triggered by scrolling',6000);
+    const after=await evaluate(`(() => {
+      const state=window.QXFRAME9A7C2_TREE_QA.tree.getState();
+      return {count:state.visibleKeys.length,rendered:state.renderedCount,virtual:state.virtual,hasMore:state.pageHasMore};
+    })()`);
+    assert.ok(after.count>=3320,'two pages appended to the same hierarchical model');
+    assert.ok(after.rendered<150,'DOM remains virtual after scrolling and streaming');
+    assert.equal(after.virtual,true);
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {
