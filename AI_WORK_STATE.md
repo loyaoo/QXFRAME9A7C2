@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-13 Stage5 P2 Preview03 font and Motion batch (CI pending)
+- Verified initial HEAD dcf5ba425e04cd447a788d10dc9e11b6ec4c4aed, PR #267 Draft/Open/unmerged, both exact-head workflows Success; previous Windows ZIP complete.
+- Fixed Preview03 hero + full-coverage section headings to use existing Theme heading font; replaced fixed .16s/.2s in event-stream and workflow-state private composition with Theme duration-sm/md, including Motion:none => 0ms.
+- New QA ledger exactly 2 Preview03 Card regions, previous highlights removed. Static and 8 Styles x 2 modes computed-style browser assertions verify heading font and standard/none Motion.
+- NEXT: final-HEAD dual CI, successful official Actions dist+docs, full Windows offline ZIP with CRC and QA/highlight verification; never merge PR without owner approval. No reliable denominator for Stage/overall completion %.
+
 ## CURRENT — 2026-10-13 Stage5 neutral controls + Tooltip batch
 - Baseline: b0762de7968202a83491b74e35ac1b4c47ce408f, PR #267 Draft/Open; QXFRAME CI 38365780345 and CSS Schema 38365780326 Success. Official artifact 11797765587 matched branch SHA. Full Windows dist+docs old-baseline ZIP created with six prior highlights, CRC and HTTP 13/13 validated. Local Chromium blocked by managed browser URL policy; do not report local Chromium success.
 - New batch: checked Radio/Checkbox wins Hover border; Tooltip inverse theme + rotate(45deg) square/outward clipping; Upload Dropzone Flex column no wrapping; ColorPanel dual hue+alpha rails/preview equal height; Popconfirm icon first-line text alignment; SelectGroup inline indicator and label center; Avatar neutral and explicit backdrop separator override; Badge default/dot neutral and indicator follows exterior; Alert description neutral; Secondary Button muted neutral. Build offline QA Python concatenation repaired and current highlighted cards switched to this batch only.
