@@ -271,7 +271,7 @@ export function themeTokens(resolved) {
     target['menu-foreground'] = src['popover-foreground'];
     // One Menu accent axis controls both selected and expanded rows. Subtle
     // keeps primary tint but uses readable Popover ink; bold uses on-primary.
-    target['menu-accent'] = resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14);
+    target['menu-accent'] = resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28);
     target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground'];
     // Inverse Choice box uses accent-foreground: its mark needs the opposite
     // palette role in both modes. Subtle = Menu surface; bold = Primary.
