@@ -51,7 +51,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.doesNotMatch(source,/data-qxframe9a7c2-style/,'Styles must not appear at runtime');
   const permittedTopLevel=new Set([
     '@scope (:root)', ':root', '.dark',
-    ':root, .dark, .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
+    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
   ]);
   let cursor=0,scopes=0;
   while(cursor<source.length){
