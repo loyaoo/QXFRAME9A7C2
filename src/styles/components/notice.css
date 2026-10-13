@@ -107,7 +107,7 @@
 .qxframe9a7c2-notice{
   display:flex;min-width:0;
   position:relative;box-sizing:border-box;flex:0 0 auto;pointer-events:auto;opacity:1;
-  transition:box-shadow 180ms ease;touch-action:pan-y
+  transition:box-shadow var(--qxframe9a7c2-theme-duration-md) ease;touch-action:pan-y
 }
 .qxframe9a7c2-notice::after{
   position:absolute;top:calc(0px - var(--_qxframe9a7c2-notice-gap));right:0;left:0;

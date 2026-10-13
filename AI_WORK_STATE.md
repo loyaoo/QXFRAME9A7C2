@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-13 Stage5 Token Audit P1 (implementation, CI pending)
+- Resume verified branch redesign/create-stage5 / PR #267 Draft/Open, HEAD 7e8060b70f1c95524ed3bb7ce6b60a367226b30d; QXFRAME CI 38344282173 and CSS Schema 38344282290 were Success for the preceding Tree source, not for this change.
+- P1 #2: changed docs/create/compiler.js only for subtle foreground: source popover-foreground; bold remains primary-foreground. Canonical default theme light/dark already contained oklch(0.205 0 0)/oklch(0.922 0 0), so no manual generated theme.css change required. Choice mark contrast remains explicit src.popover for neutral foreground filling, bold src.primary; do not conflate disclosure and selection.
+- P1 #1: real Notice Slot / Message Root / Notification Root now explicitly receive V2 radius geometry computation with --_surface-radius/--_action-radius and existing override ownership. Card root, stacking proxy and close can follow Theme radius including zero. Do not edit the 18 suspected families blindly.
+- P2 #9 verified literal Notice box-shadow transition 180ms, connected to theme-duration-md instead; other P2/P3 remain evidence-pending.
+- Added static and Chromium regression (real Notice create, two modes, zero/nonzero Radius), retaining Tree 3000 stress gate. Offline QA cleared old Tree highlights and scopes one Menu Preview03 region only; Notice is a floating overlay inspected in component demos.
+- NEXT: exact-head dual CI and real Chromium evidence. If successful, official matching Actions dist+docs artifact, ZIP CRC/QA JS/HTTP routes, PR remains Draft, no merge. Stage5 visual owner acceptance and P2/P3 evidence triage still incomplete. Completion percentage: not recalculated without evidence-based coverage denominator.
+
 ## CHECKPOINT — 2026-10-13 Stage5 static verifier adapts to narrowly authorized TreeSelect contract
 - QXFRAME run 38344117231 failed in verify:create-app at a stale literal string requiring old unauthorized-source filter. Updated the assertion to require the new stricter filter with `coreContractAllowed` and the exact TreeSelect schema-only guard. Separately compared main/current core file: only 12 new options, 85 old options same order, byte-identical remainder.
 - Retry dual CI; do not merge PR #267. Full 3000-node Chromium suite already passed on preceding source; only JS parity closure remains.

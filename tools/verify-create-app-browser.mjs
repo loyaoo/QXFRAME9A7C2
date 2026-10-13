@@ -150,6 +150,43 @@ try {
     }
   });
 
+
+  await step('Stage5 P1 real Message/Notification Radius and subtle ink in both modes',async()=>{
+    const out=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;
+      const q=d.defaultView.QXFRAME9A7C2,orig=api.state.config,root=d.documentElement,wasDark=root.classList.contains('dark');
+      if(!q?.Components?.Message?.create || !q?.Components?.Notification?.create)return {error:'Missing real Notice exports'};
+      const theme=d.createElement('style'),override=d.createElement('style');
+      d.head.append(theme,override);
+      const message=q.Components.Message.create({content:'Radius QA Message',duration:0,closable:true,document:d});
+      const notice=q.Components.Notification.create({title:'Radius QA',content:'Notification',duration:0,closable:true,document:d});
+      const samples=[];
+      const selectors=['.qxframe9a7c2-message-root','.qxframe9a7c2-notification-root','.qxframe9a7c2-message-stack .qxframe9a7c2-notice-slot','.qxframe9a7c2-notification-stack .qxframe9a7c2-notice-slot','.qxframe9a7c2-message-close','.qxframe9a7c2-notification-close'];
+      for(const dark of [false,true]){
+        root.classList.toggle('dark',dark);
+        theme.textContent=api.compileTheme({...orig,style:'vega',menuAccent:'subtle'},{generatedAt:''}).body;
+        for(const radius of ['0rem','0.875rem']){
+          override.textContent=':root,.dark{--qxframe9a7c2-theme-radius-card:'+radius+' !important;--qxframe9a7c2-theme-radius-button:'+radius+' !important}';
+          const values=selectors.map(selector=>{const el=d.querySelector(selector);return el?d.defaultView.getComputedStyle(el).borderTopLeftRadius:null});
+          const probe=d.createElement('i');probe.style.cssText='color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)';
+          d.body.append(probe);
+          const ink=d.defaultView.getComputedStyle(probe).color;probe.remove();
+          samples.push({dark,radius,values,ink});
+        }
+      }
+      try{q.Components.Message.closeAll();q.Components.Notification.closeAll()}catch(_){}
+      root.classList.toggle('dark',wasDark);theme.remove();override.remove();
+      return {samples};
+    })()`);
+    assert.ok(!out.error,out.error);
+    assert.equal(out.samples.length,4,'both modes x zero/nonzero radius');
+    for(const sample of out.samples){
+      assert.equal(sample.values.length,6,'card, slot and close selectors');
+      sample.values.forEach((radius,i)=>assert.equal(radius,sample.radius==='0rem'?'0px':'14px','Notice real shape '+i+'/'+JSON.stringify(sample)));
+      assert.ok(/^rgb\(/.test(sample.ink),'subtle ink resolves to opaque readable color');
+    }
+  });
+
   await step('Tree disclosure never looks selected, including partial ancestors and TreeSelect Popup',async()=>{
     const samples=await evaluate(`(() => {
       const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;

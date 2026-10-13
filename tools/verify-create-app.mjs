@@ -119,6 +119,22 @@ check('font-mono and Alert radius consume registered Theme mapping',()=>{
  assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
 });
 
+
+check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=>{
+ const compiler=read('compiler.js');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
+ const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.205 0 0\)/,'default light Menu ink');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.922 0 0\)/,'default dark Menu ink');
+ for(const component of ['notice-slot','message-root','notification-root'])
+   assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
+ for(const part of ['message-root','notification-root','notice-slot'])
+   assert.ok(notice.includes('border-radius:var(--qxframe9a7c2-'+(part==='message-root'?'message':part==='notification-root'?'notification':'notice')+'-radius,var(--_qxframe9a7c2-surface-radius))'),'Notice '+part+' uses surface mapping');
+ assert.ok(notice.includes('transition:box-shadow var(--qxframe9a7c2-theme-duration-md) ease'),'Notice transition maps to motion duration');
+});
+
 check('Card Skeleton preserves shimmer but follows shared Skeleton disable',()=>{
  const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
  const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
@@ -142,7 +158,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Current: 1 Card / 2 regions
+  const current={"quick-action-menu":["[data-pv3x-widget=\"quick-action-menu\"]"]}; // Current: 1 Card / 1 region
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -153,11 +169,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['platform-tree','release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only current Tree/TreeSelect Card regions are highlighted');
+  assert.equal(count,1,'only current Menu accent Card region is highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');

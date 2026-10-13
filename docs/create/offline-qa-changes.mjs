@@ -1,8 +1,7 @@
-/** Stage5 current batch: 1 Preview03 Card / 2 regions. Prior highlights cleared. */
+/** Stage5 Token P1 batch: Preview03 Menu accent. Tree highlights from last ZIP removed. */
 const groups = [
- ['platform-tree','Tree / TreeSelect',[
-  ['[data-pv3-component="workspace-tree"]','Tree lazy/virtual/operate','节点编辑、懒加载与大量数据虚拟滚动，保留中性展开配色','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect Open','嵌套 TreeSelect 同样采用中性展开态，Selected 与 Hover 单独显示','__QA_BUNDLE_HEAD__']
+ ['quick-action-menu','Menu subtle contrast',[
+  ['[data-pv3x-widget="quick-action-menu"]','Menu subtle ink','柔和强调使用 Popover 前景色；Menu/Popup 的 Open、Hover 与 Checkbox 仍须分开验收','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -66,7 +65,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Tree 与 TreeSelect 的 Open/Selected/Checkbox 状态分离；其他已修复位置不再高亮。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Menu subtle 高亮文字对比度；Notification/Message 真正弹层圆角请在组件演示中验证。Tree 旧高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
