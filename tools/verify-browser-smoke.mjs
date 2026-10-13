@@ -36,6 +36,13 @@ function adaptLegacySmokeSource(source) {
     // probes now target the canonical Scroll viewport, and Modal's split JS timing options
     // map to the semantic duration slots used by the current CSS-timing projection.
     return source
+        // The frozen HOTFIX6 indicator check is explicitly the line variant.
+        // Default Tabs now intentionally use segmented; current-source smoke
+        // separately checks that default without weakening historical indicator QA.
+        .replace(
+            "C.Tabs.create({container:document.getElementById('tabs-host'),activeKey:'one',animated:{indicator:true,panel:false}",
+            "C.Tabs.create({container:document.getElementById('tabs-host'),type:'line',activeKey:'one',animated:{indicator:true,panel:false}"
+        )
         .replace(
             "var stickyRoot=sticky.getRootElement();var firstFixed=",
             "var stickyRoot=sticky.getRootElement();var stickyViewport=sticky.getScrollViewport?sticky.getScrollViewport():stickyRoot;var firstFixed="
