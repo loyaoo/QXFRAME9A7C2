@@ -1,3 +1,6 @@
+## CHECKPOINT — Stage5 Tree paging async ownership (2026-10-13)
+- Audit found direct AbortController in paged Tree; replaced with existing canonical AsyncTaskGroup, consistent with lazy loadChildren and stale-response cancellation. DOM.listen owns scroll lifecycle; registered Theme destructive role used for failure icon. No bypass to gate.
+
 ## CURRENT — 2026-10-13 Tree Layui/video reference, lazy branches and large virtual paging
 - PR #267 Draft/Open. User requests video-style Tree actions (add/rename/delete), Layui-like disclosure/lines/checkbox/disabled and both lazy node loading and thousand-row VirtualList with incremental scroll paging.
 - Tree JS includes opt-in per-node actions (emit callbacks, never silently mutate external data), lazy=true + item.hasChildren flag with loadChildren and explicit retryLoad; large paged roots loadMore({cursor,pageSize,signal}) on near-bottom Scroll, abort/revision guards and page stats; delegates viewport windowing to ItemCollection/VirtualList. TreeSelect forwards lazy and operations. Standard tree showLine adopts box toggles and dotted connectors. Preview03 Tree + TreeSelect demo includes lazy Partners and edit operations.

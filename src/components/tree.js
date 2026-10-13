@@ -45,7 +45,7 @@ function setupTreeRuntime(instance) {
         var loadedChildren = new Map();
         var loadErrors = new Map();
         var editingKey = null;
-        var scrollPaging={loading:false,hasMore:opts.hasMore===true,cursor:opts.pageCursor===undefined?null:opts.pageCursor,error:null,revision:0,abort:null,viewport:null,unlisten:null};
+        var scrollPaging={loading:false,hasMore:opts.hasMore===true,cursor:opts.pageCursor===undefined?null:opts.pageCursor,error:null,revision:0,viewport:null,unlisten:null};
         var loadingKeys = new Set();
         var toggleKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
         var checkKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
@@ -59,6 +59,13 @@ function setupTreeRuntime(instance) {
                 signal: context.signal, tree: api
               })).then(function (children) { return { children: children, isCurrent: context.isCurrent }; }, function (error) { return { error: error, isCurrent: context.isCurrent }; });
             } catch (error) { return Promise.resolve({ error: error, isCurrent: context.isCurrent }); }
+          }
+        });
+        var pageTasks=AsyncTaskGroup.create({
+          task:function(input,context){
+            var detail=mergeOptions(input.detail,{signal:context.signal});
+            try{return Promise.resolve(opts.loadMore(detail)).then(function(page){return{page:page,isCurrent:context.isCurrent};},function(error){return{error:error,isCurrent:context.isCurrent};});}
+            catch(error){return Promise.resolve({error:error,isCurrent:context.isCurrent});}
           }
         });
         var indeterminateKeys = new Set();
@@ -501,13 +508,11 @@ function setupTreeRuntime(instance) {
           if(destroyed||!Utils.isFunction(opts.loadMore)||!scrollPaging.hasMore||scrollPaging.loading)return false;
           scrollPaging.loading=true;scrollPaging.error=null;
           var generation=++scrollPaging.revision,cursor=scrollPaging.cursor;
-          var abort=typeof AbortController==='function'?new AbortController():null;
-          scrollPaging.abort=abort;
-          var detail={cursor:cursor,pageSize:Math.max(1,Number(opts.pageSize)||100),signal:abort?abort.signal:undefined,source:meta&&meta.source||'api',tree:api};
-          var result;
-          try{result=opts.loadMore(detail);}catch(error){result=Promise.reject(error);}
-          Promise.resolve(result).then(function(page){
-            if(destroyed||generation!==scrollPaging.revision)return;
+          var detail={cursor:cursor,pageSize:Math.max(1,Number(opts.pageSize)||100),source:meta&&meta.source||'api',tree:api};
+          pageTasks.run('tree-page',{detail:detail},{source:detail.source}).then(function(result){
+            if(!result||!result.isCurrent||!result.isCurrent()||destroyed||generation!==scrollPaging.revision)return;
+            if(result.error)throw result.error;
+            var page=result.page;
             if(!Array.isArray(page) && (!page||!Array.isArray(page.items)))throw new TypeError('[QXFRAME9A7C2] Tree loadMore must return an array or {items,hasMore,cursor}.');
             var incoming=Array.isArray(page)?page:page.items;
             var hasMore=Array.isArray(page)?incoming.length>=detail.pageSize:page.hasMore===true;
@@ -521,13 +526,13 @@ function setupTreeRuntime(instance) {
             model.updateOptions({items:opts.items,rootKey:opts.rootKey,maxNodes:opts.maxNodes,getKey:keyOf,getItems:itemsOf,getParentKey:opts.getParentKey});
             pruneStateAfterModelChange();
             refresh('tree-page');
-            scrollPaging.loading=false;scrollPaging.abort=null;
+            scrollPaging.loading=false;
             var notice={items:incoming.slice(),cursor:cursorNext,hasMore:scrollPaging.hasMore,tree:api};
             if(Utils.isFunction(opts.onLoadMore))opts.onLoadMore(notice);
             emitter.emit('loadMore',notice);
           }).catch(function(error){
             if(destroyed||generation!==scrollPaging.revision)return;
-            scrollPaging.loading=false;scrollPaging.abort=null;scrollPaging.error=error;
+            scrollPaging.loading=false;scrollPaging.error=error;
             if(Utils.isFunction(opts.onLoadMoreError))opts.onLoadMoreError(error,{cursor:cursor,tree:api});
             emitter.emit('loadMoreError',{error:error,cursor:cursor,tree:api});
           });
@@ -547,8 +552,8 @@ function setupTreeRuntime(instance) {
         }
         function invalidatePaging(){
           scrollPaging.revision++;
-          if(scrollPaging.abort)scrollPaging.abort.abort();
-          scrollPaging.abort=null;scrollPaging.loading=false;scrollPaging.error=null;
+          pageTasks.invalidate('tree-paging-reset');
+          scrollPaging.loading=false;scrollPaging.error=null;
         }
 
         function refresh(reason) {
@@ -1139,7 +1144,7 @@ function setupTreeRuntime(instance) {
           destroyed = true;
           if(scrollPaging.unlisten){scrollPaging.unlisten();scrollPaging.unlisten=null;}
           scrollPaging.viewport=null;invalidatePaging();
-          loadTasks.destroy();
+          loadTasks.destroy();pageTasks.destroy();
           searchState.destroy();
           scope.dispose();
           if (list) list.destroy(reason || 'tree-destroy');

@@ -1799,7 +1799,7 @@ check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical 
  const css=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const parity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  const qa=fs.readFileSync(path.join(root,'docs/qa/tree-large-data.html'),'utf8');
- for(const token of ['loadNextPage:appendPage','opts.loadMore(detail)','loadMoreThreshold','scrollPaging.abort.abort()','getViewportElement','pageHasMore:scrollPaging.hasMore','virtual: opts.virtual','loadTasks.run(key','onOperate','finishRename(true,event)'])
+ for(const token of ['loadNextPage:appendPage','opts.loadMore(detail)','loadMoreThreshold',"pageTasks.invalidate('tree-paging-reset')",'getViewportElement','pageHasMore:scrollPaging.hasMore','virtual: opts.virtual','loadTasks.run(key','onOperate','finishRename(true,event)'])
  assert.ok(tree.includes(token),'Tree canonical lazy/page/operations '+token);
  assert.ok(select.includes('lazy:opts.lazy===true')&&select.includes('onOperate:opts.onOperate'),'TreeSelect forwards Tree behaviors');
  assert.ok(css.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-actions'),'Tree action visuals belong to component');
