@@ -261,9 +261,11 @@ export function themeTokens(resolved) {
   light.overlay = dark.overlay = `oklch(0 0 0 / ${round(looks.overlay / 100)})`;
 
   // Menu color + accent.
+  light['color-scheme'] = 'light';
+  dark['color-scheme'] = 'dark';
   const inverted = isInvertedMenu(resolved.menuColor);
   const translucent = isTranslucentMenu(resolved.menuColor);
-  const menuSource = inverted ? { light: palette.dark, dark: palette.dark } : palette;
+  const menuSource = palette; // Inverted popup reuses the opposite complete Theme block via CSS; do not remap individual Menu colors.
   for (const mode of ['light', 'dark']) {
     const target = mode === 'light' ? light : dark;
     const src = menuSource[mode];
@@ -633,5 +635,13 @@ export function themeTokens(resolved) {
 export function themeBody(resolved) {
   const { root, dark } = themeTokens(resolved);
   const lines = block => Object.entries(block).map(([name, value]) => `  ${TOKEN_PREFIX}${name}: ${value};`).join('\n');
-  return `:root,\n.dark [data-qxframe9a7c2-scheme="inverse"] {\n${lines(root)}\n}\n.dark,\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {\n${lines(dark)}\n}\n`;
+  const popupRoots = [
+    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
+    '.qxframe9a7c2-menu-submenu-panel',
+    '.qxframe9a7c2-menu-overflow-panel'
+  ];
+  const inverted = isInvertedMenu(resolved.menuColor);
+  const lightScope = [':root', ...(inverted ? popupRoots.map(selector => '.dark ' + selector) : [])].join(',\\n');
+  const darkScope = ['.dark', ...(inverted ? popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)') : [])].join(',\\n');
+  return `${lightScope} {\\n${lines(root)}\\n}\\n${darkScope} {\\n${lines(dark)}\\n}\\n`;
 }
