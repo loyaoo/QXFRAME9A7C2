@@ -44,6 +44,7 @@ function setupTreeRuntime(instance) {
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if (destroyed) return; refresh('search'); var payload={searchValue:value,source:meta.source||'api',reason:meta.reason||'search',tree:api}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(meta.silent!==true)emitter.emit('search',payload); } });
         var loadedChildren = new Map();
         var loadErrors = new Map();
+        var editingKey = null;
         var loadingKeys = new Set();
         var toggleKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
         var checkKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
@@ -327,6 +328,43 @@ function setupTreeRuntime(instance) {
           return lines;
         }
     
+        function allowedTreeActions(row) {
+          var allowed=opts.editable===true?['add','rename','remove']:(Array.isArray(opts.editable)?opts.editable:[]);
+          if (CapabilityController.mutationLocked(opts) || disabledOf(row.item,row.record.index) || (row.item && row.item.editable===false)) return [];
+          if (Utils.isFunction(opts.isItemEditable) && opts.isItemEditable(row.item,row.record.index)===false) return [];
+          return allowed.filter(function(type){return type==='add'||type==='rename'||type==='remove';});
+        }
+        function actionButton(type,key) {
+          var el=doc.createElement('button');el.type='button';el.className='qxframe9a7c2-tree-action';
+          el.dataset.treeAction=type;el.dataset.treeKey=key;
+          el.title=type==='add'?'Add child':type==='rename'?'Rename node':type==='remove'?'Delete node':type==='save'?'Save name':'Cancel';
+          el.textContent=type==='add'?'+':type==='rename'?'✎':type==='remove'?'×':type==='save'?'✓':'×';
+          return el;
+        }
+        /* Tree never silently mutates the caller's nested data. Applications
+           own persistence; operations emit stable item/key/draft payloads. */
+        function operate(type,key,label,event) {
+          var record=model&&model.getRecord(String(key));if(destroyed||!record||CapabilityController.mutationLocked(opts)||disabledOf(record.item,record.index))return false;
+          var payload={type:type,key:record.key,item:record.item,label:label,tree:api,originalEvent:event||null};
+          if(Utils.isFunction(opts.beforeOperate)&&opts.beforeOperate(payload)===false)return false;
+          if(Utils.isFunction(opts.onOperate)&&opts.onOperate(payload)===false)return false;
+          if(destroyed)return false;
+          emitter.emit('operate',payload);return true;
+        }
+        function beginRename(key) {
+          if(destroyed||!model.getRecord(String(key)))return false;
+          editingKey=String(key);refresh('tree-rename-start');
+          var input=root&&root.querySelector('.qxframe9a7c2-tree-edit-input');
+          if(input){input.focus();input.select();}return true;
+        }
+        function finishRename(commit,event) {
+          if(!editingKey)return false;
+          var key=editingKey,input=root&&root.querySelector('.qxframe9a7c2-tree-edit-input');
+          var value=input?input.value.trim():'';
+          if(commit&&(!value||!operate('rename',key,value,event)))return false;
+          editingKey=null;refresh(commit?'tree-rename-commit':'tree-rename-cancel');return true;
+        }
+
         function renderTreeRow(row, context) {
           var wrap = doc.createElement('span');
           var indentSize = Math.max(8, Number(opts.indent) || 18);
@@ -363,7 +401,10 @@ function setupTreeRuntime(instance) {
           function createIconPart() { return renderIcon(row.item); }
           var toggle = createToggle(), checkbox = createCheckbox(), icon = createIconPart();
           var label = doc.createElement('span'); label.className = 'qxframe9a7c2-tree-label qxframe9a7c2-tree-content';
-          if (Utils.isFunction(opts.itemRender)) {
+          if (editingKey===row.key) {
+            var editField=doc.createElement('input');editField.type='text';editField.className='qxframe9a7c2-tree-edit-input';
+            editField.value=String(row.label);label.appendChild(editField);wrap.classList.add('is-editing');
+          } else if (Utils.isFunction(opts.itemRender)) {
             var rendererParts = Item.createParts ? Item.createParts({ arrow:function(){var claimed=toggle;toggle=null;return claimed;} }) : {};
             var itemCtx = Item.createContext(row.item, {
               index:context && context.index, key:row.key, value:row.value, element:label, component:api, controller:api,
@@ -378,6 +419,16 @@ function setupTreeRuntime(instance) {
           if (checkbox) wrap.appendChild(checkbox);
           if (icon) wrap.appendChild(icon);
           wrap.appendChild(label);
+          if(editingKey===row.key) {
+            var editButtons=doc.createElement('span');editButtons.className='qxframe9a7c2-tree-actions is-editing';
+            editButtons.appendChild(actionButton('save',row.key));editButtons.appendChild(actionButton('cancel',row.key));wrap.appendChild(editButtons);
+          } else {
+            var editAllowed=allowedTreeActions(row);
+            if(editAllowed.length) {
+              var actions=doc.createElement('span');actions.className='qxframe9a7c2-tree-actions';
+              editAllowed.forEach(function(type){actions.appendChild(actionButton(type,row.key));});wrap.appendChild(actions);
+            }
+          }
           return wrap;
         }
     
@@ -670,6 +721,7 @@ function setupTreeRuntime(instance) {
           loadedChildren.clear();
           loadingKeys.clear();
           loadErrors.clear();
+          editingKey=null;
           loadedKeys.clear();
           loadTasks.invalidate('tree-items');
           model.setItems(opts.items, { silent: true, source: 'api', reason: 'tree-items' });
@@ -781,6 +833,16 @@ function setupTreeRuntime(instance) {
         function setupRootEvents() {
           if (!root) return;
           scope.add(DOM.listen(root, 'click', function (event) {
+            var action=event.target&&event.target.closest?event.target.closest('.qxframe9a7c2-tree-action'):null;
+            if(action&&root.contains(action)){
+              event.preventDefault();event.stopPropagation();if(event.stopImmediatePropagation)event.stopImmediatePropagation();
+              var type=action.dataset.treeAction,key=action.dataset.treeKey;
+              if(type==='save')finishRename(true,event);
+              else if(type==='cancel')finishRename(false,event);
+              else if(type==='rename')beginRename(key);
+              else if(type==='add'||type==='remove')operate(type,key,null,event);
+              return;
+            }
             var toggle = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-toggle') : null;
             var checkbox = event.target && event.target.closest ? event.target.closest('.qxframe9a7c2-tree-check') : null;
             if (toggle && root.contains(toggle)) {
@@ -814,6 +876,12 @@ function setupTreeRuntime(instance) {
             }
           }, true));
           scope.add(DOM.listen(root, 'keydown', function (event) {
+            if(event.target&&event.target.classList&&event.target.classList.contains('qxframe9a7c2-tree-edit-input')){
+              if(event.key==='Enter')finishRename(true,event);
+              else if(event.key==='Escape')finishRename(false,event);
+              else return;
+              event.preventDefault();event.stopPropagation();if(event.stopImmediatePropagation)event.stopImmediatePropagation();return;
+            }
             if (handleTreeKeydown(event)) {
               event.preventDefault(); event.stopPropagation(); if (event.stopImmediatePropagation) event.stopImmediatePropagation();
             }
@@ -944,7 +1012,7 @@ function setupTreeRuntime(instance) {
           var structuralChanged = hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getParentKey');
           Utils.copyOwn(opts, next);
           if (structuralChanged) {
-            loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear();
+            loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear(); editingKey=null;
             if (!hasOwn(next, 'loadedKeys')) loadedKeys.clear();
           }
           model.updateOptions({ items: Array.isArray(opts.items) ? opts.items : [], rootKey: opts.rootKey, maxNodes: opts.maxNodes, getKey: keyOf, getItems: itemsOf, getParentKey: opts.getParentKey });
@@ -979,6 +1047,7 @@ function setupTreeRuntime(instance) {
             loadedKeys: Array.from(loadedKeys),
             loadingKeys: Array.from(loadingKeys),
             loadErrorKeys: Array.from(loadErrors.keys()),
+            editingKey:editingKey,
             visibleKeys: visibleRecords().map(function (record) { return record.key; }),
             searchValue: searchState.query,
             multiple: opts.multiple === true,
@@ -1008,7 +1077,7 @@ function setupTreeRuntime(instance) {
           selectionController.destroy();
           checkedSelection = null;
           selectionController = null;
-          loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear(); loadedKeys.clear(); indeterminateKeys.clear();
+          loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear(); editingKey=null; loadedKeys.clear(); indeterminateKeys.clear();
           reorderInteraction = null; root = null;
           return true;
         }
@@ -1043,7 +1112,7 @@ export class Tree extends Component {
     selection:Object.freeze({ channels:Object.freeze(['selected','checked']), hierarchical:true }),
     ownership:Object.freeze({ selection:'SelectionController' })
   });
-  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, lazy:false, size:'md' });
+  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, lazy:false, editable:false, size:'md' });
   static immutableOptions = Object.freeze(['container']);
   static createDefaultDOM = ItemCollection.createDefaultDOM;
 
