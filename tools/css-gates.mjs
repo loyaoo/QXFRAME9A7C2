@@ -15,12 +15,16 @@ const registryModule = await import(pathToFileURL(REGISTRY_FILE).href);
 export const THEME_FILE_WARN_BYTES = 16 * 1024;
 
 export const THEME_PREFIX = '--qxframe9a7c2-theme-';
-const THEME_LIGHT_INVERSE = '.dark [data-qxframe9a7c2-scheme="inverse"]';
-const THEME_DARK_INVERSE = ':root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *)';
-const THEME_SELECTORS = new Set([':root', '.dark', THEME_LIGHT_INVERSE, THEME_DARK_INVERSE]);
+// A generated inverted Menu adds its existing Popup roots to the opposite
+// Theme declaration. Only these fixed groups are valid Theme token owners.
+const MENU_POPUP_ROOTS = [
+  '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
+  '.qxframe9a7c2-menu-submenu-panel',
+  '.qxframe9a7c2-menu-overflow-panel'
+];
 const THEME_GROUPS = [
-  new Set([':root', THEME_LIGHT_INVERSE]),
-  new Set(['.dark', THEME_DARK_INVERSE]),
+  [':root', ...MENU_POPUP_ROOTS.map(selector => '.dark ' + selector)],
+  ['.dark', ...MENU_POPUP_ROOTS.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)')]
 ];
 
 const VIEWPORT_UNIT = /(?:^|[^a-z0-9_.#-])-?(?:\d*\.)?\d+(?:vw|vh|vmin|vmax|vi|vb|dvh|dvw|svh|svw|lvh|lvw|dvi|dvb|svi|svb|lvi|lvb)\b/i;
@@ -52,10 +56,9 @@ function isRootSelector(sel, context) {
 // A theme block is a top-level :root / .dark rule that declares theme tokens. Other :root /
 // .dark rules are ordinary framework rules (e.g. legacy dark palettes still to be removed).
 export function isThemeBlock(rule) {
-  const oldStyle = rule.selectors.length === 1 && THEME_SELECTORS.has(rule.selectors[0])
-    && (rule.selectors[0] === ':root' || rule.selectors[0] === '.dark');
-  const grouped = rule.selectors.length === 2
-    && THEME_GROUPS.some(group => rule.selectors.every(s => group.has(s)));
+  const oldStyle = rule.selectors.length === 1 && (rule.selectors[0] === ':root' || rule.selectors[0] === '.dark');
+  const grouped = THEME_GROUPS.some(group => rule.selectors.length === group.length
+    && rule.selectors.every((selector,index) => selector === group[index]));
   return rule.context.length === 0 && (oldStyle || grouped)
     && rule.declarations.some(d => d.prop.startsWith(THEME_PREFIX));
 }
