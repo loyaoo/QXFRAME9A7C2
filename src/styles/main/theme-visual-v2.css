@@ -169,6 +169,7 @@
     background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-v2-type);
     border-color: var(--qxframe9a7c2-theme-border);
   }
+  .qxframe9a7c2-message-root, .qxframe9a7c2-notification-root { border-color: var(--qxframe9a7c2-theme-card-edge); }
   .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
   .qxframe9a7c2-alert-description { color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 90%, transparent); }
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
@@ -197,8 +198,8 @@
   .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }
   .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-v2-type); }
   .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-thumb); border-color: var(--qxframe9a7c2-theme-thumb-border); }
-  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: transparent; --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-theme-border); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
-  .qxframe9a7c2-scroll-thumb:hover { background-color: var(--qxframe9a7c2-theme-border); }
+  /* Shared translucent neutral scrollbar, no opaque theme-border override. */
+  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-color); --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-color); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
   .qxframe9a7c2-slider-tooltip { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-avatar { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
 
@@ -471,7 +472,7 @@
   /* An open ancestor is disclosure, not selection. All Picker-backed collections,
      including Cascader/TreeSelect, keep readable Menu foreground on transparent
      hover/ancestor paint even with inverted bold accents. */
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected),
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.is-selected) {
     --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
@@ -494,9 +495,10 @@
     --_qxframe9a7c2-date-panel-cell-border: var(--_qxframe9a7c2-v2-menu-selected-soft);
     --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
   }
+  /* Current day/month/year retains normal ink + primary bottom dot, not a border. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected) {
-    --_qxframe9a7c2-date-panel-cell-border: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-date-panel-cell-border: transparent;
     --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected) {
@@ -560,11 +562,6 @@
     background: var(--_qxframe9a7c2-v2-menu-selected-soft);
     border-color: var(--_qxframe9a7c2-v2-menu-selected-soft);
     color: var(--qxframe9a7c2-theme-menu-accent-foreground);
-  }
-  /* Centre guide does not cover wheel selection text and its own background. */
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
-    background: transparent;
-    border-block-color: var(--_qxframe9a7c2-v2-menu-border-neutral);
   }
   /* Shared ColorPanel control source handles idle, hover and keyboard focus. */
 
