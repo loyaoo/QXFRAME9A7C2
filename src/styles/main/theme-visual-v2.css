@@ -469,7 +469,7 @@
      Restore its original chroma at full opacity for small markers and focus
      boundaries: neutral stays legible, colored inverted menus stay colored.
      No extra Theme token or light/dark/inverted selector is necessary. */
-  .qxframe9a7c2-picker-field-panel {
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) {
     --_qxframe9a7c2-v2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
@@ -480,18 +480,18 @@
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(.is-disabled)::after {
     background: var(--_qxframe9a7c2-v2-menu-primary-solid);
   }
-  /* TreeSelect keeps canonical Tree state/DOM, but a Checkbox projected
-     inside a dark/inverted Picker consumes the Menu contrast pair. The page
-     Choice source still governs Tree instances outside Popup. */
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check-indicator {
+  /* TreeSelect's real popup is .tree-select-panel, not .picker-field-panel.
+     Only the Choice projection inside that portal reads Menu contrast.
+     Tree state and Tree CSS/JS remain unchanged. */
+  .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {
     --_qxframe9a7c2-v2-choice-bg: transparent;
     --_qxframe9a7c2-v2-choice-border: var(--_qxframe9a7c2-v2-menu-border-neutral);
     background-color: var(--_qxframe9a7c2-v2-choice-bg);
     border-color: var(--_qxframe9a7c2-v2-choice-border);
     color: var(--qxframe9a7c2-theme-menu-foreground);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
+  .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
     --_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-v2-menu-primary-solid);
     --_qxframe9a7c2-v2-choice-border: var(--_qxframe9a7c2-v2-menu-primary-solid);
     background-color: var(--_qxframe9a7c2-v2-choice-bg);
