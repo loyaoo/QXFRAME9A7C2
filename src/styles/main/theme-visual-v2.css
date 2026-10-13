@@ -277,8 +277,8 @@
     box-shadow: var(--_qxframe9a7c2-v2-action-shadow);
   }
   .qxframe9a7c2-button.is-secondary {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-muted);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-secondary);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground);
     --_qxframe9a7c2-v2-solid-hover: color-mix(in oklch, var(--qxframe9a7c2-theme-secondary) 95%, var(--qxframe9a7c2-theme-foreground) 5%);
   }
   .qxframe9a7c2-button.is-default {
