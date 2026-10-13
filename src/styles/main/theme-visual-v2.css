@@ -7,8 +7,8 @@
  * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT. */
 :root { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); }
-:root, .dark [data-qxframe9a7c2-scheme="inverse"] { color-scheme: light; }
-.dark, :root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) { color-scheme: dark; }
+.dark [data-qxframe9a7c2-scheme="inverse"] { color-scheme: light; }
+:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) { color-scheme: dark; }
 .dark, [data-qxframe9a7c2-scheme="inverse"] { color: var(--qxframe9a7c2-theme-foreground); }
 @scope (:root) {
 
