@@ -641,7 +641,7 @@ export function themeBody(resolved) {
     '.qxframe9a7c2-menu-overflow-panel'
   ];
   const inverted = isInvertedMenu(resolved.menuColor);
-  const lightScope = [':root', ...(inverted ? popupRoots.map(selector => '.dark ' + selector) : [])].join(',\\n');
-  const darkScope = ['.dark', ...(inverted ? popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)') : [])].join(',\\n');
-  return `${lightScope} {\\n${lines(root)}\\n}\\n${darkScope} {\\n${lines(dark)}\\n}\\n`;
+  const lightScope = [':root', ...(inverted ? popupRoots.map(selector => '.dark ' + selector) : [])].join(',\n');
+  const darkScope = ['.dark', ...(inverted ? popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)') : [])].join(',\n');
+  return `${lightScope} {\n${lines(root)}\n}\n${darkScope} {\n${lines(dark)}\n}\n`;
 }
