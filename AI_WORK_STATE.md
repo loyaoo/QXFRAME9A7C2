@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-13 Stage5 user screenshot visual batch (exact-head CI pending)
+- Resume baseline ddcd50bd6a598838edef1754964dd72e65af8d04, PR #267 Draft/Open and dual CI green before current edits.
+- Owner screenshots: inverted menu today dot / blue subtle selection / scroll thumb & wheel guide; Cascader column padding; Transfer and Upload Dropzone corners too large; Modal open sometimes centers; Tabs vertical action padding and default segmented look.
+- One Menu dark palette source (inverse-light and dark). Raise shared subtle Menu accent alpha 14%→28%, regenerate both default Theme values. Today marker / Scroll track & thumb / Wheel guide derive from Menu foreground (not page Primary or light Scroll).
+- Nested radius from existing theme-radius-item (no new Theme slots): Transfer-panel and Upload-dropzone; public override remains first. Cascader columns use existing fixed spacing. Tabs JS default segmented while explicit line/card remain supported, restore tab-action vertical padding. Modal delayed pointer valid 2.5s and focused trigger center fallback, autoOpen still centers; Tree/TreeSelect unchanged.
+- Offline QA only this batch: seven Preview03 Cards, eight regions. Static source regression gates, JS parity allowlist narrowly includes owner-authorized Tabs source. NEXT exact HEAD dual CI/Chromium, official dist+docs artifact, full Windows ZIP CRC/HTTP. No auto-merge, no unsupported completion percentages.
+
 ## CURRENT — 2026-10-13 Stage5 P2 Preview03 font and Motion batch (CI pending)
 - Verified initial HEAD dcf5ba425e04cd447a788d10dc9e11b6ec4c4aed, PR #267 Draft/Open/unmerged, both exact-head workflows Success; previous Windows ZIP complete.
 - Fixed Preview03 hero + full-coverage section headings to use existing Theme heading font; replaced fixed .16s/.2s in event-stream and workflow-state private composition with Theme duration-sm/md, including Motion:none => 0ms.
