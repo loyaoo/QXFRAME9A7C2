@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-13 Tree Layui/video behaviors + large-data loading
+- PR #267 Draft/Open, branch redesign/create-stage5; no main/backup merge. Owner requires Layui-like Tree (plus/minus lines, checked cascade, disabled, click), video-style inline add/rename/remove, async per-node lazy loading with explicit hasChildren/leaf signals, and *large-data virtual list with incremental scroll pagination*.
+- Prior Stage5 Tree Color separation accepted by CI at 0f944067 (QXFRAME + CSS Schema green); continuing from that exact source only.
+- Canonical Tree and TreeSelect reuse existing ItemCollection/VirtualList instead of duplicating virtual-scroller implementation. New Tree loadNextPage with loadMore({cursor,pageSize,signal,tree}), hasMore/pageCursor, passive near-bottom listener, in-flight throttle and destroy/data-reset invalidation; source CSS contains optional inline operations (callbacks, no silent business-data mutation), showLine plus/minus boxing, lazy error/retry.
+- Tree/TreeSelect are explicitly added to exact JS deviation allowlist; unrelated JS stays parity checked. Next: actual Playwright/CDP browser verification for virtual 1000+ data, scroll paging, lazy retry and edit; docs/create QA only platform-tree 1 card / 2 regions; dual CI/official offline artifact required. Do not claim full acceptance before gates.
+
 ## CURRENT — Stage5 Tree Open vs Selected visual fix (2026-10-13; CI pending)
 - User's Preview03 Workspace Explorer showed Company/Product solid blue despite merely expanded and partially checked. Canonical Tree Open/descendant/indeterminate must be structural and visually neutral; only Selected receives selection highlight.
 - Fixed Theme V2 Tree row state mapping (standalone and embedded TreeSelect), preserves neutral hover, independent selected+open and existing Menu/Cascader popup rules. Choice projection no longer inverts canonical Tree checkboxes merely because ancestors are expanded.

@@ -1,7 +1,7 @@
 /** Stage5 current batch: 1 Preview03 Card / 2 regions. Prior highlights cleared. */
 const groups = [
  ['platform-tree','Tree / TreeSelect',[
-  ['[data-pv3-component="workspace-tree"]','Tree Open','展开节点与子级勾选只表达结构，未选中节点保持透明背景与正常文字','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree"]','Tree lazy/virtual/operate','节点编辑、懒加载与大量数据虚拟滚动，保留中性展开配色','__QA_BUNDLE_HEAD__'],
   ['[data-pv3-component="workspace-tree-select"]','TreeSelect Open','嵌套 TreeSelect 同样采用中性展开态，Selected 与 Hover 单独显示','__QA_BUNDLE_HEAD__']
  ],'03']
 ];

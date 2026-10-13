@@ -45,6 +45,7 @@ function setupTreeRuntime(instance) {
         var loadedChildren = new Map();
         var loadErrors = new Map();
         var editingKey = null;
+        var scrollPaging={loading:false,hasMore:opts.hasMore===true,cursor:opts.pageCursor===undefined?null:opts.pageCursor,error:null,revision:0,abort:null,viewport:null};
         var loadingKeys = new Set();
         var toggleKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
         var checkKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
@@ -489,11 +490,73 @@ function setupTreeRuntime(instance) {
           });
         }
     
+        function scrollPagingViewport() {
+          var next=list&&list.getViewportElement?list.getViewportElement():null;
+          if(next===scrollPaging.viewport)return;
+          if(scrollPaging.viewport)scrollPaging.viewport.removeEventListener('scroll',onTreeScroll);
+          scrollPaging.viewport=next;
+          if(next)next.addEventListener('scroll',onTreeScroll,{passive:true});
+        }
+        function appendPage(meta) {
+          if(destroyed||!Utils.isFunction(opts.loadMore)||!scrollPaging.hasMore||scrollPaging.loading)return false;
+          scrollPaging.loading=true;scrollPaging.error=null;
+          var generation=++scrollPaging.revision,cursor=scrollPaging.cursor;
+          var abort=typeof AbortController==='function'?new AbortController():null;
+          scrollPaging.abort=abort;
+          var detail={cursor:cursor,pageSize:Math.max(1,Number(opts.pageSize)||100),signal:abort?abort.signal:undefined,source:meta&&meta.source||'api',tree:api};
+          var result;
+          try{result=opts.loadMore(detail);}catch(error){result=Promise.reject(error);}
+          Promise.resolve(result).then(function(page){
+            if(destroyed||generation!==scrollPaging.revision)return;
+            if(!Array.isArray(page) && (!page||!Array.isArray(page.items)))throw new TypeError('[QXFRAME9A7C2] Tree loadMore must return an array or {items,hasMore,cursor}.');
+            var incoming=Array.isArray(page)?page:page.items;
+            var hasMore=Array.isArray(page)?incoming.length>=detail.pageSize:page.hasMore===true;
+            var cursorNext=Array.isArray(page)?null:(page.cursor===undefined?cursor:page.cursor);
+            /* Validate the combined model before committing the next page. */
+            var joined=(Array.isArray(opts.items)?opts.items:[]).concat(incoming);
+            validateItems(joined,opts);
+            opts.items=joined;
+            scrollPaging.hasMore=hasMore&&incoming.length>0;
+            scrollPaging.cursor=cursorNext;
+            model.updateOptions({items:opts.items,rootKey:opts.rootKey,maxNodes:opts.maxNodes,getKey:keyOf,getItems:itemsOf,getParentKey:opts.getParentKey});
+            pruneStateAfterModelChange();
+            refresh('tree-page');
+            scrollPaging.loading=false;scrollPaging.abort=null;
+            var notice={items:incoming.slice(),cursor:cursorNext,hasMore:scrollPaging.hasMore,tree:api};
+            if(Utils.isFunction(opts.onLoadMore))opts.onLoadMore(notice);
+            emitter.emit('loadMore',notice);
+          }).catch(function(error){
+            if(destroyed||generation!==scrollPaging.revision)return;
+            scrollPaging.loading=false;scrollPaging.abort=null;scrollPaging.error=error;
+            if(Utils.isFunction(opts.onLoadMoreError))opts.onLoadMoreError(error,{cursor:cursor,tree:api});
+            emitter.emit('loadMoreError',{error:error,cursor:cursor,tree:api});
+          });
+          return true;
+        }
+        function onTreeScroll(event) {
+          if(destroyed||!scrollPaging.hasMore||scrollPaging.loading||searchState.query)return;
+          var target=event&&event.currentTarget;
+          if(!target||target.scrollHeight<=target.clientHeight)return;
+          var distance=target.scrollHeight-target.clientHeight-target.scrollTop;
+          if(distance<=Math.max(80,Number(opts.loadMoreThreshold)||200))appendPage({source:'scroll'});
+        }
+        function updatePagingViewport() {
+          scrollPagingViewport();
+          /* Underfilled virtual lists may need the first page explicitly, but
+             never loop endlessly on an empty response or an error. */
+        }
+        function invalidatePaging(){
+          scrollPaging.revision++;
+          if(scrollPaging.abort)scrollPaging.abort.abort();
+          scrollPaging.abort=null;scrollPaging.loading=false;scrollPaging.error=null;
+        }
+
         function refresh(reason) {
           if (destroyed || !list) return false;
           list.setItems(rows(), { reason: reason || 'tree-refresh' });
           if (root) root.classList.toggle('is-searching', !!searchState.query);
           syncTreeRows();
+          updatePagingViewport();
           return true;
         }
     
@@ -722,6 +785,7 @@ function setupTreeRuntime(instance) {
           loadingKeys.clear();
           loadErrors.clear();
           editingKey=null;
+          invalidatePaging();scrollPaging.hasMore=opts.hasMore===true;scrollPaging.cursor=opts.pageCursor===undefined?null:opts.pageCursor;
           loadedKeys.clear();
           loadTasks.invalidate('tree-items');
           model.setItems(opts.items, { silent: true, source: 'api', reason: 'tree-items' });
@@ -983,6 +1047,7 @@ function setupTreeRuntime(instance) {
           setupTreeReorderInteraction();
           setupRootEvents();
           syncTreeRows();
+          updatePagingViewport();
         }
     
         if (opts.expandSelectedAncestors === true && list.getState().values.length) restoreSelectedExpansion();
@@ -1011,6 +1076,9 @@ function setupTreeRuntime(instance) {
           if (hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getLabel') || hasOwn(next, 'getValue')) validateItems(candidate.items, candidate);
           var structuralChanged = hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getParentKey');
           Utils.copyOwn(opts, next);
+          if(structuralChanged||hasOwn(next,'hasMore')||hasOwn(next,'pageCursor')||hasOwn(next,'loadMore')){
+            invalidatePaging();scrollPaging.hasMore=opts.hasMore===true;scrollPaging.cursor=opts.pageCursor===undefined?null:opts.pageCursor;
+          }
           if (structuralChanged) {
             loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear(); editingKey=null;
             if (!hasOwn(next, 'loadedKeys')) loadedKeys.clear();
@@ -1031,6 +1099,7 @@ function setupTreeRuntime(instance) {
           list.updateOptions(listOptions);
           if (root) root.classList.toggle('is-searching', !!searchState.query);
           syncTreeRows();
+          updatePagingViewport();
           if (opts.expandSelectedAncestors === true && list.getState().values.length) restoreSelectedExpansion();
           return api;
         }
@@ -1048,6 +1117,8 @@ function setupTreeRuntime(instance) {
             loadingKeys: Array.from(loadingKeys),
             loadErrorKeys: Array.from(loadErrors.keys()),
             editingKey:editingKey,
+            virtual:!!state.virtual,renderedCount:state.renderedCount||0,
+            pageLoading:scrollPaging.loading,pageHasMore:scrollPaging.hasMore,pageCursor:scrollPaging.cursor,pageError:scrollPaging.error,
             visibleKeys: visibleRecords().map(function (record) { return record.key; }),
             searchValue: searchState.query,
             multiple: opts.multiple === true,
@@ -1066,6 +1137,8 @@ function setupTreeRuntime(instance) {
         function disposeRuntime(reason) {
           if (destroyed) return false;
           destroyed = true;
+          if(scrollPaging.viewport)scrollPaging.viewport.removeEventListener('scroll',onTreeScroll);
+          scrollPaging.viewport=null;invalidatePaging();
           loadTasks.destroy();
           searchState.destroy();
           scope.dispose();
@@ -1089,7 +1162,7 @@ function setupTreeRuntime(instance) {
           setItems:setItems,
           setValue:function(value,meta){ if(!destroyed){ list.setValue(value,meta||{source:'api',reason:'tree-set-value'}); syncTreeRows(); } return api; },
           clear:function(meta){ if(!destroyed){ list.clear(meta||{source:'api',reason:'tree-clear'}); syncTreeRows(); } return api; },
-          setCheckedKeys:setCheckedKeys, check:check, setExpandedKeys:setExpandedKeys, retryLoad:retryLoad, expand:expand, collapse:collapse, expandAll:expandAll, collapseAll:collapseAll, expandAncestors:expandAncestors, expandSelected:expandSelected, toggleExpand:toggleExpand, isExpanded:isExpanded, setSearch:setSearch,
+          setCheckedKeys:setCheckedKeys, check:check, setExpandedKeys:setExpandedKeys, retryLoad:retryLoad, loadNextPage:appendPage, expand:expand, collapse:collapse, expandAll:expandAll, collapseAll:collapseAll, expandAncestors:expandAncestors, expandSelected:expandSelected, toggleExpand:toggleExpand, isExpanded:isExpanded, setSearch:setSearch,
           setActiveKey:function(key,meta){ return destroyed?false:list.setActiveKey(key,meta); },
           focus:function(key){ if(destroyed)return false; if(key!==undefined&&key!==null&&key!=='')list.setActiveKey(String(key),{source:'api',reason:'tree-focus'}); return list.focusWrap(); },
           focusFirst:function(){return destroyed?false:list.focusFirst();}, focusLast:function(){return destroyed?false:list.focusLast();}, focusSelected:function(){return destroyed?false:list.focusSelected();}, focusWrap:function(){return destroyed?false:list.focusWrap();},
@@ -1112,7 +1185,7 @@ export class Tree extends Component {
     selection:Object.freeze({ channels:Object.freeze(['selected','checked']), hierarchical:true }),
     ownership:Object.freeze({ selection:'SelectionController' })
   });
-  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, lazy:false, editable:false, size:'md' });
+  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, lazy:false, editable:false, hasMore:false, pageSize:100, virtualThreshold:120, size:'md' });
   static immutableOptions = Object.freeze(['container']);
   static createDefaultDOM = ItemCollection.createDefaultDOM;
 
@@ -1130,6 +1203,7 @@ export class Tree extends Component {
   setExpandedKeys(keys,meta){return runtimeFor(this).setExpandedKeys(keys,meta);}
   expand(key,meta){return runtimeFor(this).expand(key,meta);}
   retryLoad(key,meta){return runtimeFor(this).retryLoad(key,meta);}
+  loadNextPage(meta){return runtimeFor(this).loadNextPage(meta);}
   collapse(key,meta){return runtimeFor(this).collapse(key,meta);}
   expandAll(meta){return runtimeFor(this).expandAll(meta);}
   collapseAll(meta){return runtimeFor(this).collapseAll(meta);}
