@@ -1,3 +1,7 @@
+## CHECKPOINT — 2026-10-13 CI pinned Menu ColorMix source
+- QXFRAME CI run 38396117774 stopped at verify:phase-f-token-graph on new unregistered menu-foreground 52%, 76%, 36% mixes. Existing shadcn/source mapping allows 12% and 26% Menu foreground; re-used 12% track/guide fill and 26% thumb/guide edge, and solid Menu foreground only for scrollbar hover. Did not weaken canonical ColorMix gate.
+- NEXT same-head dual CI and real Chromium computed paint, official ZIP only on green.
+
 ## CURRENT — 2026-10-13 Stage5 user screenshot visual batch (exact-head CI pending)
 - Resume baseline ddcd50bd6a598838edef1754964dd72e65af8d04, PR #267 Draft/Open and dual CI green before current edits.
 - Owner screenshots: inverted menu today dot / blue subtle selection / scroll thumb & wheel guide; Cascader column padding; Transfer and Upload Dropzone corners too large; Modal open sometimes centers; Tabs vertical action padding and default segmented look.
