@@ -50,7 +50,7 @@ check('Stage5 shared navigation/data radii do not inherit fixed 4px',()=>{
 });
 
 check('Stage5 QX-only public components consume Theme corner roles',()=>{
-  for(const part of ['menu','list','steps','tree','carousel','progress','image','badge','card','slider','tabs','picker-family']){
+  for(const part of ['menu','list','steps','carousel','progress','image','badge','card','slider','tabs','picker-family']){
     const css=fs.readFileSync(path.join(root,'src/styles/components',part+'.css'),'utf8');
     assert.match(css,/--qxframe9a7c2-theme-radius-(?:item|button|track|thumb|popup|badge)/,part+' Theme corner role');
   }

@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 official Tree legacy corner exemption
+- QXFRAME run 38349523253 failed early static gate because Stage5 test required theme-radius role inside tree.css, contrary to exact main tree.css restored per owner. Retained main blob and excluded only Tree from new Stage5 corner test; all other components remain gated. Exact HEAD dual CI pending. No merge.
+
 ## CHECKPOINT — 2026-10-13 Tree rollback QA annotation scope
 - Offline QA ledger now highlights only Preview03 platform-tree: workspace-tree and workspace-tree-select (2 regions); previous Menu P1 QA highlight is cleared, with underlying Menu fix intact. JS parity source gate updated to strict official main Tree/TreeSelect. Exact-head dual CI still required.
 
