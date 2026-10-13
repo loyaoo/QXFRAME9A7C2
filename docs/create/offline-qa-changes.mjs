@@ -1,17 +1,7 @@
-/** Stage5 current batch: 4 Preview03 Cards / 5 regions. Prior highlights cleared. */
+/** Stage5 current batch: 1 Preview03 Card / 1 region. Prior highlights cleared. */
 const groups = [
  ['customer-quality','TagInput',[
-  ['[data-pv3-component="customer-tags"]','TagInput','TagInput 与多选控件 padding-inline 等于 padding-block','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['order-routing','Cascader / Select',[
-  ['[data-pv3-component="routing-cascader"]','Cascader','多列紧贴、取消横向滚动、Open 与 Hover 区分','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="routing-select"]','Select','输入外观描边透明及浅着色/微着色区分','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['platform-tree','TreeSelect',[
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect','展开 Open 用主题色，Checkbox 反色显示','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['navigation-workspace','Menu',[
-  ['.qxframe9a7c2-menu','Menu','Hover 用中性浅色，展开 Open 用菜单主题色','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="customer-tags"]','TagInput','恢复 Tag 标签内文字与左右边框间距；TagInput 外壳 padding 保持不变','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -75,7 +65,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：输入外观、复合输入内边距、菜单 Open/Checkbox、Cascader 多列；清除上一轮高亮。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：TagInput 内部 Tag 恢复左右 padding；其他已修复位置不再高亮。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

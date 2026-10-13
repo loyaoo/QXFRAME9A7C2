@@ -1,3 +1,9 @@
+## CURRENT — Stage5 hosted Tag chip horizontal padding regression fix (2026-10-13; CI pending)
+- PR #267 remains Draft/Open on `redesign/create-stage5`, no main/backup edits, do not merge. Started from previously verified head `32ce4173526b47e188ff0feaa3b4270be8dcf780` with both earlier workflows green.
+- Owner reported TagInput outer padding now correct but internal Tag text sits against chip borders. Root cause: `src/styles/components/native-input.css` set hosted `--_qxframe9a7c2-compound-item-inset:0px`; `tags.css` uses that slot for actual chip `padding-inline`. The earlier shell-padding fix conflated two independent insets.
+- Fix only hosted chip inset to shared `--_qxframe9a7c2-fixed-space-2`, identical to Select Multiple Tag chip. Keep symmetric compound control shell inset, row heights, editors, close icons, standalone Tags, and ordinary Input unchanged. Add strict static and 8-Style × 2-mode × sm/md/lg browser measurement for nonzero symmetric chip padding and Select parity.
+- Offline QA reset to only Preview03 customer-quality / customer-tags (1 Card / 1 region); earlier highlights cleared. New HEAD requires dual green CI and matching official full dist+docs Windows offline package; CRC / QA JS syntax / HTTP gates before owner visual acceptance.
+
 ## CURRENT — Stage5 real Cascader Popup Chromium gate (2026-10-13, dual CI pending)
 - Existing 90/90 browser checks on cea35914 predecessor passed; a new browser assertion now opens the actual Preview03 Cascader, clicks United States > East, verifies 3 adjacent columns and no horizontal overflow. This addresses user requirement previously only covered by synthetic three-column checks.
 - Real interaction gate adds no relaxing of existing Chromium assertions; PR #267 Draft/Open; no main or backup writes. Local Chromium direct navigation is blocked by runtime policy (ERR_BLOCKED_BY_ADMINISTRATOR), so exact-head GitHub Actions Chromium is the authority.
