@@ -480,6 +480,24 @@
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(.is-disabled)::after {
     background: var(--_qxframe9a7c2-v2-menu-primary-solid);
   }
+  /* TreeSelect keeps canonical Tree state/DOM, but a Checkbox projected
+     inside a dark/inverted Picker consumes the Menu contrast pair. The page
+     Choice source still governs Tree instances outside Popup. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check-indicator {
+    --_qxframe9a7c2-v2-choice-bg: transparent;
+    --_qxframe9a7c2-v2-choice-border: var(--_qxframe9a7c2-v2-menu-border-neutral);
+    background-color: var(--_qxframe9a7c2-v2-choice-bg);
+    border-color: var(--_qxframe9a7c2-v2-choice-border);
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
+    --_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-v2-menu-primary-solid);
+    --_qxframe9a7c2-v2-choice-border: var(--_qxframe9a7c2-v2-menu-primary-solid);
+    background-color: var(--_qxframe9a7c2-v2-choice-bg);
+    border-color: var(--_qxframe9a7c2-v2-choice-border);
+    color: var(--qxframe9a7c2-theme-menu);
+  }
   /* Hover is a neutral highlight; selected rows alone consume the saturated
      Menu accent/foreground pair. This applies to all shared ItemSurface users. */
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-hover:not(.is-selected),
