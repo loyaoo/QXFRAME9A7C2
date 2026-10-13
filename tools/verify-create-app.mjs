@@ -1807,7 +1807,7 @@ check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical 
  for(const field of ['"lazy"','"editable"','"onOperate"','"loadMore"','"loadMoreThreshold"','"hasMore"','"pageCursor"','"pageSize"'])assert.ok(treeSelectContract.includes(field),'TreeSelect public contract '+field);
  assert.ok(css.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-actions'),'Tree action visuals belong to component');
  assert.ok(parity.includes("'src/components/tree.js'")&&parity.includes("'src/components/tree-select.js'"),'JS parity allowlist is explicit');
- assert.ok(qa.includes('virtual:true')&&qa.includes('loadMore:function')&&qa.includes('loadChildren:function'),'demo exercises all three paths');
+ assert.ok(qa.includes('virtual:true')&&qa.includes('loadMore:function')&&qa.includes('loadChildren:function')&&qa.includes('Q.BuildingBlocks.Tree'),'demo uses public BuildingBlocks.Tree and exercises virtual/scroll/lazy');
  assert.doesNotMatch(css,/display:grid|@layer|:where\(|:is\(/,'CSS restrictions remain enforced');
 });
 

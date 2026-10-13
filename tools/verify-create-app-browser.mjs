@@ -2899,7 +2899,9 @@ try {
 
   await step('Tree 3000-row real virtual DOM, lazy retry, inline rename and streamed scroll pages',async()=>{
     await s('Page.navigate',{url:origin+'/docs/qa/tree-large-data.html'});
-    await waitFor('!!(window.QXFRAME9A7C2_TREE_QA?.tree?.getState().virtual)','3k Tree virtual mount',10000);
+    await waitFor("!!window.QXFRAME9A7C2_TREE_QA?.tree || !!document.querySelector('[data-status]')?.textContent?.startsWith('Tree unavailable')",'3k Tree mount or explicit failure',10000);
+    const diag=await evaluate("({title:document.title,status:document.querySelector('[data-status]')?.textContent,hasBuildingBlock:!!window.QXFRAME9A7C2?.BuildingBlocks?.Tree,hasComponent:!!window.QXFRAME9A7C2?.Components?.Tree,errors:document.querySelectorAll('.qxframe9a7c2-virtual-list').length})");
+    assert.ok(!!(await evaluate('window.QXFRAME9A7C2_TREE_QA?.tree?.getState().virtual')), '3000-row Tree must mount via its published BuildingBlocks.Tree export: '+JSON.stringify(diag));
     const initial=await evaluate(`(() => {
       const s=window.QXFRAME9A7C2_TREE_QA.tree.getState();
       return {total:s.visibleKeys.length,rendered:s.renderedCount,virtual:s.virtual,more:s.pageHasMore,

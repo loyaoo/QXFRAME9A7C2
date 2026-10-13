@@ -9,8 +9,8 @@
 <script>
 (function(){
 'use strict';
-var C=window.QXFRAME9A7C2&&window.QXFRAME9A7C2.Components,el=document.querySelector('[data-status]');
-if(!C||!C.Tree){el.textContent='Tree unavailable';return;}
+var Q=window.QXFRAME9A7C2,T=Q&&(Q.Components&&Q.Components.Tree||Q.BuildingBlocks&&Q.BuildingBlocks.Tree),el=document.querySelector('[data-status]');
+if(!T){el.textContent='Tree unavailable: missing BuildingBlocks.Tree';return;}
 var source=Array.from({length:3000},function(_,i){var k='root-'+i;return{key:k,value:k,label:'Workspace '+i};});
 source[0]={key:'lazy-root',value:'lazy-root',label:'Lazy branch (first request fails)',hasChildren:true,lazy:true,items:[]};
 var page=0,tries=0,tree;
@@ -30,7 +30,7 @@ function mutate(rows,detail){
  return false;
 }
 function measure(){var s=tree.getState();el.textContent='Visible: '+s.visibleKeys.length+' | Rendered DOM rows: '+s.renderedCount+' | Virtual: '+s.virtual+' | Loading page: '+s.pageLoading+' | Has more: '+s.pageHasMore+' | Lazy errors: '+s.loadErrorKeys.length;}
-tree=C.Tree.create({container:document.querySelector('[data-tree]'),items:source,virtual:true,virtualThreshold:120,height:'28rem',maxHeight:'28rem',showLine:true,checkable:true,editable:true,lazy:true,maxNodes:10000,
+tree=T.create({container:document.querySelector('[data-tree]'),items:source,virtual:true,virtualThreshold:120,height:'28rem',maxHeight:'28rem',showLine:true,checkable:true,editable:true,lazy:true,maxNodes:10000,
 hasMore:true,pageSize:150,loadMoreThreshold:200,
 loadChildren:function(item){return new Promise(function(resolve,reject){setTimeout(function(){tries++;if(tries===1)reject(new Error('Retry demo'));else resolve(Array.from({length:20},function(_,i){var k='lazy-'+i;return{key:k,value:k,label:'Loaded child '+i};}));},120);});},
 loadMore:function(ctx){return new Promise(function(resolve){setTimeout(function(){var start=3000+page*150;page++;resolve({items:Array.from({length:150},function(_,i){var k='root-'+(start+i);return{key:k,value:k,label:'Scrolled page row '+(start+i)};}),hasMore:page<7,cursor:page});},100);});},

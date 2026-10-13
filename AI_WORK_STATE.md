@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-13 3k Tree browser gate root-cause
+- CSS Schema run 38340698279 reached last Chromium step and 3000 virtual QA mount timed out. Verified actual public runtime export: `BuildingBlocks.Tree` in src/runtime/runtime.js; Tree is **not** one of Components' 40 public component adapters. The demo incorrectly used Components.Tree. Fixed real demo to use Q.BuildingBlocks.Tree, and browser assertion to report missing exports instead of silent timeout. Preserve strict 3k virtual/lazy/rename/scroll checks.
+- Next: both exact-head CI green then Actions full dist+docs artifact / Windows ZIP. PR #267 Draft/Open, never merge.
+
 ## CHECKPOINT — 2026-10-13 TreeSelect generated Docs API synchronization
 - QXFRAME run 38340428457 reached verify:docs-api and detected stale generated contract params block after Schema extension. Rebuilt docs/assets/qxframe9a7c2-component-api.js generated block using the exact tools/sync-docs-api-contracts.mjs algorithm and current docs/generated/component-api.json, without touching handwritten API docs. Next: exact head dual CI / Chromium / full dist+docs artifact.
 
