@@ -1,35 +1,11 @@
-/** Stage5 Menu / Tree / Tooltip / Dialog final revision — ONLY this iteration is marked. */
-/** Stage5 current visual acceptance: 2026-10-13 shared controls. */
+/** Stage5 P2: Preview03 Typography + Theme Motion consumer fixes. */
+/** Current P2 Theme Motion; prior rounds no longer highlighted. */
 const groups = [
- ['fraud-decision','Radio selection',[
-  ['.qxframe9a7c2-form-check-input','Checked hover','Radio checked border wins hover','__QA_BUNDLE_HEAD__']
+ ['stream-animation','Incident stream Motion',[
+  ['.pv3x-event-list','Event transition','Event opacity and transform follow Theme Motion','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['audit-checklist','Checkbox selection',[
-  ['.qxframe9a7c2-form-check-input','Checked hover','Checkbox checked border wins hover','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['sla-tooltip','Tooltip inverse',[
-  ['[data-pv3x-widget="sla-tooltip"]','Tooltip arrow','Inverse tooltip and rotated diamond arrow','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['contract-documents','Upload layout',[
-  ['[data-pv3x-widget="contract-documents"]','Dropzone','Vertical column and compact spacing','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['palette-laboratory','Color panel',[
-  ['[data-pv3x-widget="palette-laboratory"]','Tracks','Two slider heights plus gap equal preview height','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['delete-policy','Popconfirm',[
-  ['[data-pv3x-widget="delete-policy"]','Title icon','Icon centered on first title line','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['stakeholder-roster','Avatar',[
-  ['.qxframe9a7c2-avatar','Avatar','Neutral avatar with host-surface separator override','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['compliance-flags','Badge',[
-  ['.qxframe9a7c2-badge','Badge','Neutral badge default and status-driven indicators','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['alert-triage','Alert',[
-  ['.qxframe9a7c2-alert','Description','Description defaults to neutral muted foreground','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['trading-toolbar','Secondary Button',[
-  ['.qxframe9a7c2-button','Button','Neutral secondary button appearance','__QA_BUNDLE_HEAD__']
+ ['state-transitions','Workflow Motion',[
+  ['.pv3x-process','State transition','Workflow active state follows Theme Motion','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -93,7 +69,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Choice Hover、Tooltip、Upload、ColorPanel、Popconfirm、Avatar、Badge、Alert 和 Secondary Button。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：事件流与状态流程 Motion。页面标题字体同步主题标题字体。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
