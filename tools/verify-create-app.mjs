@@ -1788,7 +1788,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
  assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
  assert.doesNotMatch(choice,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-item\.is-open[^\n]*\.qxframe9a7c2-tree-check-indicator/,'Tree Open cannot invert global Checkbox');
- assert.ok(choice.includes(':not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'TreeSelect popup must not invert canonical Choice Checkbox');
+ assert.ok(choice.includes(':not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'Menu Item Choice logic leaves native Tree state intact');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 
@@ -1801,9 +1801,9 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.205 0 0 / 0.28)'),'generated light menu accent synchronized');
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.922 0 0 / 0.28)'),'generated dark menu accent synchronized');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
-  assert.ok(theme.includes('background: var(--qxframe9a7c2-theme-menu-foreground);'),'Today marker reads Menu foreground');
+  assert.ok(theme.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
-  assert.ok(theme.includes('border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Wheel guide contrast uses Menu');
+  assert.ok(theme.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel guide consumes Menu Primary accent');
 });
 check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
   const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
@@ -1818,6 +1818,17 @@ check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal be
   assert.ok(tabsCSS.includes('height:100%;padding:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-tabs-pad-x)'),'Tabs action vertical inset restored');
   assert.ok(tabsJS.includes("placement: 'top', type: 'segmented', activationMode: 'auto'"),'Tabs segmented is default');
   assert.ok(modal.includes('recentPointer.time <= 2500')&&modal.includes('focusedRect.width > 0 && focusedRect.height > 0'),'Modal delayed click/focused trigger origin');
+});
+check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection are unified',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(css.includes('oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)'),'Picker derives opaque Menu Primary without new Theme inputs');
+ assert.ok(css.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today retains hue from Menu Primary');
+ assert.ok(css.includes('background: var(--_qxframe9a7c2-v2-menu-selected-soft);'),'Wheel uses Menu accent tint');
+ assert.ok(css.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel border matches Menu Primary');
+ assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
+ assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
+ assert.ok(css.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup Tree checkbox covers indeterminate');
+ assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
 });
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
   const js=read('preview-03.js');
@@ -1849,12 +1860,13 @@ check('Stage5 Tree uses official main API, not experimental edits or paging',()=
  const qa=fs.readFileSync(path.join(root,'docs/qa/tree-large-data.html'),'utf8');
  assert.ok(qa.includes('3000')&&qa.includes('virtual:true'),'official Tree still stresses 3000 nodes');
 });
-check('Stage5 TreeSelect checked/mixed/unchecked checkbox must use global Choice',()=>{
+check('Stage5 TreeSelect state remains native, Picker visual projection uses Menu roles',()=>{
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
- assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu cannot own Tree checkbox appearance');
+ assert.ok(theme.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-tree-check-indicator {'),'Picker owns only the contextual checkbox paint');
+ assert.ok(theme.includes('--_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
  assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
