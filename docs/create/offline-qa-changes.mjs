@@ -1,7 +1,7 @@
 /** Stage5 latest owner screenshot: actual TreeSelect portal Choice fix only. */
 const groups = [
  ['platform-tree','TreeSelect inverse popup',[
-  ['[data-pv3-component="workspace-tree-select"]','Popup Choice squares','Checked and mixed checkbox squares now match Menu Primary, not light-page Primary','__QA_BUNDLE_HEAD__']
+  ['[data-pv3-component="workspace-tree-select"]','Local scheme entry','Actual TreeSelect popup remains QA target while shared inverse Theme scope is introduced','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
