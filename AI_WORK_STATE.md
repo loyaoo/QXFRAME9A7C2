@@ -1,3 +1,8 @@
+## CURRENT — Stage5 explicit Cascader runtime authorization (2026-10-13; dual CI rerun pending)
+- QXFRAME CI 38327606362 completed all 90 Create Chromium browser assertions; failed the next JS build gate `verify-js-build-matches-main` solely because `src/components/cascader.js` was missing from Stage5's explicit authorized deviation list. CSS Schema CI 38327606305 succeeded.
+- User explicitly authorized this Cascader multi-column, hidden vertical Scroll and PopupFrame runtime fix. Updated the *exact* JS authorized source list with Cascader only; unrelated JS must still equal main, all emitted names and deterministic current-head rebuild must still match. Strict separate static test asserts both Cascader y-axis ownership and the narrow authorization presence. Do not revert Cascader to old horizontal scroll just to pass parity.
+- Next: exact-head dual CI success, matching official dist+docs artifact, full Windows local ZIP with CRC, QA node --check and 14 HTTP checks. PR #267 Draft/Open, main/backup untouched; owner Stage5 acceptance still pending.
+
 ## CURRENT — Stage5 Menu Choice contrast correction (2026-10-13, new dual CI pending)
 - PR #267 remains Draft/Open; only redesign/create-stage5 changed, main/backup untouched.
 - Previous commit 8522a34c disabled transient MenuItem transitions in Chromium measurement only; exact Open/hover assertions unchanged. CSS Schema 38327102701 advanced beyond Menu Open to first actual failure: vega/false/subtle Checkbox mark ink contrasts with its foreground-colored fill.
