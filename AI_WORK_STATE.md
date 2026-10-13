@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 generated TreeSelect schema restored
+- QXFRAME run 38349675889 passed earlier build verifications and found docs-generated API schema still exposed twelve removed TreeSelect options. The only differences in docs/generated/component-api.json and generated contract segment of docs/assets/qxframe9a7c2-component-api.js against main are TreeSelect parameters; restore both exact main Git blobs. Recheck docs sync/strict contract CI. No merge.
+
 ## CHECKPOINT — 2026-10-13 official Tree legacy corner exemption
 - QXFRAME run 38349523253 failed early static gate because Stage5 test required theme-radius role inside tree.css, contrary to exact main tree.css restored per owner. Retained main blob and excluded only Tree from new Stage5 corner test; all other components remain gated. Exact HEAD dual CI pending. No merge.
 

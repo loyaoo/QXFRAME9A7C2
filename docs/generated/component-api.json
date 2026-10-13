@@ -5050,14 +5050,10 @@
           "type": "function",
           "nullable": true
         },
-        "beforeOperate": {
-          "type": "function",
-          "nullable": true
-        },
         "busy": "boolean",
+        "checkStrictly": "boolean",
         "checkable": "boolean",
         "checkedStrategy": "any",
-        "checkStrictly": "boolean",
         "class": {
           "types": [
             "string",
@@ -5077,7 +5073,6 @@
         "destroyOnClose": "boolean",
         "disabled": "boolean",
         "document": "document",
-        "editable": "boolean",
         "elements": {
           "type": "object",
           "nullable": true
@@ -5104,7 +5099,6 @@
           "type": "function",
           "nullable": true
         },
-        "hasMore": "any",
         "headless": "any",
         "height": "any",
         "indent": "number",
@@ -5113,17 +5107,10 @@
           "type": "function",
           "nullable": true
         },
-        "isItemEditable": {
-          "type": "function",
-          "nullable": true
-        },
         "itemRender": "any",
         "items": "array",
-        "lazy": "boolean",
         "loadChildren": "any",
         "loadedKeys": "array",
-        "loadMore": "any",
-        "loadMoreThreshold": "any",
         "matchReferenceWidth": "boolean",
         "maxCount": "number",
         "maxHeight": "any",
@@ -5155,19 +5142,7 @@
           "type": "function",
           "nullable": true
         },
-        "onLoadMore": {
-          "type": "function",
-          "nullable": true
-        },
-        "onLoadMoreError": {
-          "type": "function",
-          "nullable": true
-        },
         "onOpenChange": {
-          "type": "function",
-          "nullable": true
-        },
-        "onOperate": {
           "type": "function",
           "nullable": true
         },
@@ -5189,8 +5164,6 @@
         },
         "open": "boolean",
         "openDelay": "number",
-        "pageCursor": "any",
-        "pageSize": "any",
         "placeholder": "string",
         "placement": "string",
         "popupRender": "any",
