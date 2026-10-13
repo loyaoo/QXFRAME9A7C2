@@ -943,7 +943,7 @@ function setupTreeRuntime(instance) {
             if(event.target&&event.target.classList&&event.target.classList.contains('qxframe9a7c2-tree-edit-input')){
               if(event.key==='Enter')finishRename(true,event);
               else if(event.key==='Escape')finishRename(false,event);
-              else return;
+              else { event.stopPropagation(); return; }
               event.preventDefault();event.stopPropagation();if(event.stopImmediatePropagation)event.stopImmediatePropagation();return;
             }
             if (handleTreeKeydown(event)) {

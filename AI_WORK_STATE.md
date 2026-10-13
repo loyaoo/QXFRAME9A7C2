@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-13 Tree Layui/video reference, lazy branches and large virtual paging
+- PR #267 Draft/Open. User requests video-style Tree actions (add/rename/delete), Layui-like disclosure/lines/checkbox/disabled and both lazy node loading and thousand-row VirtualList with incremental scroll paging.
+- Tree JS includes opt-in per-node actions (emit callbacks, never silently mutate external data), lazy=true + item.hasChildren flag with loadChildren and explicit retryLoad; large paged roots loadMore({cursor,pageSize,signal}) on near-bottom Scroll, abort/revision guards and page stats; delegates viewport windowing to ItemCollection/VirtualList. TreeSelect forwards lazy and operations. Standard tree showLine adopts box toggles and dotted connectors. Preview03 Tree + TreeSelect demo includes lazy Partners and edit operations.
+- Next: exact-head CI static and Chromium (including 3k nodes / scroll paging / lazy retry) and matching official full Windows dist+docs offline ZIP. Only platform-tree Card 2 regions QA highlighted; no main/backup changes.
+
 ## CURRENT — 2026-10-13 Tree Layui/video behaviors + large-data loading
 - PR #267 Draft/Open, branch redesign/create-stage5; no main/backup merge. Owner requires Layui-like Tree (plus/minus lines, checked cascade, disabled, click), video-style inline add/rename/remove, async per-node lazy loading with explicit hasChildren/leaf signals, and *large-data virtual list with incremental scroll pagination*.
 - Prior Stage5 Tree Color separation accepted by CI at 0f944067 (QXFRAME + CSS Schema green); continuing from that exact source only.
