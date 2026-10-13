@@ -1,22 +1,35 @@
 /** Stage5 Menu / Tree / Tooltip / Dialog final revision — ONLY this iteration is marked. */
+/** Stage5 current visual acceptance: 2026-10-13 shared controls. */
 const groups = [
- ['navigation-workspace','Navigation Menu',[
-  ['.qxframe9a7c2-menu','Navigation Menu ink','Hover / Active / Selected / Open foreground uses Sidebar, not inverse Popup Menu ink','__QA_BUNDLE_HEAD__']
+ ['fraud-decision','Radio selection',[
+  ['.qxframe9a7c2-form-check-input','Checked hover','Radio checked border wins hover','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['org-hierarchy','Tree Selected',[
-  ['[data-pv3x-widget="org-hierarchy"]','Tree selection','Selected node = Primary text only; ancestors and disclosure have no persistent painted fill','__QA_BUNDLE_HEAD__']
+ ['audit-checklist','Checkbox selection',[
+  ['.qxframe9a7c2-form-check-input','Checked hover','Checkbox checked border wins hover','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['platform-tree','TreeSelect selection',[
-  ['[data-pv3-component="workspace-tree-select"]','TreeSelect ancestry','TreeSelect uses the same neutral Tree ancestor states and selected text role','__QA_BUNDLE_HEAD__']
+ ['sla-tooltip','Tooltip inverse',[
+  ['[data-pv3x-widget="sla-tooltip"]','Tooltip arrow','Inverse tooltip and rotated diamond arrow','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['sla-tooltip','Tooltip arrow',[
-  ['[data-pv3x-widget="sla-tooltip"]','Tooltip alpha','Arrow uses actual PopupSurface background alpha; triangle is outside, never double-composited','__QA_BUNDLE_HEAD__']
+ ['contract-documents','Upload layout',[
+  ['[data-pv3x-widget="contract-documents"]','Dropzone','Vertical column and compact spacing','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['danger-dialog','Modal mask',[
-  ['[data-pv3x-widget="danger-dialog"]','Modal blur','Modal/Drawer independent Theme dialog-mask-blur, capped at .5rem','__QA_BUNDLE_HEAD__']
+ ['palette-laboratory','Color panel',[
+  ['[data-pv3x-widget="palette-laboratory"]','Tracks','Two slider heights plus gap equal preview height','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['account-drawer','Drawer mask',[
-  ['[data-pv3x-widget="account-drawer"]','Drawer blur','Theme blur and darkness follow independent Dialog policy, not Menu 1.5rem','__QA_BUNDLE_HEAD__']
+ ['delete-policy','Popconfirm',[
+  ['[data-pv3x-widget="delete-policy"]','Title icon','Icon centered on first title line','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['stakeholder-roster','Avatar',[
+  ['.qxframe9a7c2-avatar','Avatar','Neutral avatar with host-surface separator override','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['compliance-flags','Badge',[
+  ['.qxframe9a7c2-badge','Badge','Neutral badge default and status-driven indicators','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['alert-triage','Alert',[
+  ['.qxframe9a7c2-alert','Description','Description defaults to neutral muted foreground','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['trading-toolbar','Secondary Button',[
+  ['.qxframe9a7c2-button','Button','Neutral secondary button appearance','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -80,7 +93,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Navigation Menu 前景色、Tree 选中状态、Tooltip 箭头透明度、Modal / Drawer 独立模糊。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Choice Hover、Tooltip、Upload、ColorPanel、Popconfirm、Avatar、Badge、Alert 和 Secondary Button。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

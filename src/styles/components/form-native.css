@@ -81,6 +81,8 @@
     background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1),
     box-shadow var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1)
 }
+/* Keep inline Choice indicators aligned with Form text without owning inner Layout. */
+.qxframe9a7c2-selectgroup-label>.qxframe9a7c2-selectgroup-indicator:not(.is-floating),.qxframe9a7c2-selectgroup-label>.qxframe9a7c2-form-label{align-self:center}
 .qxframe9a7c2-selectgroup{--_qxframe9a7c2-layout-gap:var(--qxframe9a7c2-theme-field-gap,.75rem)}
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-border);

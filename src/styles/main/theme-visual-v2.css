@@ -148,6 +148,8 @@
     color: var(--qxframe9a7c2-theme-secondary-foreground);
     border-color: transparent;
   }
+  /* Default Badge is a neutral status label; explicit is-* colors still win. */
+  .qxframe9a7c2-badge { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
   .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-v2-soft); color: var(--_qxframe9a7c2-v2-type); }
   .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {
@@ -174,7 +176,7 @@
     border-color: var(--qxframe9a7c2-theme-card-edge);
   }
   .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
-  .qxframe9a7c2-alert-description { color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 90%, transparent); }
+  .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-alert-icon, .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-v2-type); }
   .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
@@ -275,9 +277,9 @@
     box-shadow: var(--_qxframe9a7c2-v2-action-shadow);
   }
   .qxframe9a7c2-button.is-secondary {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-secondary);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground);
-    --_qxframe9a7c2-v2-solid-hover: color-mix(in oklch, var(--qxframe9a7c2-theme-secondary) 95%, var(--qxframe9a7c2-theme-foreground) 5%);
+    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-v2-solid-hover: color-mix(in oklch, var(--qxframe9a7c2-theme-muted) 95%, var(--qxframe9a7c2-theme-foreground) 5%);
   }
   .qxframe9a7c2-button.is-default {
     --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-foreground);
