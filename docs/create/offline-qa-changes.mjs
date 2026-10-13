@@ -1,8 +1,43 @@
-/** Stage5 current batch: restore official main Tree/TreeSelect; prior Menu highlight cleared. */
+/** Stage5 visual consistency batch: only the current changed regions. */
 const groups = [
- ['platform-tree','Official Tree / TreeSelect',[
-  ['[data-pv3-component="workspace-tree"]','Main Tree restored','使用正式版展开、勾选、连线与基础虚拟列表；撤销本轮实验性编辑和滚动分页','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="workspace-tree-select"]','Main TreeSelect restored','同样恢复正式版 TreeSelect 参数契约与树节点操作','__QA_BUNDLE_HEAD__']
+ ['release-planner','TimePicker / DatePicker',[
+  ['[data-pv3-component="release-time"]','TimePicker / DatePicker','WheelPanel 原生居中标尺恢复','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['dial-settings','WheelPicker',[
+  ['[data-pv3x-widget="dial-settings"]','WheelPicker','WheelPicker 不再覆盖 WheelPanel 标尺','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['operational-feed','Scroll',[
+  ['[data-pv3x-widget="operational-feed"]','Scroll','滑块改为主题前景色混合的半透明中性色','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['org-hierarchy','Tree Open',[
+  ['[data-pv3x-widget="org-hierarchy"]','Tree Open','展开状态不再有专属背景与文字染色','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['palette-laboratory','ColorPanel',[
+  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel','预览色块圆角随全局 Shape','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['inbox-notice','Message',[
+  ['[data-card="inbox-notice"] .qxframe9a7c2-card-content','Message','Message 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['alerts-center','Notification',[
+  ['[data-pv3x-widget="alerts-center"]','Notification','Notification 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['capacity-calendar','Calendar current',[
+  ['[data-pv3x-widget="capacity-calendar"]','Calendar current','今天使用底部主题色小圆点','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['fiscal-periods','PeriodPanel current',[
+  ['[data-pv3x-widget="fiscal-periods"]','PeriodPanel current','当前年、月普通文字加小圆点','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['delete-policy','Popconfirm',[
+  ['[data-pv3x-widget="delete-policy"]','Popconfirm','小号 Button；去除内部固定最大宽度','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['customer-insights','Popover',[
+  ['[data-pv3x-widget="customer-insights"]','Popover','调整弹层四周留白','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['danger-dialog','Modal',[
+  ['[data-pv3x-widget="danger-dialog"]','Modal','加深遮罩、加强阴影；可配置背景模糊','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['account-drawer','Drawer',[
+  ['[data-pv3x-widget="account-drawer"]','Drawer','加深遮罩、加强阴影；可配置背景模糊','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -66,7 +101,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Tree / TreeSelect 回退到正式版；上一轮 Menu 高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Wheel、Scroll、Tree Open、ColorPanel、通知边框、年月日当前项、Popover/Popconfirm 及重型弹窗。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

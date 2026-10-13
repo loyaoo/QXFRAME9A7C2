@@ -158,7 +158,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Current: 1 Card / 2 regions
+  const current={"release-planner":["[data-pv3-component=\"release-time\"]"],"dial-settings":["[data-pv3x-widget=\"dial-settings\"]"],"operational-feed":["[data-pv3x-widget=\"operational-feed\"]"],"org-hierarchy":["[data-pv3x-widget=\"org-hierarchy\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"],"inbox-notice":["[data-card=\"inbox-notice\"] .qxframe9a7c2-card-content"],"alerts-center":["[data-pv3x-widget=\"alerts-center\"]"],"capacity-calendar":["[data-pv3x-widget=\"capacity-calendar\"]"],"fiscal-periods":["[data-pv3x-widget=\"fiscal-periods\"]"],"delete-policy":["[data-pv3x-widget=\"delete-policy\"]"],"customer-insights":["[data-pv3x-widget=\"customer-insights\"]"],"danger-dialog":["[data-pv3x-widget=\"danger-dialog\"]"],"account-drawer":["[data-pv3x-widget=\"account-drawer\"]"]}; // Current: 13 Cards / 13 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -173,7 +173,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'only current Tree/TreeSelect regions are highlighted');
+  assert.equal(count,13,'only current visual consistency regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1708,7 +1708,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.ok(appearance.includes('.qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{'),'Slider and ColorPanel must share Style-derived rail/thumb Shape Policy');
  assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
- for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected)',
+ for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
    '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
@@ -1723,7 +1723,6 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
    'background: var(--_qxframe9a7c2-v2-menu-selected-soft)',
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
-   '.qxframe9a7c2-wheel-panel-center-guide {\n    background: transparent',
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
    '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',

@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-13 S5 visual consistency batch HEAD under CI
+- Implemented 13 current regions across WheelPanel/Picker, theme-derived semitransparent Scroll, structural-only Tree Open, ColorPanel roundness, Message/Notification Card border, Date/Period Today+Current dot, actual Popconfirm Button.is-sm/full-width, Popover padding, and independent darkened Modal/Drawer masks + blur + depth. Current-only Preview03 QA ledger replaces previous Tree rollback highlight. No changes to official main Tree JS/CSS. No PR merge.
+- CI rerun required. CSS role test updated to reflect Tree exclusion and canonical WheelPanel paint. Rollback/P1 baseline preserved.
+
 ## CHECKPOINT — 2026-10-13 official main Tree toggle exempt from Stage5 Shape Theme axis
 - CSS Schema 38350068378 reached Chromium and failed only because old Stage5 shape matrix expected Tree toggle radius=0 when user explicitly restored main Tree. Independent Chromium measurement of main confirms original toggle remains 50% even under radius:none. Remove only Tree toggle entry from 25-part Theme-shape matrix (24 others kept under 8x2x2 strict evaluation). Keep exact main Tree CSS, not modified to satisfy rejected Stage5 policy. Next dual green CI and official artifact; no merge.
 
