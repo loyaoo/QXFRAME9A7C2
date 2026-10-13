@@ -1,43 +1,22 @@
-/** Stage5 visual consistency batch: only the current changed regions. */
+/** Stage5 Menu / Tree / Tooltip / Dialog final revision — ONLY this iteration is marked. */
 const groups = [
- ['release-planner','TimePicker / DatePicker',[
-  ['[data-pv3-component="release-time"]','TimePicker / DatePicker','WheelPanel 原生居中标尺恢复','__QA_BUNDLE_HEAD__']
+ ['navigation-workspace','Navigation Menu',[
+  ['.qxframe9a7c2-menu','Navigation Menu ink','Hover / Active / Selected / Open foreground uses Sidebar, not inverse Popup Menu ink','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['dial-settings','WheelPicker',[
-  ['[data-pv3x-widget="dial-settings"]','WheelPicker','WheelPicker 不再覆盖 WheelPanel 标尺','__QA_BUNDLE_HEAD__']
+ ['org-hierarchy','Tree Selected',[
+  ['[data-pv3x-widget="org-hierarchy"]','Tree selection','Selected node = Primary text only; ancestors and disclosure have no persistent painted fill','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['operational-feed','Scroll',[
-  ['.qxframe9a7c2-card-content','Scroll','滑块改为主题前景色混合的半透明中性色','__QA_BUNDLE_HEAD__']
+ ['platform-tree','TreeSelect selection',[
+  ['[data-pv3-component="workspace-tree-select"]','TreeSelect ancestry','TreeSelect uses the same neutral Tree ancestor states and selected text role','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['org-hierarchy','Tree Open',[
-  ['[data-pv3x-widget="org-hierarchy"]','Tree Open','展开状态不再有专属背景与文字染色','__QA_BUNDLE_HEAD__']
+ ['sla-tooltip','Tooltip arrow',[
+  ['[data-pv3x-widget="sla-tooltip"]','Tooltip alpha','Arrow uses actual PopupSurface background alpha; triangle is outside, never double-composited','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['palette-laboratory','ColorPanel',[
-  ['[data-pv3x-widget="palette-laboratory"]','ColorPanel','预览色块圆角随全局 Shape','__QA_BUNDLE_HEAD__']
+ ['danger-dialog','Modal mask',[
+  ['[data-pv3x-widget="danger-dialog"]','Modal blur','Modal/Drawer independent Theme dialog-mask-blur, capped at .5rem','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['inbox-notice','Message',[
-  ['.qxframe9a7c2-card-content','Message','Message 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['alerts-center','Notification',[
-  ['[data-pv3x-widget="alerts-center"]','Notification','Notification 边框与 Card 主题同步','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['capacity-calendar','Calendar current',[
-  ['[data-pv3x-widget="capacity-calendar"]','Calendar current','今天使用底部主题色小圆点','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['fiscal-periods','PeriodPanel current',[
-  ['[data-pv3x-widget="fiscal-periods"]','PeriodPanel current','当前年、月普通文字加小圆点','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['delete-policy','Popconfirm',[
-  ['[data-pv3x-widget="delete-policy"]','Popconfirm','小号 Button；去除内部固定最大宽度','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['customer-insights','Popover',[
-  ['[data-pv3x-widget="customer-insights"]','Popover','调整弹层四周留白','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['danger-dialog','Modal',[
-  ['[data-pv3x-widget="danger-dialog"]','Modal','加深遮罩、加强阴影；可配置背景模糊','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['account-drawer','Drawer',[
-  ['[data-pv3x-widget="account-drawer"]','Drawer','加深遮罩、加强阴影；可配置背景模糊','__QA_BUNDLE_HEAD__']
+ ['account-drawer','Drawer mask',[
+  ['[data-pv3x-widget="account-drawer"]','Drawer blur','Theme blur and darkness follow independent Dialog policy, not Menu 1.5rem','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -101,7 +80,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Wheel、Scroll、Tree Open、ColorPanel、通知边框、年月日当前项、Popover/Popconfirm 及重型弹窗。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Navigation Menu 前景色、Tree 选中状态、Tooltip 箭头透明度、Modal / Drawer 独立模糊。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

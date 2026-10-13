@@ -1,3 +1,11 @@
+## CURRENT — 2026-10-13 S5 Navigation/Tree/Tooltip/Dialog follow-up
+- Parent HEAD bb9e1f93df93b1b67dfb74c8f6e60fc490835efa already passed QXFRAME CI 38358999152 and CSS Schema 38358999243. User reported final visual gaps; PR #267 remains Draft, never merge.
+- Navigation Menu (the main menu, NOT portalled dropdown): Theme V2 paints Hover/Active/Selected/Open backgrounds using a local translucent Primary or Sidebar foreground mix, and uses --qxframe9a7c2-theme-sidebar-foreground for all text instead of inverse Menu popup ink. Portalled submenu popup retains its own Menu inversion.
+- Tree: shared Item/Popup rules exclude .qxframe9a7c2-tree-item from Open/Selected/Descendant/Indeterminate background roles. Only genuinely selected Tree node gets Primary text. Keep class, keyboard focus and hover semantics; official Tree JS/CSS unmodified.
+- Tooltip: actual arrow paint derives from --_qxframe9a7c2-popup-surface-bg, same as Tooltip content container. Outside-only non-overlapping clip-path triangle avoids double alpha; no Tooltip rotate declaration from shared Popover rule. All four placements remain supported.
+- Dialog: independent registered Theme --qxframe9a7c2-theme-dialog-mask-blur in the closed createApp token list, compilation 0.375rem when translucent / 0 normally, max .5rem via CSS clamp, no inherited Theme Menu 1.5rem blur. Both root/dark generated theme blocks updated; local dialog override remains supported; maskless always none. 
+- QA only highlights six new region slots on Preview03; previous 13-card highlights cleared. New CI and Chromium evidence required; do not claim passed before exact-head green.
+
 ## CURRENT — 2026-10-13 S5 visual consistency batch HEAD under CI
 - Implemented 13 current regions across WheelPanel/Picker, theme-derived semitransparent Scroll, structural-only Tree Open, ColorPanel roundness, Message/Notification Card border, Date/Period Today+Current dot, actual Popconfirm Button.is-sm/full-width, Popover padding, and independent darkened Modal/Drawer masks + blur + depth. Current-only Preview03 QA ledger replaces previous Tree rollback highlight. No changes to official main Tree JS/CSS. No PR merge.
 - CI rerun required. CSS role test updated to reflect Tree exclusion and canonical WheelPanel paint. Rollback/P1 baseline preserved.
