@@ -87,9 +87,10 @@ assert.doesNotMatch(tokenDocs,/Config\.configure\(\{\s*\\n\s*theme:|\['theme'|\[
 assert.doesNotMatch(siteDocs,/menu\.updateOptions\(\{\s*theme:|theme:\s*theme\(\)/,'Docs Menu must inherit CSS theme instead of runtime theme options.');
 
 assert.doesNotMatch(css,/@layer\b|:is\(|:where\(/,'Canonical CSS must not use forbidden @layer/:is()/:where().');
-// createApp v3 §5: light is :root, dark is the .dark class (no theme attribute).
-assert.match(css,/(^|[},\s]):root\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the :root default theme block.');
-assert.match(css,/(^|[},\s])\.dark\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the .dark theme block.');
+// Local inverse is a selector alias for the existing two full Theme token
+// declarations. Never add a third palette or separate component-only tokens.
+assert.match(css,/:root,\s*\.dark \[data-qxframe9a7c2-scheme="inverse"\]\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the shared light token block.');
+assert.match(css,/\.dark,\s*:root:not\(\.dark\) \[data-qxframe9a7c2-scheme="inverse"\]:not\(\.dark \*\)\s*\{[^}]*--qxframe9a7c2-theme-background/,'Canonical CSS must contain the shared dark token block.');
 
 const browser=[process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'].filter(Boolean).find(fs.existsSync);
 if(!browser){console.log(JSON.stringify({ok:true,structural:true,browserSkipped:true,reason:'chromium not found'}));process.exit(0);}
