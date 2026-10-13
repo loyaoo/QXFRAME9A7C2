@@ -1,14 +1,7 @@
-/** Stage5 latest owner screenshot: Picker Primary, ColorPicker focus, TreeSelect popup. */
+/** Stage5 latest owner screenshot: actual TreeSelect portal Choice fix only. */
 const groups = [
- ['release-planner','Picker Menu Primary',[
-  ['[data-pv3-component="release-date"]','Today dot','Neutral and colored Menu Primary instead of forced white','__QA_BUNDLE_HEAD__'],
-  ['[data-pv3-component="release-time"]','Wheel guide','Menu Primary-tinted guide','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['brand-studio','ColorPicker outline',[
-  ['[data-pv3-component="brand-color"]','ColorPanel focus','Readable keyboard/pointer focus and preset border','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['platform-tree','TreeSelect Choice',[
-  ['[data-pv3-component="workspace-tree-select"]','Inverse checkbox','Checked, mixed and unchecked popup contrast','__QA_BUNDLE_HEAD__']
+ ['platform-tree','TreeSelect inverse popup',[
+  ['[data-pv3-component="workspace-tree-select"]','Popup Choice squares','Checked and mixed checkbox squares now match Menu Primary, not light-page Primary','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -72,7 +65,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Today 主题色、Wheel Guide、ColorPicker 焦点与 TreeSelect 复选框。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：TreeSelect 反色下拉框中的选中/半选复选框。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
