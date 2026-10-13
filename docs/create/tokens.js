@@ -2,8 +2,8 @@
 // `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
 // qxframe.css and every createApp export) writes the whole list: `:root` holds
 // every token, `.dark` also contains every token (with dark values for colors).
-// Local [data-qxframe9a7c2-scheme="inverse"] is grouped into those SAME
-// two declarations. No third palette, no duplicated or component-only tokens.
+// Inverted Menu option aliases existing Popup selectors into the OPPOSITE
+// light/dark declaration. No app DOM markers, third palette, or duplicate tokens.
 // New tokens are added here only (registered), never ad hoc in CSS.
 //
 // kind:  color | length | number | percent | font | keyword | shadow | time
@@ -13,11 +13,13 @@ export const TOKEN_PREFIX = '--qxframe9a7c2-theme-';
 
 const C = (name, note) => ({ name, kind: 'color', mode: 'color', note });
 const L = (name, note, kind = 'length') => ({ name, kind, mode: 'root', note });
+const K = (name, note) => ({ name, kind: 'keyword', mode: 'color', note });
 
 export const THEME_TOKENS = [
   // shadcn semantic colors (base color + theme + chart + menu accent).
   C('background', 'Page background'),
   C('foreground', 'Page text'),
+  K('color-scheme', 'Native controls / light-dark() parity with local Theme'),
   C('card', 'Card surface'),
   C('card-foreground', 'Card text'),
   C('popover', 'Popup surface'),
