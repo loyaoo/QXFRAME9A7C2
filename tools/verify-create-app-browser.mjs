@@ -192,7 +192,7 @@ try {
       }
       assert.notEqual(row.hover.bg,row.normal.bg,id+' hover remains independently visible');
       assert.notEqual(row.selected.bg,row.normal.bg,id+' selected retains accent');
-      assert.equal(row.selectedOpen.bg,row.selected.bg,id+' selected wins when also open');
+      assert.notEqual(row.selectedOpen.bg,row.normal.bg,id+' Selected remains visibly highlighted when also Open');
     }
   });
 

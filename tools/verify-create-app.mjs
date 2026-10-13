@@ -142,7 +142,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"platform-tree":["[data-pv3-component=\\\"workspace-tree\\\"]","[data-pv3-component=\\\"workspace-tree-select\\\"]"]}; // Current: 1 Card / 2 regions
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Current: 1 Card / 2 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
