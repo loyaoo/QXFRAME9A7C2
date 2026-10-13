@@ -64,7 +64,7 @@
 .qxframe9a7c2-tree .qxframe9a7c2-tree-action:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-edit-input{box-sizing:border-box;min-width:0;flex:1 1 auto;width:100%;padding:0 var(--_qxframe9a7c2-fixed-space-1);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--qxframe9a7c2-theme-radius-button);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);font:inherit}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-edit-input:focus-visible{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-tree .qxframe9a7c2-tree-toggle.is-load-error{color:var(--qxframe9a7c2-theme-error)}
+.qxframe9a7c2-tree .qxframe9a7c2-tree-toggle.is-load-error{color:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-tree.is-show-line .qxframe9a7c2-tree-toggle:not(:disabled){border:1px solid var(--_qxframe9a7c2-semantic-border-subtle);border-radius:0}
 .qxframe9a7c2-tree.is-show-line .qxframe9a7c2-tree-line-unit::before{border-inline-start-style:dotted}
 .qxframe9a7c2-tree.is-show-line .qxframe9a7c2-tree-line-unit.is-current::after{border-block-start-style:dotted}

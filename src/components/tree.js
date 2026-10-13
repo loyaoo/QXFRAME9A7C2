@@ -45,7 +45,7 @@ function setupTreeRuntime(instance) {
         var loadedChildren = new Map();
         var loadErrors = new Map();
         var editingKey = null;
-        var scrollPaging={loading:false,hasMore:opts.hasMore===true,cursor:opts.pageCursor===undefined?null:opts.pageCursor,error:null,revision:0,abort:null,viewport:null};
+        var scrollPaging={loading:false,hasMore:opts.hasMore===true,cursor:opts.pageCursor===undefined?null:opts.pageCursor,error:null,revision:0,abort:null,viewport:null,unlisten:null};
         var loadingKeys = new Set();
         var toggleKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
         var checkKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
@@ -493,9 +493,9 @@ function setupTreeRuntime(instance) {
         function scrollPagingViewport() {
           var next=list&&list.getViewportElement?list.getViewportElement():null;
           if(next===scrollPaging.viewport)return;
-          if(scrollPaging.viewport)scrollPaging.viewport.removeEventListener('scroll',onTreeScroll);
+          if(scrollPaging.unlisten){scrollPaging.unlisten();scrollPaging.unlisten=null;}
           scrollPaging.viewport=next;
-          if(next)next.addEventListener('scroll',onTreeScroll,{passive:true});
+          if(next)scrollPaging.unlisten=DOM.listen(next,'scroll',onTreeScroll,{passive:true});
         }
         function appendPage(meta) {
           if(destroyed||!Utils.isFunction(opts.loadMore)||!scrollPaging.hasMore||scrollPaging.loading)return false;
@@ -1137,7 +1137,7 @@ function setupTreeRuntime(instance) {
         function disposeRuntime(reason) {
           if (destroyed) return false;
           destroyed = true;
-          if(scrollPaging.viewport)scrollPaging.viewport.removeEventListener('scroll',onTreeScroll);
+          if(scrollPaging.unlisten){scrollPaging.unlisten();scrollPaging.unlisten=null;}
           scrollPaging.viewport=null;invalidatePaging();
           loadTasks.destroy();
           searchState.destroy();
