@@ -56,7 +56,6 @@
 
 /* Tree node operation controls appear on hover/focus-within only.
    The Tree shell itself stays transparent, as with standalone List. */
-.qxframe9a7c2-tree .qxframe9a7c2-tree-row-content{min-width:0}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-actions{display:inline-flex;gap:var(--_qxframe9a7c2-fixed-space-1);margin-inline-start:auto;flex:0 0 auto;opacity:0;pointer-events:none}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-item:hover .qxframe9a7c2-tree-actions,.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-keyboard-focus .qxframe9a7c2-tree-actions,.qxframe9a7c2-tree .qxframe9a7c2-tree-actions.is-editing{opacity:1;pointer-events:auto}
 .qxframe9a7c2-tree .qxframe9a7c2-tree-action{display:inline-flex;align-items:center;justify-content:center;min-width:1.5rem;height:1.5rem;padding:0;border:1px solid transparent;border-radius:var(--qxframe9a7c2-theme-radius-button);background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;cursor:pointer}
