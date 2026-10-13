@@ -1240,8 +1240,8 @@ check('Local inverse scheme aliases the actual full light/dark theme token block
   assert.ok(theme.includes(dark),'local inverse in light context reuses dark declarations');
   assert.equal((theme.match(/--qxframe9a7c2-theme-background:/g)||[]).length,2,'no duplicated full Theme token blocks');
   const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
-  assert.ok(css.includes(':root, .dark [data-qxframe9a7c2-scheme="inverse"] { color-scheme: light; }'));
-  assert.ok(css.includes('.dark, :root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) { color-scheme: dark; }'));
+  assert.ok(css.includes('.dark [data-qxframe9a7c2-scheme="inverse"] { color-scheme: light; }'));
+  assert.ok(css.includes(':root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) { color-scheme: dark; }'));
   assert.ok(css.includes('.dark, [data-qxframe9a7c2-scheme="inverse"] { color: var(--qxframe9a7c2-theme-foreground); }'));
 });
 check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode inventory', () => {
