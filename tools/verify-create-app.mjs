@@ -23,6 +23,11 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.match(js,/QXFRAME9A7C2_PREVIEW3/,'JS exports live runtime diagnostics');
   assert.match(js,/Factory\.create/,'Original 18 Cards mount a public QX constructor');
   assert.match(html,/preview-03\.css/);
+  assert.ok(css.includes('.pv3-hero h1{font-family:var(--qxframe9a7c2-theme-font-heading,inherit)'),'Preview03 hero follows heading font');
+  assert.ok(css.includes('.pv3x-section-heading h2{font-family:var(--qxframe9a7c2-theme-font-heading,inherit)'),'Preview03 second section follows heading font');
+  assert.match(css,/\.pv3x-event-list>div\{[^}]*transition:opacity var\(--qxframe9a7c2-theme-duration-sm\) ease,transform var\(--qxframe9a7c2-theme-duration-sm\) ease/,'Event motion maps to Theme');
+  assert.match(css,/\.pv3x-process-chip\{[^}]*transition:background-color var\(--qxframe9a7c2-theme-duration-md\) ease/,'Process motion maps to Theme');
+  assert.doesNotMatch(css,/transition:[^;}]*\b(?:\.16s|\.2s)\b/,'Preview03 no hard-coded transition durations');
   assert.match(html,/preview-03\.js/);
   assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
   assert.match(read('offline-qa-changes.mjs'),/group\[3\]==='03'/,'offline QA locator handles third page');
@@ -158,7 +163,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"fraud-decision":[".qxframe9a7c2-form-check-input"],"audit-checklist":[".qxframe9a7c2-form-check-input"],"sla-tooltip":["[data-pv3x-widget=\"sla-tooltip\"]"],"contract-documents":["[data-pv3x-widget=\"contract-documents\"]"],"palette-laboratory":["[data-pv3x-widget=\"palette-laboratory\"]"],"delete-policy":["[data-pv3x-widget=\"delete-policy\"]"],"stakeholder-roster":[".qxframe9a7c2-avatar"],"compliance-flags":[".qxframe9a7c2-badge"],"alert-triage":[".qxframe9a7c2-alert"],"trading-toolbar":[".qxframe9a7c2-button"]} // Current Stage5 shared visual batch: 10 Cards / 10 regions
+  const current={"stream-animation":[".pv3x-event-list"],"state-transitions":[".pv3x-process"]}; // P2 theme consumer batch: 2 Cards / 2 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -173,7 +178,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,10,'only current Choice/Tooltip/Upload/ColorPanel/Popconfirm/neutral regions are highlighted');
+  assert.equal(count,2,'only 2 current Preview03 Theme Motion regions highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
