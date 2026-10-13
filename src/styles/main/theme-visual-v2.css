@@ -465,13 +465,20 @@
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-scroll-thumb:hover {
     background: var(--qxframe9a7c2-scroll-thumb-hover-color, var(--qxframe9a7c2-theme-menu-foreground));
   }
+  /* A translucent Menu accent already contains the source palette Primary.
+     Restore its original chroma at full opacity for small markers and focus
+     boundaries: neutral stays legible, colored inverted menus stay colored.
+     No extra Theme token or light/dark/inverted selector is necessary. */
+  .qxframe9a7c2-picker-field-panel {
+    --_qxframe9a7c2-v2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
+  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
-    border-block-color: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent);
-    background: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent);
+    border-block-color: var(--qxframe9a7c2-theme-menu-accent);
+    background: var(--_qxframe9a7c2-v2-menu-selected-soft);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected):not(.is-disabled)::after,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(.is-disabled)::after {
-    background: var(--qxframe9a7c2-theme-menu-foreground);
+    background: var(--_qxframe9a7c2-v2-menu-primary-solid);
   }
   /* Hover is a neutral highlight; selected rows alone consume the saturated
      Menu accent/foreground pair. This applies to all shared ItemSurface users. */
@@ -540,6 +547,18 @@
     /* ColorPanel itself owns field borders; nested Picker does not override. */
     --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
   }
+  /* Keyboard outline remains the shared 2px / -1px Focus contract, but on
+     inverse-light popups its color must be derived from the Menu surface,
+     not from the light page. Pointer borders use solid Menu Primary. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel *,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-angle,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-remove {
+    --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-v2-menu-primary-solid);
+  }
 
   /* Picker's auxiliary controls are not ItemSurface rows. They previously
      painted page-primary ink onto a potentially opposite menu background. */
@@ -558,7 +577,7 @@
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-active,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop.is-active {
-    border-color: var(--_qxframe9a7c2-v2-menu-selected-soft);
+    border-color: var(--_qxframe9a7c2-v2-menu-primary-solid);
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active) {
