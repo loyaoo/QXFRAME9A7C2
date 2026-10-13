@@ -7,7 +7,7 @@
  * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT. */
 :root { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); }
-:root, .dark, .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
   color-scheme: var(--qxframe9a7c2-theme-color-scheme);
 }
 .dark { color: var(--qxframe9a7c2-theme-foreground); }
