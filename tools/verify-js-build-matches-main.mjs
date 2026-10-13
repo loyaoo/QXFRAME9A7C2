@@ -1,5 +1,5 @@
 // Stage 5 explicit user authorization: InputOTP root semantics, Overlay/Modal
-// lifecycle, Cascader geometry, and authorized Tree / TreeSelect lazy, operations, virtual paging and TreeSelect contract additions may change.
+// lifecycle and Cascader geometry only. Tree, TreeSelect and contracts must equal main.
 // All unrelated JS sources must still match main exactly.
 // Verify all other JS sources, enforce exact allowlist, and compare two builds
 // of this HEAD byte-for-byte (rather than incorrectly claiming JS == main).
@@ -14,7 +14,7 @@ if(!refArg){console.error('usage: --reference=<main checkout>/dist');process.exi
 const reference=path.resolve(refArg.slice('--reference='.length));
 const mainRoot=path.dirname(reference),dist=path.join(root,'dist');
 const EXCLUDED=new Set(['qxframe9a7c2.css']);
-const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/tree.js','src/components/tree-select.js','src/core/componentContracts.js']);
+const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js']);
 function walk(dir,base=dir){
  if(!fs.existsSync(dir))return[];
  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
@@ -32,29 +32,8 @@ const sourceChanges=[...sourcePaths].filter(x=>{
  const a=bytes(path.join(root,'src',x)),b=bytes(path.join(mainRoot,'src',x));
  return !a||!b||!a.equals(b);
 }).map(x=>'src/'+x).sort();
-// This core file is authorized ONLY for the TreeSelect option additions.
-// All other contracts, inherited runtime validators and schema order stay byte-identical to main.
-function treeSelectContractShape(text){
- const line=text.split('\n').find(s=>s.includes('"TreeSelect": Object.freeze({ schema: schema(['));
- if(!line)throw new Error('[js-build] missing TreeSelect canonical contract row');
- const m=line.match(/schema\(\[([^\]]*)\]\)/);
- if(!m)throw new Error('[js-build] cannot read TreeSelect option list');
- return {line,raw:m[0],keys:JSON.parse('['+m[1]+']')};
-}
-function authorizedTreeSelectContractOnly(){
- const ownFile=bytes(path.join(root,'src/core/componentContracts.js'));
- const baseFile=bytes(path.join(mainRoot,'src/core/componentContracts.js'));
- if(!ownFile||!baseFile)return false;
- const ownText=ownFile.toString('utf8'),baseText=baseFile.toString('utf8');
- const own=treeSelectContractShape(ownText),base=treeSelectContractShape(baseText);
- const expected=['beforeOperate','editable','hasMore','isItemEditable','lazy','loadMore','loadMoreThreshold','onLoadMore','onLoadMoreError','onOperate','pageCursor','pageSize'];
- const additions=own.keys.filter(k=>!base.keys.includes(k)).sort();
- if(JSON.stringify(additions)!==JSON.stringify(expected.slice().sort()))return false;
- if(JSON.stringify(own.keys.filter(k=>base.keys.includes(k)))!==JSON.stringify(base.keys))return false;
- return ownText.replace(own.raw,base.raw)===baseText;
-}
-const coreContractAllowed=authorizedTreeSelectContractOnly();
-const unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)||(x==='src/core/componentContracts.js'&&!coreContractAllowed));
+// Tree and TreeSelect are identical to main; do not authorize runtime/schema deviations.
+const unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x));
 
 let repeatable=true;
 if(sourceChanges.length){
@@ -71,5 +50,5 @@ for(const p of missing)console.error('[js-build] missing vs main: '+p);
 for(const p of extra)console.error('[js-build] extra vs main: '+p);
 if(!sourceChanges.length)for(const p of changed)console.error('[js-build] differs from main without authorized source: '+p);
 const ok=!missing.length&&!extra.length&&!unauthorized.length&&ours.length>0&&repeatable&&(!changed.length||sourceChanges.length>0);
-console.log(JSON.stringify({ok,compared:ours.length,missing:missing.length,extra:extra.length,changed:changed.length,sourceChanges,unauthorized,coreContractAllowed,repeatable}));
+console.log(JSON.stringify({ok,compared:ours.length,missing:missing.length,extra:extra.length,changed:changed.length,sourceChanges,unauthorized,repeatable}));
 process.exit(ok?0:1);

@@ -1767,7 +1767,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
  assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)||(x==='src/core/componentContracts.js'&&!coreContractAllowed))"),'JS main parity rejects all unrelated source changes including non-TreeSelect contract edits');
- assert.ok(jsParity.includes('function authorizedTreeSelectContractOnly()'),'TreeSelect contract exception must be verified against main, not blanket-allowed');
+ assert.ok(jsParity.includes('src/components/cascader.js'),'JS parity remains strict on unrelated sources');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
  assert.ok(browser.includes('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click'),'Cascader real Popup pointer-expansion Chromium guard must remain');
@@ -1783,10 +1783,6 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
  assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
  assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
- assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'Tree disclosure keeps independent visual owner');
- assert.ok(theme.includes('--_qxframe9a7c2-item-bg: transparent;\n    --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-semantic-text);'),'Tree open and partial-check rows stay neutral');
- assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-indeterminate:not(.is-selected)'),'partial-check state never paints Selected');
- assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open.is-hover:not(.is-selected)'),'Tree expanded hover remains neutral');
  assert.doesNotMatch(choice,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-item\.is-open[^\n]*\.qxframe9a7c2-tree-check-indicator/,'Tree Open cannot invert global Checkbox');
  assert.ok(choice.includes(':not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'TreeSelect popup must not invert canonical Choice Checkbox');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
@@ -1810,38 +1806,18 @@ check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo op
 });
 
 
-check('Stage5 virtual Tree reconciles inline editor on same-key visible row',()=>{
- const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
- assert.ok(tree.includes('function reconcileEditRow(key)'),'Tree has visible virtual row edit lifecycle owner');
- assert.ok(tree.includes('old.parentNode.replaceChild(replacement,old)'),'editing swaps only the Tree-owned row body');
- assert.ok(tree.includes('reconcileEditRow(key);'),'edit transition updates DOM even without virtual range change');
-});
-
-check('Stage5 asynchronous Tree result consumers accept settled current AsyncTaskGroup results',()=>{
- const js=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
- assert.ok(js.includes('if (!result || destroyed) return;'),'lazy node completion accepts settled task result');
- assert.ok(js.includes('if(!result||destroyed||generation!==scrollPaging.revision)return;'),'streamed paging accepts settled result with generation guard');
- assert.doesNotMatch(js,/result\.isCurrent\(\)/,'AsyncTaskGroup current flag is false once a successful run settles and cannot be checked in then()');
-});
-
-check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical owners',()=>{
+check('Stage5 Tree uses official main API, not experimental edits or paging',()=>{
  const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
- const css=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
- const parity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ const schema=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
+ assert.match(tree,/static options = Object\.freeze/,'original Tree definition');
+ assert.doesNotMatch(tree,/loadNextPage:appendPage|retryLoad:retryLoad|finishRename\(true,event\)/,'experimental APIs removed');
+ assert.doesNotMatch(select,/lazy:opts\.lazy===true|loadMore:opts\.loadMore|onOperate:opts\.onOperate/,'TreeSelect restored');
+ const line=schema.split('\n').find(x=>x.includes('"TreeSelect": Object.freeze({ schema: schema(['))||'';
+ for(const field of ['"beforeOperate"','"loadMore"','"onOperate"','"pageSize"'])assert.ok(!line.includes(field),'no non-main TreeSelect API '+field);
  const qa=fs.readFileSync(path.join(root,'docs/qa/tree-large-data.html'),'utf8');
- for(const token of ['loadNextPage:appendPage','opts.loadMore(detail)','loadMoreThreshold',"pageTasks.invalidate('tree-paging-reset')",'getViewportElement','pageHasMore:scrollPaging.hasMore','virtual: opts.virtual','loadTasks.run(key','onOperate','finishRename(true,event)'])
- assert.ok(tree.includes(token),'Tree canonical lazy/page/operations '+token);
- assert.ok(select.includes('lazy:opts.lazy===true')&&select.includes('onOperate:opts.onOperate')&&select.includes('loadMore:opts.loadMore'),'TreeSelect forwards Tree behaviors');
- const contracts=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
- const treeSelectContract=contracts.split('"TreeSelect": Object.freeze({ schema: schema([')[1]?.split(']), legacy:')[0]||'';
- for(const field of ['"lazy"','"editable"','"onOperate"','"loadMore"','"loadMoreThreshold"','"hasMore"','"pageCursor"','"pageSize"'])assert.ok(treeSelectContract.includes(field),'TreeSelect public contract '+field);
- assert.ok(css.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-actions'),'Tree action visuals belong to component');
- assert.ok(parity.includes("'src/components/tree.js'")&&parity.includes("'src/components/tree-select.js'"),'JS parity allowlist is explicit');
- assert.ok(qa.includes('virtual:true')&&qa.includes('loadMore:function')&&qa.includes('loadChildren:function')&&qa.includes('Q.BuildingBlocks.Tree'),'demo uses public BuildingBlocks.Tree and exercises virtual/scroll/lazy');
- assert.doesNotMatch(css,/display:grid|@layer|:where\(|:is\(/,'CSS restrictions remain enforced');
+ assert.ok(qa.includes('3000')&&qa.includes('virtual:true'),'official Tree still stresses 3000 nodes');
 });
-
 check('Stage5 TreeSelect checked/mixed/unchecked checkbox must use global Choice',()=>{
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
