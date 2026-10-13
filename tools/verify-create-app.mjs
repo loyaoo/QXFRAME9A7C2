@@ -1234,8 +1234,8 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
 
 check('Local inverse scheme aliases the actual full light/dark theme token blocks',()=>{
   const theme=model.compileTheme(model.normalizeConfig({style:'nova'})).body;
-  const light=':root,\\n.dark [data-qxframe9a7c2-scheme="inverse"] {';
-  const dark='.dark,\\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {';
+  const light=':root,\n.dark [data-qxframe9a7c2-scheme="inverse"] {';
+  const dark='.dark,\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {';
   assert.ok(theme.startsWith(light),'local inverse in dark context reuses light declarations');
   assert.ok(theme.includes(dark),'local inverse in light context reuses dark declarations');
   assert.equal((theme.match(/--qxframe9a7c2-theme-background:/g)||[]).length,2,'no duplicated full Theme token blocks');
