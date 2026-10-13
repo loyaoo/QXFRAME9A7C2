@@ -1238,7 +1238,7 @@ check('Generated inverted Menu is CSS-only with real popup root aliases and no D
   assert.ok(def.startsWith(':root {\n'),'Default Theme retains canonical two blocks');
   assert.ok(def.includes('\n.dark {'),'Default dark block unchanged');
   assert.doesNotMatch(def,/data-qxframe9a7c2-scheme|qxframe9a7c2-popup-surface/,'No automatic inverse scope on normal menu');
-  assert.ok(inverse.startsWith(':root,\\n.dark .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)'),'Inversion extends existing light token block');
+  assert.ok(inverse.startsWith(':root,\n.dark .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)'),'Inversion extends existing light token block');
   assert.ok(inverse.includes(':root:not(.dark) .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.dark *)'),'Inversion extends existing dark token block');
   for(const name of ['menu-submenu-panel','menu-overflow-panel'])assert.ok(inverse.includes('qxframe9a7c2-'+name),'Existing floating Menu '+name+' matches inversion');
   assert.equal((inverse.match(/--qxframe9a7c2-theme-background:/g)||[]).length,2,'No third Theme declaration');
