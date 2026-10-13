@@ -43,6 +43,7 @@ function setupTreeRuntime(instance) {
         var api = instance;
         var searchState = SearchState.create({ query:'', onChange:function(value,meta){ if (destroyed) return; refresh('search'); var payload={searchValue:value,source:meta.source||'api',reason:meta.reason||'search',tree:api}; if(meta.notify!==false&&Utils.isFunction(opts.onSearch))opts.onSearch(value,payload); if(meta.silent!==true)emitter.emit('search',payload); } });
         var loadedChildren = new Map();
+        var loadErrors = new Map();
         var loadingKeys = new Set();
         var toggleKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
         var checkKeyByNode = typeof WeakMap === 'function' ? new WeakMap() : null;
@@ -177,6 +178,8 @@ function setupTreeRuntime(instance) {
           if (!record || !Utils.isFunction(opts.loadChildren)) return false;
           if (record.item && record.item.leaf === true) return false;
           if (loadedKeys.has(record.key)) return false;
+          /* Strict lazy mode only expands explicitly advertised child branches. */
+          if (opts.lazy === true && !(record.item && (record.item.hasChildren === true || record.item.lazy === true))) return false;
           return !model.hasChildren(record.key);
         }
     
@@ -338,9 +341,11 @@ function setupTreeRuntime(instance) {
             if (row.hasItems) {
               if (toggleKeyByNode) toggleKeyByNode.set(toggle, row.key);
               toggle.classList.toggle('is-loading', loadingKeys.has(row.key));
+              toggle.classList.toggle('is-load-error', loadErrors.has(row.key));
+              if (loadErrors.has(row.key)) toggle.title = 'Retry loading children';
               var switcher = Utils.isFunction(opts.renderSwitcher) ? opts.renderSwitcher(row.item, { key:row.key, expanded:isExpanded(row.key), loading:loadingKeys.has(row.key), tree:api }) : null;
               if (switcher && typeof switcher === 'object' && typeof switcher.nodeType === 'number') toggle.appendChild(switcher);
-              else if (switcher === undefined || switcher === null || switcher === '') { var toggleGlyph = doc.createElement('span'); toggleGlyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-' + (loadingKeys.has(row.key) ? 'sync' : (isExpanded(row.key) ? 'caret-down' : 'caret-right')) + ' is-line is-round is-stroke-3' + (loadingKeys.has(row.key) ? ' is-spin' : ''); toggle.appendChild(toggleGlyph); }
+              else if (switcher === undefined || switcher === null || switcher === '') { var toggleGlyph = doc.createElement('span'); toggleGlyph.className = 'qxframe9a7c2-icon qxframe9a7c2-icon-' + (loadingKeys.has(row.key) ? 'sync' : (loadErrors.has(row.key) ? 'refresh-cw' : (isExpanded(row.key) ? 'caret-down' : 'caret-right'))) + ' is-line is-round is-stroke-3' + (loadingKeys.has(row.key) ? ' is-spin' : ''); toggle.appendChild(toggleGlyph); }
               else toggle.textContent = String(switcher);
             } else toggle.disabled = true;
             return toggle;
@@ -460,11 +465,13 @@ function setupTreeRuntime(instance) {
           if (!record || !isLazyExpandable(record) || loadingKeys.has(record.key)) return false;
           var key = record.key;
           loadingKeys.add(key);
+          loadErrors.delete(key);
           syncTreeRows();
           loadTasks.run(key, { record: record, meta: meta || {} }, { source: meta && meta.source || 'api' }).then(function (result) {
             if (!result || !result.isCurrent || !result.isCurrent() || destroyed) return;
             loadingKeys.delete(key);
             if (result.error) {
+              loadErrors.set(key,result.error);
               syncTreeRows();
               var errorDetail = { key: key, item: record.item, error: result.error, tree: api };
               if (Utils.isFunction(opts.onLoadError)) opts.onLoadError(result.error, errorDetail);
@@ -475,6 +482,7 @@ function setupTreeRuntime(instance) {
             var nextChildren = Array.isArray(result.children) ? result.children : [];
             try { validateItems(nextChildren, opts); }
             catch (error) {
+              loadErrors.set(key,error);
               syncTreeRows();
               var validationDetail = { key: key, item: record.item, error: error, tree: api };
               if (Utils.isFunction(opts.onLoadError)) opts.onLoadError(error, validationDetail);
@@ -483,6 +491,7 @@ function setupTreeRuntime(instance) {
               return;
             }
             loadedKeys.add(key);
+            loadErrors.delete(key);
             loadedChildren.set(key, nextChildren.slice());
             model.updateOptions({ items: Array.isArray(opts.items) ? opts.items : [], getKey: keyOf, getItems: itemsOf, getParentKey: opts.getParentKey });
             pruneStateAfterModelChange();
@@ -493,6 +502,12 @@ function setupTreeRuntime(instance) {
             emitter.emit('load', detail);
           });
           return true;
+        }
+
+        function retryLoad(key, meta) {
+          var normalized = String(key), record = model && model.getRecord(normalized);
+          if (destroyed || !record || !isLazyExpandable(record)) return false;
+          return loadRecord(record, mergeOptions({ source:'api', reason:'retry-load' }, meta));
         }
 
         function expand(key, meta) {
@@ -642,6 +657,7 @@ function setupTreeRuntime(instance) {
           var validKeys = new Set(model.keys);
           disclosure.setValue(expandedKeys().filter(function (key) { return validKeys.has(key) && canExpand(model.getRecord(key)); }), { silent: true, reason: 'prune-expanded' });
           loadedKeys = new Set(Array.from(loadedKeys).filter(function (key) { return validKeys.has(key); }));
+          loadErrors.forEach(function (_, key) { if (!validKeys.has(key)) loadErrors.delete(key); });
           loadingKeys = new Set(Array.from(loadingKeys).filter(function (key) { return validKeys.has(key); }));
           loadedChildren.forEach(function (_, key) { if (!validKeys.has(key)) loadedChildren.delete(key); });
           applyChecked(checkedSelection.values.filter(function (key) { return validKeys.has(String(key)); }), { silent: true, reason: 'prune-checked' });
@@ -653,6 +669,7 @@ function setupTreeRuntime(instance) {
           opts.items = Array.isArray(items) ? items.slice() : [];
           loadedChildren.clear();
           loadingKeys.clear();
+          loadErrors.clear();
           loadedKeys.clear();
           loadTasks.invalidate('tree-items');
           model.setItems(opts.items, { silent: true, source: 'api', reason: 'tree-items' });
@@ -773,7 +790,8 @@ function setupTreeRuntime(instance) {
               event.preventDefault(); event.stopPropagation(); if (event.stopImmediatePropagation) event.stopImmediatePropagation();
               var toggleKey = toggleKeyByNode && toggleKeyByNode.get(toggle);
               if (toggleKey) list.setActiveKey(toggleKey, { source: DOM.activationSource(event), reason: 'toggle-active', originalEvent: event });
-              toggleExpand(toggleKey, { source: DOM.activationSource(event), reason: 'toggle', originalEvent: event });
+              if (toggleKey && loadErrors.has(toggleKey) && isExpanded(toggleKey)) retryLoad(toggleKey, { source:DOM.activationSource(event), reason:'retry-after-error', originalEvent:event });
+              else toggleExpand(toggleKey, { source: DOM.activationSource(event), reason: 'toggle', originalEvent: event });
               list.focusWrap();
               return;
             }
@@ -926,7 +944,7 @@ function setupTreeRuntime(instance) {
           var structuralChanged = hasOwn(next, 'items') || hasOwn(next, 'getKey') || hasOwn(next, 'getItems') || hasOwn(next, 'getParentKey');
           Utils.copyOwn(opts, next);
           if (structuralChanged) {
-            loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear();
+            loadTasks.invalidate('tree-structure'); loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear();
             if (!hasOwn(next, 'loadedKeys')) loadedKeys.clear();
           }
           model.updateOptions({ items: Array.isArray(opts.items) ? opts.items : [], rootKey: opts.rootKey, maxNodes: opts.maxNodes, getKey: keyOf, getItems: itemsOf, getParentKey: opts.getParentKey });
@@ -960,6 +978,7 @@ function setupTreeRuntime(instance) {
             indeterminateKeys: Array.from(indeterminateKeys),
             loadedKeys: Array.from(loadedKeys),
             loadingKeys: Array.from(loadingKeys),
+            loadErrorKeys: Array.from(loadErrors.keys()),
             visibleKeys: visibleRecords().map(function (record) { return record.key; }),
             searchValue: searchState.query,
             multiple: opts.multiple === true,
@@ -989,7 +1008,7 @@ function setupTreeRuntime(instance) {
           selectionController.destroy();
           checkedSelection = null;
           selectionController = null;
-          loadedChildren.clear(); loadingKeys.clear(); loadedKeys.clear(); indeterminateKeys.clear();
+          loadedChildren.clear(); loadingKeys.clear(); loadErrors.clear(); loadedKeys.clear(); indeterminateKeys.clear();
           reorderInteraction = null; root = null;
           return true;
         }
@@ -1001,7 +1020,7 @@ function setupTreeRuntime(instance) {
           setItems:setItems,
           setValue:function(value,meta){ if(!destroyed){ list.setValue(value,meta||{source:'api',reason:'tree-set-value'}); syncTreeRows(); } return api; },
           clear:function(meta){ if(!destroyed){ list.clear(meta||{source:'api',reason:'tree-clear'}); syncTreeRows(); } return api; },
-          setCheckedKeys:setCheckedKeys, check:check, setExpandedKeys:setExpandedKeys, expand:expand, collapse:collapse, expandAll:expandAll, collapseAll:collapseAll, expandAncestors:expandAncestors, expandSelected:expandSelected, toggleExpand:toggleExpand, isExpanded:isExpanded, setSearch:setSearch,
+          setCheckedKeys:setCheckedKeys, check:check, setExpandedKeys:setExpandedKeys, retryLoad:retryLoad, expand:expand, collapse:collapse, expandAll:expandAll, collapseAll:collapseAll, expandAncestors:expandAncestors, expandSelected:expandSelected, toggleExpand:toggleExpand, isExpanded:isExpanded, setSearch:setSearch,
           setActiveKey:function(key,meta){ return destroyed?false:list.setActiveKey(key,meta); },
           focus:function(key){ if(destroyed)return false; if(key!==undefined&&key!==null&&key!=='')list.setActiveKey(String(key),{source:'api',reason:'tree-focus'}); return list.focusWrap(); },
           focusFirst:function(){return destroyed?false:list.focusFirst();}, focusLast:function(){return destroyed?false:list.focusLast();}, focusSelected:function(){return destroyed?false:list.focusSelected();}, focusWrap:function(){return destroyed?false:list.focusWrap();},
@@ -1024,7 +1043,7 @@ export class Tree extends Component {
     selection:Object.freeze({ channels:Object.freeze(['selected','checked']), hierarchical:true }),
     ownership:Object.freeze({ selection:'SelectionController' })
   });
-  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, size:'md' });
+  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, lazy:false, size:'md' });
   static immutableOptions = Object.freeze(['container']);
   static createDefaultDOM = ItemCollection.createDefaultDOM;
 
@@ -1041,6 +1060,7 @@ export class Tree extends Component {
   check(key,checked,meta){return runtimeFor(this).check(key,checked,meta);}
   setExpandedKeys(keys,meta){return runtimeFor(this).setExpandedKeys(keys,meta);}
   expand(key,meta){return runtimeFor(this).expand(key,meta);}
+  retryLoad(key,meta){return runtimeFor(this).retryLoad(key,meta);}
   collapse(key,meta){return runtimeFor(this).collapse(key,meta);}
   expandAll(meta){return runtimeFor(this).expandAll(meta);}
   collapseAll(meta){return runtimeFor(this).collapseAll(meta);}
