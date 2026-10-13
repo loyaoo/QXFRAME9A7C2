@@ -239,7 +239,7 @@ try {
       assert.notEqual(r.presetHoverBorder,r.presetActiveBorder,id+' native ColorPanel preset hover border differs from selected');
       assert.equal(r.presetHoverBorder,r.neutralBorder,id+' ColorPanel preset hover uses neutral border');
       assert.equal(r.presetActiveBorder,r.softSelectedBg,id+' ColorPanel active preset border remains translucent with Menu accent');
-      assert.equal(r.wheelGuideBorder,r.neutralBorder,id+' WheelPanel guide uses passive border');
+      assert.notEqual(r.wheelGuideBorder,r.neutralBorder,id+' WheelPanel guide must preserve its own accent border instead of PickerField passive border');
       // Chromium's computed pseudo-range height mirrors the host input, not its native track.
       // Probe the computed shared recipe; the source gate enforces pseudo-track consumption.
       assert.equal(r.hueRail,r.sliderRail,id+' ColorPanel native hue track recipe matches Slider rail');
