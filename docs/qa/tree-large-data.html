@@ -35,7 +35,7 @@ hasMore:true,pageSize:150,loadMoreThreshold:200,
 loadChildren:function(item){return new Promise(function(resolve,reject){setTimeout(function(){tries++;if(tries===1)reject(new Error('Retry demo'));else resolve(Array.from({length:20},function(_,i){var k='lazy-'+i;return{key:k,value:k,label:'Loaded child '+i};}));},120);});},
 loadMore:function(ctx){return new Promise(function(resolve){setTimeout(function(){var start=3000+page*150;page++;resolve({items:Array.from({length:150},function(_,i){var k='root-'+(start+i);return{key:k,value:k,label:'Scrolled page row '+(start+i)};}),hasMore:page<7,cursor:page});},100);});},
 onOperate:function(detail){if(!mutate(source,detail))return false;tree.setItems(source);measure();return true;},
-onLoad:function(){measure();},onLoadError:function(){measure();},onLoadMore:function(r){source=source.concat(r.items);measure();},onLoadMoreError:function(){measure();}
+onLoad:function(children,detail){if(detail.key==='lazy-root')source[0].items=children.slice();measure();},onLoadError:function(){measure();},onLoadMore:function(r){source=source.concat(r.items);measure();},onLoadMoreError:function(){measure();}
 });
 window.QXFRAME9A7C2_TREE_QA={tree:tree,measure:measure};
 document.querySelectorAll('[data-action]').forEach(function(button){button.addEventListener('click',function(){var action=button.dataset.action;if(action==='next')tree.loadNextPage({source:'button'});else if(action==='expand')tree.expand('lazy-root');else if(action==='retry')tree.retryLoad('lazy-root');measure();});});measure();
