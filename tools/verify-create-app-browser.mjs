@@ -189,55 +189,6 @@ try {
     }
   });
 
-  await step('Tree disclosure never looks selected, including partial ancestors and TreeSelect Popup',async()=>{
-    const samples=await evaluate(`(() => {
-      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;
-      const root=d.documentElement,original=api.state.config,wasDark=root.classList.contains('dark');
-      const host=d.createElement('section'),sheet=d.createElement('style');
-      host.style.cssText='position:absolute;left:-10000px;top:0;width:24rem';
-      const check='<span class="qxframe9a7c2-tree-check-wrap"><input type="checkbox" class="qxframe9a7c2-tree-check" checked><span class="qxframe9a7c2-tree-check-indicator"></span></span>';
-      const row=(classes,key)=>'<div data-row="'+key+'" class="qxframe9a7c2-item-surface qxframe9a7c2-tree-item '+classes+'">'+check+'<span>Node</span></div>';
-      const items=row('','normal')+row('is-open','open')+row('is-open is-descendant-selected is-indeterminate','partial')+
-        row('is-descendant-selected','descendant')+row('is-open is-hover','hover')+
-        row('is-selected','selected')+row('is-selected is-open','selectedOpen');
-      host.innerHTML='<div class="qxframe9a7c2-tree" data-tree-test="page">'+items+'</div>'+
-        '<div class="qxframe9a7c2-popup-surface" data-tree-test="popup"><div class="qxframe9a7c2-tree">'+items+'</div></div>';
-      d.head.append(sheet);d.body.append(host);
-      // Keep the Theme matrix deterministic: compare final colors, never
-      // in-flight cross-theme transitions on Tree rows and Choice indicators.
-      host.querySelectorAll('.qxframe9a7c2-tree-item,.qxframe9a7c2-tree-check-indicator').forEach(el=>el.style.setProperty('transition','none','important'));
-      const cases=[];
-      for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
-        for(const dark of [false,true])for(const accent of ['subtle','bold']){
-          root.classList.toggle('dark',dark);
-          sheet.textContent=api.compileTheme({...original,style,menuAccent:accent,menuColor:'inverted'},{generatedAt:''}).body;
-          const scopes={};
-          for(const context of ['page','popup']){
-            const scope=host.querySelector('[data-tree-test="'+context+'"]'),rows={};
-            for(const key of ['normal','open','partial','descendant','hover','selected','selectedOpen']){
-              const el=scope.querySelector('[data-row="'+key+'"]'),cs=getComputedStyle(el);
-              rows[key]={bg:cs.backgroundColor,fg:cs.color,check:getComputedStyle(el.querySelector('.qxframe9a7c2-tree-check-indicator')).backgroundColor};
-            }
-            scopes[context]=rows;
-          }
-          cases.push({style,dark,accent,scopes});
-        }
-      root.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;
-    })()`);
-    assert.equal(samples.length,32,'8 Styles x light/dark x subtle/bold Menu Accent');
-    for(const x of samples)for(const context of ['page','popup']){
-      const row=x.scopes[context],id=x.style+'/'+x.dark+'/'+x.accent+'/'+context;
-      for(const key of ['open','partial','descendant']){
-        assert.equal(row[key].bg,row.normal.bg,id+' '+key+' has neutral background');
-        assert.equal(row[key].fg,row.normal.fg,id+' '+key+' has normal foreground');
-        assert.equal(row[key].check,row.normal.check,id+' '+key+' Choice check is unchanged by disclosure');
-      }
-      assert.notEqual(row.hover.bg,row.normal.bg,id+' hover remains independently visible');
-      assert.notEqual(row.selected.bg,row.normal.bg,id+' selected retains accent');
-      assert.notEqual(row.selectedOpen.bg,row.normal.bg,id+' Selected remains visibly highlighted when also Open');
-    }
-  });
-
   await step('Menu inverse Picker descendants use readable local semantic roles (8 Styles x 2 modes x 4 Menu variants)',async()=>{
     const result=await evaluate("(() => {"+
       "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;"+
@@ -2936,61 +2887,25 @@ try {
     }
   });
 
-  await step('Tree 3000-row real virtual DOM, lazy retry, inline rename and streamed scroll pages',async()=>{
+  await step('Official main Tree 3000-node VirtualList and selection',async()=>{
     await s('Page.navigate',{url:origin+'/docs/qa/tree-large-data.html'});
-    await waitFor("!!window.QXFRAME9A7C2_TREE_QA?.tree || !!document.querySelector('[data-status]')?.textContent?.startsWith('Tree unavailable')",'3k Tree mount or explicit failure',10000);
-    const diag=await evaluate("({title:document.title,status:document.querySelector('[data-status]')?.textContent,hasBuildingBlock:!!window.QXFRAME9A7C2?.BuildingBlocks?.Tree,hasComponent:!!window.QXFRAME9A7C2?.Components?.Tree,errors:document.querySelectorAll('.qxframe9a7c2-virtual-list').length})");
-    assert.ok(!!(await evaluate('window.QXFRAME9A7C2_TREE_QA?.tree?.getState().virtual')), '3000-row Tree must mount via its published BuildingBlocks.Tree export: '+JSON.stringify(diag));
+    await waitFor("!!window.QXFRAME9A7C2_TREE_QA?.tree || document.querySelector('[data-status]')?.textContent?.includes('Tree unavailable')",'official Tree mount',12000);
     const initial=await evaluate(`(() => {
-      const s=window.QXFRAME9A7C2_TREE_QA.tree.getState();
-      return {total:s.visibleKeys.length,rendered:s.renderedCount,virtual:s.virtual,more:s.pageHasMore,
-        viewport:!!document.querySelector('.qxframe9a7c2-virtual-list-viewport')};
+      const tree=window.QXFRAME9A7C2_TREE_QA.tree,s=tree.getState();
+      return {count:s.visibleKeys.length,rows:document.querySelectorAll('.qxframe9a7c2-tree-item').length,
+      viewport:!!document.querySelector('.qxframe9a7c2-virtual-list-viewport'),checked:s.checkedKeys};
     })()`);
-    assert.ok(initial.total>=3000,'all 3000 roots are indexed');
-    assert.equal(initial.virtual,true,'Tree uses canonical ItemCollection VirtualList');
-    assert.ok(initial.rendered<150,'virtual Tree avoids thousands of DOM rows');
-    assert.equal(initial.viewport,true,'Tree viewport is a real virtual scroller');
-    assert.equal(initial.more,true,'Tree can stream more pages');
-    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.expand('lazy-root')");
-    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().loadErrorKeys.includes('lazy-root')",'first lazy branch failure',5000);
-    const pending=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.retryLoad('lazy-root')");
-    assert.equal(pending,true,'retry requests failed branch');
-    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().loadedKeys.includes('lazy-root')",'lazy retry success',5000);
-    const loaded=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState()");
-    assert.ok(loaded.visibleKeys.length>=3020,'loaded descendants joined visible Tree rows');
-    assert.equal(loaded.loadErrorKeys.length,0,'retry clears lazy error');
-    const rename=await evaluate(`(() => {
-      const tree=window.QXFRAME9A7C2_TREE_QA.tree;
-      const action=document.querySelector('.qxframe9a7c2-tree-action[data-tree-action="rename"]');
-      if(!action)return {found:false};
-      action.click();
-      const input=document.querySelector('.qxframe9a7c2-tree-edit-input');
-      if(!input)return {found:true,editing:false};
-      input.value='Renamed lazy branch';
-      input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));
-      return {found:true,editing:true,label:tree.getItem('lazy-root')?.label};
-    })()`);
-    assert.equal(rename.found,true,'Tree actions render on visible nodes');
-    assert.equal(rename.editing,true,'Tree offers inline rename field');
-    assert.equal(rename.label,'Renamed lazy branch','Tree operation callback applies proposed edit');
-    const manual=await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.loadNextPage({source:'browser-test'})");
-    assert.equal(manual,true,'explicit page request starts');
-    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length>=3170",'appended virtual page',6000);
-    const scrolled=await evaluate(`(() => {
-      const viewport=document.querySelector('.qxframe9a7c2-virtual-list-viewport');
-      viewport.scrollTop=viewport.scrollHeight;
-      viewport.dispatchEvent(new Event('scroll'));
-      return {top:viewport.scrollTop,height:viewport.scrollHeight,client:viewport.clientHeight};
-    })()`);
-    assert.ok(scrolled.height>scrolled.client,'virtual pane has scrollable content');
-    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length>=3320",'second page triggered by scrolling',6000);
-    const after=await evaluate(`(() => {
-      const state=window.QXFRAME9A7C2_TREE_QA.tree.getState();
-      return {count:state.visibleKeys.length,rendered:state.renderedCount,virtual:state.virtual,hasMore:state.pageHasMore};
-    })()`);
-    assert.ok(after.count>=3320,'two pages appended to the same hierarchical model');
-    assert.ok(after.rendered<150,'DOM remains virtual after scrolling and streaming');
-    assert.equal(after.virtual,true);
+    assert.equal(initial.count,3000,'official Tree has 3000 roots');
+    assert.ok(initial.rows>0&&initial.rows<150,'official Tree keeps bounded virtual rows');
+    assert.equal(initial.viewport,true,'official Tree shows VirtualList');
+    assert.ok(initial.checked.includes('finance'),'checked child survives initial load');
+    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.expand('company')");
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.includes('finance')",'official Tree expands branch');
+    assert.equal(await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length"),3002);
+    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.collapse('company')");
+    assert.equal(await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length"),3000);
+    const rows=await evaluate("document.querySelectorAll('.qxframe9a7c2-tree-item').length");
+    assert.ok(rows>0&&rows<150,'official Tree stays virtual after disclosure');
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));

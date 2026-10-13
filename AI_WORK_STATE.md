@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 Tree official 3000-node Chromium update
+- Removed Stage5-only lazy-retry/paging/edit browser checks; actual 3000-node gate now tests published Tree visible-key model, bounded VirtualList DOM and expansion/checked state. QA page rebuilt with only official options; tree.js/tree-select.js/contracts/tree.css are exact main blobs. New HEAD needs dual CI and official artifact. No merge.
+
 ## CURRENT — 2026-10-13 Restore Tree to production main (CI pending)
 - User rejected experimental Stage5 Tree as buggy; authoritative main HEAD 718da2a6be0bc71520adb0451429cd3d3d8320b3; previous Stage5 HEAD 6ddbb3118289e012a2c10c3197d7874a8d0a3b27; PR #267 remains Draft/Open, never merge.
 - Restored exact Git blobs from main for Tree JS, TreeSelect JS, componentContracts, Tree CSS; removed Stage5-only Tree state-paint rules; Preview03 uses only existing official API and static children. All other components and P1 Notice/Menu edits untouched.
