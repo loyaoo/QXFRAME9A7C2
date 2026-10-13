@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 official main Tree toggle exempt from Stage5 Shape Theme axis
+- CSS Schema 38350068378 reached Chromium and failed only because old Stage5 shape matrix expected Tree toggle radius=0 when user explicitly restored main Tree. Independent Chromium measurement of main confirms original toggle remains 50% even under radius:none. Remove only Tree toggle entry from 25-part Theme-shape matrix (24 others kept under 8x2x2 strict evaluation). Keep exact main Tree CSS, not modified to satisfy rejected Stage5 policy. Next dual green CI and official artifact; no merge.
+
 ## CHECKPOINT — 2026-10-13 main Tree verified paint semantics
 - Independently measured actual main official qxframe CSS in Chromium: Tree Normal transparent; Tree Open and Tree Selected both consume the standard muted Item state. This is identical to official main and intentionally differs from prior Stage5 custom neutral Open variant. Removed outdated Stage5-only transparent Open test; retained independent Menu accent comparison. Main Tree CSS/JS source left exact. Re-run full browser CI.
 
