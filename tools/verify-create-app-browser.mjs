@@ -2880,14 +2880,17 @@ try {
   });
 
 
-  await step('Local inverse scope consumes the SAME full light/dark tokens and native color-scheme',async()=>{
-    const samples=await evaluate("(() => {\n      const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement;\n      const wasDark=h.classList.contains('dark'),host=d.createElement('div'),styleEl=d.createElement('style');\n      host.innerHTML='<div data-inverse data-qxframe9a7c2-scheme=\"inverse\"><input type=\"checkbox\"></div><div class=\"dark\" data-dark><input type=\"checkbox\"></div><div class=\"dark\"><div data-dark-inverse data-qxframe9a7c2-scheme=\"inverse\"><input type=\"checkbox\"></div></div>';\n      d.body.append(host);d.head.append(styleEl);\n      const read=e=>{const c=d.defaultView.getComputedStyle(e);return [c.getPropertyValue('--qxframe9a7c2-theme-background').trim(),c.getPropertyValue('--qxframe9a7c2-theme-primary').trim(),c.colorScheme];};\n      const samples=[];\n      try {\n        for(const style of ['nova','rhea','sera']){\n          styleEl.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;\n          h.classList.remove('dark');\n          const light=read(h),inverseLight=read(host.querySelector('[data-inverse]')),localDark=read(host.querySelector('[data-dark]')),localInverseDark=read(host.querySelector('[data-dark-inverse]'));\n          h.classList.add('dark');\n          const dark=read(h),inverseDark=read(host.querySelector('[data-inverse]'));\n          samples.push({style,light,dark,inverseLight,inverseDark,localDark,localInverseDark});\n        }\n      } finally {h.classList.toggle('dark',wasDark);styleEl.remove();host.remove();}\n      return samples;\n    })()");
-    assert.equal(samples.length,3);
+  await step('Inverse Menu uses only existing popup classes, no DOM theme attribute or JS changes',async()=>{
+    const samples=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement;\n const wasDark=h.classList.contains('dark'),holder=d.createElement('div'),styleEl=d.createElement('style');\n holder.innerHTML='<div class=\"qxframe9a7c2-popup-surface\" data-popup></div><div class=\"qxframe9a7c2-menu-submenu-panel\" data-submenu></div><div class=\"qxframe9a7c2-menu-overflow-panel\" data-overflow></div><div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\" data-popover></div>';\n d.body.append(holder);d.head.append(styleEl);\n const read=e=>{const c=d.defaultView.getComputedStyle(e);return [c.getPropertyValue('--qxframe9a7c2-theme-background').trim(),c.getPropertyValue('--qxframe9a7c2-theme-foreground').trim(),c.getPropertyValue('--qxframe9a7c2-theme-primary').trim(),c.colorScheme];};\n const results=[];\n try{\n  for(const style of ['nova','rhea','sera'])for(const mode of ['default','inverted']){\n   styleEl.textContent=api.compileTheme({...api.state.config,style,menuColor:mode},{generatedAt:''}).body;\n   h.classList.remove('dark');\n   const light={root:read(h),popup:read(holder.querySelector('[data-popup]')),submenu:read(holder.querySelector('[data-submenu]')),overflow:read(holder.querySelector('[data-overflow]')),popover:read(holder.querySelector('[data-popover]'))};\n   h.classList.add('dark');\n   const dark={root:read(h),popup:read(holder.querySelector('[data-popup]')),submenu:read(holder.querySelector('[data-submenu]')),overflow:read(holder.querySelector('[data-overflow]')),popover:read(holder.querySelector('[data-popover]'))};\n   results.push({style,mode,light,dark});\n  }\n }finally{h.classList.toggle('dark',wasDark);styleEl.remove();holder.remove();}\n return results;\n})()");
+    assert.equal(samples.length,6);
     for(const s of samples){
-      assert.deepEqual(s.inverseLight,s.dark,s.style+' light-page inverse = full dark Theme');
-      assert.deepEqual(s.inverseDark,s.light,s.style+' dark-page inverse = full light Theme');
-      assert.deepEqual(s.localDark,s.dark,s.style+' nested .dark = full dark Theme');
-      assert.deepEqual(s.localInverseDark,s.light,s.style+' nested .dark inverse = light Theme');
+      const inv=s.mode==='inverted',tag=s.style+'/'+s.mode;
+      for(const key of ['popup','submenu','overflow']){
+        assert.deepEqual(s.light[key],inv?s.dark.root:s.light.root,tag+' light-page '+key+' matches complete target Theme');
+        assert.deepEqual(s.dark[key],inv?s.light.root:s.dark.root,tag+' dark-page '+key+' matches complete target Theme');
+      }
+      assert.deepEqual(s.light.popover,s.light.root,tag+' Popover is never inverted with Menu');
+      assert.deepEqual(s.dark.popover,s.dark.root,tag+' dark Popover remains normal');
     }
   });
 
