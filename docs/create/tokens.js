@@ -68,6 +68,7 @@ export const THEME_TOKENS = [
   C('menu-foreground', 'Menu text'),
   C('menu-accent', 'Menu item highlight'),
   C('menu-accent-foreground', 'Menu item highlight text'),
+  C('menu-accent-contrast', 'Contrasting ink against Menu accent-foreground, for nested Choice marks'),
   C('card-edge', 'Card ring (surface edge axis)'),
   C('popup-edge', 'Popup / dialog ring (surface edge axis)'),
   C('card-section', 'Card footer band (surface partition axis)'),

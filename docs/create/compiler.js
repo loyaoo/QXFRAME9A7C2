@@ -273,6 +273,9 @@ export function themeTokens(resolved) {
     // means a light primary tint; bold uses the saturated primary + on-primary.
     target['menu-accent'] = resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 14);
     target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src.primary;
+    // Inverse Choice box uses accent-foreground: its mark needs the opposite
+    // palette role in both modes. Subtle = Menu surface; bold = Primary.
+    target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover;
   }
   root['menu-blur'] = translucent ? '1.5rem' : '0';
 

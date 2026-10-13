@@ -1756,6 +1756,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.doesNotMatch(theme,/--_qxframe9a7c2-menu-render-background:\s*var\(--_qxframe9a7c2-menu-recipe-expanded/,'legacy static expanded recipes cannot override the dynamic Menu accent');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
+ assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
+ assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
  assert.ok(theme.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)'),'standalone Tree Open uses shared Menu accent without painting Tree root');
  assert.ok(choice.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected) .qxframe9a7c2-tree-check-indicator'),'standalone Tree inverted check belongs to Choice');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');

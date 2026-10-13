@@ -1,3 +1,10 @@
+## CURRENT — Stage5 Menu Choice contrast correction (2026-10-13, new dual CI pending)
+- PR #267 remains Draft/Open; only redesign/create-stage5 changed, main/backup untouched.
+- Previous commit 8522a34c disabled transient MenuItem transitions in Chromium measurement only; exact Open/hover assertions unchanged. CSS Schema 38327102701 advanced beyond Menu Open to first actual failure: vega/false/subtle Checkbox mark ink contrasts with its foreground-colored fill.
+- Cause: Open Checkbox fill used menu-accent-foreground (subtle = opaque Primary) while mark stripped alpha from menu-accent (also Primary), so the two matched. Registered closed Theme `menu-accent-contrast`, derived from opaque Menu surface in subtle and Primary in bold, consumed only in choice-visual.css; compiler, default theme root/dark and strict static checks updated together.
+- No old accepted artifact can certify this round. Cascader real popup interaction and full 8-Style/light-dark matrix remain pending final CI.
+- Next: repair first real CI failure (if any), obtain dual green on exact HEAD, package matching official dist+docs artifact as Windows START-DEMO.cmd full ZIP, node --check QA, 13+ HTTP paths and CRC. Stage5 owner visual acceptance pending.
+
 ## CURRENT — Stage5 Menu Open state final paint correction (2026-10-13, CI pending)
 - PR #267 stays Draft/Open; main and backup untouched. No rollback of Stage3/4, original style and DOM/Controller policy retained.
 - User's current requested round: distinct Input Look outline/tinted/subtle (including dark mode), Open vs Hover for Tree/TreeSelect/Cascader/Menu with bold/subtle accent and Choice-owned inverse Checkbox, TagInput/Select Multiple symmetric outer padding, contiguous Cascader columns without horizontal scroll/gaps. Previous commits contain those changes; browser acceptance matrix enforces multiple Styles and both color modes.
