@@ -1801,7 +1801,10 @@ check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical 
  const qa=fs.readFileSync(path.join(root,'docs/qa/tree-large-data.html'),'utf8');
  for(const token of ['loadNextPage:appendPage','opts.loadMore(detail)','loadMoreThreshold',"pageTasks.invalidate('tree-paging-reset')",'getViewportElement','pageHasMore:scrollPaging.hasMore','virtual: opts.virtual','loadTasks.run(key','onOperate','finishRename(true,event)'])
  assert.ok(tree.includes(token),'Tree canonical lazy/page/operations '+token);
- assert.ok(select.includes('lazy:opts.lazy===true')&&select.includes('onOperate:opts.onOperate'),'TreeSelect forwards Tree behaviors');
+ assert.ok(select.includes('lazy:opts.lazy===true')&&select.includes('onOperate:opts.onOperate')&&select.includes('loadMore:opts.loadMore'),'TreeSelect forwards Tree behaviors');
+ const contracts=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
+ const treeSelectContract=contracts.split('"TreeSelect": Object.freeze({ schema: schema([')[1]?.split(']), legacy:')[0]||'';
+ for(const field of ['"lazy"','"editable"','"onOperate"','"loadMore"','"loadMoreThreshold"','"hasMore"','"pageCursor"','"pageSize"'])assert.ok(treeSelectContract.includes(field),'TreeSelect public contract '+field);
  assert.ok(css.includes('.qxframe9a7c2-tree .qxframe9a7c2-tree-actions'),'Tree action visuals belong to component');
  assert.ok(parity.includes("'src/components/tree.js'")&&parity.includes("'src/components/tree-select.js'"),'JS parity allowlist is explicit');
  assert.ok(qa.includes('virtual:true')&&qa.includes('loadMore:function')&&qa.includes('loadChildren:function'),'demo exercises all three paths');

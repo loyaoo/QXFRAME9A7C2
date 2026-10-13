@@ -1,3 +1,7 @@
+## CHECKPOINT — Stage5 TreeSelect strict schema (2026-10-13)
+- Live Theme Studio CI identified concrete Preview03 mount failure: TreeSelect does not accept unknown option 'lazy'. The public ComponentContract was updated to register lazy/edit callbacks and paged scrolling options, forwarded to canonical inner Tree. Do not remove lazy from Preview03 or disable strict option contracts.
+- Next: check exact-head CI and actual Chromium Tree 3000 virtual stress; official ZIP only on green. PR #267 remains Draft.
+
 ## CHECKPOINT — Stage5 Tree paging async ownership (2026-10-13)
 - Audit found direct AbortController in paged Tree; replaced with existing canonical AsyncTaskGroup, consistent with lazy loadChildren and stale-response cancellation. DOM.listen owns scroll lifecycle; registered Theme destructive role used for failure icon. No bypass to gate.
 

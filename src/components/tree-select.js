@@ -414,6 +414,9 @@ function setupTreeSelectRuntime(instance,fieldInit) {
           filterItem: opts.filterItem,
           loadChildren: opts.loadChildren,
           lazy:opts.lazy===true,
+          hasMore:opts.hasMore===true,pageCursor:opts.pageCursor,pageSize:opts.pageSize,
+          loadMore:opts.loadMore,loadMoreThreshold:opts.loadMoreThreshold,
+          onLoadMore:opts.onLoadMore,onLoadMoreError:opts.onLoadMoreError,
           editable:opts.editable,
           isItemEditable:opts.isItemEditable,
           beforeOperate:opts.beforeOperate,
@@ -783,7 +786,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
             size: opts.size, disabled: opts.disabled === true, readOnly: opts.readOnly === true,
             virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
             getKey: opts.getKey, getItems: opts.getItems, getLabel: opts.getLabel, getValue: opts.getValue, isItemDisabled: opts.isItemDisabled,
-            filterItem: opts.filterItem, loadChildren: opts.loadChildren, lazy:opts.lazy===true, editable:opts.editable, isItemEditable:opts.isItemEditable, beforeOperate:opts.beforeOperate, onOperate:opts.onOperate, beforeCheck: beforeTreeCheck, beforeExpand: opts.beforeExpand,
+            filterItem: opts.filterItem, loadChildren: opts.loadChildren, lazy:opts.lazy===true, hasMore:opts.hasMore===true, pageCursor:opts.pageCursor, pageSize:opts.pageSize, loadMore:opts.loadMore, loadMoreThreshold:opts.loadMoreThreshold, onLoadMore:opts.onLoadMore, onLoadMoreError:opts.onLoadMoreError, editable:opts.editable, isItemEditable:opts.isItemEditable, beforeOperate:opts.beforeOperate, onOperate:opts.onOperate, beforeCheck: beforeTreeCheck, beforeExpand: opts.beforeExpand,
             itemRender: opts.itemRender, renderIcon: opts.renderIcon, showLine: opts.showLine, indent: opts.indent,
             onLoad: opts.onLoad, onLoadError: opts.onLoadError
           };
