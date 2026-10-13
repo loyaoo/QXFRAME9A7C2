@@ -25,7 +25,7 @@ import { Popover } from './popover.js';
 const global=globalThis;
 
 const TABS_DEFAULTS = Object.freeze({
-  items: [], orientation: 'horizontal', placement: 'top', type: 'line', activationMode: 'auto',
+  items: [], orientation: 'horizontal', placement: 'top', type: 'segmented', activationMode: 'auto',
   destroyInactive: false, overflow: true, edgeShadow: true, wheelPropagation: true,
   editable: false, addable: undefined, closable: false, disabled: false, readOnly: false,
   stretch: false, centered: false, indicator: null, animated: undefined, overflowPopupRender: null,
