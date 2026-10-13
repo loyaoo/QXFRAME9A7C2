@@ -633,5 +633,5 @@ export function themeTokens(resolved) {
 export function themeBody(resolved) {
   const { root, dark } = themeTokens(resolved);
   const lines = block => Object.entries(block).map(([name, value]) => `  ${TOKEN_PREFIX}${name}: ${value};`).join('\n');
-  return `:root {\n${lines(root)}\n}\n.dark {\n${lines(dark)}\n}\n`;
+  return `:root,\n.dark [data-qxframe9a7c2-scheme="inverse"] {\n${lines(root)}\n}\n.dark,\n:root:not(.dark) [data-qxframe9a7c2-scheme="inverse"]:not(.dark *) {\n${lines(dark)}\n}\n`;
 }
