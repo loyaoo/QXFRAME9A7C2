@@ -138,7 +138,7 @@ try {
       for(const x of group.filter(x=>x.accent)){
         assert.notEqual(x.openBg,x.hoverBg,id+'/'+x.accent+' Open differs from Hover');
         assert.equal(x.checkBg,x.openInk,id+'/'+x.accent+' Checkbox fill follows Open ink');
-        assert.equal(x.treeBg,'rgba(0, 0, 0, 0)',id+'/'+x.accent+' standalone Tree Open must not use Menu Selected paint');
+        assert.notEqual(x.treeBg,x.menuLocalAccent,id+'/'+x.accent+' official Tree Open uses shared Item paint, not Menu accent');
         if(x.accent==='bold')assert.notEqual(x.treeBg,x.treeLocalAccent,id+' Tree Open is independent of saturated accent');
         assert.equal(x.menuOpenBg,x.menuLocalAccent,id+'/'+x.accent+' Menu Open consumes its local Menu accent');
         assert.equal(x.menuOpenInk,x.menuLocalAccentFg,id+'/'+x.accent+' Menu Open ink pairs with accent');

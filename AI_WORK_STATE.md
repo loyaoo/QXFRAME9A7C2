@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 main Tree verified paint semantics
+- Independently measured actual main official qxframe CSS in Chromium: Tree Normal transparent; Tree Open and Tree Selected both consume the standard muted Item state. This is identical to official main and intentionally differs from prior Stage5 custom neutral Open variant. Removed outdated Stage5-only transparent Open test; retained independent Menu accent comparison. Main Tree CSS/JS source left exact. Re-run full browser CI.
+
 ## CHECKPOINT — 2026-10-13 generated TreeSelect schema restored
 - QXFRAME run 38349675889 passed earlier build verifications and found docs-generated API schema still exposed twelve removed TreeSelect options. The only differences in docs/generated/component-api.json and generated contract segment of docs/assets/qxframe9a7c2-component-api.js against main are TreeSelect parameters; restore both exact main Git blobs. Recheck docs sync/strict contract CI. No merge.
 
