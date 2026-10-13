@@ -1810,7 +1810,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
 check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
-  assert.ok(compiler.includes('const menuSource = inverted ? { light: palette.dark, dark: palette.dark } : palette'),'inverse must share dark Menu source');
+  assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.205 0 0 / 0.28)'),'generated light menu accent synchronized');
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.922 0 0 / 0.28)'),'generated dark menu accent synchronized');
