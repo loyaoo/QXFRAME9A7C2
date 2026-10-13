@@ -1775,8 +1775,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
  assert.ok(menu.includes('--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-accent)'), 'Menu Open must consume the compiled Menu accent, not the hover or legacy expanded recipe');
  assert.ok(menu.includes('--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-accent-foreground)'), 'Menu Open must pair theme accent background and ink');
- assert.ok(theme.includes('--_qxframe9a7c2-menu-render-background: var(--qxframe9a7c2-theme-menu-accent);'),'Menu Open must override rendered surface using the actual compiled soft/bold accent');
- assert.ok(theme.includes('--_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Menu Open rendered ink must pair with the accent foreground');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,transparent);'),'root Navigation Menu Open uses its own translucent Primary highlight, not inverted popup accent');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);'),'root Navigation Menu text follows Sidebar foreground independent of portalled popup');
  assert.doesNotMatch(theme,/--_qxframe9a7c2-menu-render-background:\s*var\(--_qxframe9a7c2-menu-recipe-expanded/,'legacy static expanded recipes cannot override the dynamic Menu accent');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
