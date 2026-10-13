@@ -575,9 +575,8 @@
     color: var(--qxframe9a7c2-theme-popover-foreground);
     border: 1px solid var(--_qxframe9a7c2-v2-popup-border);
     box-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
+    filter: drop-shadow(var(--qxframe9a7c2-dialog-depth-shadow,0 1.125rem 1.75rem oklch(0 0 0 / 0.3)));
   }
-  .qxframe9a7c2-modal-mask, .qxframe9a7c2-drawer-mask { background-color: var(--qxframe9a7c2-theme-overlay); }
-  .qxframe9a7c2-modal-mask.is-maskless, .qxframe9a7c2-drawer-mask.is-maskless { background-color: transparent; }
 
   /* navigation: shadcn item highlighting uses accent, not primary. */
   .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
