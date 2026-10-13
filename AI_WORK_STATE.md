@@ -1,3 +1,8 @@
+## CHECKPOINT — 2026-10-13 QXFRAME JS parity after full Tree browser pass
+- CSS Schema Acceptance success and QXFRAME createApp / 3000-row Tree Chromium successfully passed on prior HEAD `75772db529af906ce015b676b36e62f67e2dfd97`.
+- QXFRAME release failed only on unauthorized source diff `src/core/componentContracts.js`. The user authorized exactly 12 new TreeSelect public options; verified narrow allowlist now checks added keys exactly, ensures original key order unchanged and compares all other file bytes to main with only that schema segment normalized. No blanket componentContracts exception.
+- Next: dual latest-HEAD CI, exact Actions dist+docs full Windows QA ZIP and true final state. PR #267 remains Draft/Open.
+
 ## CHECKPOINT — virtual Tree inline rename DOM reconciliation (2026-10-13)
 - CI run 38342415739 passed 3000-node mount, virtual DOM and first lazy failure/retry; failed when clicking the visible rename action because virtual same-key row did not expose inline input immediately. Added narrow Tree-owned row content reconciliation after state refresh for both begin and finish edit. Does not discard virtual scroll state, replace VirtualList or touch ItemCollection root.
 - Next check 3000-node action/edit/scroll stages under exact HEAD dual CI, then official dist+docs Windows package.
