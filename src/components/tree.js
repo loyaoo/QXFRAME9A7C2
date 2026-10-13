@@ -510,7 +510,10 @@ function setupTreeRuntime(instance) {
           var generation=++scrollPaging.revision,cursor=scrollPaging.cursor;
           var detail={cursor:cursor,pageSize:Math.max(1,Number(opts.pageSize)||100),source:meta&&meta.source||'api',tree:api};
           pageTasks.run('tree-page',{detail:detail},{source:detail.source}).then(function(result){
-            if(!result||!result.isCurrent||!result.isCurrent()||destroyed||generation!==scrollPaging.revision)return;
+            /* AsyncTaskGroup discards stale results before resolving run(). Its
+               context.isCurrent() becomes false after a *successful* settlement,
+               so never re-check it inside this consumer. */
+            if(!result||destroyed||generation!==scrollPaging.revision)return;
             if(result.error)throw result.error;
             var page=result.page;
             if(!Array.isArray(page) && (!page||!Array.isArray(page.items)))throw new TypeError('[QXFRAME9A7C2] Tree loadMore must return an array or {items,hasMore,cursor}.');
@@ -587,7 +590,10 @@ function setupTreeRuntime(instance) {
           loadErrors.delete(key);
           syncTreeRows();
           loadTasks.run(key, { record: record, meta: meta || {} }, { source: meta && meta.source || 'api' }).then(function (result) {
-            if (!result || !result.isCurrent || !result.isCurrent() || destroyed) return;
+            /* The task group returns undefined for superseded requests. A finished
+               task is no longer active, so context.isCurrent() is always
+               false here even when the response is valid. */
+            if (!result || destroyed) return;
             loadingKeys.delete(key);
             if (result.error) {
               loadErrors.set(key,result.error);

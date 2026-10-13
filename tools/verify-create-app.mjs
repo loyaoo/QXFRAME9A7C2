@@ -1793,6 +1793,13 @@ check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo op
 });
 
 
+check('Stage5 asynchronous Tree result consumers accept settled current AsyncTaskGroup results',()=>{
+ const js=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+ assert.ok(js.includes('if (!result || destroyed) return;'),'lazy node completion accepts settled task result');
+ assert.ok(js.includes('if(!result||destroyed||generation!==scrollPaging.revision)return;'),'streamed paging accepts settled result with generation guard');
+ assert.doesNotMatch(js,/result\.isCurrent\(\)/,'AsyncTaskGroup current flag is false once a successful run settles and cannot be checked in then()');
+});
+
 check('Stage5 Tree lazy, edits and virtual infinite scrolling rely on canonical owners',()=>{
  const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');

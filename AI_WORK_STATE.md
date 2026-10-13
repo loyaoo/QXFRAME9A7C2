@@ -1,3 +1,9 @@
+## CURRENT — Tree lazy and virtual paging CI correction (2026-10-13)
+- PR #267 is Draft/Open. Latest resumed head `2e77323df8f96b402a9752f3420ee8b7cb4ec486` failed both CI workflows due to the real 3000-node browser test waiting for the first simulated lazy error.
+- Exact cause: Tree per-node `loadRecord` and scroll `appendPage` checked `result.isCurrent()` *after* `AsyncTask.run` had resolved and cleared its active task. That predicate is always false even on a successful, current completion. AsyncTaskGroup already omits stale results; keep the independent paging generation guard and drop late re-check. Both consumers now accept non-null result with destroy/generation protection.
+- Added static regression to prevent future double-check; preserve browser 3000-node virtualization, retry, editing, auto pagination gate. Wait for dual green CI, official Actions artifact, complete Windows dist+docs ZIP with only current Tree/TreeSelect QA highlights.
+- No merge/main/backup changes.
+
 ## CURRENT — 2026-10-13 3k Tree browser gate root-cause
 - CSS Schema run 38340698279 reached last Chromium step and 3000 virtual QA mount timed out. Verified actual public runtime export: `BuildingBlocks.Tree` in src/runtime/runtime.js; Tree is **not** one of Components' 40 public component adapters. The demo incorrectly used Components.Tree. Fixed real demo to use Q.BuildingBlocks.Tree, and browser assertion to report missing exports instead of silent timeout. Preserve strict 3k virtual/lazy/rename/scroll checks.
 - Next: both exact-head CI green then Actions full dist+docs artifact / Windows ZIP. PR #267 Draft/Open, never merge.
