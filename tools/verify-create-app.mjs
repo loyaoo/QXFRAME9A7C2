@@ -126,8 +126,8 @@ check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=
  const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
  const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
- assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.205 0 0\)/,'default light Menu ink');
- assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.922 0 0\)/,'default dark Menu ink');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.145 0 0\)/,'default light Menu ink');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.985 0 0\)/,'default dark Menu ink');
  for(const component of ['notice-slot','message-root','notification-root'])
    assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
  for(const part of ['message-root','notification-root','notice-slot'])

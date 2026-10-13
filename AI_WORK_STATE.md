@@ -1,3 +1,7 @@
+## CHECKPOINT — 2026-10-13 P1 generator source of truth (CI fix)
+- QXFRAME run 38346425250 failed verify:theme-default because first P1 commit updated compiler but left generated src/styles/main/theme.css stale. Nova/neutral Popover foreground = light oklch(0.145 0 0), dark oklch(0.985 0 0). These differ from old Primary 0.205/0.922. Matched generated output for two changed Token values; kept Scheme A: subtle=Popover ink, bold=Primary ink. Updated static expectations. Handoff 0.205/0.922 values reflected old Primary and cannot simultaneously equal compiler's new Popover ink. Verify canonical builder CI and browser.
+- Next exact-head dual CI and Message/Notification real-radius/browser evidence. No merge.
+
 ## CURRENT — 2026-10-13 Stage5 Token Audit P1 (implementation, CI pending)
 - Resume verified branch redesign/create-stage5 / PR #267 Draft/Open, HEAD 7e8060b70f1c95524ed3bb7ce6b60a367226b30d; QXFRAME CI 38344282173 and CSS Schema 38344282290 were Success for the preceding Tree source, not for this change.
 - P1 #2: changed docs/create/compiler.js only for subtle foreground: source popover-foreground; bold remains primary-foreground. Canonical default theme light/dark already contained oklch(0.205 0 0)/oklch(0.922 0 0), so no manual generated theme.css change required. Choice mark contrast remains explicit src.popover for neutral foreground filling, bold src.primary; do not conflate disclosure and selection.
