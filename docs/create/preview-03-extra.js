@@ -66,7 +66,7 @@ var insightBtn=button('customer-insights','Why engagement grew');
 try{if(C.Popover&&typeof C.Popover.create==='function'){var popover=C.Popover.create({reference:insightBtn,title:'Engagement trends',content:'Illustrative improvement from retention and service cohorts.',trigger:'click',placement:'bottom-start'});mounted.push({id:'customer-insights',type:'Popover',instance:popover});functional.push('Popover')}else throw new Error('Popover API unavailable')}catch(e){errors.push({id:'customer-insights',type:'Popover',message:String(e.message||e)})}
 mount('transaction-outcome','Result',{name:'success',visible:true,title:'Approval recorded',subtitle:'Illustrative local finance transaction'});
 simple('backlog-ordering','Sort',['Design review','Finance review','Release build','Audit report']);
-var tabs=mount('segmented-console','Tabs',{items:[{key:'users',label:'Users'},{key:'access',label:'Access'},{key:'billing',label:'Billing'}],defaultActiveKey:'users',type:'line'});
+var tabs=mount('segmented-console','Tabs',{items:[{key:'users',label:'Users'},{key:'access',label:'Access'},{key:'billing',label:'Billing'}],defaultActiveKey:'users'});
 mount('shift-allocation','TimePanel',{value:'09:30:00',use12Hours:false,readOnly:true});
 var tipBtn=button('sla-tooltip','Explain the SLA');
 try{if(C.Tooltip&&typeof C.Tooltip.create==='function'){var tooltip=C.Tooltip.create({reference:tipBtn,content:'Monthly availability target for the customer-facing API.',placement:'top',showArrow:true});mounted.push({id:'sla-tooltip',type:'Tooltip',instance:tooltip});functional.push('Tooltip')}else throw new Error('Tooltip API unavailable')}catch(e){errors.push({id:'sla-tooltip',type:'Tooltip',message:String(e.message||e)})}
