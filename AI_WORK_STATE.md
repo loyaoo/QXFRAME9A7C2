@@ -1,3 +1,7 @@
+## CHECKPOINT — virtual Tree inline rename DOM reconciliation (2026-10-13)
+- CI run 38342415739 passed 3000-node mount, virtual DOM and first lazy failure/retry; failed when clicking the visible rename action because virtual same-key row did not expose inline input immediately. Added narrow Tree-owned row content reconciliation after state refresh for both begin and finish edit. Does not discard virtual scroll state, replace VirtualList or touch ItemCollection root.
+- Next check 3000-node action/edit/scroll stages under exact HEAD dual CI, then official dist+docs Windows package.
+
 ## CURRENT — Tree lazy and virtual paging CI correction (2026-10-13)
 - PR #267 is Draft/Open. Latest resumed head `2e77323df8f96b402a9752f3420ee8b7cb4ec486` failed both CI workflows due to the real 3000-node browser test waiting for the first simulated lazy error.
 - Exact cause: Tree per-node `loadRecord` and scroll `appendPage` checked `result.isCurrent()` *after* `AsyncTask.run` had resolved and cleared its active task. That predicate is always false even on a successful, current completion. AsyncTaskGroup already omits stale results; keep the independent paging generation guard and drop late re-check. Both consumers now accept non-null result with destroy/generation protection.

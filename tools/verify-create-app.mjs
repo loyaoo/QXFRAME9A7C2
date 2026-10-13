@@ -1793,6 +1793,13 @@ check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo op
 });
 
 
+check('Stage5 virtual Tree reconciles inline editor on same-key visible row',()=>{
+ const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+ assert.ok(tree.includes('function reconcileEditRow(key)'),'Tree has visible virtual row edit lifecycle owner');
+ assert.ok(tree.includes('old.parentNode.replaceChild(replacement,old)'),'editing swaps only the Tree-owned row body');
+ assert.ok(tree.includes('reconcileEditRow(key);'),'edit transition updates DOM even without virtual range change');
+});
+
 check('Stage5 asynchronous Tree result consumers accept settled current AsyncTaskGroup results',()=>{
  const js=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
  assert.ok(js.includes('if (!result || destroyed) return;'),'lazy node completion accepts settled task result');

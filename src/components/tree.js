@@ -359,9 +359,23 @@ function setupTreeRuntime(instance) {
           if(destroyed)return false;
           emitter.emit('operate',payload);return true;
         }
+        function reconcileEditRow(key) {
+          /* VirtualList may retain a same-key row when the visible geometry is
+             unchanged. Update only that row's Tree-owned body, not the virtual
+             scroller or any ancestor ItemCollection surface. */
+          var record=model && model.getRecord(String(key));
+          var host=list && list.getItemElement ? list.getItemElement(String(key)) : null;
+          if(!record||!host)return false;
+          var old=host.querySelector('.qxframe9a7c2-tree-row-content');
+          if(!old)return false;
+          var replacement=renderTreeRow(rowOf(record),{ index:record.index });
+          old.parentNode.replaceChild(replacement,old);
+          return true;
+        }
         function beginRename(key) {
           if(destroyed||!model.getRecord(String(key)))return false;
           editingKey=String(key);refresh('tree-rename-start');
+          reconcileEditRow(key);
           var input=root&&root.querySelector('.qxframe9a7c2-tree-edit-input');
           if(input){input.focus();input.select();}return true;
         }
@@ -370,7 +384,7 @@ function setupTreeRuntime(instance) {
           var key=editingKey,input=root&&root.querySelector('.qxframe9a7c2-tree-edit-input');
           var value=input?input.value.trim():'';
           if(commit&&(!value||!operate('rename',key,value,event)))return false;
-          editingKey=null;refresh(commit?'tree-rename-commit':'tree-rename-cancel');return true;
+          editingKey=null;refresh(commit?'tree-rename-commit':'tree-rename-cancel');reconcileEditRow(key);return true;
         }
 
         function renderTreeRow(row, context) {
