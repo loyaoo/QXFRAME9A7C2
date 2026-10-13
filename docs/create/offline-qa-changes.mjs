@@ -1,11 +1,27 @@
-/** Stage5 P2: Preview03 Typography + Theme Motion consumer fixes. */
-/** Current P2 Theme Motion; prior rounds no longer highlighted. */
+/** Stage5 owner screenshot visual fixes: Menu/Pickers/Cascader/Radius/Modal/Tabs. */
+/** 2026-10-13 owner screenshot batch — new highlights only. */
 const groups = [
- ['stream-animation','Incident stream Motion',[
-  ['.pv3x-event-list','Event transition','Event opacity and transform follow Theme Motion','__QA_BUNDLE_HEAD__']
+ ['release-planner','Inverse Picker',[
+  ['.qxframe9a7c2-date-panel-cell','Today / Selected','Readable today dot and selected state','__QA_BUNDLE_HEAD__'],
+  ['.qxframe9a7c2-wheel-panel-center-guide','Wheel guide','Dark menu scroll and guide visibility','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['state-transitions','Workflow Motion',[
-  ['.pv3x-process','State transition','Workflow active state follows Theme Motion','__QA_BUNDLE_HEAD__']
+ ['order-routing','Cascader spacing',[
+  ['.qxframe9a7c2-cascader-column','Column inset','Shared menu column padding','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['workforce-access','Transfer radius',[
+  ['.qxframe9a7c2-transfer-panel','Panel corner','Shared Theme item radius','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['contract-documents','Upload radius',[
+  ['.qxframe9a7c2-upload-dropzone','Dropzone corner','Shared Theme item radius','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['segmented-console','Tabs spacing and default',[
+  ['.qxframe9a7c2-tabs-tab-action','Tab action','Restored vertical padding, segmented default','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['danger-dialog','Modal origin',[
+  ['.qxframe9a7c2-modal-container','Trigger origin','Delayed trigger-centered Modal animation','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['quick-action-menu','Inverse Menu selection',[
+  ['.qxframe9a7c2-item-surface','Menu selected','Higher-contrast shared Menu selected role','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -69,7 +85,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：事件流与状态流程 Motion。页面标题字体同步主题标题字体。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：反色 Menu/Picker、日历、滚动条、Wheel、Cascader、Transfer/Upload、Modal、Tabs。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
