@@ -164,6 +164,9 @@ try {
       host.innerHTML='<div class="qxframe9a7c2-tree" data-tree-test="page">'+items+'</div>'+
         '<div class="qxframe9a7c2-popup-surface" data-tree-test="popup"><div class="qxframe9a7c2-tree">'+items+'</div></div>';
       d.head.append(sheet);d.body.append(host);
+      // Keep the Theme matrix deterministic: compare final colors, never
+      // in-flight cross-theme transitions on Tree rows and Choice indicators.
+      host.querySelectorAll('.qxframe9a7c2-tree-item,.qxframe9a7c2-tree-check-indicator').forEach(el=>el.style.setProperty('transition','none','important'));
       const cases=[];
       for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
         for(const dark of [false,true])for(const accent of ['subtle','bold']){
