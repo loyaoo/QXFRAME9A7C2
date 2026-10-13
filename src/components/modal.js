@@ -66,7 +66,7 @@ function createModalController(instance, options) {
     if (event.clientX === 0 && event.clientY === 0 && event.detail === 0) return null;
     return { x:event.clientX, y:event.clientY };
   }
-  function originPoint(ctx, event) {
+  function originPoint(ctx, event, reason) {
     var direct = eventPoint(event);
     if (direct) return direct;
     var opts = ctx.options();
@@ -78,7 +78,15 @@ function createModalController(instance, options) {
       var rect = origin.getBoundingClientRect();
       return { x:rect.left + rect.width / 2, y:rect.top + rect.height / 2 };
     }
-    if (recentPointer && Date.now() - recentPointer.time <= 200) return { x:recentPointer.x, y:recentPointer.y };
+    if (reason === 'autoOpen') return null;
+    if (recentPointer && Date.now() - recentPointer.time <= 2500 && (!recentPointer.target || recentPointer.target.isConnected)) {
+      return { x:recentPointer.x, y:recentPointer.y };
+    }
+    var focused = ctx.document.activeElement;
+    if (focused && focused !== ctx.document.body && focused !== ctx.document.documentElement && focused !== ctx.surface && !ctx.root.contains(focused) && focused.getBoundingClientRect) {
+      var focusedRect = focused.getBoundingClientRect();
+      if (focusedRect.width > 0 && focusedRect.height > 0) return { x:focusedRect.left + focusedRect.width / 2, y:focusedRect.top + focusedRect.height / 2 };
+    }
     return null;
   }
   function measureSurfaceRect(ctx) {
@@ -94,9 +102,9 @@ function createModalController(instance, options) {
     if (transition) style.setProperty('transition', transition, transitionPriority); else style.removeProperty('transition');
     return rect;
   }
-  function applyMotion(ctx, showing, event) {
+  function applyMotion(ctx, showing, event, reason) {
     if (!showing) return;
-    var point = originPoint(ctx, event);
+    var point = originPoint(ctx, event, reason);
     var rect = measureSurfaceRect(ctx);
     ctx.surface.style.transformOrigin = point && rect.width > 0 && rect.height > 0
       ? Math.round(point.x - rect.left) + 'px ' + Math.round(point.y - rect.top) + 'px'
@@ -151,7 +159,7 @@ function createModalController(instance, options) {
       if (own(opts, 'maskColor')) ctx.mask.style.background = opts.maskColor || '';
       if (own(opts, 'maskBlur')) ctx.mask.style.backdropFilter = opts.maskBlur ? 'blur(' + px(opts.maskBlur) + ')' : '';
     },
-    beforePresence(ctx, showing, _reason, event) { applyMotion(ctx, showing, event); },
+    beforePresence(ctx, showing, reason, event) { applyMotion(ctx, showing, event, reason); },
     maskTransition(ctx) {
       return {
         transition:function () { var opts=ctx.options(); return opts.maskAnimation === false ? 'fade' : (opts.maskAnimation || 'fade'); },
@@ -177,7 +185,7 @@ function createModalController(instance, options) {
     setup(ctx) {
       ctx.scope.add(DOM.listen(ctx.document, 'pointerdown', function (event) {
         var point = eventPoint(event);
-        if (point) recentPointer = { x:point.x, y:point.y, time:Date.now() };
+        if (point) recentPointer = { x:point.x, y:point.y, time:Date.now(), target:event.target && event.target.nodeType === 1 ? event.target : null };
       }, true));
     }
   });
