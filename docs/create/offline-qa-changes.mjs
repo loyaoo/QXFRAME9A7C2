@@ -1,7 +1,8 @@
-/** Stage5 Token P1 batch: Preview03 Menu accent. Tree highlights from last ZIP removed. */
+/** Stage5 current batch: restore official main Tree/TreeSelect; prior Menu highlight cleared. */
 const groups = [
- ['quick-action-menu','Menu subtle contrast',[
-  ['[data-pv3x-widget="quick-action-menu"]','Menu subtle ink','柔和强调使用 Popover 前景色；Menu/Popup 的 Open、Hover 与 Checkbox 仍须分开验收','__QA_BUNDLE_HEAD__']
+ ['platform-tree','Official Tree / TreeSelect',[
+  ['[data-pv3-component="workspace-tree"]','Main Tree restored','使用正式版展开、勾选、连线与基础虚拟列表；撤销本轮实验性编辑和滚动分页','__QA_BUNDLE_HEAD__'],
+  ['[data-pv3-component="workspace-tree-select"]','Main TreeSelect restored','同样恢复正式版 TreeSelect 参数契约与树节点操作','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -65,7 +66,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Menu subtle 高亮文字对比度；Notification/Message 真正弹层圆角请在组件演示中验证。Tree 旧高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Tree / TreeSelect 回退到正式版；上一轮 Menu 高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

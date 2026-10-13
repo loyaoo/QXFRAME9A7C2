@@ -1,3 +1,6 @@
+## CHECKPOINT — 2026-10-13 Tree rollback QA annotation scope
+- Offline QA ledger now highlights only Preview03 platform-tree: workspace-tree and workspace-tree-select (2 regions); previous Menu P1 QA highlight is cleared, with underlying Menu fix intact. JS parity source gate updated to strict official main Tree/TreeSelect. Exact-head dual CI still required.
+
 ## CHECKPOINT — 2026-10-13 Tree official 3000-node Chromium update
 - Removed Stage5-only lazy-retry/paging/edit browser checks; actual 3000-node gate now tests published Tree visible-key model, bounded VirtualList DOM and expansion/checked state. QA page rebuilt with only official options; tree.js/tree-select.js/contracts/tree.css are exact main blobs. New HEAD needs dual CI and official artifact. No merge.
 

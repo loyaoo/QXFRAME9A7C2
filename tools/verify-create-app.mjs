@@ -158,7 +158,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"quick-action-menu":["[data-pv3x-widget=\"quick-action-menu\"]"]}; // Current: 1 Card / 1 region
+  const current={"platform-tree":["[data-pv3-component=\"workspace-tree\"]","[data-pv3-component=\"workspace-tree-select\"]"]}; // Current: 1 Card / 2 regions
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview 03 Card '+id);
@@ -169,11 +169,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['platform-tree','release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['quick-action-menu','release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only current Menu accent Card region is highlighted');
+  assert.equal(count,2,'only current Tree/TreeSelect regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1766,7 +1766,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
  const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
- assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)||(x==='src/core/componentContracts.js'&&!coreContractAllowed))"),'JS main parity rejects all unrelated source changes including non-TreeSelect contract edits');
+ assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))"),'JS parity rejects unauthorized including Tree, TreeSelect and component contracts');
  assert.ok(jsParity.includes('src/components/cascader.js'),'JS parity remains strict on unrelated sources');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
