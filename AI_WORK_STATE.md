@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 align inverted Menu selected-row assertion with actual scoped selector (CI pending)
+- QXFRAME #38536291502 full verification stopped at old static regex for Popup ItemSurface selected, requiring the former generic selector that also matched Tooltip; test now requires the narrowed actual Menu selector with Tooltip excluded. Kept the selected-row paint assertion instead of removing it. Continue same-HEAD full browser/dual CI and offline acceptance. Previous CI failures must not be called success.
+
 ## CURRENT — 2026-10-14 acceptance gates synchronized to single-owner repair (CI pending)
 - First same-HEAD QXFRAME run 38535471221 reached verification but failed on previous QA ledger savings-targets. The old TreeSelect computed assertion expected the now-confirmed wrong Menu-bg checkmark foreground. Gate update enforces current three annotations, actual Choice Type foreground/check contrast, inverted Tooltip scheme and arrow/background parity across page/menu modes. css-gates Menu selector allowlist now matches exact Tooltip exclusion. Do not weaken CI; correct state owner is the required expectation.
 - Next: QXFRAME/CSS Schema same-HEAD CI, official artifact and full Windows package. No merge.
