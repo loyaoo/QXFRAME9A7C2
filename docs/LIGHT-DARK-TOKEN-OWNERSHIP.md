@@ -56,3 +56,8 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - No DatePicker-specific Calendar color/density patch, no standalone Range DOM, no new public tokens or compatibility aliases; DatePicker single/dual/DateTime consume one Calendar source.
 
 - 2026-10-14 follow-up: removed the pre-existing `.date-picker-composite.has-time` Calendar cell size/height override. Minimum shared nine-row Calendar height now belongs to `.calendar.is-adaptive-month` itself. The date/week renderer's Theme cell-size still comes from the original Calendar size slot; DatePicker does not fork CSS for DateTime.
+
+## 2026-10-14 — Calendar unit ownership
+
+- Calendar is the single DOM, date selection/value, active keyboard/virtual focus, delegated click, range painter owner for date, week, month, quarter and year. Only data labels/count/navigation page change with unit.
+- Month/quarter/year use existing Calendar button > cell-view > cell-inner DOM; `.calendar.is-period` expresses four-column unit geometry, not a separate widget. `PeriodPanel` old module is a direct import alias only; no second implementation. No new Theme tokens.

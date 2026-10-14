@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-14 Calendar unit owner consolidation (CI pending)
+- Starting baseline 455470dd41115f746f2f1fd22c72954209e51234, QXFRAME and CSS Schema Success; PR #267 Draft, main unchanged.
+- New Calendar unit policy supplies month, quarter and year data through the same Calendar DOM + ActiveItem / ValueController / Focus / Interaction pipeline as date/week. DatePicker now calls Calendar.create for all modes.
+- PeriodPanel module has only one-line direct Calendar export alias for existing callers, with no second DOM, event owner or state machine.
+- Period styling now uses Calendar.is-period geometry and the same button > cell-view > cell-inner and range ::before painter. CI Flex acceptance updated; JS authorisation declares this owner-requested module removal.
+- Next: update stale CI assertions and run full Chromium Calendar unit/navigation tests + Theme gates. Maintain Draft and do not merge. No credible Stage or overall % yet.
+
 ## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 existing hover test moves to actual painter (CI pending)
 - QXFRAME #38582099562 passed through final audit regressions. Old outside-month hover assertion sampled outer Calendar button background, which now deliberately stays transparent. Preserved its pointer/hover/outside-color checks; asserted button remains transparent and visible inner cell changes background on hover. This is a real behavior ratchet, not removal of coverage.
 - Next latest HEAD CI (both workflows), real Calendar Chromium test, official Windows dist/docs. PR #267 Draft; no merge or Controller/Tree source edits.
