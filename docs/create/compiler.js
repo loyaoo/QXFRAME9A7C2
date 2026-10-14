@@ -1,5 +1,6 @@
 // createApp theme compiler (v3 §5). Turns a resolved configuration into the complete
-// closed token list (tokens.js): every token in :root, every color token again in .dark.
+// closed token list (tokens.js): both :root and .dark remain complete;
+// CSS light-dark() pairs each COLOR token and local color-scheme selects its mode.
 // Only fixed values are produced here; qxframe.css owns every formula (size curve,
 // color-mix states, concentric radii). Values with a shadcn source follow the measured
 // table (tools/qa/spec.json, shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c); values
@@ -616,7 +617,8 @@ export function themeTokens(resolved) {
   root['spinner-icon-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-spinner-icon-spin';
   root['loading-spin-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-loading-spin';
 
-  // The exported theme is self-contained in each mode: both blocks declare the closed list.
+  // Both blocks retain the closed export inventory; colors are paired by CSS
+  // light-dark(), rather than separately fixing a value per Theme mode.
   const rootBlock = {}, darkBlock = {};
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
