@@ -1292,9 +1292,10 @@ check('Canonical public Theme Schema mirrors all live registry tokens, no histor
  const canonicalCss=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  const firstRoot=canonicalCss.split('.dark {')[0];
  for(const token of data.tokens){
-   const match=[...firstRoot.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\\s*([^;]+);/g)].find(x=>'--qxframe9a7c2-theme-'+x[1]===token.name);
-   assert.ok(match,'default Theme contains '+token.name);
-   assert.equal(token.defaultRoot,match[2],'schema must mirror the actual :root value of '+token.name);
+   const row=firstRoot.split('\n').map(x=>x.trim()).find(x=>x.startsWith(token.name+':'));
+   assert.ok(row,'default Theme contains '+token.name);
+   const actual=row.slice(row.indexOf(':')+1).trim().replace(/;$/,'');
+   assert.equal(token.defaultRoot,actual,'schema must mirror the actual :root value of '+token.name);
    if(token.kind==='color')assert.ok(token.defaultRoot.startsWith('light-dark('),'every COLOR is a light-dark single owner');
  }
  assert.equal(data.tokens.find(x=>x.name==='--qxframe9a7c2-theme-color-scheme').defaultRoot,'light','root keyword exception is light');
@@ -1991,7 +1992,7 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
  assert.ok(theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'Only the real TreeSelect portal owns the contextual checkbox paint');
- assert.ok(theme.includes('--_qxframe9a7c2-choice-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
+ assert.ok(theme.includes('--_qxframe9a7c2-check-indicator-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'TreeSelect checked mark consumes its own check-indicator bg, not SelectGroup label');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
  assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');

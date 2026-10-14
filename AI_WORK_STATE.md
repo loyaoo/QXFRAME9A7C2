@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 ownership reconciliation and static test repair (CI pending)
+- Resolved 12 previously duplicated v2 names by actual state owners and distinct DOM semantics, removing recipe names and duplicate Card/Poup painting. See docs/LIGHT-DARK-TOKEN-OWNERSHIP.md.
+- Fixed two stale static checks after this change: TreeSelect check indicator name, and canonical Schema :root matching (old JS regex accidentally matched literal backslash+s, causing latest QXFRAME CI #38521826814 to fail before reaching component tests). Correctly parse each Theme root line by exact registered key.
+- Next: full dual CI plus real Chromium against current HEAD; never reintroduce version/recipe aliases; don't report completed acceptance until green.
+
 ## CURRENT — 2026-10-14 resolve 12 old v2 collisions by single-ownership semantics (CI PENDING)
 - Owner rejected mechanical 'recipe-*' namespace: it hides, rather than resolves, duplicate implementation. Audited original CSS variable definitions, consumers and component paint owners for 12 colliding slots.
 - MERGED into existing component/family slots, not a new extra layer: action-bg/action-border, control-bg/control-border (including hover/focus/disabled mapping), popup-bg/popup-text/popup-border/popup-shadow (drop self-referential projector), card-shadow (Card CSS now sole state/box-shadow authority consuming Theme shadow).
