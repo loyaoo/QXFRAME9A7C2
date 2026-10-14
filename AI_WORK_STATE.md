@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 cross-frame Chromium test correction (CI pending)
+- Latest state before change: development HEAD 66e09bc0189afffd0759c7d098e10b3fe27c5afb, PR #267 Draft/Open, main unchanged; QXFRAME #38592636159 and CSS Schema #38592636269 both failed at browser Calendar five-unit check `date one delegated select` rather than core Theme Schema.
+- Cause identified in new fixture: Calendar runtime `Date` objects are created in Preview iframe realm. Using outer-page `selected instanceof Date` misclassifies valid Date objects. The check now independently asserts exactly one `onSelect` call and a finite `selected.getTime()`, without weakening the event/selection contract. Do not change Calendar runtime while confirming this.
+- Next: same HEAD QXFRAME/CSS Schema workflows; investigate any additional actual Chromium failure, then exact-HEAD official Windows dist/docs acceptance and QA labels. Existing date/week/month/quarter/year single Calendar owner must be retained. Frozen Tree/Controller/main untouched; never merge #267. Stage/overall completion not credibly quantified.
+
 ## CURRENT — 2026-10-14 Calendar unit docs coverage gate repair (CI pending)
 - QXFRAME #38592260766 passed earlier source/controller/schema tests and stopped at Preview03 catalog assumption 66 unique component families. This unification intentionally has 65 canonical components across unchanged 66 Card demos, with both date and quarter as Calendar. Gate now asserts exactly 65 unique and two Calendar consumers, preserving 66 Cards and 48 new Cards; not suppressing the check.
 - Next same-HEAD dual workflows, real browser month/quarter/year + DatePicker drill, official acceptance bundle when both pass.
