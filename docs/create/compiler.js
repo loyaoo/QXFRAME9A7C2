@@ -654,7 +654,15 @@ export function themeBody(resolved) {
   ];
   const inDark = popupRoots.map(selector => '.dark ' + selector).join(',\n');
   const inLight = popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)').join(',\n');
+  // The native customizable Select is browser top-layer content. Only its
+  // ::picker(select) switches scheme; the closed control remains in page mode.
+  // All existing Menu color declarations continue to consume light-dark() as-is.
+  const picker = 'select:not([multiple]):not([size])';
+  const darkPicker = '.dark ' + picker + '::picker(select)';
+  const lightPicker = ':root:not(.dark) ' + picker + ':not(.dark *)::picker(select)';
   return rootCss + darkCss
     + `${inDark} {\n  color-scheme: light;\n}\n`
-    + `${inLight} {\n  color-scheme: dark;\n}\n`;
+    + `${inLight} {\n  color-scheme: dark;\n}\n`
+    + `${darkPicker} {\n  color-scheme: light;\n}\n`
+    + `${lightPicker} {\n  color-scheme: dark;\n}\n`;
 }

@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 current batch (pending CI)
+- User correction: Native ::picker(select) inverse is ONLY a CSS color-scheme switch on the picker pseudo element, no CSS color declaration changes, no Popconfirm arrow on picker. Closed native Select remains page scheme. Generated theme includes paired top-layer picker scheme-only selectors; strict Theme schema and browser coverage being upgraded.
+- Tooltip arrow now matches Popconfirm/Popover rotated square size/offset and four-sided border geometry; removes divergent clip-path triangle, consumes Tooltip surface background and preserves alpha. No Tooltip/Popover/Controller JS changes.
+- v2 private token audit confirmed nontrivial name collision risks (12 of 40 old v2 tokens collide with existing unversioned names in built CSS); rename ONLY proven collision-free tokens after checking references and tests. Legacy named tokens are not evidence of a second public Theme registry.
+- Draft PR #267, frozen Tree/TreeSelect CSS/JS and Controller remain unchanged. Pending exact-HEAD dual CI + browser + Windows offline ZIP.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 current-only offline annotations (CI pending)
 - Changed opt-in offline QA ledger to a single Preview 01 savings-targets native Select control (1 card/1 region) matching THIS consumer batch. Removed previous TreeSelect/ColorPicker highlights. Global Create/Preview surface color migration is not arbitrarily represented by unrelated card highlights. Strict static ledger/count gate updated, opt-in QA markers still excluded from production.
 - Official artifact/ZIP must match final dual-green HEAD; no old dist+docs acceptable.

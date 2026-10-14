@@ -149,12 +149,16 @@
 .qxframe9a7c2-tooltip-root.is-lg .qxframe9a7c2-tooltip-container{font-size:1rem;padding:0.375rem 0.625rem}
 .qxframe9a7c2-tooltip-root.is-xl .qxframe9a7c2-tooltip-container{font-size:1rem;padding:0.5rem 0.75rem}
 
-.qxframe9a7c2-tooltip-arrow{width:0.5rem;height:0.5rem;transform:rotate(45deg);transform-origin:center;background:var(--_qxframe9a7c2-popup-surface-bg,var(--_qxframe9a7c2-tooltip-bg));pointer-events:none}
+/* Popconfirm consumes Popover's arrow. Tooltip uses the SAME rotated square,
+ * same size, offsets and four edge geometries, with its own surface color.
+ * No clip-path (which clipped the arrow and changed alpha). */
+.qxframe9a7c2-tooltip-root{--_qxframe9a7c2-popover-arrow-size:var(--qxframe9a7c2-popover-arrow-size,0.625rem);--_qxframe9a7c2-popover-arrow-half:calc(var(--_qxframe9a7c2-popover-arrow-size) * -.5)}
+.qxframe9a7c2-tooltip-arrow{width:var(--_qxframe9a7c2-popover-arrow-size);height:var(--_qxframe9a7c2-popover-arrow-size);transform:rotate(45deg);transform-origin:center;background:var(--_qxframe9a7c2-tooltip-bg);border:1px solid transparent;box-sizing:border-box;z-index:var(--qxframe9a7c2-z-local-base);pointer-events:none}
 .qxframe9a7c2-tooltip-arrow[hidden]{display:none}
-.qxframe9a7c2-tooltip-root[data-placement^="top"] .qxframe9a7c2-tooltip-arrow{left:50%;bottom:-0.25rem;margin-left:-0.25rem;clip-path:polygon(0 0,0 100%,100% 100%)}
-.qxframe9a7c2-tooltip-root[data-placement^="bottom"] .qxframe9a7c2-tooltip-arrow{left:50%;top:-0.25rem;margin-left:-0.25rem;clip-path:polygon(0 0,100% 0,100% 100%)}
-.qxframe9a7c2-tooltip-root[data-placement^="left"] .qxframe9a7c2-tooltip-arrow{right:-0.25rem;top:50%;margin-top:-0.25rem;clip-path:polygon(100% 0,100% 100%,0 100%)}
-.qxframe9a7c2-tooltip-root[data-placement^="right"] .qxframe9a7c2-tooltip-arrow{left:-0.25rem;top:50%;margin-top:-0.25rem;clip-path:polygon(0 0,100% 0,0 100%)}
+.qxframe9a7c2-tooltip-root[data-placement^="top"] .qxframe9a7c2-tooltip-arrow{left:50%;bottom:var(--_qxframe9a7c2-popover-arrow-half);margin-left:var(--_qxframe9a7c2-popover-arrow-half);border-left:0;border-top:0}
+.qxframe9a7c2-tooltip-root[data-placement^="bottom"] .qxframe9a7c2-tooltip-arrow{left:50%;top:var(--_qxframe9a7c2-popover-arrow-half);margin-left:var(--_qxframe9a7c2-popover-arrow-half);border-right:0;border-bottom:0}
+.qxframe9a7c2-tooltip-root[data-placement^="left"] .qxframe9a7c2-tooltip-arrow{right:var(--_qxframe9a7c2-popover-arrow-half);top:50%;margin-top:var(--_qxframe9a7c2-popover-arrow-half);border-left:0;border-bottom:0}
+.qxframe9a7c2-tooltip-root[data-placement^="right"] .qxframe9a7c2-tooltip-arrow{left:var(--_qxframe9a7c2-popover-arrow-half);top:50%;margin-top:var(--_qxframe9a7c2-popover-arrow-half);border-right:0;border-top:0}
 .qxframe9a7c2-tooltip-root[data-placement^="top"]{transform-origin:50% 100%}
 .qxframe9a7c2-tooltip-root[data-placement^="bottom"]{transform-origin:50% 0}
 .qxframe9a7c2-tooltip-root[data-placement^="left"]{transform-origin:100% 50%}

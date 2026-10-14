@@ -26,6 +26,13 @@ const POPUP_SCHEME_GROUPS = [
   MENU_POPUP_ROOTS.map(s => '.dark ' + s),
   MENU_POPUP_ROOTS.map(s => ':root:not(.dark) ' + s + ':not(.dark *)')
 ];
+// ::picker(select) is rendered in the browser top layer; unlike a custom
+// Popup it cannot inherit our Popup DOM subtree color-scheme. Scheme-only
+// exception: never inject light/dark color declarations into the native picker.
+const NATIVE_PICKER_SCHEME = [
+  '.dark select:not([multiple]):not([size])::picker(select)',
+  ':root:not(.dark) select:not([multiple]):not([size]):not(.dark *)::picker(select)'
+];
 
 const VIEWPORT_UNIT = /(?:^|[^a-z0-9_.#-])-?(?:\d*\.)?\d+(?:vw|vh|vmin|vmax|vi|vb|dvh|dvw|svh|svw|lvh|lvw|dvi|dvb|svi|svb|lvi|lvb)\b/i;
 const FR_UNIT = /(?:^|[^a-z0-9_.#-])-?(?:\d*\.)?\d+fr\b/i;
@@ -175,6 +182,8 @@ export function checkThemeFile(css, { registry = readRegistry() } = {}) {
     if (r.selectors.length === 1 && r.selectors[0] === ':root') return 'root';
     if (r.selectors.length === 1 && r.selectors[0] === '.dark') return 'dark';
     if (POPUP_SCHEME_GROUPS.some(g => g.length === r.selectors.length && g.every((s,i) => s === r.selectors[i]))) return r.selectors[0].startsWith('.dark ') ? 'inverse-dark' : 'inverse-light';
+    if (r.selectors.length === 1 && r.selectors[0] === NATIVE_PICKER_SCHEME[0]) return 'native-dark';
+    if (r.selectors.length === 1 && r.selectors[0] === NATIVE_PICKER_SCHEME[1]) return 'native-light';
     return null;
   };
   for (const r of rules) {
@@ -184,7 +193,7 @@ export function checkThemeFile(css, { registry = readRegistry() } = {}) {
     seenRules.add(role);
     for (const d of r.declarations) {
       if (d.prop === 'color-scheme') {
-        const expected = role === 'dark' || role === 'inverse-light' ? 'dark' : 'light';
+        const expected = role === 'dark' || role === 'inverse-light' || role === 'native-light' ? 'dark' : 'light';
         if (d.value !== expected) errors.push(`${role}: color-scheme must be ${expected}, got ${d.value}`);
         continue;
       }
@@ -205,10 +214,12 @@ export function checkThemeFile(css, { registry = readRegistry() } = {}) {
       }
     }
     if (!r.declarations.some(d => d.prop === 'color-scheme')) errors.push(`${role}: missing color-scheme`);
-    if ((role === 'inverse-dark' || role === 'inverse-light') && r.declarations.length !== 1) errors.push(`${role}: Popup must switch scheme only`);
+    if (['inverse-dark','inverse-light','native-dark','native-light'].includes(role) && r.declarations.length !== 1) errors.push(`${role}: inverse surface must switch scheme only`);
   }
   if (!seenRules.has('root') || !seenRules.has('dark')) errors.push('both :root and .dark scheme boundaries required');
   if (seenRules.has('inverse-dark') !== seenRules.has('inverse-light')) errors.push('inverse Menu scheme roots must be paired');
+  if (seenRules.has('native-dark') !== seenRules.has('native-light')) errors.push('native picker scheme roots must be paired');
+  if (seenRules.has('inverse-dark') !== seenRules.has('native-dark')) errors.push('native picker inverse must follow Menu inverse option');
   if (registry) {
     for (const token of registry.tokens) {
       const rootCount = declared.get('root§' + token.name) || 0;
