@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 sync Dropdown compact group font gate to rem CSS
+- QXFRAME #38564278117 verified Registry/Token and failed only in Stage5 new ItemCollection group static assertion still expecting legacy .875em while source has required 0.875rem. Corrected test literal; no code change, no weakening of functional group header checks. Re-run final CI.
+
 ## CURRENT — 2026-10-14 mirror configured Nova overlay into canonical Registry Schema
 - QXFRAME #38563832290 passed prior gates and stopped at verify-create-app.mjs canonical Theme Schema mirror: changed static Theme overlay 0.1 ->0.6 but generated docs/generated/theme-public-schema.json still 0.1. Updated only this token defaultRoot, preserving 214-token registry and all token names/ordering. Existing gate remains enforced.
 - Next QXFRAME + CSS Schema dual on final HEAD and browser tests; not complete yet.

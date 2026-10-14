@@ -1882,7 +1882,7 @@ check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an
  assert.ok(choice.includes('.qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate'),'branch intermediate state has own contrast');
  assert.ok(!choice.includes('.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,'),'unchecked open parent no longer receives a colored filled box');
  assert.ok(collection.includes('.qxframe9a7c2-item-collection-group{box-sizing:border-box;min-height:0;'),'group label is not rendered as an option-size item');
- assert.ok(collection.includes('background:transparent;font-size:.875em;line-height:1.25;font-weight:600'),'group label neutral, compact and unselectable');
+ assert.ok(collection.includes('background:transparent;font-size:0.875rem;line-height:1.25;font-weight:600'),'group label neutral, compact and unselectable');
 });
 check('Stage5 DatePicker width and preset scroll border are owner-aligned',()=>{
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
