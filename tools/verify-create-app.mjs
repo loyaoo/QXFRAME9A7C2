@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { checkThemeFile } from './css-gates.mjs';
+import { checkThemeFile, readRegistry } from './css-gates.mjs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -1269,9 +1269,24 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
+check('Canonical public Theme Schema mirrors all live registry tokens, no historical 105 v2 pilot fields',()=>{
+ const old=path.join(root,'docs/generated/theme-public-schema-v2.json');
+ const canonical=path.join(root,'docs/generated/theme-public-schema.json');
+ assert.ok(!fs.existsSync(old),'obsolete pilot Schema must be retired, not coexist with a second Theme registry');
+ const data=JSON.parse(fs.readFileSync(canonical,'utf8'));
+ 
+ assert.equal(data.schema,3,'canonical schema version is metadata, not a Token name');
+ assert.equal(data.status,'CANONICAL_REGISTRY_MIRROR');
+ assert.equal(data.tokenCount,data.tokens.length);
+ assert.equal(data.geometryInputs.length,21);
+ assert.deepEqual([...new Set(data.tokens.map(x=>x.name))].sort(),readRegistry().tokens.map(x=>x.name).sort(),'JSON Theme token catalog equals live compiler registry');
+ for(const token of data.tokens)assert.ok(!/--qxframe9a7c2-theme-v[123]-/.test(token.name),'no v1/v2/v3 Theme Token names');
+ for(const token of data.tokens)assert.ok(token.defaultRoot!=null,'actual default CSS Theme value supplied: '+token.name);
+});
+
 check('No v1/v2/v3 CSS token names remain; 12 colliding recipes keep a distinct semantic namespace',()=>{
  const css=fs.readFileSync(path.join(root,'dist/qxframe9a7c2.css'),'utf8');
- const sources=['src/styles/main/theme-visual-v2.css','src/styles/main/theme-visual-v2-consumers.css','src/styles/main/theme-visual-v2-style-consumers.css','src/styles/main/fixed-values.css',
+ const sources=['docs/assets/qxframe9a7c2-docs.css','src/styles/main/theme-visual-v2.css','src/styles/main/theme-visual-v2-consumers.css','src/styles/main/theme-visual-v2-style-consumers.css','src/styles/main/fixed-values.css',
    'docs/create/app.css','docs/create/preview.css','docs/create/preview-03.css'];
  const obsolete=/(?:--_?qxframe9a7c2-(?:[a-z0-9-]+-)?v[123](?:-|\\b))/g;
  for(const [name,body] of [['dist CSS',css],...sources.map(p=>[p,fs.readFileSync(path.join(root,p),'utf8')])]){
