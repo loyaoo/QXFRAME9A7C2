@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 CSS-order and offline QA contract
+- Migrated protected CSS concat source assertions to verify unique :root light-dark COLOR declaration and scheme-only .dark, preserving full 61-module verbatim concat. Updated offline QA to mark ONLY current Theme scope areas on Preview03 platform-tree and brand-studio (2 cards/2 regions); previous Tree-specific checkbox highlight removed. No runtime DOM/class change.
+- Exact-HEAD CI not yet green; official local Windows package not yet generated. Frozen Tree/TreeSelect/Controller unchanged. PR Draft/Open.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 legacy mode color consumer batch (CI not yet verified)
 - Consolidated fixed-values.css two paired legacy color projection blocks: three scroll colors + 27 older semantic/mode colors now resolve via light-dark() at consumer; unchanged aliases declared once; full Popup shadow geometry retained as the single mode exception. No Tree/TreeSelect/Controller modifications. Source color/formula operands untouched; rem/shape/focus/behavior unchanged.
 - Continue requiring exact-HEAD dual CI and real Chromium browser acceptance; not a claim of completed global migration.
