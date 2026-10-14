@@ -164,10 +164,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"overview-metrics":[".qxframe9a7c2-card"],"shift-allocation":['[data-pv3x-widget="shift-allocation"]'],"dial-settings":['[data-pv3x-widget="dial-settings"]']}; // Only this batch's overview Cards and shared WheelPanel examples.
+  const current={"release-planner":['[data-pv3-component="release-time"]'],"shift-allocation":['[data-pv3x-widget="shift-allocation"]'],"dial-settings":['[data-pv3x-widget="dial-settings"]']}; // Only this batch's TimePicker/TimePanel/WheelPicker Scroll stacking change.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok((id==='overview-metrics'?read('preview-03.html').includes('<section class="pv3-overview">'):read('preview-03.html').includes('data-card="'+id+'"')),'current Preview Card '+id);
+    assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -1974,6 +1974,11 @@ check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection ar
 });
 check('Stage5 WheelPanel selection/dividers and Preview03 overview Cards have one visual owner',()=>{
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const runtime=fs.readFileSync(path.join(root,'src/components/wheel-panel.js'),'utf8');
+ assert.ok(runtime.includes('scrollMount.appendChild(guide)'),'Guide shares scrollMount with Scroll.create output');
+ assert.ok(runtime.includes('container: scrollMount,'),'Wheel Scroll is mounted in the same parent as its guide');
+ assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll{z-index:var(--qxframe9a7c2-z-local-above)}'),'Scroll receives a local layer above guide, without 999 or a global Scroll override');
+ assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-raised)'),'Selection guide stays below the scroll content');
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const html=read('preview-03.html'),css=read('preview-03.css');
  assert.match(picker,/\.qxframe9a7c2-wheel-panel-center-guide\{[^}]*border-block:1px solid var\(--qxframe9a7c2-theme-menu-accent\);background:var\(--qxframe9a7c2-theme-menu-accent\)/,'WheelPanel owns bold/subtle guide');

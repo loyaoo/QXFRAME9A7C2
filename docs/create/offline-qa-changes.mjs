@@ -1,13 +1,13 @@
-/** Stage5 current-only acceptance: one WheelPanel guide, consistent dividers, genuine overview Cards. */
+/** Stage5 current-only QA: WheelPanel Scroll overlay above center guide in all three consumers. */
 const groups = [
-  ['overview-metrics','Preview03 overview uses QX Card',[
-    ['.qxframe9a7c2-card','Four overview metric Cards','Card and CardContent now own radius, border, surface, shadow and padding','__QA_BUNDLE_HEAD__']
+  ['release-planner','TimePicker scroll above guide',[
+    ['[data-pv3-component="release-time"]','TimePicker selection text','Scroll is layered above selection guide; guide continues painting accent backdrop','__QA_BUNDLE_HEAD__']
   ],'03'],
-  ['shift-allocation','TimePanel shared guide',[
-    ['[data-pv3x-widget="shift-allocation"]','TimePanel Wheel guide','Bold Menu accent pairs with theme-aware selected ink; column separators use field-border','__QA_BUNDLE_HEAD__']
+  ['shift-allocation','TimePanel scroll above guide',[
+    ['[data-pv3x-widget="shift-allocation"]','TimePanel selection text','Actual WheelPanel Scroll sibling now paints the selected values above its guide','__QA_BUNDLE_HEAD__']
   ],'03'],
-  ['dial-settings','WheelPicker shared guide',[
-    ['[data-pv3x-widget="dial-settings"]','WheelPicker guide','No component-specific guide repaint; same WheelPanel accent/foreground and field-border family','__QA_BUNDLE_HEAD__']
+  ['dial-settings','WheelPicker scroll above guide',[
+    ['[data-pv3x-widget="dial-settings"]','WheelPicker selection text','Shared WheelPanel stacking replaces numeric z-index experiments; no color change','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -71,7 +71,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：WheelPanel/TimePicker/WheelPicker 统一选中颜色与分割线，以及 Preview03 指标使用真实 Card。旧轮次高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：WheelPanel 的 Scroll 高于 Guide，覆盖 TimePicker、TimePanel、WheelPicker；未修改颜色与其它组件。旧轮次高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

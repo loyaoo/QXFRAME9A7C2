@@ -2993,6 +2993,22 @@ try {
     }
   });
 
+  await step('WHEEL-GUIDE-STACK-001 real sibling Scroll above guide: 8 Styles x 2 modes x 4 Menu modes x 2 accents',async()=>{
+    const rows=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const h=d.documentElement,api=window.QXFRAME9A7C2_CREATE,wasDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('section'),sheet=d.createElement('style');\n host.style.cssText='position:absolute;left:-10000px;top:0;width:28rem';\n const wheel=(kind)=>'<div class=\"qxframe9a7c2-wheel-panel\" data-wheel=\"'+kind+'\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-scroll\" style=\"height:12rem\"><div class=\"qxframe9a7c2-scroll\"><div class=\"qxframe9a7c2-scroll-viewport\"><div class=\"qxframe9a7c2-scroll-content\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">09</div></div></div><div class=\"qxframe9a7c2-scroll-track qxframe9a7c2-scroll-track-y\"></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div></div></div></div>';\n host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+wheel('panel')+'<div class=\"qxframe9a7c2-wheel-picker-popup\">'+wheel('picker')+'</div><div class=\"qxframe9a7c2-time-panel-root\"><div class=\"qxframe9a7c2-time-panel-wrapper\">'+wheel('time')+'</div></div></div>';\n d.body.append(host);d.head.append(sheet);\n const samples=[];\n try {\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])\n for(const dark of [false,true])\n for(const menuColor of ['default','default-translucent','inverted','inverted-translucent'])\n for(const menuAccent of ['subtle','bold']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor,menuAccent},{generatedAt:''}).body;\n   const result={style,dark,menuColor,menuAccent};\n   for(const kind of ['panel','picker','time']){\n     const root=host.querySelector('[data-wheel=\"'+kind+'\"]');\n     const mount=root.querySelector('.qxframe9a7c2-wheel-panel-scroll');\n     const scroll=mount.querySelector(':scope > .qxframe9a7c2-scroll');\n     const guide=mount.querySelector(':scope > .qxframe9a7c2-wheel-panel-center-guide');\n     const item=scroll?.querySelector('.qxframe9a7c2-wheel-panel-item.is-selected');\n     const scrollCss=scroll&&d.defaultView.getComputedStyle(scroll),guideCss=guide&&d.defaultView.getComputedStyle(guide);\n     result[kind]={validDOM:!!(scroll&&guide&&item&&guide.previousElementSibling===scroll&&scroll.contains(item)),scrollZ:scrollCss?.zIndex,guideZ:guideCss?.zIndex,scrollPos:scrollCss?.position,guidePos:guideCss?.position,guidePaint:guideCss?.backgroundColor,selectedInk:item?d.defaultView.getComputedStyle(item).color:null};\n   }\n   samples.push(result);\n }\n } finally {h.classList.toggle('dark',wasDark);sheet.remove();host.remove();}\n return samples;\n})()");
+    assert.equal(rows.length,128,'all Theme cases test WheelPanel real sibling layout');
+    for(const r of rows){
+      const key=[r.style,r.dark,r.menuColor,r.menuAccent].join('/');
+      for(const kind of ['panel','picker','time']){
+        const v=r[kind];
+        assert.ok(v.validDOM,key+' '+kind+' matches real WheelPanel scrollMount children');
+        assert.equal(v.scrollPos,'relative',key+' '+kind+' Scroll layer positioned');
+        assert.equal(v.guidePos,'absolute',key+' '+kind+' Guide absolute in same containing block');
+        assert.ok(Number(v.scrollZ)>Number(v.guideZ),key+' '+kind+' Scroll item text is painted above guide');
+        assert.notEqual(v.guidePaint,'rgba(0, 0, 0, 0)',key+' '+kind+' guide background not removed to hide bug');
+      }
+    }
+  });
+
   await step('Official main Tree 3000-node VirtualList and selection',async()=>{
     await s('Page.navigate',{url:origin+'/docs/qa/tree-large-data.html'});
     await waitFor("!!window.QXFRAME9A7C2_TREE_QA?.tree || document.querySelector('[data-status]')?.textContent?.includes('Tree unavailable')",'official Tree mount',12000);

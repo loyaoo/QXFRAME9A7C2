@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 Stage5 WHEEL-GUIDE-STACK-001 (exact-HEAD CI pending)
+- Owner reproduced the real WheelPanel issue: center guide paints over selected item because actual `.qxframe9a7c2-scroll` and `.qxframe9a7c2-wheel-panel-center-guide` are siblings under `.qxframe9a7c2-wheel-panel-scroll`, not because of foreground contrast. Prior computed-color tests used a noncanonical test DOM and missed this. Fix is only source `picker-family.css` direct-child Scroll z-index `z-local-above=2` > guide `z-local-raised=1`, preserving accent guide and Theme ink unchanged.
+- Update source contract and Chromium regression to test sibling topology and stacking across Style/light-dark/inversion/accent. Offline annotation reset to current three Preview03 consumers (Release Planner TimePicker, Shift Allocation TimePanel, Dial Settings WheelPicker). No changes to frozen Tree/Controller or runtime WheelPanel, PR #267 Draft, main unchanged.
+- Next: final same-HEAD QXFRAME + CSS Schema CI Success; if complete, official exact-HEAD dist/docs Windows bundle + CRC/HTTP and current-only highlights. Progress not credibly quantified.
+
 ## CURRENT — 2026-10-14 Popup passive border convergence
 - Replaced old popup Menu-foreground 26%-mixed passive border alias with direct theme-field-border consumption across semantic border, semantic subtle border and ColorPanel passive Hover border. The common Wheel/Cascader/TimePicker separators use the same field-border. Existing accent/focus states remain Theme primary; no new Theme or private token; tests and real CSS color probes updated. Dual CI for this HEAD pending, PR #267 stays Draft.
 

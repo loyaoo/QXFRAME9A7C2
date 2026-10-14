@@ -40,3 +40,9 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - **Preview03 overview:** four metrics now use actual `Card > CardContent`; private Preview03 CSS controls flex arrangement only, with the framework owning Card surface/outline/shadow/radius/insets.
 
 - **Popup passive borders:** retired the redundant `menu-border-neutral` 26%-Menu-foreground mix. The Popup semantic border, subtle border, control border and ColorPanel passive Hover border now consume the same registered `theme-field-border` as Wheel/Cascader/TimePicker dividers. Theme accent continues to own selected/active/focus borders.
+
+## 2026-10-14: WheelPanel Scroll/guide stacking correction
+
+- Real `wheel-panel.js` appends the center guide to `wheel-panel-scroll` *after* creating a sibling `.qxframe9a7c2-scroll`. The columns' outer stacking index cannot order those two siblings.
+- `picker-family.css` assigns **only** `.wheel-panel-scroll > .scroll` the existing `z-local-above=2` value, leaving `.wheel-panel-center-guide` at `z-local-raised=1`. Scroll text and interactive scrollbar paint above the guide; Guide remains the sole accent background painter and `pointer-events:none`.
+- No `z-index:999`, global Scroll paint, selected-foreground rewrite, Theme registry edit or WheelPanel runtime edit. Browser acceptance must exercise the *real sibling DOM topology* rather than the old synthetic fixture that placed guide outside columns.
