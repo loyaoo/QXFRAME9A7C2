@@ -1324,6 +1324,8 @@ check('Legacy v2 collision resolved through existing semantic owners, not a new 
     assert.ok(button.includes(prop+':var(--_qxframe9a7c2-state-'+role+')'),'Button owns '+prop+' through its state resolver');
   assert.doesNotMatch(visual,/background-color:\s*var\(--_qxframe9a7c2-action-current\)/,'No late duplicate Button painter');
   assert.doesNotMatch(visual,/--_qxframe9a7c2-action-current/,'No second Button state resolver');
+  assert.doesNotMatch(visual,/--_qxframe9a7c2-action-shadow:\s*none\s*;/,'A Button variant cannot compose a none shadow with the pointer/keyboard halo');
+  assert.match(visual,/--_qxframe9a7c2-action-shadow:\s*0 0 0 0 transparent/,'unraised Button variant uses composable zero-length shadow');
   assert.ok(visual.includes('--_qxframe9a7c2-button-bg: var(--_qxframe9a7c2-action-bg)'),'Theme feeds original Button state');
 
 });

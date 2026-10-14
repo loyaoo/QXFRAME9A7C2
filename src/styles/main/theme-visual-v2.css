@@ -308,27 +308,27 @@
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-solid-hover);
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type-foreground);
     --_qxframe9a7c2-action-border: transparent;
-    --_qxframe9a7c2-action-shadow: none;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-filled {
     --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-soft);
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-soft-hover);
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
     --_qxframe9a7c2-action-border: transparent;
-    --_qxframe9a7c2-action-shadow: none;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-plain, .qxframe9a7c2-button.is-text {
     --_qxframe9a7c2-action-bg: transparent;
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-ghost-hover);
     --_qxframe9a7c2-action-border: transparent;
-    --_qxframe9a7c2-action-shadow: none;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-link {
     --_qxframe9a7c2-action-bg: transparent;
     --_qxframe9a7c2-action-hover: transparent;
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
     --_qxframe9a7c2-action-border: transparent;
-    --_qxframe9a7c2-action-shadow: none;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-filled {
     --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
