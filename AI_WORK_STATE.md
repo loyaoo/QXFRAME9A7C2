@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 DateTime Calendar/TimePanel aligned density and height (CI pending)
+- Source DatePicker only (not TimePanel/WheelPanel globally): if consumer time options lack visibleItemCount, use 9 visible rows (WheelMetrics itemHeight remains the established Theme size projection; explicit visibleItemCount untouched). Composite `.has-time` Calendar uses existing Theme control-height size axis for six-week day cells and nine-row min-height; right TimePanel wheel no longer visually ends early under a taller Calendar, without CSS-overriding JS inline scroll height or breaking snap padding.
+- DatePicker JS is an intentional explicitly authorized delta to main in existing verify-js-build-matches-main allowlist; Tree/Controller untouched. Need real Chrome popup computed height validation, both DateTime and non-time regression. PR #267 Draft; final dual CI pending.
+
 ## CURRENT — 2026-10-14 screenshot changes new offline QA ledger
 - Reset local-only `offline-qa-changes.mjs` to 10 **current screenshot-fix** Preview03 regions, clearing previous WheelPanel z-index-only markers and overview markers. Each marker uses real Card/inner DOM; Source HTML remains untouched (overlay only bundled in Windows QA).
 - Additional final tasks: same SHA CI double green, repair gate errors, official Windows ZIP and real browser smoke. DateTime picker Calendar/Time wheel height remains the one unclosed geometry item; no unsafe snap CSS.

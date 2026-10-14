@@ -1891,6 +1891,15 @@ check('Stage5 DatePicker width and preset scroll border are owner-aligned',()=>{
  assert.ok(picker.includes('date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto'),'Calendar group does not stretch');
  assert.ok(picker.includes('presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto;border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)'),'Presets scroll shell owns border');
 });
+check('Stage5 DateTime composite shares nine-row Wheel height and density',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const js=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const build=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;"),'only default DateTime wheel expands to nine rows; custom options preserved');
+ assert.ok(picker.includes('--qxframe9a7c2-calendar-cell-size:var(--_qxframe9a7c2-control-height)'),'DateTime Calendar cells use Theme control density');
+ assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'DateTime Calendar min-height equals TimePanel nine-row projection');
+ assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

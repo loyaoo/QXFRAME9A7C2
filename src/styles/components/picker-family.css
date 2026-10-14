@@ -252,6 +252,16 @@
 .qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3.5rem);--_qxframe9a7c2-date-picker-time-width:16rem}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar{border:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-composite{display:flex;align-items:stretch;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:min(calc(16rem * 4),100%)}
+/* DateTime's native WheelPanel has nine visible rows. Size the six-week
+   Calendar from the same control-height axis instead of stretching the Wheel
+   Scroll beyond its snap-padding contract. Standalone Date/Time are unchanged. */
+.qxframe9a7c2-date-picker-composite.has-time{
+  --_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-control-height) + 2 * var(--qxframe9a7c2-theme-calendar-padding,.5rem));
+  --qxframe9a7c2-calendar-cell-size:var(--_qxframe9a7c2-control-height)
+}
+.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar.is-adaptive-month{
+  min-height:calc(9 * var(--_qxframe9a7c2-control-height))
+}
 .qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto;align-self:stretch}
 .qxframe9a7c2-date-picker-selection-panel{display:flex;align-self:stretch;flex:1 1 auto;min-width:0;overflow:hidden}
 .qxframe9a7c2-date-picker-selection-scroll>.qxframe9a7c2-date-picker-selection-panel.qxframe9a7c2-scroll-viewport{width:100%;height:100%;min-width:0}
