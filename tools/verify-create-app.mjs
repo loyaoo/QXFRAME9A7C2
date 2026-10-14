@@ -1698,7 +1698,7 @@ check('CardFooter peer Button equal-width semantic only when editorial',()=>{
   assert.ok(compiler.includes("root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto'"));
   assert.match(html,/data-card="social-links"[\s\S]*?card-footer pv-justify-end pv-gap-2 is-source-peer-actions/);
   const themeDefault=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
-  assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,2);
+  assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,1,'invariant Card footer role has one Theme owner');
   for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0%':'0 1 auto')+';'),'theme peer action role '+style);
