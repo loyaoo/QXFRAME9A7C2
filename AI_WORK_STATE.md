@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 real Tooltip/Popconfirm arrow parity matrix (CI pending)
+- Added 64 Chromium cases (8 Styles × 2 modes × top/right/bottom/left) comparing actual computed dimensions, transforms, offsets and border-edge geometry between Popconfirm's Popover arrow and Tooltip. Also asserts Tooltip arrow background matches its surface's semi-transparent rgba, with no clip-path or extra opacity. No component JS changes. This catches size/offset/alpha regressions from theme/placement changes.
+
 ## CURRENT — 2026-10-14 Native picker browser proof and stronger role equivalence (CI pending)
 - Standalone real Chromium check: style only select::picker(select){color-scheme:dark} under light page. Computed Select scheme=light; picker scheme=dark; option scheme=dark; picker/option colors resolve to dark arm of inherited light-dark Theme variables. No option override is required.
 - Upgraded main createApp Chromium 64-case matrix: expected Menu roles are computed from an isolated color-scheme swatch; inverse picker/selected/idle/disabled colors must equal that swatch, in addition to picker opposite scheme and unchanged closed control. This tests both color-scheme propagation and actual paint without adding any CSS color overrides.
