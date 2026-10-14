@@ -467,10 +467,6 @@
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {
     --_qxframe9a7c2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-center-guide {
-    border-block-color: var(--qxframe9a7c2-theme-menu-accent);
-    background: var(--_qxframe9a7c2-menu-selected-soft);
-  }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected):not(.is-disabled)::after,
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(.is-disabled)::after {
     background: var(--_qxframe9a7c2-menu-primary-solid);

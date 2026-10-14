@@ -8,7 +8,7 @@
 .pv3-hero .pv3-kicker{color:var(--qxframe9a7c2-theme-foreground)}
 .pv3-hero-meta{display:flex;gap:.5rem;align-items:center;justify-content:flex-end;flex-wrap:wrap;max-width:25rem}
 .pv3-overview{display:flex;gap:1rem;margin-bottom:2rem;min-width:0}
-.pv3-overview>.pv3-metric{flex:1 1 0;background:var(--qxframe9a7c2-theme-card);border:1px solid var(--qxframe9a7c2-theme-border);border-radius:var(--qxframe9a7c2-theme-radius-card);padding:1.125rem 1.25rem}
+.pv3-overview>.qxframe9a7c2-card{flex:1 1 0;min-width:0}
 .pv3-columns{display:flex;gap:var(--pv3-gap);align-items:flex-start;min-width:0}
 .pv3-column{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:var(--pv3-gap)}
 .pv3-card{min-width:0;overflow:visible}
