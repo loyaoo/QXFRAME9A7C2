@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Browser Smoke + Preview03 Calendar period consumer migration (CI pending)
+- Legacy Preview03 fiscal-periods now mounts Calendar({unit:quarter}) directly and declares the same component type in coverage JSON. Browser smoke regression for quarter/month drill now queries actual Calendar.cell button + view/inner; keyboard selection remains asserted. One Calendar owner; compatibility import alias is not used by any DatePicker/Preview03 internal consumer.
+- Next full CI, real keyboard/hover/range source, no Tree/Controller or main edits. Draft PR #267 remains Open.
+
 ## CURRENT — 2026-10-14 Calendar period title keyboard unification (CI pending)
 - One Calendar handler now routes Period title keyboard activate to onTitleRequest and title arrow keys to correct unit page (year decade, month/quarter year). Previously PeriodPanel's independent FocusController handled this; single owner must retain behavior.
 - Browser test covers five datasets and key navigation; do not weaken Phase-C input gates. Await exact final SHA CI.

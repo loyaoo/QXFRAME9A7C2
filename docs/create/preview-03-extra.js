@@ -59,7 +59,7 @@ try{if(C.Modal&&typeof C.Modal.create==='function'){var modal=C.Modal.create({au
 var notifBtn=button('alerts-center','Show notification');
 notifBtn.addEventListener('click',function(){if(C.Notification&&typeof C.Notification.info==='function'){C.Notification.info({title:'Batch review',content:'Demo alert: batch review is ready.',duration:4500,placement:'top-right'});functional.push('Notification')}status('alerts-center','QX notification requested; no incident created.')});
 simple('command-palette','OptionList',['Deploy review','Export CSV','Refresh chart','Audit events'],{value:'0'});
-mount('fiscal-periods','PeriodPanel',{unit:'quarter',value:'2026-Q4'});
+mount('fiscal-periods','Calendar',{unit:'quarter',value:'2026-Q4'});
 var deleteBtn=button('delete-policy','Request deletion');
 try{if(C.Popconfirm&&typeof C.Popconfirm.create==='function'){var popconfirm=C.Popconfirm.create({reference:deleteBtn,title:'Discard this policy draft?',content:'Demo only. Nothing will be deleted.',danger:true,confirmText:'Discard',cancelText:'Keep',placement:'top'});mounted.push({id:'delete-policy',type:'Popconfirm',instance:popconfirm});functional.push('Popconfirm')}else throw new Error('Popconfirm API unavailable')}catch(e){errors.push({id:'delete-policy',type:'Popconfirm',message:String(e.message||e)})}
 var insightBtn=button('customer-insights','Why engagement grew');

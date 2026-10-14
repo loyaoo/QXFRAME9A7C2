@@ -186,7 +186,7 @@
       "mode": "QX-runtime-or-availability-checked"
     },
     {
-      "component": "period-panel",
+      "component": "calendar",
       "card": "fiscal-periods",
       "mode": "QX-runtime-or-availability-checked"
     },
@@ -530,7 +530,7 @@
       "id": "fiscal-periods",
       "title": "Fiscal period selection",
       "description": "Budget quarter and year review",
-      "component": "period-panel",
+      "component": "calendar",
       "sector": "Finance"
     },
     {
