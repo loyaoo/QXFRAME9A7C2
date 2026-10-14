@@ -307,16 +307,8 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 }
 /* Non-customizable native menu color still follows the page color scheme.
  * A dark .dark subtree must not show white OS options with white text. */
-.qxframe9a7c2-form-select:not([multiple]):not([size]),
-.qxframe9a7c2-native-form select:not([multiple]):not([size]),
-select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
-  color-scheme:light;
-}
-.dark .qxframe9a7c2-form-select:not([multiple]):not([size]),
-.dark .qxframe9a7c2-native-form select:not([multiple]):not([size]),
-.dark select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
-  color-scheme:dark;
-}
+/* Native select inherits the computed Theme color-scheme from its ancestor.
+ * Do not force page-light colors inside dark/local-inverse popups. */
 
 /* Native Select: match the JS Select chevron-down SVG geometry (24px
  * viewBox, m6 9 6 6 6-6, round 2px stroke), not CSS triangles.
