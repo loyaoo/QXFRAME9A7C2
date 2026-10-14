@@ -229,7 +229,7 @@ try {
       for(const field of ['rows','search','normal','today','wheelNormal','preset','colorInput'])
         assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
       assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
-      assert.equal(r.wheel,r.menuFg,id+' TimePicker uses TimePanel selected text role');
+      assert.equal(r.wheel,r.accentFg,id+' selected Wheel text pairs with Menu accent, not idle foreground');
       assert.equal(r.wheelBg,'rgba(0, 0, 0, 0)',id+' TimePicker leaves selected wheel background to TimePanel guide');
       assert.equal(r.collectionBg,'rgba(0, 0, 0, 0)',id+' nested collection is transparent; only Popup owns Menu backdrop opacity');
       assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
@@ -246,7 +246,7 @@ try {
       assert.equal(r.presetHoverBorder,r.neutralBorder,id+' ColorPanel preset hover uses neutral border');
       assert.equal(r.presetActiveBorder,r.menuSolid,id+' ColorPanel active preset border uses visible Menu Primary');
       assert.equal(r.wheelGuideBorder,r.accentBg,id+' WheelPanel guide border retains Menu accent');
-      assert.equal(r.wheelGuideBg,r.softSelectedBg,id+' WheelPanel guide fill retains Menu tint');
+      assert.equal(r.wheelGuideBg,r.accentBg,id+' guide fill uses one Menu accent: solid bold, tinted subtle');
       assert.equal(r.todayDot,r.menuSolid,id+' Today dot uses solid dark/inverted Menu Primary');
       // Chromium's computed pseudo-range height mirrors the host input, not its native track.
       // Probe the computed shared recipe; the source gate enforces pseudo-track consumption.
@@ -2974,6 +2974,22 @@ try {
       assert.equal(v.uncheckedBorder,v.expectedChoiceBorder,k+' unchecked popup Choice follows Theme Choice edge');
       assert.notEqual(v.uncheckedBorder,v.uncheckedBg,k+' unchecked popup Choice has visible border');
       assert.equal(v.refCheckedText,v.refMixedText,k+' Tree outside Popup still consumes page Choice');
+    }
+  });
+
+  await step('Stage5 shared WheelPanel / WheelPicker / TimePicker guide and unified passive dividers: 8 Styles x 2 schemes x 4 Menu modes x 2 accents',async()=>{
+    const rows=await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument;\n  const h=d.documentElement,api=window.QXFRAME9A7C2_CREATE;\n  const wasDark=h.classList.contains('dark'),orig=api.state.config;\n  const host=d.createElement('section'),sheet=d.createElement('style');\n  host.style.cssText='position:absolute;left:-10000px;top:0;width:28rem';\n  const wheel=(kind)=>'<div class=\"qxframe9a7c2-wheel-panel\" data-wheel=\"'+kind+'\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">20</div></div><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">30</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div>';\n  host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'\n    +wheel('panel')\n    +'<div class=\"qxframe9a7c2-wheel-picker-popup\">'+wheel('picker')+'</div>'\n    +'<div class=\"qxframe9a7c2-time-panel-root\"><div class=\"qxframe9a7c2-time-panel-wrapper\">'+wheel('time')+'</div></div>'\n    +'<div class=\"qxframe9a7c2-cascader-columns\"><div class=\"qxframe9a7c2-cascader-column\">A</div><div class=\"qxframe9a7c2-cascader-column\">B</div></div>'\n    +'<button class=\"qxframe9a7c2-time-picker-now\">Now</button>'\n    +'<i data-accent style=\"background:var(--qxframe9a7c2-theme-menu-accent);color:var(--qxframe9a7c2-theme-menu-accent-foreground)\"></i>'\n    +'<i data-field-edge style=\"border-top:1px solid var(--qxframe9a7c2-theme-field-border)\"></i>'\n    +'</div>';\n  d.body.append(host);d.head.append(sheet);\n  const get=(sel)=>d.defaultView.getComputedStyle(host.querySelector(sel));\n  const samples=[];\n  try {\n    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])\n    for(const dark of [false,true])\n    for(const menuColor of ['default','default-translucent','inverted','inverted-translucent'])\n    for(const menuAccent of ['subtle','bold']){\n      h.classList.toggle('dark',dark);\n      sheet.textContent=api.compileTheme({...orig,style,menuColor,menuAccent},{generatedAt:''}).body;\n      const accent=get('[data-accent]'),border=get('[data-field-edge]').borderTopColor;\n      samples.push({style,dark,menuColor,menuAccent,accentBg:accent.backgroundColor,accentInk:accent.color,edge:border,\n        panelBg:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        pickerBg:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        timeBg:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        panelBorder:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        pickerBorder:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        timeBorder:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        panelInk:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        pickerInk:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        timeInk:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        wheelDivider:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-column + .qxframe9a7c2-wheel-panel-column').borderLeftColor,\n        cascaderDivider:get('.qxframe9a7c2-cascader-column').borderRightColor,\n        timeNowDivider:get('.qxframe9a7c2-time-picker-now').borderTopColor\n      });\n    }\n  } finally {h.classList.toggle('dark',wasDark);host.remove();sheet.remove();}\n  return samples;\n})()");
+    assert.equal(rows.length,128,'Style x page scheme x Menu mode x subtle/bold');
+    for(const r of rows){
+      const k=[r.style,r.dark,r.menuColor,r.menuAccent].join('/');
+      for(const name of ['panelBg','pickerBg','timeBg','panelBorder','pickerBorder','timeBorder'])
+        assert.equal(r[name],r.accentBg,k+' '+name+' uses one Theme accent painter');
+      for(const name of ['panelInk','pickerInk','timeInk'])
+        assert.equal(r[name],r.accentInk,k+' '+name+' pairs with guide background');
+      for(const name of ['wheelDivider','cascaderDivider','timeNowDivider'])
+        assert.equal(r[name],r.edge,k+' '+name+' shares Theme Field border');
+      assert.notEqual(r.accentBg,'rgba(0, 0, 0, 0)',k+' guide remains visible');
+      if(r.menuAccent==='bold')assert.notEqual(r.accentInk,r.accentBg,k+' bold text must contrast accent');
     }
   });
 
