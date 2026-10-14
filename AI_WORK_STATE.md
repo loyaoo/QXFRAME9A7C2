@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Calendar unit docs coverage gate repair (CI pending)
+- QXFRAME #38592260766 passed earlier source/controller/schema tests and stopped at Preview03 catalog assumption 66 unique component families. This unification intentionally has 65 canonical components across unchanged 66 Card demos, with both date and quarter as Calendar. Gate now asserts exactly 65 unique and two Calendar consumers, preserving 66 Cards and 48 new Cards; not suppressing the check.
+- Next same-HEAD dual workflows, real browser month/quarter/year + DatePicker drill, official acceptance bundle when both pass.
+
 ## CURRENT — 2026-10-14 Browser Smoke + Preview03 Calendar period consumer migration (CI pending)
 - Legacy Preview03 fiscal-periods now mounts Calendar({unit:quarter}) directly and declares the same component type in coverage JSON. Browser smoke regression for quarter/month drill now queries actual Calendar.cell button + view/inner; keyboard selection remains asserted. One Calendar owner; compatibility import alias is not used by any DatePicker/Preview03 internal consumer.
 - Next full CI, real keyboard/hover/range source, no Tree/Controller or main edits. Draft PR #267 remains Open.

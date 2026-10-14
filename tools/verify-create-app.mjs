@@ -36,7 +36,8 @@ check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview r
   assert.equal(inventory.totalCards,66,'full commercial gallery count');
   assert.equal(inventory.addedCards,48,'this batch adds 48');
   assert.equal(inventory.coverage.length,66,'every documented family mapped');
-  assert.equal(new Set(inventory.coverage.map(x=>x.component)).size,66,'no duplicated documentation families');
+  assert.equal(new Set(inventory.coverage.map(x=>x.component)).size,65,'Calendar date/period share one documented framework component while gallery keeps 66 cards');
+  assert.equal(inventory.coverage.filter(x=>x.component==='calendar').length,2,'both Calendar day and quarter demos use the unified Calendar');
   assert.equal(new Set(inventory.added.map(x=>x.id)).size,48,'new Card ids distinct');
   for(const entry of inventory.added) assert.ok(html.includes('data-card="'+entry.id+'"'),'additional Card '+entry.id);
   assert.equal((html.match(/data-card="/g)||[]).length,66,'exactly 66 Preview03 Card containers');
