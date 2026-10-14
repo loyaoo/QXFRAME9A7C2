@@ -621,8 +621,20 @@ export function themeTokens(resolved) {
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
       if (light[token.name] === undefined || dark[token.name] === undefined) throw new Error('Missing color token: ' + token.name);
-      rootBlock[token.name] = light[token.name];
-      darkBlock[token.name] = dark[token.name];
+      if (token.kind === 'color') {
+        // light-dark() is resolved at the consuming element's color-scheme:
+        // full page, nested .dark, and the existing CSS-only inverse Popup.
+        // Keep both closed blocks during the compatibility migration. Their
+        // COLOR expressions are identical; only the keyword scheme differs.
+        const value = `light-dark(${light[token.name]}, ${dark[token.name]})`;
+        rootBlock[token.name] = value;
+        darkBlock[token.name] = value;
+      } else {
+        // color-scheme is a keyword, not a color: light-dark(light,dark)
+        // is invalid CSS. The existing scope aliases switch this keyword.
+        rootBlock[token.name] = light[token.name];
+        darkBlock[token.name] = dark[token.name];
+      }
     } else {
       if (root[token.name] === undefined) throw new Error('Missing token: ' + token.name);
       rootBlock[token.name] = root[token.name];
