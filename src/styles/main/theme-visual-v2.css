@@ -236,7 +236,8 @@
   .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-carousel-arrow { --_qxframe9a7c2-carousel-arrow-bg: var(--qxframe9a7c2-theme-background); --_qxframe9a7c2-carousel-arrow-bg-hover: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-carousel-caption { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-upload-preview-mask[class], .qxframe9a7c2-image-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
+  .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
+  /* Image Preview owns a solid, adjustable mask; avoid multiplying two alpha values. */
   .qxframe9a7c2-image-preview-toolbar { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-image-preview-tool[class] { color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }

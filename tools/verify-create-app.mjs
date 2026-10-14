@@ -1842,6 +1842,18 @@ check('Stage5 calendar range strip zero gap and Menu body has no default paint',
  assert.match(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*column-gap:0/);
  assert.match(menu,/\.qxframe9a7c2-menu\{[\s\S]*?background:var\(--_qxframe9a7c2-menu-context-background,transparent\)/);
 });
+check('Stage5 configured Mask Style defaults and Image Preview chroma are consistent',()=>{
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const compiler=read('compiler.js'),v=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const alpha=[...compiler.matchAll(/overlay:\s*(\d+), switchTrack/g)].map(m=>Number(m[1]));
+ assert.equal(alpha.length,8,'eight Style mask defaults');
+ assert.ok(alpha.every(x=>x>=50),'default overlay >=50, without runtime clamping public overrides');
+ assert.match(theme,/--qxframe9a7c2-theme-overlay: light-dark\(oklch\(0 0 0 \/ 0\.6\), oklch\(0 0 0 \/ 0\.6\)\)/,'default Nova mask matches compiler');
+ assert.match(image,/--_qxframe9a7c2-image-preview-mask:var\(--qxframe9a7c2-image-preview-mask-color,rgb\(0 0 0\)\)/,'separate solid Image Preview mask');
+ assert.doesNotMatch(v,/\.qxframe9a7c2-image-preview-mask\[class\] \{ background-color:/,'no alpha-overlay multipainter on Image Preview');
+ assert.match(image,/\.qxframe9a7c2-image-preview-tool\.qxframe9a7c2-image-preview-close:hover,\.qxframe9a7c2-image-preview-nav:hover\{background:rgb\(255 255 255 \/ \.14\)\}/,'close hover matches Image Preview toolbar actions');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

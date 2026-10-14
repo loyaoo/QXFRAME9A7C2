@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 Stage5 screenshot batch: Mask default configuration and Image Preview toolbar (CI pending)
+- User explicitly said NOT to hard-clamp opacity. All eight style look mask default values now >=50% (six formerly 10/20/30 →60; Maia/Mira 80 unchanged); default CSS Nova overlay now 60%, custom Theme mask tokens retain precedence.
+- Image Preview fixed alpha compositing: own solid black mask default with editable mask color + 82% opacity, no Theme Overlay double alpha painting. Close button/nav hover now same translucent white as Preview toolbar hover; no unrelated button hover edits.
+- Next: verify exact CI; continue remaining screenshot family-specific bugs. Stage/overall progress not credible yet.
+
 ## CURRENT — 2026-10-14 Stage5 screenshot batch: contiguous DatePicker/PeriodPanel range strips and transparent Menu (CI pending)
 - User clarified Calendar grid gap must be ZERO, not merely visually smaller. Seven equal width cells connect selected/range background within each week row, including adaptive months; PeriodPanel range slots have no horizontal gap. No runtime date selection changes.
 - Inline Menu root now defaults transparent; explicit recipes and popup surface remain separate. Previous WheelPanel z-index fix aa0c2194 was already committed and awaiting CI; do not rework.
