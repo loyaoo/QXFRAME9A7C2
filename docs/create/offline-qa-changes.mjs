@@ -1,34 +1,7 @@
-/** Stage5 current-round screenshot-fix acceptance annotations. Previous WheelPanel guide-z-order highlights cleared. */
+/** CALENDAR-RANGE-VISUAL-001 — current-only highlights, not historical Stage 5 regions. */
 const groups = [
-  ['release-planner','DatePicker / TimePicker Popup',[
-    ['[data-pv3-component="release-date"]','DatePicker / TimePicker Popup','Range Calendar gap 0, intrinsic width and proper Presets edge','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['navigation-workspace','Menu default transparent',[
-    ['[data-pv3x-widget="navigation-workspace"]','Menu default transparent','No default Menu surface fill; Popup keeps its own background','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['alerts-center','Alert feedback surface',[
-    ['[data-pv3x-widget="alerts-center"]','Alert feedback surface','Theme border and configurable Card shadow restored','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['compliance-flags','Semantic Badge',[
-    ['.qxframe9a7c2-badge.is-error','Semantic Badge','Badge accent fill/ink restored without Theme neutral repaint','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['order-routing','Cascader Choice',[
-    ['[data-pv3-component="routing-cascader"]','Cascader Choice','Unchecked expanded branch checkbox remains empty','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['quick-action-menu','Dropdown Choice/group',[
-    ['[data-pv3x-widget="quick-action-menu"]','Dropdown Choice/group','Open unselected checkbox remains empty; group header neutral','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['finance-approval','Steps connector flow',[
-    ['[data-pv3-component="finance-steps"]','Steps connector flow','Step rail stays in flow beside titles, not over text','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['approval-queue-item','Item leading alignment',[
-    ['.qxframe9a7c2-item-surface','Item leading alignment','Leading icon/checkbox and text stay side by side','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['customer-quality','Tags Add theme',[
-    ['[data-pv3-component="customer-tags"]','Tags Add theme','AddTag inherits Tag height/radius/Theme surface','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['asset-preview','ImagePreview mask/close',[
-    ['[data-pv3x-widget="asset-preview"]','ImagePreview mask/close','Dark adjustable mask; close Hover matches toolbar','__QA_BUNDLE_HEAD__']
+  ['release-planner','Calendar shared range cells',[
+    ['[data-pv3-component="release-date"]','DatePicker Calendar continuous range','All Calendar date buttons retain their events; two visual children and CSS-only half-width start/end range stripes','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

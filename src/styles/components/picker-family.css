@@ -73,6 +73,9 @@
   --_qxframe9a7c2-calendar-adaptive-cell:var(--qxframe9a7c2-calendar-cell-size,2rem);
   --_qxframe9a7c2-calendar-adaptive-padding:var(--qxframe9a7c2-calendar-padding,var(--qxframe9a7c2-theme-calendar-padding,.5rem));
   box-sizing:border-box;flex:0 0 auto;min-width:0;max-width:none;
+  /* Shared Calendar height across standalone, range and DateTime hosts:
+     no component-specific Calendar cell/height override in DatePicker. */
+  min-height:calc(9 * var(--_qxframe9a7c2-control-height));
   width:calc(7 * var(--_qxframe9a7c2-calendar-adaptive-cell) + 2 * var(--_qxframe9a7c2-calendar-adaptive-padding));
   padding:var(--_qxframe9a7c2-calendar-adaptive-padding);
   border:0;background:transparent
@@ -96,10 +99,10 @@
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{gap:0}
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday,
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
-  box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0;padding:0
+  box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0
 }
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday{
-  font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
+  padding:0;font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
 }
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{
   margin-top:.5rem
@@ -107,7 +110,6 @@
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
   /* Exact adaptive day-box dimension; generic date controls may set a taller min-height. */
   aspect-ratio:1/1;min-height:0;height:var(--_qxframe9a7c2-calendar-adaptive-cell);
-  padding:var(--_qxframe9a7c2-fixed-space-1) 0;
   border-width:0;font-weight:400
 }
 /* Source DayPicker presents four, five or six weeks as needed by the month. */
@@ -309,16 +311,6 @@
 .qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3.5rem);--_qxframe9a7c2-date-picker-time-width:16rem}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar{border:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-composite{display:flex;align-items:stretch;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:min(calc(16rem * 4),100%)}
-/* DateTime's native WheelPanel has nine visible rows. Size the six-week
-   Calendar from the same control-height axis instead of stretching the Wheel
-   Scroll beyond its snap-padding contract. Standalone Date/Time are unchanged. */
-.qxframe9a7c2-date-picker-composite.has-time{
-  --_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-control-height) + 2 * var(--qxframe9a7c2-theme-calendar-padding,.5rem));
-}
-.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar.is-adaptive-month{
-  --_qxframe9a7c2-calendar-adaptive-cell:var(--_qxframe9a7c2-control-height);
-  min-height:calc(9 * var(--_qxframe9a7c2-control-height))
-}
 .qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto;align-self:stretch}
 .qxframe9a7c2-date-picker-selection-panel{display:flex;align-self:stretch;flex:1 1 auto;min-width:0;overflow:hidden}
 .qxframe9a7c2-date-picker-selection-scroll>.qxframe9a7c2-date-picker-selection-panel.qxframe9a7c2-scroll-viewport{width:100%;height:100%;min-width:0}

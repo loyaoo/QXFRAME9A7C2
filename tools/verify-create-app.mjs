@@ -164,7 +164,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"release-planner":['[data-pv3-component="release-date"]'],"navigation-workspace":['[data-pv3x-widget="navigation-workspace"]'],"alerts-center":['[data-pv3x-widget="alerts-center"]'],"compliance-flags":['.qxframe9a7c2-badge.is-error'],"order-routing":['[data-pv3-component="routing-cascader"]'],"quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],"finance-approval":['[data-pv3-component="finance-steps"]'],"approval-queue-item":['.qxframe9a7c2-item-surface'],"customer-quality":['[data-pv3-component="customer-tags"]'],"asset-preview":['[data-pv3x-widget="asset-preview"]']}; // Only current screenshot component changes.
+  const current={"release-planner":['[data-pv3-component="release-date"]']}; // Only current Calendar range-cell DOM/CSS change.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
@@ -175,11 +175,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['platform-tree','quick-action-menu','release-planner','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['platform-tree','quick-action-menu','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,10,'exactly current screenshot regions highlighted, no old highlights');
+  assert.equal(count,1,'exactly current Calendar range region highlighted, no old highlights');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1833,6 +1833,30 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
 });
+check('CALENDAR-RANGE-VISUAL-001 shared Calendar owns two styling layers and CSS-only range',()=>{
+ const source=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const fixed=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const authorized=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ assert.match(source,/cell\.className='qxframe9a7c2-calendar-cell'/,'old button stays Calendar state/action owner');
+ assert.match(source,/view\.className='qxframe9a7c2-calendar-cell-view'/,'view is style-only');
+ assert.match(source,/inner\.className='qxframe9a7c2-calendar-cell-inner'/,'inner is style-only');
+ assert.match(source,/view\.appendChild\(inner\);[\s\S]*cell\.appendChild\(view\)/,'exact two style wrappers');
+ assert.match(source,/Renderer\.append\(cellInner, cellOutput\)/,'custom date renderer targets inner square');
+ assert.match(source,/DOM\.setPrivate\(button, 'calendarDate', entry\.key\)/,'Calendar event private owner unchanged');
+ assert.match(source,/delegation\.on\('click', DOM\.privateMatcher\('calendarDate'\)/,'existing date event delegation unchanged');
+ assert.match(picker,/\.qxframe9a7c2-calendar-grid>\.qxframe9a7c2-calendar-cell\.is-in-range::before\{/,'range painted by cell pseudo only');
+ assert.match(picker,/\.is-in-range\.is-range-start:not\(\.is-range-end\)::before\{left:50%;width:50%\}/,'range begins in right half');
+ assert.match(picker,/\.is-in-range\.is-range-end:not\(\.is-range-start\)::before\{left:0;width:50%\}/,'range ends in left half');
+ assert.ok(!source.includes('calendar-cell-range'),'no JS range backing DOM');
+ assert.match(picker,/\.qxframe9a7c2-calendar-weekdays,\.qxframe9a7c2-calendar-grid\{display:flex;flex-wrap:wrap;gap:0\}/,'Calendar grid has no gap');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell-inner\{[^}]*aspect-ratio:1\/1/,'inner day renders 1:1');
+ assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'Calendar visual dimensions independent of DateTime consumers');
+ assert.ok(!visual.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled),'),'no second Calendar selected painter');
+ assert.ok(fixed.includes('.qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today'),'Calendar today dot belongs to inner');
+ assert.ok(authorized.includes("'src/components/calendar.js'"),'the owner-authorized Calendar DOM change in reproducible JS build set');
+});
 check('Stage5 calendar range strip zero gap and Menu body has no default paint',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
@@ -1896,8 +1920,9 @@ check('Stage5 DateTime composite shares nine-row Wheel height and density',()=>{
  const js=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
  const build=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;"),'only default DateTime wheel expands to nine rows; custom options preserved');
- assert.ok(picker.includes('--_qxframe9a7c2-calendar-adaptive-cell:var(--_qxframe9a7c2-control-height)'),'DateTime Calendar cells use existing private adaptive cell consumption, no public token declarations');
- assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'DateTime Calendar min-height equals TimePanel nine-row projection');
+ assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'canonical Calendar minimum height covers TimePanel nine-row projection for every consumer');
+ assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'DatePicker may not duplicate Calendar cell/size ownership');
+ assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time{'),'DatePicker may not override Calendar size in DateTime');
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
 });
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
