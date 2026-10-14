@@ -587,116 +587,17 @@
  * Legacy public color aliases are output-only adapters; canonical CSS never consumes them.
  */
 :root {
-
-  
-  
-  
-  
-
   --qxframe9a7c2-color-text: var(--_qxframe9a7c2-semantic-text);
   --qxframe9a7c2-color-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
-  
-  
-
   --qxframe9a7c2-color-bg: var(--_qxframe9a7c2-semantic-bg);
-  
   --qxframe9a7c2-color-surface-raised: var(--_qxframe9a7c2-semantic-surface-raised);
-  
-  
-
   --qxframe9a7c2-color-border: var(--_qxframe9a7c2-semantic-border);
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  --_qxframe9a7c2-token-scroll-track: rgba(82, 82, 82, .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(82, 82, 82, .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(82, 82, 82, .68);
+  --_qxframe9a7c2-token-scroll-track: light-dark(rgba(82, 82, 82, .14), rgba(229, 229, 229, .14));
+  --_qxframe9a7c2-token-scroll-thumb: light-dark(rgba(82, 82, 82, .46), rgba(229, 229, 229, .46));
+  --_qxframe9a7c2-token-scroll-thumb-hover: light-dark(rgba(82, 82, 82, .68), rgba(229, 229, 229, .68));
   --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(38, 38, 38, .18);
 }
-
 .dark {
-
-  
-  
-  
-  
-
-  --qxframe9a7c2-color-text: var(--_qxframe9a7c2-semantic-text);
-  --qxframe9a7c2-color-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
-  
-  
-
-  --qxframe9a7c2-color-bg: var(--_qxframe9a7c2-semantic-bg);
-  
-  --qxframe9a7c2-color-surface-raised: var(--_qxframe9a7c2-semantic-surface-raised);
-  
-  
-
-  --qxframe9a7c2-color-border: var(--_qxframe9a7c2-semantic-border);
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  --_qxframe9a7c2-token-scroll-track: rgba(229, 229, 229, .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(229, 229, 229, .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(229, 229, 229, .68);
   --qxframe9a7c2-shadow-popup: 0 0.875rem 2.625rem rgba(0, 0, 0, .46);
 }
 
@@ -926,58 +827,26 @@
    * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
    * global mode switch never leaks one mode's public semantic values into a nested boundary. */
   :root {
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-bg: var(--_qxframe9a7c2-fixed-light-bg, var(--_qxframe9a7c2-standard-light-bg, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface: var(--_qxframe9a7c2-fixed-light-surface, var(--_qxframe9a7c2-standard-light-surface, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface-raised: var(--_qxframe9a7c2-fixed-light-surface-raised, var(--_qxframe9a7c2-standard-light-surface-raised, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface-muted: var(--_qxframe9a7c2-fixed-light-surface-muted, var(--_qxframe9a7c2-neutral-12));
-    --_qxframe9a7c2-mode-text: var(--_qxframe9a7c2-fixed-light-text, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-text-secondary: var(--_qxframe9a7c2-fixed-light-text-secondary, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-text-muted: var(--_qxframe9a7c2-fixed-light-text-muted, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-text-placeholder: var(--_qxframe9a7c2-fixed-light-text-placeholder, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-border: var(--_qxframe9a7c2-fixed-light-border, var(--_qxframe9a7c2-neutral-10));
-    --_qxframe9a7c2-mode-border-subtle: var(--_qxframe9a7c2-fixed-light-border-subtle, var(--_qxframe9a7c2-neutral-12));
-    --_qxframe9a7c2-mode-border-strong: var(--_qxframe9a7c2-fixed-light-border-strong, var(--_qxframe9a7c2-neutral-8));
-    --_qxframe9a7c2-mode-input-border: var(--_qxframe9a7c2-fixed-light-input-border, var(--_qxframe9a7c2-neutral-10));
-    --_qxframe9a7c2-mode-default-solid: var(--_qxframe9a7c2-fixed-light-default-solid, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-default-solid-hover: var(--_qxframe9a7c2-fixed-light-default-solid-hover, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-default-solid-focus: var(--_qxframe9a7c2-fixed-light-default-solid-focus, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-default-solid-active: var(--_qxframe9a7c2-fixed-light-default-solid-active, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-default-solid-text: var(--_qxframe9a7c2-fixed-light-default-solid-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--_qxframe9a7c2-fixed-light-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    --_qxframe9a7c2-mode-bg: light-dark(var(--_qxframe9a7c2-fixed-light-bg, var(--_qxframe9a7c2-standard-light-bg, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-bg, var(--_qxframe9a7c2-standard-dark-bg, var(--_qxframe9a7c2-neutral-1))));
+    --_qxframe9a7c2-mode-surface: light-dark(var(--_qxframe9a7c2-fixed-light-surface, var(--_qxframe9a7c2-standard-light-surface, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-surface, var(--_qxframe9a7c2-standard-dark-surface, var(--_qxframe9a7c2-mode-bg))));
+    --_qxframe9a7c2-mode-surface-raised: light-dark(var(--_qxframe9a7c2-fixed-light-surface-raised, var(--_qxframe9a7c2-standard-light-surface-raised, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-surface-raised, var(--_qxframe9a7c2-standard-dark-surface-raised, var(--_qxframe9a7c2-neutral-2))));
+    --_qxframe9a7c2-mode-surface-muted: light-dark(var(--_qxframe9a7c2-fixed-light-surface-muted, var(--_qxframe9a7c2-neutral-12)), var(--_qxframe9a7c2-fixed-dark-surface-muted, var(--_qxframe9a7c2-neutral-3)));
+    --_qxframe9a7c2-mode-text: light-dark(var(--_qxframe9a7c2-fixed-light-text, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-text, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-text-secondary: light-dark(var(--_qxframe9a7c2-fixed-light-text-secondary, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-text-secondary, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-text-muted: light-dark(var(--_qxframe9a7c2-fixed-light-text-muted, var(--_qxframe9a7c2-neutral-6)), var(--_qxframe9a7c2-fixed-dark-text-muted, var(--_qxframe9a7c2-neutral-7)));
+    --_qxframe9a7c2-mode-text-placeholder: light-dark(var(--_qxframe9a7c2-fixed-light-text-placeholder, var(--_qxframe9a7c2-neutral-6)), var(--_qxframe9a7c2-fixed-dark-text-placeholder, var(--_qxframe9a7c2-neutral-7)));
+    --_qxframe9a7c2-mode-border: light-dark(var(--_qxframe9a7c2-fixed-light-border, var(--_qxframe9a7c2-neutral-10)), var(--_qxframe9a7c2-fixed-dark-border, rgba(255, 255, 255, .10)));
+    --_qxframe9a7c2-mode-border-subtle: light-dark(var(--_qxframe9a7c2-fixed-light-border-subtle, var(--_qxframe9a7c2-neutral-12)), var(--_qxframe9a7c2-fixed-dark-border-subtle, rgba(255, 255, 255, .08)));
+    --_qxframe9a7c2-mode-border-strong: light-dark(var(--_qxframe9a7c2-fixed-light-border-strong, var(--_qxframe9a7c2-neutral-8)), var(--_qxframe9a7c2-fixed-dark-border-strong, rgba(255, 255, 255, .15)));
+    --_qxframe9a7c2-mode-input-border: light-dark(var(--_qxframe9a7c2-fixed-light-input-border, var(--_qxframe9a7c2-neutral-10)), var(--_qxframe9a7c2-fixed-dark-input-border, rgba(255, 255, 255, .15)));
+    --_qxframe9a7c2-mode-default-solid: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-default-solid, var(--_qxframe9a7c2-neutral-5)));
+    --_qxframe9a7c2-mode-default-solid-hover: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-hover, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-default-solid-hover, var(--_qxframe9a7c2-neutral-6)));
+    --_qxframe9a7c2-mode-default-solid-focus: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-focus, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-default-solid-focus, var(--_qxframe9a7c2-neutral-5)));
+    --_qxframe9a7c2-mode-default-solid-active: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-active, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-default-solid-active, var(--_qxframe9a7c2-neutral-4)));
+    --_qxframe9a7c2-mode-default-solid-text: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-text, var(--_qxframe9a7c2-neutral-13)), var(--_qxframe9a7c2-fixed-dark-default-solid-text, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-default-solid-disabled-text: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8)), var(--_qxframe9a7c2-fixed-dark-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8)));
     --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
-    --_qxframe9a7c2-on-grey: rgb(255, 255, 255);
-    
+    --_qxframe9a7c2-on-grey: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));
     --_qxframe9a7c2-on-cyan: rgb(255, 255, 255);
     --_qxframe9a7c2-on-teal: rgb(255, 255, 255);
     --_qxframe9a7c2-on-green: rgb(255, 255, 255);
@@ -995,124 +864,15 @@
     --_qxframe9a7c2-on-warning: rgb(255, 255, 255);
     --_qxframe9a7c2-on-error: rgb(255, 255, 255);
     --_qxframe9a7c2-on-info: rgb(255, 255, 255);
-    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-11);
-    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-7);
-    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-border-disabled: var(--_qxframe9a7c2-neutral-10);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-focus-visible: rgb(0, 0, 0);
-    
-    
-    
-    --_qxframe9a7c2-ripple-default-inside: rgba(0, 0, 0, .22);
-    --_qxframe9a7c2-ripple-default-outside: rgba(0, 0, 0, .38);
-    --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
-    --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
-    --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);
-    --qxframe9a7c2-ripple-outside-opacity: 1;
-  }
-
-  .dark {
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-bg: var(--_qxframe9a7c2-fixed-dark-bg, var(--_qxframe9a7c2-standard-dark-bg, var(--_qxframe9a7c2-neutral-1)));
-    --_qxframe9a7c2-mode-surface: var(--_qxframe9a7c2-fixed-dark-surface, var(--_qxframe9a7c2-standard-dark-surface, var(--_qxframe9a7c2-mode-bg)));
-    --_qxframe9a7c2-mode-surface-raised: var(--_qxframe9a7c2-fixed-dark-surface-raised, var(--_qxframe9a7c2-standard-dark-surface-raised, var(--_qxframe9a7c2-neutral-2)));
-    --_qxframe9a7c2-mode-surface-muted: var(--_qxframe9a7c2-fixed-dark-surface-muted, var(--_qxframe9a7c2-neutral-3));
-    --_qxframe9a7c2-mode-text: var(--_qxframe9a7c2-fixed-dark-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-text-secondary: var(--_qxframe9a7c2-fixed-dark-text-secondary, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-text-muted: var(--_qxframe9a7c2-fixed-dark-text-muted, var(--_qxframe9a7c2-neutral-7));
-    --_qxframe9a7c2-mode-text-placeholder: var(--_qxframe9a7c2-fixed-dark-text-placeholder, var(--_qxframe9a7c2-neutral-7));
-    --_qxframe9a7c2-mode-border: var(--_qxframe9a7c2-fixed-dark-border, rgba(255, 255, 255, .10));
-    --_qxframe9a7c2-mode-border-subtle: var(--_qxframe9a7c2-fixed-dark-border-subtle, rgba(255, 255, 255, .08));
-    --_qxframe9a7c2-mode-border-strong: var(--_qxframe9a7c2-fixed-dark-border-strong, rgba(255, 255, 255, .15));
-    --_qxframe9a7c2-mode-input-border: var(--_qxframe9a7c2-fixed-dark-input-border, rgba(255, 255, 255, .15));
-    --_qxframe9a7c2-mode-default-solid: var(--_qxframe9a7c2-fixed-dark-default-solid, var(--_qxframe9a7c2-neutral-5));
-    --_qxframe9a7c2-mode-default-solid-hover: var(--_qxframe9a7c2-fixed-dark-default-solid-hover, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-default-solid-focus: var(--_qxframe9a7c2-fixed-dark-default-solid-focus, var(--_qxframe9a7c2-neutral-5));
-    --_qxframe9a7c2-mode-default-solid-active: var(--_qxframe9a7c2-fixed-dark-default-solid-active, var(--_qxframe9a7c2-neutral-4));
-    --_qxframe9a7c2-mode-default-solid-text: var(--_qxframe9a7c2-fixed-dark-default-solid-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--_qxframe9a7c2-fixed-dark-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
-    --_qxframe9a7c2-on-grey: rgb(0, 0, 0);
-    
-    --_qxframe9a7c2-on-cyan: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-teal: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-green: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-lime: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-yellow: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-orange: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-red: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-pink: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-purple: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-blue: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-azure: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-white: rgb(0, 0, 0);
-    --_qxframe9a7c2-on-black: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-success: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-warning: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-error: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-info: rgb(255, 255, 255);
-    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-4);
-    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-6);
-    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-border-disabled: rgba(255, 255, 255, .08);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-focus-visible: rgb(255, 255, 255);
-    
-    
-    
-    --_qxframe9a7c2-ripple-default-inside: rgba(255, 255, 255, .22);
-    --_qxframe9a7c2-ripple-default-outside: rgba(255, 255, 255, .38);
+    --_qxframe9a7c2-mode-subtle: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-subtle-hover: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-subtle-active: light-dark(var(--_qxframe9a7c2-neutral-11), var(--_qxframe9a7c2-neutral-4));
+    --_qxframe9a7c2-mode-text-disabled: light-dark(var(--_qxframe9a7c2-neutral-7), var(--_qxframe9a7c2-neutral-6));
+    --_qxframe9a7c2-mode-bg-disabled: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-border-disabled: light-dark(var(--_qxframe9a7c2-neutral-10), rgba(255, 255, 255, .08));
+    --_qxframe9a7c2-mode-focus-visible: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+    --_qxframe9a7c2-ripple-default-inside: light-dark(rgba(0, 0, 0, .22), rgba(255, 255, 255, .22));
+    --_qxframe9a7c2-ripple-default-outside: light-dark(rgba(0, 0, 0, .38), rgba(255, 255, 255, .38));
     --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
     --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
     --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);

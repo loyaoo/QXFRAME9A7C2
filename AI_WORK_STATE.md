@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 legacy mode color consumer batch (CI not yet verified)
+- Consolidated fixed-values.css two paired legacy color projection blocks: three scroll colors + 27 older semantic/mode colors now resolve via light-dark() at consumer; unchanged aliases declared once; full Popup shadow geometry retained as the single mode exception. No Tree/TreeSelect/Controller modifications. Source color/formula operands untouched; rem/shape/focus/behavior unchanged.
+- Continue requiring exact-HEAD dual CI and real Chromium browser acceptance; not a claim of completed global migration.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 (implementation checkpoint; CI not yet verified)
 - GitHub PR #267 Draft/Open at start: HEAD 8431c83c4c2bd2be4c4e355858d3d7a15c4d7a89; main 718da2a6be0bc71520adb0451429cd3d3d8320b3; old QXFRAME CI 38499590420 and CSS Schema 38499590409 both Success (not evidence for this change).
 - Bounded inventory scanned all 61 CSS source modules and Create app/preview CSS: global duplicated Theme COLOR declarations reside in generated main/theme.css; other .dark sites cluster in fixed-values.css, theme-visual-v2-style.css, native Select embedded SVG and Create shell; most components have no per-mode branches. Frozen Tree/TreeSelect JS/CSS untouched.
