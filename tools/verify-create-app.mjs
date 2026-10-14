@@ -164,7 +164,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"ui-elements":[".qxframe9a7c2-button"],"platform-tree":['[data-pv3x-widget="platform-tree"]'],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only this batch's three changed component regions.
+  const current={"ui-elements":[".qxframe9a7c2-button"],"platform-tree":['[data-pv3-component="workspace-tree-select"]'],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only this batch's three changed component regions.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read(id==='ui-elements'?'preview-02.html':'preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);

@@ -4,7 +4,7 @@ const groups = [
     ['.qxframe9a7c2-button','Button visual states','Theme action values feed original Button state resolver; remove duplicate background, border, text and shadow paint','__QA_BUNDLE_HEAD__']
   ],'02'],
   ['platform-tree','TreeSelect Choice indicator',[
-    ['[data-pv3x-widget="platform-tree"]','TreeSelect checked marker','Checked and indeterminate glyph use the shared Checkbox primary-foreground, not Menu background','__QA_BUNDLE_HEAD__']
+    ['[data-pv3-component="workspace-tree-select"]','TreeSelect checked marker','Checked and indeterminate glyph use the shared Checkbox primary-foreground, not Menu background','__QA_BUNDLE_HEAD__']
   ],'03'],
   ['sla-tooltip','Tooltip inverse without Menu override',[
     ['[data-pv3x-widget="sla-tooltip"]','Tooltip inverse surface','Light page dark tip / dark page light tip; Menu inversion does not double-invert Tooltip','__QA_BUNDLE_HEAD__']
