@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { checkThemeFile } from './css-gates.mjs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -1257,7 +1258,6 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
 });
 
 check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
-  const { checkThemeFile } = await import('../tools/css-gates.mjs');
   for (const style of data.STYLES.map(s=>s.value)) for(const mode of ['default','default-translucent','inverted','inverted-translucent']){
     const body=model.compileTheme(model.normalizeConfig({style,menuColor:mode})).body;
     const inverse=mode.startsWith('inverted');
