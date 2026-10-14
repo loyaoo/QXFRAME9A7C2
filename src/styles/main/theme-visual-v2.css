@@ -467,8 +467,10 @@
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {
     --_qxframe9a7c2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected):not(.is-disabled)::after,
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(.is-disabled)::after {
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-today:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-current:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today:not(.is-selected):not(.is-disabled)::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-current:not(.is-selected):not(.is-disabled)::after {
     background: var(--_qxframe9a7c2-menu-primary-solid);
   }
   /* TreeSelect indicators use the same Choice checked/indeterminate paint as
@@ -593,7 +595,9 @@
     background: var(--_qxframe9a7c2-menu-hover-soft);
     color: var(--qxframe9a7c2-theme-menu-foreground);
   }
-  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled),
+  /* Calendar draws selected day using the inherited Theme state roles on the
+     inner square. Keep direct physical paint only on PeriodPanel's separate DOM. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled):not(.qxframe9a7c2-calendar-cell),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected:not(:disabled) {
     background: var(--_qxframe9a7c2-menu-selected-soft);
     border-color: var(--_qxframe9a7c2-menu-selected-soft);

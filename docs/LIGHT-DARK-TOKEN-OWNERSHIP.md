@@ -46,3 +46,11 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - Real `wheel-panel.js` appends the center guide to `wheel-panel-scroll` *after* creating a sibling `.qxframe9a7c2-scroll`. The columns' outer stacking index cannot order those two siblings.
 - `picker-family.css` assigns **only** `.wheel-panel-scroll > .scroll` the existing `z-local-above=2` value, leaving `.wheel-panel-center-guide` at `z-local-raised=1`. Scroll text and interactive scrollbar paint above the guide; Guide remains the sole accent background painter and `pointer-events:none`.
 - No `z-index:999`, global Scroll paint, selected-foreground rewrite, Theme registry edit or WheelPanel runtime edit. Browser acceptance must exercise the *real sibling DOM topology* rather than the old synthetic fixture that placed guide outside columns.
+
+## 2026-10-14: Calendar DOM/Range surface owner (CALENDAR-RANGE-VISUAL-001)
+
+- The existing `button.qxframe9a7c2-calendar-cell.qxframe9a7c2-date-panel-cell` retains `calendarDate`, disabled/tabIndex, selected/hover/today/range states, click delegation, active virtual focus and pointer handlers.
+- Calendar creates **exactly two interior styling nodes** per button: `div.calendar-cell-view > div.calendar-cell-inner`. The day output is rendered only inside `inner`. No range DOM is created.
+- The *outer button* `::before` is the sole range-strip painter. Horizontal fill covers 100% for middle days, the right half for start and left half for end. The pseudo inset-block is the same Calendar vertical cell padding, so week rows remain separate while days connect with `calendar-grid{gap:0}`. The square `inner` sits at z=2 above the strip (z=1) and consumes the existing `--_date-panel-cell-* `state roles.
+- Selected, Hover, Today and keyboard state are still managed by the same Calendar logic. Calendar selected background physical paint is **removed** from the later Picker Theme painter; that file supplies variables only. PeriodPanel remains a separate 4-column DOM, unaffected by this change.
+- No DatePicker-specific Calendar color/density patch, no standalone Range DOM, no new public tokens or compatibility aliases; DatePicker single/dual/DateTime consume one Calendar source.

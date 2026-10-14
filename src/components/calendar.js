@@ -33,7 +33,21 @@ function createDefaultDOM(context) {
   for (var i=0;i<7;i+=1) { var weekday=context.document.createElement('div'); weekday.className='qxframe9a7c2-calendar-weekday'; weekday.textContent=WEEKDAYS[(i+weekStartsOn)%7]; refs.weekdays.appendChild(weekday); }
   return {root: instance.root, refs: refs};
 }
-function createCell(context) { var cell=context.document.createElement('button'); cell.type='button'; cell.className='qxframe9a7c2-calendar-cell'; return cell; }
+function createCell(context) {
+  // The original button remains the event/value/focus owner. These inner
+  // wrappers have layout-only responsibility; the range strip is ::before on
+  // the button itself (no independent range DOM or event handlers).
+  var cell=context.document.createElement('button');
+  cell.type='button';
+  cell.className='qxframe9a7c2-calendar-cell';
+  var view=context.document.createElement('div');
+  view.className='qxframe9a7c2-calendar-cell-view';
+  var inner=context.document.createElement('div');
+  inner.className='qxframe9a7c2-calendar-cell-inner';
+  view.appendChild(inner);
+  cell.appendChild(view);
+  return cell;
+}
 DOMFactory = Object.freeze({createDefaultDOM:createDefaultDOM,createCell:createCell,blueprint:blueprint});
 
 var validDate = DateUnit.isValidDate;
@@ -279,9 +293,11 @@ function create(options) {
     cells.forEach(function (entry) {
       var button = DOMFactory.createCell({ document: doc, options: opts, entry: entry });
       button.classList.add('qxframe9a7c2-calendar-cell','qxframe9a7c2-date-panel-cell');
-      button.textContent = '';
+      // Render only the visible inner square; do not remove the style wrappers
+      // or move the calendarDate private key/event delegation off the button.
+      var cellInner = button.firstElementChild.firstElementChild;
       var cellOutput = typeof opts.renderCell === 'function' ? opts.renderCell(cloneDate(entry.date), { entry: entry, calendar: api }) : String(entry.date.getDate());
-      Renderer.append(button, cellOutput);
+      Renderer.append(cellInner, cellOutput);
       DOM.setPrivate(button, 'calendarDate', entry.key);
       button.tabIndex = -1;
       button.disabled = entry.disabled === true;
