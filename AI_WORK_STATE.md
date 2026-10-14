@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 stage5 verify-theme-tokens correction (CI pending)
+- QXFRAME #38562936754 passed css-constraints but failed theme-tokens hardcoded-color ratchet: newly duplicated rgb(255 255 255 / .14) Image Preview close hover. Original toolbar literal must not be duplicated. Added one private component-local --_image-preview-hover derived via color-mix 14% of registered theme palette white, consumed by both toolbar and close/nav. No public token/alias, no gate weakening.
+- Next: re-run official same-head CI, Chrome screenshot tests.
+
 ## CURRENT — 2026-10-14 mask color token gate CI correction (pending)
 - QXFRAME #38562627197 passed css-constraints, stopped at verify:theme-tokens because new literal rgb(0 0 0) in Image Preview exceeded hardcoded-color baseline. Mapped default to existing registered palette-black Theme token (opaque both modes), preserving independent adjustable mask opacity and avoiding a new token. Updated static ratchet, did not disable/raise baseline.
 - Further gates/Chromium still pending. Stage5 owner screenshot acceptance pending; PR Draft.

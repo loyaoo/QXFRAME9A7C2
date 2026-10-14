@@ -1852,7 +1852,8 @@ check('Stage5 configured Mask Style defaults and Image Preview chroma are consis
  assert.match(theme,/--qxframe9a7c2-theme-overlay: light-dark\(oklch\(0 0 0 \/ 0\.6\), oklch\(0 0 0 \/ 0\.6\)\)/,'default Nova mask matches compiler');
  assert.ok(image.includes('--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--qxframe9a7c2-theme-palette-black))'),'separate opaque Image Preview mask uses registered palette black');
  assert.doesNotMatch(v,/\.qxframe9a7c2-image-preview-mask\[class\] \{ background-color:/,'no alpha-overlay multipainter on Image Preview');
- assert.match(image,/\.qxframe9a7c2-image-preview-tool\.qxframe9a7c2-image-preview-close:hover,\.qxframe9a7c2-image-preview-nav:hover\{background:rgb\(255 255 255 \/ \.14\)\}/,'close hover matches Image Preview toolbar actions');
+ assert.ok(image.includes('--_qxframe9a7c2-image-preview-hover:color-mix(in oklab,var(--qxframe9a7c2-theme-palette-white) 14%,transparent)'),'hover derives Theme white palette without hardcoded colors');
+ assert.ok((image.match(/background:var\(--_qxframe9a7c2-image-preview-hover\)/g)||[]).length===2,'toolbar and close/nav share one hover paint');
 });
 check('Stage5 Alert and semantic Badge retain component paint',()=>{
  const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
