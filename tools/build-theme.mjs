@@ -1,5 +1,6 @@
 // Generate src/styles/main/theme.css — qxframe.css's default theme block — from the
-// createApp compiler (v3: two closed Token blocks; local inverse reuses each block).
+// createApp compiler: two closed Token blocks; color tokens use light-dark(),
+// local inverse Menu reuses the opposite color-scheme without DOM changes.
 // `--check` fails when the committed file differs from the compiler output.
 import fs from 'node:fs';
 import path from 'node:path';
