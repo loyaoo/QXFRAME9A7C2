@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Button/TreeSelect/Tooltip ownership batch (CI pending)
+- Started from verified head 4f25a3eebeb3cbf2d24d8c01f56107e7aba123e6, Draft/Open PR #267, main unchanged. Existing same-HEAD QXFRAME and CSS Schema green before this batch.
+- Button: remove late duplicate background/border/color/shadow painting; map existing Theme action roles into component-owned state slots at variant specificity, preserving button.css single painter and focus/disabled logic.
+- TreeSelect: remove portal-local checked indicator Menu background foreground override; preserve common Checkbox checked/indeterminate Choice pairing, no frozen Tree or Controller edits.
+- Tooltip: inverse Menu selector was inadvertently matching Tooltip popup-surface. Scope compiled inverse Menu scheme and Theme Menu semantic projection away from Tooltip, allowing its existing inverse surface pair (foreground/background) and same-color arrow to work in both light/dark.
+- Next: exact HEAD CI (QXFRAME + CSS Schema), inspect failing browser assertions if any, official exact-HEAD dist/docs artifact and current-only offline QA bundle. No merge.
+
 ## CURRENT — 2026-10-14 collision merge dependency graph no-cycle correction (CI pending)
 - On rerun, GitHub QXFRAME #38522141822 failed verify-phase-f-token-graph.mjs: actual --_qxframe9a7c2-menu-item-bg self-referencing declaration. This came from the previous old v2 navigation-item projection: when merged with the canonical MenuItem Token, the line became alias-to-self. Removed ONLY that redundant projection; existing MenuItem state --_menu-item-bg values and --_menu-render-background paint owner stay intact. Strengthened static QA to reject this specific reappearance. Need all-cycle graph 0 and browser suite same-HEAD green before acceptance.
 

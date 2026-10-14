@@ -1,11 +1,14 @@
-/** LIGHT-DARK-GLOBAL-001 — current batch: native Select theme-aware arrow in Preview01. */
+/** LIGHT-DARK-GLOBAL-001 — ONLY this batch's Button, TreeSelect Choice and Tooltip inverse fixes. */
 const groups = [
- ['savings-targets','Native Select local color-scheme',[
-  ['select.qxframe9a7c2-form-select','Native picker inverse','Native ::picker(select) uses color-scheme only, keeping original Menu colors and closed control unchanged','__QA_BUNDLE_HEAD__']
- ],'01'],
- ['sla-tooltip','Tooltip/Popconfirm common Arrow',[
-  ['[data-pv3x-widget="sla-tooltip"]','Tooltip Arrow/alpha','Tooltip shares Popconfirm arrow geometry; Tooltip and Popover surfaces keep their owner-specific backgrounds and opacity','__QA_BUNDLE_HEAD__']
- ],'03']
+  ['ui-elements','Button single state painter',[
+    ['.qxframe9a7c2-button','Button visual states','Theme action values feed original Button state resolver; remove duplicate background, border, text and shadow paint','__QA_BUNDLE_HEAD__']
+  ],'02'],
+  ['platform-tree','TreeSelect Choice indicator',[
+    ['[data-pv3x-widget="platform-tree"]','TreeSelect checked marker','Checked and indeterminate glyph use the shared Checkbox primary-foreground, not Menu background','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['sla-tooltip','Tooltip inverse without Menu override',[
+    ['[data-pv3x-widget="sla-tooltip"]','Tooltip inverse surface','Light page dark tip / dark page light tip; Menu inversion does not double-invert Tooltip','__QA_BUNDLE_HEAD__']
+  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -68,7 +71,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：原生 Select picker 的 color-scheme 反色，以及 Tooltip/Popconfirm 统一箭头与表面透明度。旧轮次高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Button 状态单一绘制、TreeSelect 勾选前景色、Tooltip 排除 Menu 双重反色。旧轮次高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

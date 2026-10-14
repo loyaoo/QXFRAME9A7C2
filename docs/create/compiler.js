@@ -648,7 +648,7 @@ export function themeBody(resolved) {
   // CSS-only inverse: exact existing Portal roots; no DOM attributes, new
   // palettes, Theme token redeclarations or Controller/Portal manipulation.
   const popupRoots = [
-    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
+    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container)',
     '.qxframe9a7c2-menu-submenu-panel',
     '.qxframe9a7c2-menu-overflow-panel'
   ];

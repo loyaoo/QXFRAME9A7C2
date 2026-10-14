@@ -25,3 +25,9 @@ A new variable is justified only when it models a genuinely different subject, s
 ## Acceptance
 
 All existing theme combinations, light/dark and inverse Menu cases, Chromium component visual states, CSS ratchets and native picker computed paint must remain green. PR #267 stays Draft until visual approval. Frozen Tree and Controller files must remain unchanged.
+
+## 2026-10-14: resolved Button paint and inverse Tooltip/Choice ownership
+
+- Button: original `button.css` remains the only background, border, text and shadow painter. The Theme visual module supplies existing normal/hover/focus/active/disabled variant state slots; the old late direct paint and `action-current` state surrogate are removed. An explicit `is-shadow` remains controlled by the component.
+- TreeSelect: the checked/indeterminate indicator uses the same primary/primary-foreground Choice painter as Checkbox; the former TreeSelect-only Menu background foreground override is removed. Tree CSS/JS remain frozen.
+- Tooltip: Tooltip uses the inverse **surface** pair (Theme foreground/background), just as Slider Tips. Inverted **Menu** changes `color-scheme` only for Menu-family popup roots; Tooltip is explicitly excluded from Menu inversion and Menu semantic projection, so it does not get inverted twice. Tooltip arrow consumes its own surface color.
