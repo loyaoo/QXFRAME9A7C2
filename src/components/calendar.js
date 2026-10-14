@@ -432,13 +432,18 @@ function create(options) {
       var titleUnit = String(DOM.getPrivate(titleTarget, 'calendarTitle') || '');
       if (actionName === 'ACTIVATE') {
         var requestDetail = { unit:titleUnit, viewValue:cloneDate(viewValue), originalEvent:event, source:'keyboard', reason:'title-keyboard', calendar:api };
-        if (titleUnit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), requestDetail);
+        if(titleUnit==='period'&&typeof opts.onTitleRequest==='function'){
+          requestDetail.unit=periodUnit;opts.onTitleRequest(cloneDate(viewValue),requestDetail);emitter.emit('titleRequest',requestDetail);
+        } else if (titleUnit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), requestDetail);
         else if (titleUnit === 'month' && typeof opts.onMonthRequest === 'function') opts.onMonthRequest(cloneDate(viewValue), requestDetail);
         else return false;
         return true;
       }
       if (['MOVE_LEFT','MOVE_RIGHT','MOVE_UP','MOVE_DOWN'].indexOf(actionName) >= 0) {
         var direction = actionName === 'MOVE_LEFT' || actionName === 'MOVE_UP' ? -1 : 1;
+        if(titleUnit==='period'){
+          changeView(addPage(viewValue,direction),{source:'keyboard',reason:'title-'+periodUnit+'-step',originalEvent:event});return true;
+        }
         var monthDelta = titleUnit === 'year' ? direction * 12 : direction;
         if (titleUnit !== 'year' && titleUnit !== 'month') return false;
         changeView(addMonths(viewValue, monthDelta), { source:'keyboard', reason:'title-' + titleUnit + '-step', originalEvent:event });

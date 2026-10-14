@@ -1843,6 +1843,7 @@ check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
  assert.ok(cal.includes("classList.toggle('is-period',isPeriod)"),'period units are one CSS variant on shared root');
  assert.ok(cal.includes("cellInner = button.firstElementChild.firstElementChild"),'same view/inner DOM for every unit');
  assert.ok(cal.includes("columns:isPeriod?4:7"),'one keyboard handler switches grid columns, not controllers');
+ assert.ok(cal.includes("titleUnit==='period'"),'month/quarter/year title keyboard interaction shares Calendar');
  assert.equal((date.match(/Calendar\.create\(/g)||[]).length,5,'DatePicker only creates Calendar for date, year/month drill and period');
  assert.doesNotMatch(date,/PeriodPanel\.create\(/,'no second period runtime');
  assert.match(css,/\.qxframe9a7c2-calendar\.is-period \.qxframe9a7c2-calendar-cell-inner\{/,'unified inner painter for period data');

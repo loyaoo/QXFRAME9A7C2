@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Calendar period title keyboard unification (CI pending)
+- One Calendar handler now routes Period title keyboard activate to onTitleRequest and title arrow keys to correct unit page (year decade, month/quarter year). Previously PeriodPanel's independent FocusController handled this; single owner must retain behavior.
+- Browser test covers five datasets and key navigation; do not weaken Phase-C input gates. Await exact final SHA CI.
+
 ## CURRENT — 2026-10-14 Calendar single owner source+real Chrome gate
 - Added one real Chromium test on preview runtime, checking Calendar and PeriodPanel object identity (no second component), five data units, 42/12/4/12 item counts, Calendar view/inner DOM, one selected click, one keyboard path and month/year/decade paging. Existing Calendar day 8-case range visual test remains.
 - Added static gates asserting no PeriodPanel implementation or CSS grid and DatePicker solely Calendar.create. Pending actual same HEAD CI and any browser regression diagnosis. PR #267 Draft; no merge.
