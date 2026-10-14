@@ -32,7 +32,7 @@ for (const style of STYLES) {
   assert.equal(first.css, second.css, 'Compilation must be deterministic: ' + style);
   const check = checkThemeFile(first.body);
   assert.deepEqual(check.errors, [], 'Invalid compiled theme for ' + style);
-  if (check.warn) console.log('::warning::' + style + ' theme file ' + check.bytes + ' bytes exceeds ' + THEME_FILE_WARN_BYTES + 'B advisory threshold (v3 §5.12); full .dark token inventory is required.');
+  if (check.warn) console.log('::warning::' + style + ' theme file ' + check.bytes + ' bytes exceeds ' + THEME_FILE_WARN_BYTES + 'B advisory threshold (v3 §5.12); single-owner light-dark() output remains required.');
   const back = model.parseThemeHeader(first.css);
   assert.ok(back.ok, 'Header must round-trip: ' + style);
   assert.equal(model.serializeConfig(back.config), model.serializeConfig(config));
