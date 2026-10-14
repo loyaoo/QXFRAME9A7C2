@@ -646,7 +646,6 @@
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
     --_qxframe9a7c2-menu-item-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
-    --_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-menu-item-bg);
     --_qxframe9a7c2-menu-item-text: var(--_qxframe9a7c2-navigation-text);
   }
   /* Menu source paints --menu-render-background (not the generic navigation

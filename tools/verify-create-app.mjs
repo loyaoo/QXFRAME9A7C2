@@ -1315,6 +1315,7 @@ check('Legacy v2 collision resolved through existing semantic owners, not a new 
   assert.ok(full.includes('--_qxframe9a7c2-check-indicator-border:'),'check indicator edge has a separate semantic owner');
   assert.ok(visual.includes('.qxframe9a7c2-menu .qxframe9a7c2-menu-item'),'Menu item state remains component-owned');
   assert.ok(!visual.includes('--_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-popup-bg)'),'no self-referential Popup aliases');
+  assert.ok(!visual.includes('--_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-menu-item-bg)'),'no self-referential MenuItem state aliases');
   assert.ok(!visual.includes('--_qxframe9a7c2-card-explicit-shadow'),'no redundant Card shadow facade');
   const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   assert.ok(card.includes('--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Card single paint owner consumes Theme shadow');

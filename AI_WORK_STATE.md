@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 collision merge dependency graph no-cycle correction (CI pending)
+- On rerun, GitHub QXFRAME #38522141822 failed verify-phase-f-token-graph.mjs: actual --_qxframe9a7c2-menu-item-bg self-referencing declaration. This came from the previous old v2 navigation-item projection: when merged with the canonical MenuItem Token, the line became alias-to-self. Removed ONLY that redundant projection; existing MenuItem state --_menu-item-bg values and --_menu-render-background paint owner stay intact. Strengthened static QA to reject this specific reappearance. Need all-cycle graph 0 and browser suite same-HEAD green before acceptance.
+
 ## CURRENT — 2026-10-14 ownership reconciliation and static test repair (CI pending)
 - Resolved 12 previously duplicated v2 names by actual state owners and distinct DOM semantics, removing recipe names and duplicate Card/Poup painting. See docs/LIGHT-DARK-TOKEN-OWNERSHIP.md.
 - Fixed two stale static checks after this change: TreeSelect check indicator name, and canonical Schema :root matching (old JS regex accidentally matched literal backslash+s, causing latest QXFRAME CI #38521826814 to fail before reaching component tests). Correctly parse each Theme root line by exact registered key.
