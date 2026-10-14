@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 CI diagnostic geometry regex fixture update (pending exact-HEAD CI)
+- Previous superseded HEAD 1e2a170e QXFRAME CI failed in tools/verify-css-token-size-tree.mjs because tools/theme-v2-geometry-contract.mjs still expected old string 'v2-size-ratio' and 'v2-font-step' AFTER their 28 safe private token names were removed. Fixes ONLY expected private variable names in geometry verifier; no geometry values changed. Other earlier CSS Schema failure was a stale native picker expected-page-color assertion on b9c099, now replaced by color-scheme reference swatch comparison on current head.
+- Do not claim current CI green until same-HEAD runs finish.
+
 ## CURRENT — 2026-10-14 real Tooltip/Popconfirm arrow parity matrix (CI pending)
 - Added 64 Chromium cases (8 Styles × 2 modes × top/right/bottom/left) comparing actual computed dimensions, transforms, offsets and border-edge geometry between Popconfirm's Popover arrow and Tooltip. Also asserts Tooltip arrow background matches its surface's semi-transparent rgba, with no clip-path or extra opacity. No component JS changes. This catches size/offset/alpha regressions from theme/placement changes.
 
