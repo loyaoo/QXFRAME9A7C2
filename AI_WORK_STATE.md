@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Native Select + Create mode consumer closeout (CI pending)
+- Replaced native Select hardcoded light/dark data-URI SVG arrow with CSS chevron strokes colored by existing light-dark muted-foreground token. The two short diagonal strokes keep the old 24px SVG path width when scaled to a 1rem icon; no Portal/Controller/DOM change. External arrow-image remains optionally overridable (arrow-size also configurable). Eliminated .dark-specific SVG branch so inverse Popup descendants honor local color-scheme. Native picker still inherits OS scheme; geometry/focus/interaction unchanged.
+- Converted Create picker menu surface/border, preview canvas ring/backdrop, Preview01/02 backgrounds and Preview03 body background to scoped light-dark declarations; removed redundant :root.dark color selectors. Color sources, numeric shadows, layout, and Style recipes preserved.
+- Raised strict static acceptance for no mode-specific native arrow/Preview colors, no data SVG arrow. Pending: exact HEAD dual CI, full Chromium neutral/blue/orange x 8 Style x 2 page schemes x 4 menu variants, official exact-HEAD Windows dist+docs QA.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 CSS-order and offline QA contract
 - Migrated protected CSS concat source assertions to verify unique :root light-dark COLOR declaration and scheme-only .dark, preserving full 61-module verbatim concat. Updated offline QA to mark ONLY current Theme scope areas on Preview03 platform-tree and brand-studio (2 cards/2 regions); previous Tree-specific checkbox highlight removed. No runtime DOM/class change.
 - Exact-HEAD CI not yet green; official local Windows package not yet generated. Frozen Tree/TreeSelect/Controller unchanged. PR Draft/Open.

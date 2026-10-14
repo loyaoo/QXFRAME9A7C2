@@ -407,9 +407,11 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:var\(--_qxframe9a7c2-tabs-height\)/,'horizontal Tabs root uses shared tab height');
   assert.match(css('tabs'),/is-segmented:not\(\.is-vertical\) \.qxframe9a7c2-tabs-scroll\{height:calc\(var\(--_qxframe9a7c2-tabs-height\) \+ \.5rem\)/,'segmented Scroll adds the full vertical 8px rail budget');
   assert.match(css('tabs'),/\.qxframe9a7c2-scroll-viewport\{box-sizing:border-box;padding:0\.25rem;/,'viewport 4px vertical padding restored without overflow');
-  assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select arrow uses a theme-overridable SVG image slot');
-  assert.match(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'dark SVG must use theme boundary (light-dark does not accept URLs)');
-  assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
+  assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select keeps optional custom image slot');
+  assert.match(css('form-native'),/linear-gradient\(45deg,transparent 37%,var\(--qxframe9a7c2-theme-muted-foreground\)/,'native chevron consumes mode-aware Theme color');
+  assert.match(css('form-native'),/linear-gradient\(135deg,transparent 37%,var\(--qxframe9a7c2-theme-muted-foreground\)/,'both native chevron strokes share one color');
+  assert.doesNotMatch(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'native arrow cannot remain tied to page .dark when Popup scheme inverts');
+  assert.doesNotMatch(css('form-native'),/data:image\/svg\+xml/,'no hardcoded image paint for the Select chevron');
   assert.match(css('composition'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes Theme pointer token and is restricted to pointer origin');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
@@ -511,6 +513,16 @@ check('All 78 COLOR Theme tokens have a single light-dark owner, with scheme-onl
   assert.doesNotMatch(values,/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/,'fixed aliases cannot override local Popup color-scheme');
 });
 
+
+check('Create shell and three Preview canvases consume light-dark without mode-specific paint duplicates',()=>{
+  for(const file of ['app.css','preview.css','preview-03.css']){
+    const css=read(file);
+    assert.doesNotMatch(css,/:root\.dark\s+(?:\.create-|body\.create-preview-body|\.pv3-body)|html:root\.dark\s*\{/,
+      file+' cannot fork surface colors by page class');
+  }
+  assert.match(read('app.css'),/background: light-dark\(rgb\(10 10 10 \/ 0\.8\), rgb\(38 38 38 \/ 0\.9\)\)/);
+  assert.match(read('preview-03.css'),/background:light-dark\(var\(--qxframe9a7c2-theme-muted\),var\(--qxframe9a7c2-theme-background\)\)/);
+});
 
 check('Control Shadow and Card Shadow independently switch and round-trip without new Theme tokens',()=>{
  const control=data.EXT_AXES.find(a=>a.key==='controlShadow'),surface=data.EXT_AXES.find(a=>a.key==='shadow');

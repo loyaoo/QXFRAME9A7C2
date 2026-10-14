@@ -2,16 +2,14 @@
  * qxframe components cannot express live here; reusable rules belong in qxframe.css. */
 html, body.create-preview-body { margin: 0; min-height: 100%; }
 body.create-preview-body *, body.create-preview-body *::before, body.create-preview-body *::after { box-sizing: border-box; }
-html:root { background: var(--qxframe9a7c2-theme-muted); }
-html:root.dark { background: var(--qxframe9a7c2-theme-background); }
+html:root { background: light-dark(var(--qxframe9a7c2-theme-muted), var(--qxframe9a7c2-theme-background)); }
 body.create-preview-body {
-  background: var(--qxframe9a7c2-theme-muted);
+  background: light-dark(var(--qxframe9a7c2-theme-muted), var(--qxframe9a7c2-theme-background));
   color: var(--qxframe9a7c2-theme-foreground);
   font-family: var(--qxframe9a7c2-theme-font-sans, system-ui, sans-serif);
   --create-gap: 2.5rem;
   --create-canvas: 187.5rem;
 }
-:root.dark body.create-preview-body { background: var(--qxframe9a7c2-theme-background); }
 :root[data-create-style="lyra"] body.create-preview-body,
 :root[data-create-style="mira"] body.create-preview-body { --create-gap: 1.5rem; --create-canvas: 162.5rem; }
 .create-canvas { overflow-x: auto; overflow-y: hidden; }
