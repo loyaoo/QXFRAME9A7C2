@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 screenshot changes new offline QA ledger
+- Reset local-only `offline-qa-changes.mjs` to 10 **current screenshot-fix** Preview03 regions, clearing previous WheelPanel z-index-only markers and overview markers. Each marker uses real Card/inner DOM; Source HTML remains untouched (overlay only bundled in Windows QA).
+- Additional final tasks: same SHA CI double green, repair gate errors, official Windows ZIP and real browser smoke. DateTime picker Calendar/Time wheel height remains the one unclosed geometry item; no unsafe snap CSS.
+- Stage/overall percentages not credible without denominator. PR #267 Draft.
+
 ## CURRENT — 2026-10-14 sync Dropdown compact group font gate to rem CSS
 - QXFRAME #38564278117 verified Registry/Token and failed only in Stage5 new ItemCollection group static assertion still expecting legacy .875em while source has required 0.875rem. Corrected test literal; no code change, no weakening of functional group header checks. Re-run final CI.
 

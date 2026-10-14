@@ -164,7 +164,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"release-planner":['[data-pv3-component="release-time"]'],"shift-allocation":['[data-pv3x-widget="shift-allocation"]'],"dial-settings":['[data-pv3x-widget="dial-settings"]']}; // Only this batch's TimePicker/TimePanel/WheelPicker Scroll stacking change.
+  const current={"release-planner":['[data-pv3-component="release-date"]'],"navigation-workspace":['[data-pv3x-widget="navigation-workspace"]'],"alerts-center":['[data-pv3x-widget="alerts-center"]'],"compliance-flags":['.qxframe9a7c2-badge.is-error'],"order-routing":['[data-pv3-component="routing-cascader"]'],"quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],"finance-approval":['[data-pv3-component="finance-steps"]'],"approval-queue-item":['.qxframe9a7c2-item-surface'],"customer-quality":['[data-pv3-component="customer-tags"]'],"asset-preview":['[data-pv3x-widget="asset-preview"]']}; // Only current screenshot component changes.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
@@ -179,7 +179,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'exactly three current changed regions highlighted, no old highlights');
+  assert.equal(count,10,'exactly current screenshot regions highlighted, no old highlights');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
