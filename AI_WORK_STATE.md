@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 extended Chromium matrix (pending CI)
+- Expanded actual Chromium computed-style acceptance for 8 Styles × neutral/blue/orange × 2 page modes × 4 Menu options (192 cases). Asserts root, local inverse Popup, actual TreeSelect panel selector and non-Menu Popover scheme, plus native Select CSS chevron in two native class shapes matching opposite-page paint. This tests real computed background-image, not raw Theme variables. Keeps prior 64-mode Date/Time/Tree Choice/HEX checks and all frozen JS unchanged.
+- No success claimed before same-HEAD GitHub CI; tracked unverified until Actions finishes.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Native Select + Create mode consumer closeout (CI pending)
 - Replaced native Select hardcoded light/dark data-URI SVG arrow with CSS chevron strokes colored by existing light-dark muted-foreground token. The two short diagonal strokes keep the old 24px SVG path width when scaled to a 1rem icon; no Portal/Controller/DOM change. External arrow-image remains optionally overridable (arrow-size also configurable). Eliminated .dark-specific SVG branch so inverse Popup descendants honor local color-scheme. Native picker still inherits OS scheme; geometry/focus/interaction unchanged.
 - Converted Create picker menu surface/border, preview canvas ring/backdrop, Preview01/02 backgrounds and Preview03 body background to scoped light-dark declarations; removed redundant :root.dark color selectors. Color sources, numeric shadows, layout, and Style recipes preserved.

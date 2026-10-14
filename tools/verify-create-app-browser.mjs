@@ -2797,11 +2797,11 @@ try {
     assert.ok(r.viewportHeight+.5>=r.tabHeight,'Tabs horizontal viewport cannot clip TabItem: '+JSON.stringify(r));
     assert.equal(r.appearance,'base-select','modern native Select opts into customizable picker');
     assert.equal(r.pickerAppearance,'base-select','native dropdown is the browser top-layer customizable picker');
-    assert.equal(r.pickerIcon,'none','native Select has only the framework SVG chevron, no duplicate picker icon');
-    assert.ok(r.arrow.includes('svg+xml'),'native Select displays a single SVG chevron');
+    assert.equal(r.pickerIcon,'none','native Select has only the framework CSS chevron, no duplicate picker icon');
+    assert.ok(r.arrow.includes('linear-gradient(45deg')&&r.arrow.includes('linear-gradient(135deg')&&!r.arrow.includes('url('),'native Select uses two theme-aware gradient strokes, not a fixed SVG URL');
   });
 
-  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and SVG chevron',async()=>{
+  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and scheme-aware chevron',async()=>{
     const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-input-group'),input=group.querySelector('.qxframe9a7c2-form-input'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs'),scroll=tabs.querySelector('.qxframe9a7c2-tabs-scroll'),viewport=scroll.querySelector('.qxframe9a7c2-scroll-viewport'),item=tabs.querySelector('.qxframe9a7c2-tabs-tab');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');h.style.setProperty('--qxframe9a7c2-theme-pointer-width','3px');h.style.setProperty('--qxframe9a7c2-theme-pointer-offset','2px');h.style.setProperty('--qxframe9a7c2-theme-pointer-opacity','100%');input.focus();let pointer=getComputedStyle(group),w=getComputedStyle(viewport),g=viewport.getBoundingClientRect(),t=item.getBoundingClientRect(),sr=scroll.getBoundingClientRect(),card=d.querySelector('[data-card=faq]').getBoundingClientRect();let out={pointerWidth:pointer.outlineWidth,pointerOffset:pointer.outlineOffset,paddingTop:parseFloat(w.paddingTop),paddingBottom:parseFloat(w.paddingBottom),withinTop:t.top>=g.top+parseFloat(w.paddingTop)-.6,withinBottom:t.bottom<=g.bottom-parseFloat(w.paddingBottom)+.6,tabHeight:t.height,railHeight:sr.height,cardHeight:card.height};h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group);out.keyboardWidth=keyboard.outlineWidth;out.keyboardOffset=keyboard.outlineOffset;h.style.removeProperty('--qxframe9a7c2-theme-pointer-width');h.style.removeProperty('--qxframe9a7c2-theme-pointer-offset');h.style.removeProperty('--qxframe9a7c2-theme-pointer-opacity');return out})()");
     assert.equal(r.pointerWidth,'3px','InputGroup visual owner respects mouse focus Theme width');
     assert.equal(r.pointerOffset,'2px','InputGroup visual owner respects mouse focus Theme offset');
@@ -2892,6 +2892,33 @@ try {
       }
       assert.deepEqual(s.light.popover,s.light.root,tag+' Popover is never inverted with Menu');
       assert.deepEqual(s.dark.popover,s.dark.root,tag+' dark Popover remains normal');
+    }
+  });
+
+
+  await step('Native Select local-scheme arrow + true TreeSelect panel scope: 8 Styles x 3 themes x 2 pages x 4 Menu modes',async()=>{
+    const rows=await evaluate("(() => {\n  const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n  const oldDark=h.classList.contains('dark'),sheet=d.createElement('style'),host=d.createElement('div');\n  host.style.cssText='position:absolute;left:-10000px;top:0;width:22rem';\n  host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-page><option>Native</option></select>'+\n    '<div class=\"qxframe9a7c2-popup-surface\" data-popup-root><select class=\"qxframe9a7c2-form-select\" data-popup><option>Native</option></select><div class=\"qxframe9a7c2-native-form\"><select data-native><option>Native</option></select></div></div>'+\n    '<div class=\"qxframe9a7c2-tree-select-panel qxframe9a7c2-popup-surface\" data-tree-panel><div class=\"qxframe9a7c2-tree-select-popup-content\"><div class=\"qxframe9a7c2-tree-select-tree-host\"><div class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-tree-check-wrap\"><input class=\"qxframe9a7c2-tree-check\" type=\"checkbox\" checked><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div></div></div></div></div>'+\n    '<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\" data-popover-root><select class=\"qxframe9a7c2-form-select\" data-popover><option>Native</option></select></div>';\n  d.head.append(sheet);d.body.append(host);\n  const styles=['vega','nova','maia','lyra','mira','luma','sera','rhea'];\n  const menus=['default','default-translucent','inverted','inverted-translucent'],palettes=['neutral','blue','orange'],rows=[];\n  const read=key=>{const computed=d.defaultView.getComputedStyle(host.querySelector(key));return {scheme:computed.colorScheme,arrow:computed.backgroundImage};};\n  try{\n    for(const style of styles)for(const palette of palettes)for(const menuColor of menus)for(const dark of [false,true]){\n      sheet.textContent=api.compileTheme({...api.state.config,style,baseColor:'neutral',theme:palette,chartColor:palette,menuColor},{generatedAt:''}).body;\n      h.classList.toggle('dark',dark);\n      rows.push({style,palette,menuColor,dark,page:read('[data-page]'),popup:read('[data-popup]'),native:read('[data-native]'),popover:read('[data-popover]'),\n        rootScheme:d.defaultView.getComputedStyle(h).colorScheme,\n        popupScheme:d.defaultView.getComputedStyle(host.querySelector('[data-popup-root]')).colorScheme,\n        treeScheme:d.defaultView.getComputedStyle(host.querySelector('[data-tree-panel]')).colorScheme,\n        treeCheck:d.defaultView.getComputedStyle(host.querySelector('[data-tree-panel] .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator')).backgroundColor});\n    }\n  }finally{h.classList.toggle('dark',oldDark);sheet.remove();host.remove();}\n  return rows;\n})()");
+    assert.equal(rows.length,192,'cross-theme computed-style acceptance must run all combinations');
+    const lookup=new Map(rows.map(r=>[JSON.stringify([r.style,r.palette,r.menuColor,r.dark]),r]));
+    for(const row of rows){
+      const tag=[row.style,row.palette,row.menuColor,row.dark?'dark':'light'].join('/');
+      const rootScheme=row.dark?'dark':'light',invert=row.menuColor.startsWith('inverted');
+      const popupScheme=invert?(row.dark?'light':'dark'):rootScheme;
+      assert.equal(row.rootScheme,rootScheme,tag+' page scheme');
+      assert.equal(row.page.scheme,rootScheme,tag+' standalone native scheme');
+      assert.equal(row.popup.scheme,popupScheme,tag+' local Popup native scheme');
+      assert.equal(row.popupScheme,popupScheme,tag+' Popup root scheme');
+      assert.equal(row.treeScheme,popupScheme,tag+' actual TreeSelect panel class is scheme-bound, not a fake PickerField');
+      assert.equal(row.native.scheme,popupScheme,tag+' native-form select scheme');
+      assert.equal(row.popover.scheme,rootScheme,tag+' non-Menu Popover must not invert');
+      assert.equal(row.popover.arrow,row.page.arrow,tag+' non-Menu Popover arrow matches page');
+      assert.equal(row.native.arrow,row.popup.arrow,tag+' both native select API shapes share Theme arrow');
+      assert.ok(row.page.arrow.includes('linear-gradient(45deg')&&row.page.arrow.includes('linear-gradient(135deg')&&!row.page.arrow.includes('url('),tag+' CSS arrow uses live Theme color');
+      const opposite=lookup.get(JSON.stringify([row.style,row.palette,row.menuColor,!row.dark]));
+      assert.ok(opposite,tag+' opposite page sample');
+      assert.notEqual(row.page.arrow,opposite.page.arrow,tag+' light/dark arrow paint differs');
+      assert.equal(row.popup.arrow,invert?opposite.page.arrow:row.page.arrow,tag+' local inverse selects opposite color without SVG or per-component CSS');
+      assert.notEqual(row.treeCheck,'rgba(0, 0, 0, 0)',tag+' TreeSelect checked indicator remains filled');
     }
   });
 
