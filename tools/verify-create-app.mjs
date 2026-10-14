@@ -1922,7 +1922,7 @@ check('Stage5 DateTime composite shares nine-row Wheel height and density',()=>{
  assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;"),'only default DateTime wheel expands to nine rows; custom options preserved');
  assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'canonical Calendar minimum height covers TimePanel nine-row projection for every consumer');
  assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'DatePicker may not duplicate Calendar cell/size ownership');
- assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time{'),'DatePicker may not override Calendar size in DateTime');
+ assert.doesNotMatch(picker,/\.qxframe9a7c2-date-picker-composite\.has-time\{[^}]*--_qxframe9a7c2-(?:calendar|date-picker-calendar)/,'DateTime host must not override Calendar size; responsive flex-direction may remain');
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
 });
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{

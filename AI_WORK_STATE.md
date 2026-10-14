@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Calendar test gate clarified (CI pending)
+- Intermediate QXFRAME #38581551123 passed Schema/Theme gates but failed an overbroad static test forbidding any `.date-picker-composite.has-time` selector, accidentally catching existing responsive flex-direction:column (which is not a Calendar visual override). Narrowed to reject only consumer-owned Calendar sizing declarations; preserves mobile layout and owner ban on DateTime-specific Calendar style.
+- Chromium real Calendar matrix already added; verify next run before packaging. PR Draft/main unchanged.
+
 ## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 static ownership gate and normalized Calendar density (CI pending)
 - Initial GitHub CI #38580554960 stopped at duplicated adaptive Calendar `padding` authored in two rules. Unified cell padding to canonical grid cell; weekday padding retained in its own rule, no gate exception.
 - Removed DateTime-specific `.date-picker-composite.has-time` Calendar dimensions; canonical `.calendar.is-adaptive-month` owns minimum nine-row height for all consumers while retaining existing Theme calendar cell-size input. Updated existing DateTime static gate to assert no consumer-specific Calendar sizing. Reset current-only QA to `release-planner` DatePicker Calendar region; added shared structural/style DOM regression ensuring outer button owns calendarDate and no JS range backing node.
