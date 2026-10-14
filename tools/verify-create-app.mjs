@@ -1850,7 +1850,7 @@ check('Stage5 configured Mask Style defaults and Image Preview chroma are consis
  assert.equal(alpha.length,8,'eight Style mask defaults');
  assert.ok(alpha.every(x=>x>=50),'default overlay >=50, without runtime clamping public overrides');
  assert.match(theme,/--qxframe9a7c2-theme-overlay: light-dark\(oklch\(0 0 0 \/ 0\.6\), oklch\(0 0 0 \/ 0\.6\)\)/,'default Nova mask matches compiler');
- assert.match(image,/--_qxframe9a7c2-image-preview-mask:var\(--qxframe9a7c2-image-preview-mask-color,rgb\(0 0 0\)\)/,'separate solid Image Preview mask');
+ assert.ok(image.includes('--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--qxframe9a7c2-theme-palette-black))'),'separate opaque Image Preview mask uses registered palette black');
  assert.doesNotMatch(v,/\.qxframe9a7c2-image-preview-mask\[class\] \{ background-color:/,'no alpha-overlay multipainter on Image Preview');
  assert.match(image,/\.qxframe9a7c2-image-preview-tool\.qxframe9a7c2-image-preview-close:hover,\.qxframe9a7c2-image-preview-nav:hover\{background:rgb\(255 255 255 \/ \.14\)\}/,'close hover matches Image Preview toolbar actions');
 });

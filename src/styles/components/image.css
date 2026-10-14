@@ -15,7 +15,7 @@
 .qxframe9a7c2-image.is-previewable.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-image.is-disabled{cursor:not-allowed;opacity:.62}
 
-.qxframe9a7c2-image-preview-root{--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,rgb(0 0 0));--_qxframe9a7c2-image-preview-control:var(--qxframe9a7c2-image-preview-control,rgb(0 0 0 / .52));--_qxframe9a7c2-image-preview-border:var(--qxframe9a7c2-image-preview-border,rgb(255 255 255 / .18));position:fixed;inset:0;display:block;padding:0;overflow:hidden;color:var(--_qxframe9a7c2-semantic-overlay-text);pointer-events:none;overscroll-behavior:contain;touch-action:none;outline:none;isolation:isolate}
+.qxframe9a7c2-image-preview-root{--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--qxframe9a7c2-theme-palette-black));--_qxframe9a7c2-image-preview-control:var(--qxframe9a7c2-image-preview-control,rgb(0 0 0 / .52));--_qxframe9a7c2-image-preview-border:var(--qxframe9a7c2-image-preview-border,rgb(255 255 255 / .18));position:fixed;inset:0;display:block;padding:0;overflow:hidden;color:var(--_qxframe9a7c2-semantic-overlay-text);pointer-events:none;overscroll-behavior:contain;touch-action:none;outline:none;isolation:isolate}
 .qxframe9a7c2-image-preview-root[hidden]{display:none!important}
 .qxframe9a7c2-image-preview-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-base);background:var(--_qxframe9a7c2-image-preview-mask);opacity:var(--qxframe9a7c2-image-preview-mask-opacity,82%);pointer-events:auto}
 .qxframe9a7c2-image-preview-mask.qxframe9a7c2-motion-fade-appear-from,

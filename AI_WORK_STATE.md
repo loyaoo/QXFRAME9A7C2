@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 mask color token gate CI correction (pending)
+- QXFRAME #38562627197 passed css-constraints, stopped at verify:theme-tokens because new literal rgb(0 0 0) in Image Preview exceeded hardcoded-color baseline. Mapped default to existing registered palette-black Theme token (opaque both modes), preserving independent adjustable mask opacity and avoiding a new token. Updated static ratchet, did not disable/raise baseline.
+- Further gates/Chromium still pending. Stage5 owner screenshot acceptance pending; PR Draft.
+
 ## CURRENT — 2026-10-14 fix CI CSS constraint (pending)
 - Same-HEAD QXFRAME 38561916341 failed verify:css-constraints: new `.item-collection-group` font-size `.875em` increases non-rem-length by one. Changed only that to 0.875rem; otherwise unchanged. Keep original non-rem baseline; no weakening gate. Follow up exact final HEAD CI and browser evidence.
 
