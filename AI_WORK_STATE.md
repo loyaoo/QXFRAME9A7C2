@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 existing hover test moves to actual painter (CI pending)
+- QXFRAME #38582099562 passed through final audit regressions. Old outside-month hover assertion sampled outer Calendar button background, which now deliberately stays transparent. Preserved its pointer/hover/outside-color checks; asserted button remains transparent and visible inner cell changes background on hover. This is a real behavior ratchet, not removal of coverage.
+- Next latest HEAD CI (both workflows), real Calendar Chromium test, official Windows dist/docs. PR #267 Draft; no merge or Controller/Tree source edits.
+
 ## CURRENT — 2026-10-14 Calendar test gate clarified (CI pending)
 - Intermediate QXFRAME #38581551123 passed Schema/Theme gates but failed an overbroad static test forbidding any `.date-picker-composite.has-time` selector, accidentally catching existing responsive flex-direction:column (which is not a Calendar visual override). Narrowed to reject only consumer-owned Calendar sizing declarations; preserves mobile layout and owner ban on DateTime-specific Calendar style.
 - Chromium real Calendar matrix already added; verify next run before packaging. PR Draft/main unchanged.
