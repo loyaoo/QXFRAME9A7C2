@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 DatePicker composite widths and Presets divider (CI pending)
+- Removed two-rem intrinsic max-width subtraction that left a trailing blank on DatePicker popup. Calendar Scroll+group now shrink/intrinsic rather than grow and leave unused right-hand white strip. Presets divider paints on enclosing Scroll shell, not clipped viewport, and matches field-border Theme.
+- DateTime Calendar / TimePanel *height* parity remains to be measured: do not override JS inline Wheel scroll viewport height because that would break snap centering. DatePicker JS divergence would require explicit build-allowlist consideration.
+- PR 267 stays Draft/Open; main/Tree/Controller unchanged.
+
 ## CURRENT — 2026-10-14 align previous Item static assertion to repaired layout
 - QXFRAME #38563351476 completed CSS Token ratchets and failed on old Step3 Item visual assertion requiring `flex-wrap:wrap` in item-surface.css. That obsolete behavior was the exact screenshot issue (checkbox on its own line). Updated test to REQUIRE flex-wrap:nowrap; retains source contract and additional content-wrap checks; no CSS revert. CI still pending final HEAD.
 

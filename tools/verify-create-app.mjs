@@ -1884,6 +1884,13 @@ check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an
  assert.ok(collection.includes('.qxframe9a7c2-item-collection-group{box-sizing:border-box;min-height:0;'),'group label is not rendered as an option-size item');
  assert.ok(collection.includes('background:transparent;font-size:.875em;line-height:1.25;font-weight:600'),'group label neutral, compact and unselectable');
 });
+check('Stage5 DatePicker width and preset scroll border are owner-aligned',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('max-width:min(calc(16rem * 4),100%)'),'No DatePicker trailing two-rem blank');
+ assert.ok(picker.includes('date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto'),'Selection scroll may shrink');
+ assert.ok(picker.includes('date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto'),'Calendar group does not stretch');
+ assert.ok(picker.includes('presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto;border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)'),'Presets scroll shell owns border');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
