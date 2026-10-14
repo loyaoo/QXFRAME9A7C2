@@ -46,7 +46,7 @@
       "name": "--qxframe9a7c2-theme-color-scheme",
       "kind": "keyword",
       "mode": "color",
-      "defaultRoot": "dark"
+      "defaultRoot": "light"
     },
     {
       "name": "--qxframe9a7c2-theme-card",

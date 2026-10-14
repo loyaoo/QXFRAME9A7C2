@@ -1281,7 +1281,15 @@ check('Canonical public Theme Schema mirrors all live registry tokens, no histor
  assert.equal(data.geometryInputs.length,21);
  assert.deepEqual([...new Set(data.tokens.map(x=>x.name))].sort(),readRegistry().tokens.map(x=>x.name).sort(),'JSON Theme token catalog equals live compiler registry');
  for(const token of data.tokens)assert.ok(!/--qxframe9a7c2-theme-v[123]-/.test(token.name),'no v1/v2/v3 Theme Token names');
- for(const token of data.tokens)assert.ok(token.defaultRoot!=null,'actual default CSS Theme value supplied: '+token.name);
+ const canonicalCss=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const firstRoot=canonicalCss.split('.dark {')[0];
+ for(const token of data.tokens){
+   const match=[...firstRoot.matchAll(/--qxframe9a7c2-theme-([a-z0-9-]+):\\s*([^;]+);/g)].find(x=>'--qxframe9a7c2-theme-'+x[1]===token.name);
+   assert.ok(match,'default Theme contains '+token.name);
+   assert.equal(token.defaultRoot,match[2],'schema must mirror the actual :root value of '+token.name);
+   if(token.kind==='color')assert.ok(token.defaultRoot.startsWith('light-dark('),'every COLOR is a light-dark single owner');
+ }
+ assert.equal(data.tokens.find(x=>x.name==='--qxframe9a7c2-theme-color-scheme').defaultRoot,'light','root keyword exception is light');
 });
 
 check('No v1/v2/v3 CSS token names remain; 12 colliding recipes keep a distinct semantic namespace',()=>{
