@@ -125,29 +125,6 @@ check('font-mono and Alert radius consume registered Theme mapping',()=>{
 });
 
 
-check('Theme color registry uses light-dark() at every style/mode boundary',()=>{
-  const registry=read('tokens.js');
-  const colors=[...registry.matchAll(/\bC\('([a-z0-9-]+)'/g)].map(m=>m[1]);
-  assert.equal(colors.length,78,'the entire closed Theme color registry is accounted for');
-  for(const style of ['nova','rhea','sera']){
-    const body=model.compileTheme(model.normalizeConfig({style})).body;
-    const lightStart=body.indexOf(':root {'),darkStart=body.indexOf('\n.dark {');
-    assert.ok(lightStart>=0&&darkStart>lightStart,style+' preserved two compatibility selector blocks');
-    const section=body.slice(lightStart,darkStart),reverse=body.slice(darkStart);
-    for(const t of colors){
-      const expr='--qxframe9a7c2-theme-'+t+': light-dark(';
-      assert.ok(section.includes(expr),style+'/'+t+' light scope must resolve light-dark');
-      assert.ok(reverse.includes(expr),style+'/'+t+' dark scope must resolve light-dark');
-      const line=section.split('\n').find(x=>x.includes(expr));
-      assert.ok(reverse.includes(line.trim()),style+'/'+t+' same CSS expression regardless of enclosing scheme');
-    }
-    assert.ok(section.includes('--qxframe9a7c2-theme-color-scheme: light;'),'light scheme keyword is not a color');
-    assert.ok(reverse.includes('--qxframe9a7c2-theme-color-scheme: dark;'),'dark scheme keyword is not a color');
-  }
-  const values=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
-  assert.doesNotMatch(values,/color-scheme:\s*(?:light|dark);/,'fixed-values no longer hardcodes scheme keywords');
-  assert.ok((values.match(/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/g)||[]).length>=4);
-});
 check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=>{
  const compiler=read('compiler.js');
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
@@ -508,6 +485,30 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
+
+check('Theme color registry uses light-dark() at every style/mode boundary',()=>{
+  const registry=read('tokens.js');
+  const colors=[...registry.matchAll(/\bC\('([a-z0-9-]+)'/g)].map(m=>m[1]);
+  assert.equal(colors.length,78,'the entire closed Theme color registry is accounted for');
+  for(const style of ['nova','rhea','sera']){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const lightStart=body.indexOf(':root {'),darkStart=body.indexOf('\n.dark {');
+    assert.ok(lightStart>=0&&darkStart>lightStart,style+' preserved two compatibility selector blocks');
+    const section=body.slice(lightStart,darkStart),reverse=body.slice(darkStart);
+    for(const t of colors){
+      const expr='--qxframe9a7c2-theme-'+t+': light-dark(';
+      assert.ok(section.includes(expr),style+'/'+t+' light scope must resolve light-dark');
+      assert.ok(reverse.includes(expr),style+'/'+t+' dark scope must resolve light-dark');
+      const line=section.split('\n').find(x=>x.includes(expr));
+      assert.ok(reverse.includes(line.trim()),style+'/'+t+' same CSS expression regardless of enclosing scheme');
+    }
+    assert.ok(section.includes('--qxframe9a7c2-theme-color-scheme: light;'),'light scheme keyword is not a color');
+    assert.ok(reverse.includes('--qxframe9a7c2-theme-color-scheme: dark;'),'dark scheme keyword is not a color');
+  }
+  const values=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+  assert.doesNotMatch(values,/color-scheme:\s*(?:light|dark);/,'fixed-values no longer hardcodes scheme keywords');
+  assert.ok((values.match(/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/g)||[]).length>=4);
+});
 
 
 check('Control Shadow and Card Shadow independently switch and round-trip without new Theme tokens',()=>{
