@@ -64,6 +64,21 @@ function sameMonth(a, b) { return a.getFullYear() === b.getFullYear() && a.getMo
     
 function create(options) {
   var opts = mergeOptions({}, options);
+
+  /* A single Calendar state and renderer: unit changes only the data/view policy. */
+  var unit=String(opts.unit||'date').toLowerCase();
+  if(!['date','week','month','quarter','year'].includes(unit))throw new TypeError('[QXFRAME9A7C2] Calendar unit must be date, week, month, quarter or year.');
+  var periodUnit=unit==='week'?'date':unit,isPeriod=periodUnit!=='date';
+  function parseDate(v){return DateUnit.parse(v,{unit:periodUnit});}
+  function keyOf(v){return DateUnit.key(v,periodUnit,0);}
+  function sameDay(a,b){return DateUnit.same(a,b,periodUnit,0);}
+  function normalizeValue(v){return !v?null:(isPeriod?DateUnit.start(v,periodUnit,0,false):stripTime(v));}
+  function startMonth(v){return !isPeriod?new Date(v.getFullYear(),v.getMonth(),1):periodUnit==='year'?new Date(Math.floor(v.getFullYear()/10)*10,0,1):new Date(v.getFullYear(),0,1);}
+  function sameMonth(a,b){return !!a&&!!b&&startMonth(a).getTime()===startMonth(b).getTime();}
+  function addPage(v,n){return !isPeriod?addMonths(v,n):new Date(v.getFullYear()+n*(periodUnit==='year'?10:1),v.getMonth(),1);}
+  function addUnit(v,n){var d=cloneDate(v);if(!d)return null;if(periodUnit==='year')d.setFullYear(d.getFullYear()+n);else if(periodUnit==='quarter')d.setMonth(d.getMonth()+3*n);else d.setMonth(d.getMonth()+n);return normalizeValue(d);}
+  function periodLabel(v){return periodUnit==='year'?String(v.getFullYear()):periodUnit==='quarter'?'Q'+DateUnit.quarter(v):String(v.getMonth()+1).padStart(2,'0');}
+  function periodTitle(v){return periodUnit==='year'?v.getFullYear()+'–'+(v.getFullYear()+9):String(v.getFullYear());}
   var doc = opts.document || (opts.container && opts.container.ownerDocument) || globalThis.document;
   var emitter = Events.createEmitter();
   var virtualFocusDomainName = 'calendar-' + (++calendarDomainSequence);
@@ -95,25 +110,26 @@ function create(options) {
   var api = null;
     
   function weekStartsOn() { var n = Number(opts.weekStartsOn); return Number.isFinite(n) ? ((n % 7) + 7) % 7 : 0; }
-  function isDisabledDate(date) { return opts.disabled === true || (typeof opts.disabledDate === 'function' && opts.disabledDate(cloneDate(date)) === true); }
+  function isDisabledDate(date) { var guard=isPeriod?(opts.disabledValue||opts.disabledDate):opts.disabledDate;return opts.disabled===true||(typeof guard==='function'&&guard(cloneDate(date),Object.freeze({unit:unit,calendar:api}))===true); }
   function isReadOnly() { return opts.readOnly === true; }
   function canNavigate() { return capabilityController.can('navigate'); }
   function canSelect() { return capabilityController.can('select'); }
     
-  function buildCells() {
-    var first = startMonth(viewValue);
-    var offset = (first.getDay() - weekStartsOn() + 7) % 7;
-    var start = addDays(first, -offset);
-    var output = [];
-    for (var i = 0; i < 42; i += 1) {
-      var date = addDays(start, i);
-      output.push({ key: keyOf(date), date: date, disabled: isDisabledDate(date), outside: !sameMonth(date, viewValue) });
+  function buildCells(){
+    var output=[];
+    if(isPeriod){
+      var page=startMonth(viewValue),count=periodUnit==='quarter'?4:12,year=periodUnit==='year'?page.getFullYear()-1:page.getFullYear();
+      for(var i=0;i<count;i++){
+        var date=periodUnit==='year'?new Date(year+i,0,1):periodUnit==='quarter'?new Date(year,i*3,1):new Date(year,i,1);
+        output.push({key:keyOf(date),date:date,label:periodLabel(date),disabled:isDisabledDate(date),outside:periodUnit==='year'&&(i===0||i===11)});
+      }
+    }else{
+      var first=startMonth(viewValue),offset=(first.getDay()-weekStartsOn()+7)%7,start=addDays(first,-offset);
+      for(var j=0;j<42;j++){var day=addDays(start,j);output.push({key:keyOf(day),date:day,disabled:isDisabledDate(day),outside:!sameMonth(day,viewValue)});}
     }
-    cells = output;
-    return output;
+    cells=output;return output;
   }
-    
-  activeItem = ActiveItem.create({
+    activeItem = ActiveItem.create({
     getEntries: function () { return cells; },
     getKey: function (entry) { return entry.key; },
     isDisabled: function (entry) { return entry.disabled === true; },
@@ -165,19 +181,19 @@ function create(options) {
     root = domBinding.refs.root;
     title = domBinding.refs.title;
     grid = domBinding.refs.grid;
-    root.classList.add('qxframe9a7c2-calendar'); root.tabIndex = 0;
+    root.classList.add('qxframe9a7c2-calendar','is-unit-'+unit);root.classList.toggle('is-period',isPeriod);root.tabIndex = 0;
     if (domBinding.refs.header) domBinding.refs.header.classList.add('qxframe9a7c2-calendar-header');
     if (domBinding.refs.prev) { domBinding.refs.prev.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.prev, 'calendarNav', '-1'); domBinding.refs.prev.tabIndex = -1; }
     if (domBinding.refs.next) { domBinding.refs.next.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.next, 'calendarNav', '1'); domBinding.refs.next.tabIndex = -1; }
     title.classList.add('qxframe9a7c2-calendar-title');
-    if (domBinding.refs.yearTitle) { domBinding.refs.yearTitle.tabIndex = 0; domBinding.refs.yearTitle.classList.add('qxframe9a7c2-calendar-title-button','qxframe9a7c2-calendar-year'); DOM.setPrivate(domBinding.refs.yearTitle, 'calendarTitle', 'year'); }
+    if (domBinding.refs.yearTitle) { domBinding.refs.yearTitle.tabIndex = 0; domBinding.refs.yearTitle.classList.add('qxframe9a7c2-calendar-title-button','qxframe9a7c2-calendar-year'); DOM.setPrivate(domBinding.refs.yearTitle, 'calendarTitle', isPeriod?'period':'year'); }
     if (domBinding.refs.monthTitle) { domBinding.refs.monthTitle.tabIndex = 0; domBinding.refs.monthTitle.classList.add('qxframe9a7c2-calendar-title-button','qxframe9a7c2-calendar-month'); DOM.setPrivate(domBinding.refs.monthTitle, 'calendarTitle', 'month'); }
     if (domBinding.refs.weekdays) {
       domBinding.refs.weekdays.classList.add('qxframe9a7c2-calendar-weekdays');
       var weekdayNodes = domBinding.refs.weekdays.children || [];
       for (var wi = 0; wi < weekdayNodes.length; wi += 1) weekdayNodes[wi].classList.add('qxframe9a7c2-calendar-weekday');
     }
-    grid.classList.add('qxframe9a7c2-calendar-grid');
+    grid.classList.add('qxframe9a7c2-calendar-grid');if(domBinding.refs.weekdays)domBinding.refs.weekdays.hidden=isPeriod;
     delegation = EventDelegation.create({ root: root });
     scope.add(function () { delegation.destroy(); });
     function focusKeyboardHost() {
@@ -201,15 +217,16 @@ function create(options) {
     }));
     delegation.on('click', DOM.privateMatcher('calendarNav'), function (payload) {
       if (!canNavigate()) return;
-      changeView(addMonths(viewValue, Number(DOM.getPrivate(payload.target, 'calendarNav'))), { source: DOM.activationSource(payload.event), reason: 'nav' });
+      changeView(addPage(viewValue, Number(DOM.getPrivate(payload.target, 'calendarNav'))), { source: DOM.activationSource(payload.event), reason: 'nav' });
       focusKeyboardHost();
     });
     delegation.on('click', DOM.privateMatcher('calendarTitle'), function (payload) {
       if (!canNavigate()) return;
       var unit = String(DOM.getPrivate(payload.target, 'calendarTitle') || '');
       var detail = { unit: unit, viewValue: cloneDate(viewValue), originalEvent: payload.event, source: DOM.activationSource(payload.event), reason: 'title', calendar: api };
-      if (unit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), detail);
-      if (unit === 'month' && typeof opts.onMonthRequest === 'function') opts.onMonthRequest(cloneDate(viewValue), detail);
+      if(unit==='period'&&typeof opts.onTitleRequest==='function'){detail.unit=periodUnit;opts.onTitleRequest(cloneDate(viewValue),detail);emitter.emit('titleRequest',detail);}
+      else if(unit==='year'&&typeof opts.onYearRequest==='function')opts.onYearRequest(cloneDate(viewValue),detail);
+      else if(unit==='month'&&typeof opts.onMonthRequest==='function')opts.onMonthRequest(cloneDate(viewValue),detail);
     });
     delegation.on('click', DOM.privateMatcher('calendarDate'), function (payload) {
       if (opts.disabled === true) return;
@@ -247,6 +264,13 @@ function create(options) {
     
   function reconcileActiveToView(meta) {
     if (!activeItem) return false;
+    if(isPeriod){
+      var present=cells.find(function(e){return e.key===activeItem.activeKey&&!e.disabled;});
+      if(present)return true;
+      var committed=cells.find(function(e){return !e.disabled&&sameDay(e.date,valueState.value);});
+      var first=committed||cells.find(function(e){return !e.disabled&&!e.outside;})||cells.find(function(e){return !e.disabled;});
+      return first?activeItem.set(first.key,{silent:true,source:meta&&meta.source||'view',reason:'period-reconcile'}):activeItem.clear({silent:true});
+    }
     var current = parseDate(activeItem.activeKey);
     var currentEntry = current && sameMonth(current, viewValue)
       ? cells.find(function (entry) { return entry.key === activeItem.activeKey && entry.disabled !== true && sameMonth(entry.date, viewValue); })
@@ -280,14 +304,13 @@ function create(options) {
   function render(meta) {
     if (!root || destroyed) return;
     buildCells();
-    if (domBinding && domBinding.refs.yearTitle && domBinding.refs.monthTitle) {
-      domBinding.refs.yearTitle.textContent = String(viewValue.getFullYear());
-      domBinding.refs.monthTitle.textContent = String(viewValue.getMonth() + 1).padStart(2, '0');
-      domBinding.refs.yearTitle.disabled = opts.disabled === true || typeof opts.onYearRequest !== 'function';
-      domBinding.refs.monthTitle.disabled = opts.disabled === true || typeof opts.onMonthRequest !== 'function';
-      domBinding.refs.yearTitle;
-      domBinding.refs.monthTitle;
-    } else title.textContent = viewValue.getFullYear() + '-' + String(viewValue.getMonth() + 1).padStart(2, '0');
+    if(domBinding&&domBinding.refs.yearTitle&&domBinding.refs.monthTitle){
+      domBinding.refs.yearTitle.textContent=isPeriod?periodTitle(viewValue):String(viewValue.getFullYear());
+      domBinding.refs.monthTitle.textContent=String(viewValue.getMonth()+1).padStart(2,'0');
+      domBinding.refs.yearTitle.disabled=opts.disabled===true||(isPeriod?typeof opts.onTitleRequest!=='function':typeof opts.onYearRequest!=='function');
+      domBinding.refs.monthTitle.disabled=isPeriod||opts.disabled===true||typeof opts.onMonthRequest!=='function';
+      domBinding.refs.monthTitle.hidden=isPeriod;
+    }else title.textContent=isPeriod?periodTitle(viewValue):viewValue.getFullYear()+'-'+String(viewValue.getMonth()+1).padStart(2,'0');
     grid.textContent = '';
     var fragment = doc.createDocumentFragment();
     cells.forEach(function (entry) {
@@ -296,7 +319,7 @@ function create(options) {
       // Render only the visible inner square; do not remove the style wrappers
       // or move the calendarDate private key/event delegation off the button.
       var cellInner = button.firstElementChild.firstElementChild;
-      var cellOutput = typeof opts.renderCell === 'function' ? opts.renderCell(cloneDate(entry.date), { entry: entry, calendar: api }) : String(entry.date.getDate());
+      var cellOutput=typeof opts.renderCell==='function'?opts.renderCell(cloneDate(entry.date),{entry:entry,unit:unit,calendar:api}):(isPeriod?entry.label:String(entry.date.getDate()));
       Renderer.append(cellInner, cellOutput);
       DOM.setPrivate(button, 'calendarDate', entry.key);
       button.tabIndex = -1;
@@ -320,16 +343,16 @@ function create(options) {
   function syncCellStates() {
     if (!grid) return;
     var nodes = DOM.findAllPrivate(grid, 'calendarDate');
-    var today = stripTime(new Date());
+    var today = normalizeValue(new Date());
     for (var i = 0; i < nodes.length; i += 1) {
       var date = parseDate(DOM.getPrivate(nodes[i], 'calendarDate'));
-      var external = typeof opts.getCellState === 'function'
-        ? opts.getCellState(cloneDate(date), { calendar: api, entry: cells.find(function (candidate) { return sameDay(candidate.date, date); }) || null })
-        : null;
+      var getState=opts.getCellState||opts.getItemState;
+      var external=typeof getState==='function'?getState(cloneDate(date),{unit:unit,calendar:api,entry:cells.find(function(c){return sameDay(c.date,date);})||null}):null;
       var state = external && typeof external === 'object' ? external : {};
       var selected = Object.prototype.hasOwnProperty.call(state, 'selected') ? state.selected === true : sameDay(date, valueState.value);
       nodes[i].classList.toggle('is-selected', selected);
-      nodes[i].classList.toggle('is-today', sameDay(date, today));
+      nodes[i].classList.toggle('is-today', !isPeriod&&sameDay(date,today));
+      nodes[i].classList.toggle('is-current', isPeriod&&sameDay(date,today));
       nodes[i].classList.toggle('is-in-range', state.inRange === true);
       nodes[i].classList.toggle('is-range-start', state.rangeStart === true);
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
@@ -361,7 +384,7 @@ function create(options) {
   function selectDate(next, meta) {
     if (destroyed || !canSelect()) return false;
     var parsed = parseDate(next); if (!parsed || isDisabledDate(parsed)) return false;
-    var selected = stripTime(parsed);
+    var selected = normalizeValue(parsed);
     var previous = cloneDate(valueState.value);
     var stateMeta = { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'select', originalEvent: meta && meta.originalEvent || null };
     if (valueState.controlled) valueState.requestChange(selected, stateMeta); else valueState.setValue(selected, stateMeta);
@@ -378,7 +401,7 @@ function create(options) {
     if (destroyed) return false;
     var parsed = next === null || next === undefined || next === '' ? null : parseDate(next); if (next !== null && next !== undefined && next !== '' && !parsed) return false;
     var previous = cloneDate(valueState.value);
-    valueState.setValue(parsed ? stripTime(parsed) : null, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-value', originalEvent: meta && meta.originalEvent || null });
+    valueState.setValue(parsed ? normalizeValue(parsed) : null, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-value', originalEvent: meta && meta.originalEvent || null });
     var committed = valueState.value;
     var preserveView = !!(meta && meta.syncView === false);
     if (committed && !preserveView) changeView(committed, { source: meta && meta.source || 'api', reason: 'value-view-sync', silent: true });
@@ -427,8 +450,23 @@ function create(options) {
     var activeDate = parseDate(activeItem.activeKey);
     var committedInView = valueState.value && sameMonth(valueState.value, viewValue) ? valueState.value : null;
     var current = activeDate && sameMonth(activeDate, viewValue) ? activeDate : (committedInView || new Date(viewValue.getFullYear(), viewValue.getMonth(), 1));
-    var gridAction = TemporalGrid.keyAction(key, { columns:7 });
+    var gridAction = TemporalGrid.keyAction(key, { columns:isPeriod?4:7 });
     if (!gridAction) return false;
+    if(isPeriod){
+      if(gridAction.type==='activate'){if(canSelect())selectDate(current,{source:'keyboard',reason:'activate',originalEvent:event});return true;}
+      if(gridAction.type==='page')return changeView(addPage(viewValue,gridAction.amount),{source:'keyboard',reason:key,originalEvent:event});
+      if(gridAction.type==='home'||gridAction.type==='end'){
+        var options=cells.filter(function(e){return !e.disabled&&!e.outside;});
+        var selected=gridAction.type==='home'?options[0]:options[options.length-1];
+        return selected?setActiveDate(selected.date,{source:'keyboard',reason:key,originalEvent:event}):true;
+      }
+      if(gridAction.type==='step'){
+        var step=gridAction.amount,next=addUnit(current,step),count=0;
+        while(next&&isDisabledDate(next)&&count++<240)next=addUnit(next,step<0?-1:1);
+        return next&&count<240?setActiveDate(next,{source:'keyboard',reason:key,originalEvent:event}):true;
+      }
+      return false;
+    }
     if (gridAction.type === 'activate') { if (canSelect()) selectDate(current, { source:'keyboard', reason:'activate', originalEvent:event }); return true; }
     var next = TemporalGrid.moveDateByKey(current, key, { columns:7, weekStartsOn:weekStartsOn() });
     var guard = 0, backward = gridAction.action === 'left' || gridAction.action === 'up' || gridAction.action === 'home' || gridAction.action === 'page-up';
@@ -470,7 +508,7 @@ function create(options) {
     
   function updateOptions(nextOptions) {
     if (destroyed) return api;
-    var next = nextOptions || {}; opts = mergeOptions(opts, next);
+    var next=nextOptions||{};if(Object.prototype.hasOwnProperty.call(next,'unit')&&String(next.unit)!==unit)throw new Error('[QXFRAME9A7C2] Calendar unit is immutable.');opts=mergeOptions(opts,next);
     capabilityController.updateOptions({});
     if (Object.prototype.hasOwnProperty.call(Object(next), 'controlled')) valueState.setControlled(opts.controlled === true);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { setValue(next.value, { source: 'options', reason: 'options-value', silent: true }); }
@@ -488,9 +526,10 @@ function create(options) {
     setValue: setValue,
     clear: function (meta) { return setValue(null, meta); },
     setViewValue: changeView,
-    prev: function () { return changeView(addMonths(viewValue, -1), { source: 'api', reason: 'prev' }); },
-    next: function () { return changeView(addMonths(viewValue, 1), { source: 'api', reason: 'next' }); },
+    prev: function () { return changeView(addPage(viewValue, -1), { source: 'api', reason: 'prev' }); },
+    next: function () { return changeView(addPage(viewValue, 1), { source: 'api', reason: 'next' }); },
     setActiveDate: setActiveDate,
+    setActiveValue: setActiveDate,
     focus: function () { return hostedVirtualFocus ? false : !!(keyboardRegion && keyboardRegion.focus()); },
     handleKeydown: onKeydown,
     bindVirtualFocus: bindVirtualFocus,
@@ -498,7 +537,8 @@ function create(options) {
     refresh: function () { render(); return api; },
     refreshStates: function () { syncCellStates(); return api; },
     updateOptions: updateOptions,
-    getState: function () { return Object.freeze({ value: cloneDate(valueState.value), viewValue: cloneDate(viewValue), activeKey: activeItem.activeKey, hoverValue: parseDate(hoveredKey), disabled: opts.disabled === true, readOnly: isReadOnly(), destroyed: destroyed }); },
+    getState: function () {return Object.freeze({unit:unit,value:cloneDate(valueState.value),viewValue:cloneDate(viewValue),activeKey:activeItem.activeKey,activeValue:parseDate(activeItem.activeKey),hoverValue:parseDate(hoveredKey),disabled:opts.disabled===true,readOnly:isReadOnly(),destroyed:destroyed});},
+    getItems: function(){return cells.map(function(c){return {key:c.key,date:cloneDate(c.date),label:c.label||String(c.date.getDate()),disabled:c.disabled};});},
     getRootElement: function () { return root; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },
     getDOMSource: function () { return domBinding ? domBinding.source : null; },

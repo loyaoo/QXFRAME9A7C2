@@ -1,7 +1,7 @@
 import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
-import { PeriodPanel } from './period-panel.js';
+
 import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
@@ -1413,7 +1413,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       if (primaryRefs && primaryRefs.next) primaryRefs.next.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
       if (secondaryRefs && secondaryRefs.prev) secondaryRefs.prev.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
     }
-    yearPanel = PeriodPanel.create({
+    yearPanel = Calendar.create({
       container: selectionHost,
       unit: 'year',
       value: selectionAnchor(draft.draftValue),
@@ -1427,7 +1427,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
       onSelect: handleYearDrillSelect
     });
     yearPanel.getRootElement().classList.add('qxframe9a7c2-date-picker-drill-panel');
-    monthPanel = PeriodPanel.create({
+    monthPanel = Calendar.create({
       container: selectionHost,
       unit: 'month',
       value: selectionAnchor(draft.draftValue),
@@ -1444,7 +1444,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     monthPanel.getRootElement().classList.add('qxframe9a7c2-date-picker-drill-panel');
     setCalendarPanelMode('date', selectionAnchor(draft.draftValue) || opts.defaultPickerValue || new Date());
   } else {
-    periodPanel = PeriodPanel.create({
+    periodPanel = Calendar.create({
       container: selectionHost,
       unit: unit,
       value: selectionAnchor(draft.draftValue),
