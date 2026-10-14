@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 mirror configured Nova overlay into canonical Registry Schema
+- QXFRAME #38563832290 passed prior gates and stopped at verify-create-app.mjs canonical Theme Schema mirror: changed static Theme overlay 0.1 ->0.6 but generated docs/generated/theme-public-schema.json still 0.1. Updated only this token defaultRoot, preserving 214-token registry and all token names/ordering. Existing gate remains enforced.
+- Next QXFRAME + CSS Schema dual on final HEAD and browser tests; not complete yet.
+
 ## CURRENT — 2026-10-14 DatePicker composite widths and Presets divider (CI pending)
 - Removed two-rem intrinsic max-width subtraction that left a trailing blank on DatePicker popup. Calendar Scroll+group now shrink/intrinsic rather than grow and leave unused right-hand white strip. Presets divider paints on enclosing Scroll shell, not clipped viewport, and matches field-border Theme.
 - DateTime Calendar / TimePanel *height* parity remains to be measured: do not override JS inline Wheel scroll viewport height because that would break snap centering. DatePicker JS divergence would require explicit build-allowlist consideration.

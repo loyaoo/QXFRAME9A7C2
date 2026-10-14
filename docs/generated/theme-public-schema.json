@@ -316,7 +316,7 @@
       "name": "--qxframe9a7c2-theme-overlay",
       "kind": "color",
       "mode": "color",
-      "defaultRoot": "light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.1))"
+      "defaultRoot": "light-dark(oklch(0 0 0 / 0.6), oklch(0 0 0 / 0.6))"
     },
     {
       "name": "--qxframe9a7c2-theme-menu",
