@@ -1015,7 +1015,7 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
   const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   assert.match(compos,/\.qxframe9a7c2-field-content\{[^}]*theme-field-content-gap/);
-  assert.match(item,/flex-wrap:wrap;align-items:center;width:100%/);
+  assert.match(item,/flex-wrap:nowrap;align-items:center;width:100%/,'Item leading media and content must remain one row; text wraps internally');
   assert.match(item,/\.qxframe9a7c2-item-title\{[^}]*-webkit-line-clamp:1/);
   assert.match(item,/\.qxframe9a7c2-item-desc\{[^}]*-webkit-line-clamp:2/);
   const html=read('preview-01.html');

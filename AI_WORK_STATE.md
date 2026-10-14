@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 align previous Item static assertion to repaired layout
+- QXFRAME #38563351476 completed CSS Token ratchets and failed on old Step3 Item visual assertion requiring `flex-wrap:wrap` in item-surface.css. That obsolete behavior was the exact screenshot issue (checkbox on its own line). Updated test to REQUIRE flex-wrap:nowrap; retains source contract and additional content-wrap checks; no CSS revert. CI still pending final HEAD.
+
 ## CURRENT — 2026-10-14 stage5 verify-theme-tokens correction (CI pending)
 - QXFRAME #38562936754 passed css-constraints but failed theme-tokens hardcoded-color ratchet: newly duplicated rgb(255 255 255 / .14) Image Preview close hover. Original toolbar literal must not be duplicated. Added one private component-local --_image-preview-hover derived via color-mix 14% of registered theme palette white, consumed by both toolbar and close/nav. No public token/alias, no gate weakening.
 - Next: re-run official same-head CI, Chrome screenshot tests.
