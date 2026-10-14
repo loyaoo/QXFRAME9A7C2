@@ -1875,6 +1875,14 @@ check('Stage5 Steps connector not over title, Item media fixed, Tags add inherit
  assert.ok(tags.includes('tags-add{box-sizing:border-box;display:inline-flex;'),'Tag add shares source size and radius');
  assert.ok(tags.includes('border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-subtle-hover);'),'Tag Add consumes matching theme surface');
 });
+check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an option',()=>{
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const collection=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ assert.ok(choice.includes('.qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate'),'branch intermediate state has own contrast');
+ assert.ok(!choice.includes('.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,'),'unchecked open parent no longer receives a colored filled box');
+ assert.ok(collection.includes('.qxframe9a7c2-item-collection-group{box-sizing:border-box;min-height:0;'),'group label is not rendered as an option-size item');
+ assert.ok(collection.includes('background:transparent;font-size:.875em;line-height:1.25;font-weight:600'),'group label neutral, compact and unselectable');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
@@ -1964,7 +1972,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
  assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
  assert.doesNotMatch(choice,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-item\.is-open[^\n]*\.qxframe9a7c2-tree-check-indicator/,'Tree Open cannot invert global Checkbox');
- assert.ok(choice.includes(':not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'Menu Item Choice logic leaves native Tree state intact');
+ assert.ok(!choice.includes('.is-open:not(.is-selected):not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'Popup Item Checkbox must not override Tree or TreeSelect Choice');
+ assert.ok(choice.includes('.qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked'),'Only checked Choice may use inverse Popup paint');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
 });
 

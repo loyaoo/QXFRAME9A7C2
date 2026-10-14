@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 Stage5 Dropdown/Cascader Choice + group heading (CI pending)
+- Root cause for black unchecked boxes: old Popup.is-open CSS colored every checkbox in an expanded row, including an unchecked item, making it look selected. Now inverse contrast applies only when checkbox truly checked/indeterminate; unselected receives the common Choice empty border and surface. Tree/TreeSelect are untouched.
+- ItemCollection group heading now compact neutral transparent text, no Option-sized fill/height/cursor, preserving navigation semantics.
+- Next: screenshot computed Chrome regression and remaining DatePicker geometry. PR #267 remains Draft.
+
 ## CURRENT — 2026-10-14 Stage5 Steps/Item/List/Tags screenshot fix (CI pending)
 - Default horizontal Steps rail is now an in-flow flex sibling after the icon/title, preventing connector drawing through title/subtitle/percent; other Step modes stay untouched.
 - Static Item and vertical List no longer flex-wrap leading checkbox/icon onto its own line; content flexes and wraps inside its own min-width:0 column.

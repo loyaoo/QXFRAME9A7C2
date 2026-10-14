@@ -41,10 +41,11 @@
 .qxframe9a7c2-native-form input[type="radio"]:checked,.qxframe9a7c2-form-check-input[type="radio"]:checked,.qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input[type="radio"]:checked{border-color:var(--qxframe9a7c2-theme-primary);background-color:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-native-form input[type="radio"]:checked::before,.qxframe9a7c2-form-check-input[type="radio"]:checked::before,.qxframe9a7c2-selectgroup-input:checked+.qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio::before,.qxframe9a7c2-selectgroup-item:not(:has(>.qxframe9a7c2-selectgroup-label))>.qxframe9a7c2-selectgroup-input[type="radio"]:checked::before{opacity:1;transform:scale(1)}
 
-/* Inverted Choice projection is only for colored non-Tree Popup Open rows.
- * A Tree expanding does not change global Checkbox checked/mixed paint. */
-.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,
-.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected):not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator{
+/* Only a checked/mixed checkbox on a colored open row may invert its glyph.
+ * An unchecked open parent must retain the shared empty Choice surface, never
+ * become a black filled square. Tree/TreeSelect paint is not overridden here. */
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked,
+.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) .qxframe9a7c2-item-surface.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate{
   background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
   border-color:var(--qxframe9a7c2-theme-menu-accent-foreground);
   /* The inverse box consumes accent-foreground. Subtle marks use the opaque
