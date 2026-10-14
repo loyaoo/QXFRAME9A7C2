@@ -1833,6 +1833,15 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
 });
+check('Stage5 calendar range strip zero gap and Menu body has no default paint',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
+ assert.match(css,/\.qxframe9a7c2-calendar-weekdays,\.qxframe9a7c2-calendar-grid\{display:flex;flex-wrap:wrap;gap:0\}/);
+ assert.match(css,/\.qxframe9a7c2-calendar-weekday,\.qxframe9a7c2-calendar-cell\{[^}]*flex:0 0 calc\(100% \/ 7\)/);
+ assert.doesNotMatch(css,/\.qxframe9a7c2-calendar\.is-adaptive-month>\.qxframe9a7c2-calendar-grid\{[^}]*row-gap:/);
+ assert.match(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*column-gap:0/);
+ assert.match(menu,/\.qxframe9a7c2-menu\{[\s\S]*?background:var\(--_qxframe9a7c2-menu-context-background,transparent\)/);
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
