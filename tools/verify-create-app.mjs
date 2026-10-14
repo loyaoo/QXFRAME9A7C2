@@ -1281,10 +1281,10 @@ check('Private v2 names without collision are unversioned while colliding names 
 
 check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
  const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
- assert.doesNotMatch(visual,/\\.qxframe9a7c2-popup-surface, \\.qxframe9a7c2-menu-submenu-panel, \\.qxframe9a7c2-menu-overflow-panel, \\.qxframe9a7c2-popover-container\\s*\\{/);
- assert.doesNotMatch(visual,/\\.qxframe9a7c2-popover-root\\s*\\{\\s*--_qxframe9a7c2-popover-bg:/);
- assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg)'));
- assert.match(visual,/\\.qxframe9a7c2-menu-submenu-panel, \\.qxframe9a7c2-menu-overflow-panel\\s*\\{/);
+ assert.ok(!visual.includes('.qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {'),'never override the complete family surface');
+ assert.ok(!visual.includes('.qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg:'),'public Popover color retains its local owner');
+ assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg)'),'generic surface background cannot override families');
+ assert.ok(visual.includes('.qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {'),'navigation panels retain Menu paint');
 });
 
 check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
