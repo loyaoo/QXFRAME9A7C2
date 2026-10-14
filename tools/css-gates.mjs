@@ -18,7 +18,7 @@ export const THEME_PREFIX = '--qxframe9a7c2-theme-';
 // Only these exact pre-existing Menu/Picker Portal roots may receive a
 // generated local scheme switch. No Popup may redeclare Theme tokens.
 const MENU_POPUP_ROOTS = [
-  '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
+  '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container)',
   '.qxframe9a7c2-menu-submenu-panel',
   '.qxframe9a7c2-menu-overflow-panel'
 ];

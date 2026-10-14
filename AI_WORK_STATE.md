@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 acceptance gates synchronized to single-owner repair (CI pending)
+- First same-HEAD QXFRAME run 38535471221 reached verification but failed on previous QA ledger savings-targets. The old TreeSelect computed assertion expected the now-confirmed wrong Menu-bg checkmark foreground. Gate update enforces current three annotations, actual Choice Type foreground/check contrast, inverted Tooltip scheme and arrow/background parity across page/menu modes. css-gates Menu selector allowlist now matches exact Tooltip exclusion. Do not weaken CI; correct state owner is the required expectation.
+- Next: QXFRAME/CSS Schema same-HEAD CI, official artifact and full Windows package. No merge.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Button/TreeSelect/Tooltip ownership batch (CI pending)
 - Started from verified head 4f25a3eebeb3cbf2d24d8c01f56107e7aba123e6, Draft/Open PR #267, main unchanged. Existing same-HEAD QXFRAME and CSS Schema green before this batch.
 - Button: remove late duplicate background/border/color/shadow painting; map existing Theme action roles into component-owned state slots at variant specificity, preserving button.css single painter and focus/disabled logic.

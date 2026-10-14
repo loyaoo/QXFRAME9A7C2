@@ -66,7 +66,7 @@ check('Stage5 QX-only public components consume Theme corner roles',()=>{
 check('menu-inverted Picker descendants consume matched Menu surface roles',()=>{
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   const menuScope='qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)';
-  assert.ok(v2.includes(menuScope),'Picker surface is menu-scoped, not global');
+  assert.ok(v2.includes(menuScope+':not(.qxframe9a7c2-tooltip-container)'),'Menu semantics exclude Tooltip surface');
   for(const role of ['semantic-text','semantic-text-secondary','semantic-text-disabled','semantic-text-placeholder',
     'semantic-surface','semantic-border-subtle','navigation-bg','control-bg','control-text','control-border'])
     assert.match(v2,new RegExp('--_qxframe9a7c2-'+role+':'),'nested popup semantic role '+role);
@@ -164,10 +164,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"savings-targets":["select.qxframe9a7c2-form-select"],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only the current native Select component is visibly annotated.
+  const current={"ui-elements":[".qxframe9a7c2-button"],"platform-tree":['[data-pv3x-widget="platform-tree"]'],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only this batch's three changed component regions.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(read(id==='sla-tooltip'?'preview-03.html':'preview-01.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
+    assert.ok(read(id==='ui-elements'?'preview-02.html':'preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -179,7 +179,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,2,'exactly two current changed regions highlighted, no old highlights');
+  assert.equal(count,3,'exactly three current changed regions highlighted, no old highlights');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1319,6 +1319,13 @@ check('Legacy v2 collision resolved through existing semantic owners, not a new 
   assert.ok(!visual.includes('--_qxframe9a7c2-card-explicit-shadow'),'no redundant Card shadow facade');
   const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   assert.ok(card.includes('--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Card single paint owner consumes Theme shadow');
+  const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+  for(const [prop,role] of [['background','bg'],['color','text'],['box-shadow','shadow']])
+    assert.ok(button.includes(prop+':var(--_qxframe9a7c2-state-'+role+')'),'Button owns '+prop+' through its state resolver');
+  assert.doesNotMatch(visual,/background-color:\s*var\(--_qxframe9a7c2-action-current\)/,'No late duplicate Button painter');
+  assert.doesNotMatch(visual,/--_qxframe9a7c2-action-current/,'No second Button state resolver');
+  assert.ok(visual.includes('--_qxframe9a7c2-button-bg: var(--_qxframe9a7c2-action-bg)'),'Theme feeds original Button state');
+
 });
 
 check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
@@ -1338,6 +1345,7 @@ check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme 
     assert.equal((body.match(/--qxframe9a7c2-theme-background:/g)||[]).length,1,'exactly one COLOR owner');
     for(const name of ['popup-surface:not(.qxframe9a7c2-popover-container)','menu-submenu-panel','menu-overflow-panel'])
       assert.equal(body.includes('qxframe9a7c2-'+name),inverse,'inverse selectors match only selected Menu mode');
+    assert.equal(body.includes('qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container)'),inverse,'inverse Menu excludes Tooltip');
     if(inverse){
       assert.ok(body.includes('color-scheme: light;\n}\n:root:not(.dark)'),'dark page Popup selects light');
       assert.ok(body.includes('color-scheme: dark;\n}'),'light page Popup selects dark');
@@ -1951,9 +1959,9 @@ check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection ar
  assert.ok(css.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel border matches Menu Primary');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
- assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup Tree checkbox covers indeterminate');
- assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),'real popup checked indicator');
- assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) {\n    --_qxframe9a7c2-menu-primary-solid:'),'Menu solid color belongs to shared Popup root, not Date-only Picker');
+ assert.ok(!css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup must not override shared indeterminate Choice');
+ assert.ok(!css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),'Popup must not override shared checked Choice');
+ assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {\n    --_qxframe9a7c2-menu-primary-solid:'),'Menu solid color belongs to Menu Popup, never Tooltip');
  assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-tree-check/,'do not repeat unreachable synthetic PickerField Tree selectors');
  assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
 });
@@ -1992,8 +2000,8 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
- assert.ok(theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'Only the real TreeSelect portal owns the contextual checkbox paint');
- assert.ok(theme.includes('--_qxframe9a7c2-check-indicator-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'TreeSelect checked mark consumes its own check-indicator bg, not SelectGroup label');
+ assert.ok(!theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'TreeSelect portal must not own Checkbox paint');
+ assert.ok(!theme.includes('--_qxframe9a7c2-check-indicator-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'TreeSelect checked mark uses shared Choice Type, not Menu background');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
  assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
