@@ -11,6 +11,7 @@ import { EventDelegation } from '../core/eventDelegation.js';
 import { Renderer } from '../core/renderer.js';
 import { DOMBinding } from '../core/domBinding.js';
 import { DOMTemplate } from '../core/domTemplate.js';
+import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { mergeOptions } from '../core/options.js';
 import { DateUnit } from '../utils/dateUnit.js';
 
@@ -496,7 +497,7 @@ function create(options) {
         name:virtualFocusDomainName,
         getElement:function(key){ return getCellElement(key); },
         reconcile:function(key){ var cell=cells.find(function(entry){return entry.key===String(key)&&entry.disabled!==true;}); if(cell)return cell.key; return activeItem.activeKey || null; },
-        ensureVisible:function(){ return true; }
+        ensureVisible:function(key){var el=getCellElement(key);return isPeriod&&el&&grid?ScrollVisibility.ensureVisible(grid,el,{axis:'both',align:'nearest'}):true;}
       }
     });
     if (!binding) return null;

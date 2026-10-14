@@ -1863,7 +1863,7 @@ check('Stage5 calendar range strip zero gap and Menu body has no default paint',
  assert.match(css,/\.qxframe9a7c2-calendar-weekdays,\.qxframe9a7c2-calendar-grid\{display:flex;flex-wrap:wrap;gap:0\}/);
  assert.match(css,/\.qxframe9a7c2-calendar-weekday,\.qxframe9a7c2-calendar-cell\{[^}]*flex:0 0 calc\(100% \/ 7\)/);
  assert.doesNotMatch(css,/\.qxframe9a7c2-calendar\.is-adaptive-month>\.qxframe9a7c2-calendar-grid\{[^}]*row-gap:/);
- assert.match(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*column-gap:0/);
+ assert.match(css,/\.qxframe9a7c2-calendar\.is-period>\.qxframe9a7c2-calendar-grid\{[^}]*column-gap:0/);
  assert.match(menu,/\.qxframe9a7c2-menu\{[\s\S]*?background:var\(--_qxframe9a7c2-menu-context-background,transparent\)/);
 });
 check('Stage5 configured Mask Style defaults and Image Preview chroma are consistent',()=>{

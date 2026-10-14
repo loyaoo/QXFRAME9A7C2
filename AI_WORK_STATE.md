@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 Calendar unit migration CI checkpoints
+- QXFRAME #38590468831 failed the old FocusController gate demanding separate focus implementation inside period-panel.js; this is now a single export alias. Updated Focus, Phase C, ScrollVisibility and audit gates to insist PeriodPanel is one Calendar identity with shared controller/cell hover owner.
+- Calendar period virtual focus now invokes canonical ScrollVisibility.ensureVisible. CSS Flex gate and CreateApp period acceptance moved to .calendar.is-period. Next real Chrome period API tests and same HEAD dual CI.
+- No source Tree/Controller edits, no merge. Stage/global progress not yet quantifiable.
+
 ## CURRENT — 2026-10-14 Calendar unit owner consolidation (CI pending)
 - Starting baseline 455470dd41115f746f2f1fd22c72954209e51234, QXFRAME and CSS Schema Success; PR #267 Draft, main unchanged.
 - New Calendar unit policy supplies month, quarter and year data through the same Calendar DOM + ActiveItem / ValueController / Focus / Interaction pipeline as date/week. DatePicker now calls Calendar.create for all modes.

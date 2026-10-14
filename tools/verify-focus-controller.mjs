@@ -19,12 +19,14 @@ assert.ok(/KeyboardRegion\.create\(settings\)/.test(controllerSource),'FocusCont
 assert.ok(!/addEventListener\s*\(/.test(controllerSource),'FocusController must not add a parallel DOM event routing layer.');
 assert.ok(!/registerDomain\s*\(/.test(controllerSource),'FocusController must not implement a second virtual-focus domain engine.');
 
-for(const file of ['wheel-panel.js','calendar.js','period-panel.js']){
+for(const file of ['wheel-panel.js','calendar.js']){
   const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
   assert.ok(/focusController\.js/.test(source),file+' must enter focus authority through FocusController.');
   assert.ok(!/keyboardRegion\.js/.test(source),file+' must not import KeyboardRegion directly after Phase C migration.');
   assert.ok(!/\.registerDomain\s*\(/.test(source),file+' must delegate virtual-domain binding through FocusController instead of recreating the binding lifecycle.');
 }
+const periodAlias=fs.readFileSync(path.join(root,'src/components/period-panel.js'),'utf8');
+assert.match(periodAlias,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'PeriodPanel is one Calendar reference, never another focus owner');
 for(const file of ['select.js','tree-select.js','cascader.js']){
   const source=fs.readFileSync(path.join(root,'src/components',file),'utf8');
   assert.ok(/focusController\.js/.test(source),file+' must enter editable host focus through FocusController.');
@@ -71,7 +73,7 @@ console.log(JSON.stringify({
   ok:true,
   owner:'FocusController',
   delegates:['FocusManager','FocusScope','KeyboardRegion','KeyboardNavigation.virtualFocus'],
-  firstPack:['WheelPanel','TimePanel','Calendar','PeriodPanel'],
+  firstPack:['WheelPanel','TimePanel','Calendar'],
   popupHostedPack:['Select','TreeSelect','Cascader'],
   standalonePack:['Menu','Tags'],
   hybridEditPack:['Table'],

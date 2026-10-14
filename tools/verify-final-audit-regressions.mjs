@@ -57,7 +57,7 @@ assert.match(inputOtpSource,/type: this\.options\.mask === true \? 'password' : 
 assert.match(css,/\.qxframe9a7c2-input-segment-field\.has-mask\.has-mask-value>\.qxframe9a7c2-input-segment-input::selection\{[^}]*color:transparent;[^}]*-webkit-text-fill-color:transparent;/,'InputOTP string-mask selection must keep the real segment text visually masked.');
 assert.doesNotMatch(dateSource,/preserveRangeSlots/,'DatePicker must not keep a second transient unsorted range-slot normalization path.');
 assert.match(calendarSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'Calendar must project canonical is-hover state.');
-assert.match(periodPanelSource,/classList\.toggle\('is-hover',[^\n]*hoveredKey/,'PeriodPanel must project the same canonical is-hover state.');
+assert.match(periodPanelSource,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'Period import delegates to Calendar canonical is-hover state.');
 assert.match(css,/\.qxframe9a7c2-date-panel-cell\.is-in-range\.is-hover:not\(:disabled\):not\(\.is-selected\)\{[^}]*(?:accent-soft-hover|theme-primary\) 20%)/,'Canonical date cell CSS must distinguish range hover from selected state.');
 assert.doesNotMatch(css,/--_qxframe9a7c2-calendar-cell-text/,'Calendar must not use the retired cell-text private variable.');
 assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\);color:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,'Outside-month Calendar cells must project the shared date-panel text variable and muted physical color.');

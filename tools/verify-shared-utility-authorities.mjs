@@ -67,10 +67,11 @@ assert.match(cascaderSource,/axis:\s*'y',\s*wheelAxis:\s*'y',\s*wheelPropagation
 assert.doesNotMatch(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost|axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader must never fall back to horizontal reveal');
 assert.ok(!/column\.offsetLeft|viewport\.scrollLeft\s*=/.test(cascaderSource), 'Cascader must not re-own horizontal scroll visibility geometry.');
 
-const periodPanelSource=read('src/components/period-panel.js');
-assert.match(periodPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'PeriodPanel must import ScrollVisibility.');
-assert.match(periodPanelSource,/ScrollVisibility\.ensureVisible\(grid,\s*element,\s*\{\s*axis:['"]both['"],\s*align:['"]nearest['"]\s*\}\)/, 'PeriodPanel item reveal must use ScrollVisibility.');
-assert.ok(!/grid\.scroll(?:Top|Left)\s*=|element\.offset(?:Top|Left)/.test(periodPanelSource), 'PeriodPanel must not re-own scroll visibility geometry.');
+const calendarSource=read('src/components/calendar.js'), periodAlias=read('src/components/period-panel.js');
+assert.match(periodAlias,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'Period API must share Calendar');
+assert.match(calendarSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Calendar period mode uses canonical ScrollVisibility');
+assert.match(calendarSource,/ScrollVisibility\.ensureVisible\(grid,el,\{axis:'both',align:'nearest'\}\)/, 'Calendar period virtual focus must reveal through shared visibility');
+assert.ok(!/grid\.scroll(?:Top|Left)\s*=|el\.offset(?:Top|Left)/.test(calendarSource),'Calendar cannot re-own scrolling');
 
 const wheelPanelSource=read('src/components/wheel-panel.js');
 assert.match(wheelPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'WheelPanel must import ScrollVisibility.');
