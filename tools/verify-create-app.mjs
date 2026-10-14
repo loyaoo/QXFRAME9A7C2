@@ -164,10 +164,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"savings-targets":["select.qxframe9a7c2-form-select"]}; // Only the current native Select component is visibly annotated.
+  const current={"savings-targets":["select.qxframe9a7c2-form-select"],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only the current native Select component is visibly annotated.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(read('preview-01.html').includes('data-card="'+id+'"'),'current Preview 01 Card '+id);
+    assert.ok(read(id==='sla-tooltip'?'preview-03.html':'preview-01.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -179,7 +179,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'exactly one current Native Select region highlighted');
+  assert.equal(count,2,'exactly two current changed regions highlighted, no old highlights');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
