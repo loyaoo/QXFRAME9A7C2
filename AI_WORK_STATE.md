@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 last CSS-only legacy direct dark shadow branch removed (CI pending)
+- Scanned full bundled CSS: --qxframe9a7c2-shadow-popup existed as two declarations in fixed-values.css but had ZERO var(--qxframe9a7c2-shadow-popup) consumers in the bundled runtime CSS. Old historical size-tree manifest only mentions source context, not a live consumer. Removed this dead output-only public shadow alias and direct .dark shadow geometry override. Popup surfaces instead consume the existing canonical --qxframe9a7c2-theme-shadow-popup, which is already owned by the Theme generator (no new shadow token, no geometry changes to actual components). Static QA now rejects the obsolete alias and verifies canonical Theme shadow remains.
+- Across all 61 canonical framework CSS modules, no active explicit .dark paint override remains beyond allowed Theme color-scheme keyword and shared :root,.dark scopes. Documentation chrome uses light-dark and color-scheme; no hand-authored light/dark paint table remains there.
+
 ## CURRENT — 2026-10-14 canonical schema mirrors :root not last .dark override
 - Fixed canonical Schema defaultRoot for registered keyword --qxframe9a7c2-theme-color-scheme to light (the original mirror mapping incorrectly took its last .dark:dark declaration). Static CI now compares every Schema defaultRoot value to the first :root block in src/styles/main/theme.css and checks all 78 COLOR tokens are light-dark(). This makes the Schema verifiably descriptive, not a second generated Theme owner.
 

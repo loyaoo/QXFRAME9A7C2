@@ -595,10 +595,6 @@
   --_qxframe9a7c2-token-scroll-track: light-dark(rgba(82, 82, 82, .14), rgba(229, 229, 229, .14));
   --_qxframe9a7c2-token-scroll-thumb: light-dark(rgba(82, 82, 82, .46), rgba(229, 229, 229, .46));
   --_qxframe9a7c2-token-scroll-thumb-hover: light-dark(rgba(82, 82, 82, .68), rgba(229, 229, 229, .68));
-  --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(38, 38, 38, .18);
-}
-.dark {
-  --qxframe9a7c2-shadow-popup: 0 0.875rem 2.625rem rgba(0, 0, 0, .46);
 }
 
 @supports (color: contrast-color(red)) {

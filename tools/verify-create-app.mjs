@@ -1269,6 +1269,14 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
+check('No public unused mode-specific shadow palette remains: Popup consumes registered Theme shadow',()=>{
+ const source=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const canonical=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ assert.ok(!source.includes('--qxframe9a7c2-shadow-popup:'),'retired output-only unused shadow-palette override');
+ assert.ok(canonical.includes('--qxframe9a7c2-theme-shadow-popup:'),'Popup shadows are owned by registered Theme tokens');
+ assert.ok(!/\\.dark\\s*\\{[^}]*--qxframe9a7c2-shadow-popup/.test(source),'never reintroduce manual dark shadow slots');
+});
+
 check('Canonical public Theme Schema mirrors all live registry tokens, no historical 105 v2 pilot fields',()=>{
  const old=path.join(root,'docs/generated/theme-public-schema-v2.json');
  const canonical=path.join(root,'docs/generated/theme-public-schema.json');
