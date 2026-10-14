@@ -208,8 +208,6 @@
   .qxframe9a7c2-avatar { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* Source decoration distribution; inline feedback has no popup shadow. */
-  .qxframe9a7c2-card { --_qxframe9a7c2-recipe-card-shadow: var(--qxframe9a7c2-theme-shadow-card); --_qxframe9a7c2-card-explicit-shadow: var(--qxframe9a7c2-theme-shadow-card); box-shadow: var(--_qxframe9a7c2-recipe-card-shadow); }
-  .qxframe9a7c2-card.is-shadow, .qxframe9a7c2-card.is-hover-shadow:hover, .qxframe9a7c2-card.is-hoverable:hover { box-shadow: var(--_qxframe9a7c2-card-explicit-shadow); }
   .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
   .qxframe9a7c2-switch-thumb { box-shadow: var(--qxframe9a7c2-theme-shadow-switch-thumb); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb); }
@@ -217,19 +215,19 @@
   .qxframe9a7c2-alert-root { box-shadow: none; }
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
-  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-recipe-control-bg); border-color: var(--_qxframe9a7c2-recipe-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-recipe-control-bg); border-color: var(--_qxframe9a7c2-recipe-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-recipe-control-bg); border-color: var(--_qxframe9a7c2-recipe-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-recipe-control-bg); border-color: var(--_qxframe9a7c2-recipe-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   /* ColorPanel source paints input, format and eye as one field family. */
-  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-recipe-control-bg); border-color: var(--_qxframe9a7c2-recipe-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-recipe-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
   .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
   .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
@@ -243,7 +241,7 @@
   .qxframe9a7c2-image-preview-tool[class] { color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-background); --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* action: current Type is an input binding, not a separate formula per Type. */
   .qxframe9a7c2-button {
@@ -253,24 +251,24 @@
     --_qxframe9a7c2-outline-hover: var(--qxframe9a7c2-theme-outline-hover);
     --_qxframe9a7c2-outline-border: var(--qxframe9a7c2-theme-outline-border);
     --_qxframe9a7c2-ghost-hover: light-dark(var(--qxframe9a7c2-theme-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent));
-    --_qxframe9a7c2-recipe-action-bg: var(--_qxframe9a7c2-outline);
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-outline);
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-outline-hover);
     --_qxframe9a7c2-action-text: var(--qxframe9a7c2-theme-foreground);
-    --_qxframe9a7c2-recipe-action-border: var(--_qxframe9a7c2-outline-border);
-    --_qxframe9a7c2-action-current: var(--_qxframe9a7c2-recipe-action-bg);
+    --_qxframe9a7c2-action-border: var(--_qxframe9a7c2-outline-border);
+    --_qxframe9a7c2-action-current: var(--_qxframe9a7c2-action-bg);
     --_qxframe9a7c2-action-shadow: var(--qxframe9a7c2-theme-shadow-control);
     /* Component-facing state slots read by button.css (dashed / legacy appearances). */
-    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-recipe-action-border);
-    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-recipe-action-border);
-    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-recipe-action-border);
-    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-recipe-action-border);
+    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-action-border);
     --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-pointer-focus);
     --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-action-hover);
     --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-action-hover);
-    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-recipe-action-bg);
+    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-action-bg);
     --_qxframe9a7c2-button-disabled-text: var(--_qxframe9a7c2-action-text);
     background-color: var(--_qxframe9a7c2-action-current);
-    border-color: var(--_qxframe9a7c2-recipe-action-border);
+    border-color: var(--_qxframe9a7c2-action-border);
     color: var(--_qxframe9a7c2-action-text);
     box-shadow: var(--_qxframe9a7c2-action-shadow);
   }
@@ -289,30 +287,30 @@
   .qxframe9a7c2-button.is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
   .qxframe9a7c2-button.is-danger { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
   .qxframe9a7c2-button.is-solid {
-    --_qxframe9a7c2-recipe-action-bg: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-type);
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-solid-hover);
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type-foreground);
-    --_qxframe9a7c2-recipe-action-border: transparent;
+    --_qxframe9a7c2-action-border: transparent;
     --_qxframe9a7c2-action-shadow: none;
   }
   .qxframe9a7c2-button.is-filled {
-    --_qxframe9a7c2-recipe-action-bg: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-soft);
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-soft-hover);
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
-    --_qxframe9a7c2-recipe-action-border: transparent;
+    --_qxframe9a7c2-action-border: transparent;
     --_qxframe9a7c2-action-shadow: none;
   }
   .qxframe9a7c2-button.is-plain, .qxframe9a7c2-button.is-text {
-    --_qxframe9a7c2-recipe-action-bg: transparent;
+    --_qxframe9a7c2-action-bg: transparent;
     --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-ghost-hover);
-    --_qxframe9a7c2-recipe-action-border: transparent;
+    --_qxframe9a7c2-action-border: transparent;
     --_qxframe9a7c2-action-shadow: none;
   }
   .qxframe9a7c2-button.is-link {
-    --_qxframe9a7c2-recipe-action-bg: transparent;
+    --_qxframe9a7c2-action-bg: transparent;
     --_qxframe9a7c2-action-hover: transparent;
     --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
-    --_qxframe9a7c2-recipe-action-border: transparent;
+    --_qxframe9a7c2-action-border: transparent;
     --_qxframe9a7c2-action-shadow: none;
   }
   .qxframe9a7c2-button:hover, .qxframe9a7c2-button.is-hover {
@@ -323,27 +321,27 @@
   /* Source supplies no independent pressed color. Loading freezes the normal
      expression; disabled keeps that expression and applies whole opacity. */
   .qxframe9a7c2-button.is-loading, .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled {
-    --_qxframe9a7c2-action-current: var(--_qxframe9a7c2-recipe-action-bg);
+    --_qxframe9a7c2-action-current: var(--_qxframe9a7c2-action-bg);
   }
   .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled { opacity: .5; }
 
   /* control: same owner for native Input and all existing Picker Controls. */
   .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
-    --_qxframe9a7c2-recipe-control-bg: var(--qxframe9a7c2-theme-field);
-    --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-field-border);
-    background-color: var(--_qxframe9a7c2-recipe-control-bg);
-    border-color: var(--_qxframe9a7c2-recipe-control-border);
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-field-border);
+    background-color: var(--_qxframe9a7c2-control-bg);
+    border-color: var(--_qxframe9a7c2-control-border);
     color: var(--qxframe9a7c2-theme-foreground);
   }
-  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-recipe-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
-  .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-recipe-control-border: var(--qxframe9a7c2-theme-warning); }
+  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-warning); }
   .qxframe9a7c2-input.is-disabled { opacity: .5; }
-  .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-recipe-control-bg: var(--qxframe9a7c2-theme-field-disabled); }
+  .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field-disabled); }
   .qxframe9a7c2-input-control::placeholder, .qxframe9a7c2-input-prefix, .qxframe9a7c2-input-suffix { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-input.is-draft-value > .qxframe9a7c2-input-control { color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-recipe-control-bg: var(--qxframe9a7c2-theme-muted); }
-  .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-recipe-control-border: transparent; --_qxframe9a7c2-recipe-control-bg: transparent; }
+  .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-control-border: transparent; --_qxframe9a7c2-control-bg: transparent; }
 
   /* surface: retain Card composition and opt-in divider geometry. */
   .qxframe9a7c2-card {
@@ -360,27 +358,23 @@
      The real border uses the source ring color; QX geometry stays QX-owned. */
   /* Menu color axis: floating menus use the menu surface; popovers and dialogs keep the popover surface. */
   .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container, .qxframe9a7c2-popover-root, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
-    --_qxframe9a7c2-recipe-popup-bg: var(--qxframe9a7c2-theme-popover);
-    --_qxframe9a7c2-recipe-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
   }
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
-    --_qxframe9a7c2-recipe-popup-bg: var(--qxframe9a7c2-theme-menu);
-    --_qxframe9a7c2-recipe-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
     backdrop-filter: blur(var(--qxframe9a7c2-theme-menu-blur));
   }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
-    --_qxframe9a7c2-recipe-popup-border: var(--qxframe9a7c2-theme-popup-edge);
-    --_qxframe9a7c2-recipe-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
     --_qxframe9a7c2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
-    --_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-recipe-popup-bg);
-    --_qxframe9a7c2-popup-text: var(--_qxframe9a7c2-recipe-popup-text);
-    --_qxframe9a7c2-popup-border: var(--_qxframe9a7c2-recipe-popup-border);
-    --_qxframe9a7c2-popup-shadow: var(--_qxframe9a7c2-recipe-popup-shadow);
-    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-recipe-popup-bg);
-    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-recipe-popup-border);
+    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-popup-border);
     --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
-    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-recipe-popup-bg);
-    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-recipe-popup-border);
+    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-popup-border);
     --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
   }
   /* Popup ItemCollection and ItemSurface otherwise force the page foreground
@@ -474,18 +468,18 @@
      Only the Choice projection inside that portal reads Menu contrast.
      Tree state and Tree CSS/JS remain unchanged. */
   .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {
-    --_qxframe9a7c2-recipe-choice-bg: transparent;
-    --_qxframe9a7c2-recipe-choice-border: var(--_qxframe9a7c2-menu-border-neutral);
-    background-color: var(--_qxframe9a7c2-recipe-choice-bg);
-    border-color: var(--_qxframe9a7c2-recipe-choice-border);
+    --_qxframe9a7c2-check-indicator-bg: transparent;
+    --_qxframe9a7c2-check-indicator-border: var(--_qxframe9a7c2-menu-border-neutral);
+    background-color: var(--_qxframe9a7c2-check-indicator-bg);
+    border-color: var(--_qxframe9a7c2-check-indicator-border);
     color: var(--qxframe9a7c2-theme-menu-foreground);
   }
   .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator,
   .qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator {
-    --_qxframe9a7c2-recipe-choice-bg: var(--_qxframe9a7c2-menu-primary-solid);
-    --_qxframe9a7c2-recipe-choice-border: var(--_qxframe9a7c2-menu-primary-solid);
-    background-color: var(--_qxframe9a7c2-recipe-choice-bg);
-    border-color: var(--_qxframe9a7c2-recipe-choice-border);
+    --_qxframe9a7c2-check-indicator-bg: var(--_qxframe9a7c2-menu-primary-solid);
+    --_qxframe9a7c2-check-indicator-border: var(--_qxframe9a7c2-menu-primary-solid);
+    background-color: var(--_qxframe9a7c2-check-indicator-bg);
+    border-color: var(--_qxframe9a7c2-check-indicator-border);
     color: var(--qxframe9a7c2-theme-menu);
   }
   /* Hover is a neutral highlight; selected rows alone consume the saturated
@@ -619,14 +613,14 @@
    * surfaces and Popover/Tooltip/Pickers consume their family-owned surface
    * tokens through component foundation, preserving alpha and local scheme. */
   .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
-    background-color: var(--_qxframe9a7c2-recipe-popup-bg);
-    border-color: var(--_qxframe9a7c2-recipe-popup-border);
-    box-shadow: var(--_qxframe9a7c2-recipe-popup-shadow);
+    background-color: var(--_qxframe9a7c2-popup-bg);
+    border-color: var(--_qxframe9a7c2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-popup-shadow);
   }
   .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
     background-color: var(--qxframe9a7c2-theme-popover);
     color: var(--qxframe9a7c2-theme-popover-foreground);
-    border: 1px solid var(--_qxframe9a7c2-recipe-popup-border);
+    border: 1px solid var(--_qxframe9a7c2-popup-border);
     box-shadow: var(--_qxframe9a7c2-dialog-shadow);
     filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
   }
@@ -634,25 +628,25 @@
   /* navigation: shadcn item highlighting uses accent, not primary. */
   .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item {
-    --_qxframe9a7c2-recipe-navigation-bg: transparent;
+    --_qxframe9a7c2-menu-item-bg: transparent;
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground));
-    background-color: var(--_qxframe9a7c2-recipe-navigation-bg);
+    --_qxframe9a7c2-menu-render-background: var(--_qxframe9a7c2-menu-item-bg);
     color: var(--_qxframe9a7c2-navigation-text);
     border-color: transparent;
   }
   /* Hover is neutral, expanded uses Menu accent, selection remains separate. */
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
-    --_qxframe9a7c2-recipe-navigation-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-menu-item-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-active:not(.is-open) {
-    --_qxframe9a7c2-recipe-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
+    --_qxframe9a7c2-menu-item-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
-    --_qxframe9a7c2-recipe-navigation-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
+    --_qxframe9a7c2-menu-item-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
-    --_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-recipe-navigation-bg);
+    --_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-menu-item-bg);
     --_qxframe9a7c2-menu-item-text: var(--_qxframe9a7c2-navigation-text);
   }
   /* Menu source paints --menu-render-background (not the generic navigation
@@ -663,14 +657,14 @@
     --_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
-  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-recipe-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
-  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-recipe-navigation-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
+  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-menu-item-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
+  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
   /* Shared native/projected choice; state source and QX focus protocol unchanged. */
-  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-recipe-choice-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-recipe-choice-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-recipe-choice-bg); border-color: var(--_qxframe9a7c2-recipe-choice-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
   .qxframe9a7c2-native-form input[type="radio"]:checked::before, .qxframe9a7c2-form-check-input[type="radio"]:checked::before, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio::before { background-color: currentColor; }
   .qxframe9a7c2-form-check-input[type="checkbox"] { border-radius: var(--_qxframe9a7c2-choice-radius); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-recipe-choice-bg); border-color: var(--_qxframe9a7c2-recipe-choice-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
 
   /* Tree Choice is global: Popup Menu never changes checkbox painting. */

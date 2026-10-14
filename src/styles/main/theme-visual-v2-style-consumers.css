@@ -13,10 +13,10 @@
      field / field-border / field-sides (underline = sides 0%, bottom edge kept). */
   .qxframe9a7c2-input[class],.qxframe9a7c2-form-input[class],.qxframe9a7c2-form-select[class],.qxframe9a7c2-form-textarea[class],
   .qxframe9a7c2-input-otp-segment[class],.qxframe9a7c2-pagination-input[class]{
-    background-color:var(--_qxframe9a7c2-recipe-control-bg);
-    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-end-color:var(--_qxframe9a7c2-recipe-control-border);
+    background-color:var(--_qxframe9a7c2-control-bg);
+    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-end-color:var(--_qxframe9a7c2-control-border);
   }
   .qxframe9a7c2-input:focus-within,.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded,.qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid,.qxframe9a7c2-input.is-warning,
   .qxframe9a7c2-form-input:focus,.qxframe9a7c2-form-input.is-focused,.qxframe9a7c2-form-input.is-invalid,
@@ -24,9 +24,9 @@
   .qxframe9a7c2-form-textarea:focus,.qxframe9a7c2-form-textarea.is-focused,.qxframe9a7c2-form-textarea.is-invalid,
   .qxframe9a7c2-input-otp-segment:focus,.qxframe9a7c2-input-otp-segment.is-focused,.qxframe9a7c2-input-otp-segment.is-invalid,
   .qxframe9a7c2-pagination-input:focus,.qxframe9a7c2-pagination-input.is-focused,.qxframe9a7c2-pagination-input.is-invalid{
-    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-end-color:var(--_qxframe9a7c2-recipe-control-border);
+    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-end-color:var(--_qxframe9a7c2-control-border);
   }
   /* Focus is a ring role plus the selected Control Appearance topology. Resolve
      the role directly here so a component-local normal-border owner cannot keep
@@ -40,9 +40,9 @@
   .qxframe9a7c2-form-textarea:focus:not(.is-invalid),.qxframe9a7c2-form-textarea.is-focused:not(.is-invalid),
   .qxframe9a7c2-input-otp-segment:focus:not(.is-invalid),.qxframe9a7c2-input-otp-segment.is-focused:not(.is-invalid),
   .qxframe9a7c2-pagination-input:focus:not(.is-invalid),.qxframe9a7c2-pagination-input.is-focused:not(.is-invalid){
-    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-recipe-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
-    border-block-end-color:var(--_qxframe9a7c2-recipe-control-border);
+    border-inline-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
+    border-block-end-color:var(--_qxframe9a7c2-control-border);
   }
   /* Source-specific disabled fills stay authoritative; appearance still owns the
      border topology. This preserves disabled contrast instead of treating it as
@@ -53,7 +53,7 @@
   .qxframe9a7c2-form-textarea:disabled,.qxframe9a7c2-form-textarea.is-disabled,
   .qxframe9a7c2-input-otp-segment:disabled,.qxframe9a7c2-input-otp-segment.is-disabled,
   .qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-pagination-input.is-disabled{
-    background-color:var(--_qxframe9a7c2-recipe-control-bg);
+    background-color:var(--_qxframe9a7c2-control-bg);
   }
 
   /* Field status wins over keyboard/pointer focus in the one V2 border owner.
@@ -64,7 +64,7 @@
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-recipe-control-border:var(--qxframe9a7c2-theme-destructive)
+    --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-destructive)
   }
   .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -72,7 +72,7 @@
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-recipe-control-border:var(--qxframe9a7c2-theme-warning)
+    --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
 
@@ -84,7 +84,7 @@
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-invalid .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-recipe-control-border:var(--qxframe9a7c2-theme-destructive)
+    --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-destructive)
   }
   .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -92,7 +92,7 @@
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-warning .qxframe9a7c2-form-textarea:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning){
-    --_qxframe9a7c2-recipe-control-border:var(--qxframe9a7c2-theme-warning)
+    --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
   /* Field validity applies to JS Input's shared V2 physical border slot, too.
@@ -106,7 +106,7 @@
   .qxframe9a7c2-field.is-valid .qxframe9a7c2-input:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-form-field.is-valid .qxframe9a7c2-input:not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
     --_qxframe9a7c2-state-border:var(--qxframe9a7c2-theme-success);
-    --_qxframe9a7c2-recipe-control-border:var(--qxframe9a7c2-theme-success)
+    --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-success)
   }
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-menu-item[class],.qxframe9a7c2-menu-submenu-title[class],.qxframe9a7c2-menu-overflow[class]{
@@ -121,11 +121,7 @@
 
   .qxframe9a7c2-card[class]{
     --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,var(--qxframe9a7c2-theme-card-font-size));
-    --_qxframe9a7c2-recipe-card-shadow:var(--qxframe9a7c2-theme-shadow-card);
-    --_qxframe9a7c2-card-explicit-shadow:var(--qxframe9a7c2-theme-shadow-card);
-    box-shadow:var(--qxframe9a7c2-theme-shadow-card);
   }
-  .qxframe9a7c2-card.is-shadow,.qxframe9a7c2-card.is-hover-shadow:hover,.qxframe9a7c2-card.is-hoverable:hover{box-shadow:var(--qxframe9a7c2-theme-shadow-card)}
 
   /* Component roots own these private radii, so bind the Style Shape roles at
      the component root while preserving explicit public component overrides. */
