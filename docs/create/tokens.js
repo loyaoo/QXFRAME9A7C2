@@ -1,13 +1,16 @@
 // QXFRAME9A7C2 theme token closed list (v3 §5.1). The only theme inputs are the
 // `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
 // qxframe.css and every createApp export) writes the whole list: `:root` holds
-// every token, `.dark` also contains every token (with dark values for colors).
+// every token, `.dark` also contains every token for the existing export contract.
+// All 78 COLOR roles use the same light-dark(light,dark) expression in both
+// blocks; --theme-color-scheme stays a light/dark keyword, because light-dark()
+// accepts colors only. CSS color-scheme at the current subtree decides the color.
 // Inverted Menu option aliases existing Popup selectors into the OPPOSITE
 // light/dark declaration. No app DOM markers, third palette, or duplicate tokens.
 // New tokens are added here only (registered), never ad hoc in CSS.
 //
 // kind:  color | length | number | percent | font | keyword | shadow | time
-// mode: 'color' → mode-specific values; 'root' → identical in both blocks.
+// mode: 'color' → mode-specific source inputs; emitted COLOR values are paired by light-dark(); 'root' → identical in both blocks.
 
 export const TOKEN_PREFIX = '--qxframe9a7c2-theme-';
 
