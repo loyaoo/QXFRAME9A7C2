@@ -430,14 +430,13 @@
        Only the popup surface opacity changes between Menu modes; descendant
        Hover, Selected and passive borders remain translucent overlays. */
     --_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent);
-    --_qxframe9a7c2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent);
     --_qxframe9a7c2-menu-selected-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-accent) 84%, transparent);
     --_qxframe9a7c2-semantic-surface-muted: var(--_qxframe9a7c2-menu-hover-soft);
     --_qxframe9a7c2-semantic-subtle: var(--_qxframe9a7c2-menu-hover-soft);
     --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-menu-hover-soft);
     --_qxframe9a7c2-semantic-surface-hover: var(--_qxframe9a7c2-menu-hover-soft);
-    --_qxframe9a7c2-semantic-border: var(--_qxframe9a7c2-menu-border-neutral);
-    --_qxframe9a7c2-semantic-border-subtle: var(--_qxframe9a7c2-menu-border-neutral);
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-field-border);
     --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-menu-hover-soft);
     --_qxframe9a7c2-navigation-selected-bg: var(--_qxframe9a7c2-menu-selected-soft);
@@ -575,7 +574,7 @@
   }
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active) {
-    border-color: var(--_qxframe9a7c2-menu-border-neutral);
+    border-color: var(--qxframe9a7c2-theme-field-border);
   }
   .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-selection-indicator.is-check {
     color: var(--qxframe9a7c2-theme-menu-foreground);

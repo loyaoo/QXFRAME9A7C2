@@ -1850,7 +1850,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
-   '--_qxframe9a7c2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
    '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem)'), 'Cascader popup follows rendered column count');
@@ -1865,7 +1865,7 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
    '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',
-   '--_qxframe9a7c2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
    '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
@@ -1939,6 +1939,7 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
   const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
   assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Single canonical WheelPanel guide paints Menu accent in both bold and subtle modes');
+  assert.ok(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8').includes('--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)'),'Menu passive separators share the actual Control field border');
   assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No second context-specific guide painter');
 });
 check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
