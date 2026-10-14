@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 legacy keyboard-focus browser ratchet repair (CI pending)
+- The former 297740de QXFRAME #38650400583 reached legacy Phase C real Chromium smoke. Only failing check: `regression-period-panel-keyboard-focus` measured 0 on obsolete `.period-panel-cell.is-keyboard-focus`. Source Calendar now intentionally renders `.calendar-grid > .calendar-cell.date-panel-cell` for every unit; the activeKey correctly moved from 2026-08 to 2026-09. Do not revive standalone Period DOM or CSS.
+- Updated actual legacy browser test to find the one canonical Calendar active cell, and REQUIRE visible computed 2px solid keyboard outline, not merely count a class. Existing key ArrowRight and month/unit assertions kept. No changes to Calendar runtime or frozen Controllers/Tree.
+- QXFRAME #38650400583 failed only at old CSS selector; CSS Schema #38650400578 Success at the same HEAD. Next: both workflows on this new HEAD; exact-HEAD official Windows dist/docs artifact + clean QA labels after double green.
+- PR #267 must remain Draft/Open; main unchanged. Stage/overall progress not credibly quantified.
+
 ## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 cross-frame Chromium test correction (CI pending)
 - Latest state before change: development HEAD 66e09bc0189afffd0759c7d098e10b3fe27c5afb, PR #267 Draft/Open, main unchanged; QXFRAME #38592636159 and CSS Schema #38592636269 both failed at browser Calendar five-unit check `date one delegated select` rather than core Theme Schema.
 - Cause identified in new fixture: Calendar runtime `Date` objects are created in Preview iframe realm. Using outer-page `selected instanceof Date` misclassifies valid Date objects. The check now independently asserts exactly one `onSelect` call and a finite `selected.getTime()`, without weakening the event/selection contract. Do not change Calendar runtime while confirming this.
