@@ -227,7 +227,7 @@ export function extractDefaultThemeBlocks(css) {
   const { rules } = parseCss(css);
   return rules
     .filter(r => isThemeBlock(r) && r.declarations.some(d => d.prop.startsWith(THEME_PREFIX)))
-    .map(r => `${r.selector} {\n${r.declarations.map(d => `  ${d.prop}: ${d.value};`).join('\n')}\n}\n`)
+    .map(r => `${r.selector} {\n${r.declarations.filter(d => d.prop === 'color-scheme' || d.prop.startsWith(THEME_PREFIX)).map(d => `  ${d.prop}: ${d.value};`).join('\n')}\n}\n`)
     .join('');
 }
 
