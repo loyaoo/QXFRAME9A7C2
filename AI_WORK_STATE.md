@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-14 fix CI CSS constraint (pending)
+- Same-HEAD QXFRAME 38561916341 failed verify:css-constraints: new `.item-collection-group` font-size `.875em` increases non-rem-length by one. Changed only that to 0.875rem; otherwise unchanged. Keep original non-rem baseline; no weakening gate. Follow up exact final HEAD CI and browser evidence.
+
 ## CURRENT — 2026-10-14 Stage5 Dropdown/Cascader Choice + group heading (CI pending)
 - Root cause for black unchecked boxes: old Popup.is-open CSS colored every checkbox in an expanded row, including an unchecked item, making it look selected. Now inverse contrast applies only when checkbox truly checked/indeterminate; unselected receives the common Choice empty border and surface. Tree/TreeSelect are untouched.
 - ItemCollection group heading now compact neutral transparent text, no Option-sized fill/height/cursor, preserving navigation semantics.
