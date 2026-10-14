@@ -431,7 +431,7 @@ check('small Button typography consumes one source-mapped Theme token', () => {
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   assert.match(tokens,/L\('button-sm-font-size'/,'closed theme schema');
   const defaultTheme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
-  assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,2,'default Nova light/dark token symmetry');
+  assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,1,'default Nova geometry has one invariant Theme owner');
   assert.match(compiler,/root\['button-sm-font-size'\]/,'compiler emits independent style recipe');
   assert.match(v2,/\.qxframe9a7c2-button\.is-sm\{\s*font-size:var\(--qxframe9a7c2-theme-button-sm-font-size/,'V2 actual shared geometry owner consumes source Button type');
   assert.match(v2,/\.qxframe9a7c2-button\.is-sm\.is-square,[\s\S]*?font-size:var\(--qxframe9a7c2-theme-control-font-size/,'icon-sm retains source 14px Nova body/control type');
