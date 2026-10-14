@@ -6,7 +6,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const css=readCanonicalComponentStyleSource({root});
 
 assert.match(css,/\.qxframe9a7c2-period-panel-grid\{display:flex;flex-wrap:wrap;/);
-assert.match(css,/\.qxframe9a7c2-period-panel-cell\{[^}]*flex:0 0 calc\(25% - \(var\(--_qxframe9a7c2-fixed-space-2\) \* \.75\)\)/);
+assert.match(css,/\.qxframe9a7c2-period-panel-cell\{[^}]*flex:0 0 25%/,'PeriodPanel cells exactly fill columns, no horizontal range gaps');
+assert.match(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*column-gap:0/,'PeriodPanel range highlights must join within each row');
 assert.doesNotMatch(css,/\.qxframe9a7c2-period-panel-grid\{[^}]*(?:display:grid|grid-template-columns)/);
 
 assert.match(css,/\.qxframe9a7c2-color-panel-fields\{display:flex;align-items:stretch;/);

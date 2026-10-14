@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 PeriodPanel CSS Flex structural gate aligned to zero-gap Ant selection (CI pending)
+- QXFRAME #38564865028 reached legacy verify:css-grid-layout-trio. Its original regex required 25%-less-gap period cells and now contradicted screenshot-mandated 25% full-width gap-zero range. Replaced assertion with more stringent 25% exact and `column-gap:0` plus original no-CSS-grid guard. No broad baseline change.
+- Need same-HEAD dual green and real browser tests; remaining screenshot focus areas documented.
+
 ## CURRENT — 2026-10-14 DateTime Calendar/TimePanel aligned density and height (CI pending)
 - Source DatePicker only (not TimePanel/WheelPanel globally): if consumer time options lack visibleItemCount, use 9 visible rows (WheelMetrics itemHeight remains the established Theme size projection; explicit visibleItemCount untouched). Composite `.has-time` Calendar uses existing Theme control-height size axis for six-week day cells and nine-row min-height; right TimePanel wheel no longer visually ends early under a taller Calendar, without CSS-overriding JS inline scroll height or breaking snap padding.
 - DatePicker JS is an intentional explicitly authorized delta to main in existing verify-js-build-matches-main allowlist; Tree/Controller untouched. Need real Chrome popup computed height validation, both DateTime and non-time regression. PR #267 Draft; final dual CI pending.
