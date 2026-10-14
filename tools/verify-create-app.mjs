@@ -1833,6 +1833,21 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
 });
+check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
+ const cal=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const alias=fs.readFileSync(path.join(root,'src/components/period-panel.js'),'utf8');
+ const date=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const css=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.match(alias,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'PeriodPanel cannot implement a second component');
+ assert.ok(cal.includes("['date','week','month','quarter','year']"),'one Calendar supports date/week/month/quarter/year');
+ assert.ok(cal.includes("classList.toggle('is-period',isPeriod)"),'period units are one CSS variant on shared root');
+ assert.ok(cal.includes("cellInner = button.firstElementChild.firstElementChild"),'same view/inner DOM for every unit');
+ assert.ok(cal.includes("columns:isPeriod?4:7"),'one keyboard handler switches grid columns, not controllers');
+ assert.equal((date.match(/Calendar\.create\(/g)||[]).length,5,'DatePicker only creates Calendar for date, year/month drill and period');
+ assert.doesNotMatch(date,/PeriodPanel\.create\(/,'no second period runtime');
+ assert.match(css,/\.qxframe9a7c2-calendar\.is-period \.qxframe9a7c2-calendar-cell-inner\{/,'unified inner painter for period data');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-period-panel-grid\{/,'no second period grid DOM paint');
+});
 check('CALENDAR-RANGE-VISUAL-001 shared Calendar owns two styling layers and CSS-only range',()=>{
  const source=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

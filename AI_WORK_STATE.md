@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Calendar single owner source+real Chrome gate
+- Added one real Chromium test on preview runtime, checking Calendar and PeriodPanel object identity (no second component), five data units, 42/12/4/12 item counts, Calendar view/inner DOM, one selected click, one keyboard path and month/year/decade paging. Existing Calendar day 8-case range visual test remains.
+- Added static gates asserting no PeriodPanel implementation or CSS grid and DatePicker solely Calendar.create. Pending actual same HEAD CI and any browser regression diagnosis. PR #267 Draft; no merge.
+
 ## CURRENT — 2026-10-14 Calendar unit migration CI checkpoints
 - QXFRAME #38590468831 failed the old FocusController gate demanding separate focus implementation inside period-panel.js; this is now a single export alias. Updated Focus, Phase C, ScrollVisibility and audit gates to insist PeriodPanel is one Calendar identity with shared controller/cell hover owner.
 - Calendar period virtual focus now invokes canonical ScrollVisibility.ensureVisible. CSS Flex gate and CreateApp period acceptance moved to .calendar.is-period. Next real Chrome period API tests and same HEAD dual CI.
