@@ -232,7 +232,6 @@
   .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
-  .qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg); --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text); }
   .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
   .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-type); }
@@ -378,20 +377,12 @@
     --_qxframe9a7c2-popup-text: var(--_qxframe9a7c2-v2-popup-text);
     --_qxframe9a7c2-popup-border: var(--_qxframe9a7c2-v2-popup-border);
     --_qxframe9a7c2-popup-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
-    --_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-popup-surface-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-popup-surface-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popup-surface-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
-    --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popover-border: var(--_qxframe9a7c2-v2-popup-border);
     --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-v2-popup-bg);
     --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-v2-popup-border);
     --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
     --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-v2-popup-bg);
     --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-v2-popup-border);
     --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
-    color: var(--_qxframe9a7c2-v2-popup-text);
   }
   /* Popup ItemCollection and ItemSurface otherwise force the page foreground
      onto floating Select options, breaking inverted menu readability.
@@ -625,7 +616,10 @@
   }
   /* Shared ColorPanel control source handles idle, hover and keyboard focus. */
 
-  .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
+  /* Only navigation-specific panels own direct Menu paint. Generic Popup
+   * surfaces and Popover/Tooltip/Pickers consume their family-owned surface
+   * tokens through component foundation, preserving alpha and local scheme. */
+  .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
     background-color: var(--_qxframe9a7c2-v2-popup-bg);
     border-color: var(--_qxframe9a7c2-v2-popup-border);
     box-shadow: var(--_qxframe9a7c2-v2-popup-shadow);

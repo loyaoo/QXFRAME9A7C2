@@ -1279,6 +1279,14 @@ check('Private v2 names without collision are unversioned while colliding names 
  }
 });
 
+check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.doesNotMatch(visual,/\\.qxframe9a7c2-popup-surface, \\.qxframe9a7c2-menu-submenu-panel, \\.qxframe9a7c2-menu-overflow-panel, \\.qxframe9a7c2-popover-container\\s*\\{/);
+ assert.doesNotMatch(visual,/\\.qxframe9a7c2-popover-root\\s*\\{\\s*--_qxframe9a7c2-popover-bg:/);
+ assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg)'));
+ assert.match(visual,/\\.qxframe9a7c2-menu-submenu-panel, \\.qxframe9a7c2-menu-overflow-panel\\s*\\{/);
+});
+
 check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
   for (const style of data.STYLES.map(s=>s.value)) for(const mode of ['default','default-translucent','inverted','inverted-translucent']){
     const body=model.compileTheme(model.normalizeConfig({style,menuColor:mode})).body;
@@ -1296,9 +1304,10 @@ check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme 
     if(inverse){
       const schemes=body.split('::picker(select)');
       assert.equal(schemes.length,3,'paired native picker color-scheme selectors');
-      const pickerRules=body.match(/(?:\\.dark|:root:not\\(\\.dark\\)) select:not\\(\\[multiple\\]\\):not\\(\\[size\\]\\)[^{]+\\{[^}]+\\}/g)||[];
-      assert.equal(pickerRules.length,2,'exact native picker scope roots');
-      assert.ok(pickerRules.every(rule=>/\\{\\s*color-scheme: (?:light|dark);\\s*\\}/.test(rule)),'native picker inversion never adds CSS colors');
+      const darkPicker=body.split('.dark select:not([multiple]):not([size])::picker(select)')[1]?.split('}')[0];
+      const lightPicker=body.split(':root:not(.dark) select:not([multiple]):not([size]):not(.dark *)::picker(select)')[1]?.split('}')[0];
+      assert.equal(darkPicker,' {\n  color-scheme: light;\n','native top layer scheme only on dark page');
+      assert.equal(lightPicker,' {\n  color-scheme: dark;\n','native top layer scheme only on light page');
     }
     assert.doesNotMatch(body,/data-qxframe9a7c2-scheme|data-qxframe9a7c2-theme/);
     assert.deepEqual(checkThemeFile(body).errors,[],style+'/'+mode+' exact owner/schema');
