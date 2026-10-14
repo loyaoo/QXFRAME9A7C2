@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 (implementation checkpoint; CI not yet verified)
+- GitHub PR #267 Draft/Open at start: HEAD 8431c83c4c2bd2be4c4e355858d3d7a15c4d7a89; main 718da2a6be0bc71520adb0451429cd3d3d8320b3; old QXFRAME CI 38499590420 and CSS Schema 38499590409 both Success (not evidence for this change).
+- Bounded inventory scanned all 61 CSS source modules and Create app/preview CSS: global duplicated Theme COLOR declarations reside in generated main/theme.css; other .dark sites cluster in fixed-values.css, theme-visual-v2-style.css, native Select embedded SVG and Create shell; most components have no per-mode branches. Frozen Tree/TreeSelect JS/CSS untouched.
+- This batch changes compiler/export/default Theme to one :root owner per each of 78 COLOR light-dark() roles and invariant token, .dark switches color-scheme with only the registered keyword exception; existing inverse Popup roots flip local color-scheme without a duplicate palette, DOM or Controller changes. Fixed-values and shared consumer no longer override that Popup scheme. Strict closed schema and Create assertions upgraded; import validates compiler body as well as header.
+- Not completed: full non-Theme legacy CSS mode conversion (especially fixed-values and native Select SVG image), complete browser Style x Theme x Popup matrix, same-HEAD dual CI, offline artifact ZIP/CRC/HTTP. Do not claim Stage/global percent without audited denominator. Do not merge #267.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-CORE-001 (migration in progress)
 - Starting verified HEAD b69c90316d56711551aa5ebf0a5a7f28f425c04c: QXFRAME CI 38488288711 / CSS Schema 38488288658 both Success; PR #267 Draft/Open, main unchanged.
 - Owner selects B: zero DOM change inverted Menu using existing Popup CSS selectors, opposite full Theme blocks and common --qxframe9a7c2-theme-color-scheme. No new inverse attribute, .dark class on Popup, extra palette, or JS surgery.

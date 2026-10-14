@@ -15,16 +15,16 @@ const registryModule = await import(pathToFileURL(REGISTRY_FILE).href);
 export const THEME_FILE_WARN_BYTES = 16 * 1024;
 
 export const THEME_PREFIX = '--qxframe9a7c2-theme-';
-// A generated inverted Menu adds its existing Popup roots to the opposite
-// Theme declaration. Only these fixed groups are valid Theme token owners.
+// Only these exact pre-existing Menu/Picker Portal roots may receive a
+// generated local scheme switch. No Popup may redeclare Theme tokens.
 const MENU_POPUP_ROOTS = [
   '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
   '.qxframe9a7c2-menu-submenu-panel',
   '.qxframe9a7c2-menu-overflow-panel'
 ];
-const THEME_GROUPS = [
-  [':root', ...MENU_POPUP_ROOTS.map(selector => '.dark ' + selector)],
-  ['.dark', ...MENU_POPUP_ROOTS.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)')]
+const POPUP_SCHEME_GROUPS = [
+  MENU_POPUP_ROOTS.map(s => '.dark ' + s),
+  MENU_POPUP_ROOTS.map(s => ':root:not(.dark) ' + s + ':not(.dark *)')
 ];
 
 const VIEWPORT_UNIT = /(?:^|[^a-z0-9_.#-])-?(?:\d*\.)?\d+(?:vw|vh|vmin|vmax|vi|vb|dvh|dvw|svh|svw|lvh|lvw|dvi|dvb|svi|svb|lvi|lvb)\b/i;
@@ -44,7 +44,7 @@ export function readDistCss() {
 
 export function readRegistry() {
   return {
-    tokens: registryModule.THEME_TOKENS.map(t => ({ name: registryModule.TOKEN_PREFIX + t.name, mode: t.mode })),
+    tokens: registryModule.THEME_TOKENS.map(t => ({ name: registryModule.TOKEN_PREFIX + t.name, mode: t.mode, kind: t.kind })),
   };
 }
 
@@ -56,10 +56,8 @@ function isRootSelector(sel, context) {
 // A theme block is a top-level :root / .dark rule that declares theme tokens. Other :root /
 // .dark rules are ordinary framework rules (e.g. legacy dark palettes still to be removed).
 export function isThemeBlock(rule) {
-  const oldStyle = rule.selectors.length === 1 && (rule.selectors[0] === ':root' || rule.selectors[0] === '.dark');
-  const grouped = THEME_GROUPS.some(group => rule.selectors.length === group.length
-    && rule.selectors.every((selector,index) => selector === group[index]));
-  return rule.context.length === 0 && (oldStyle || grouped)
+  return rule.context.length === 0 && rule.selectors.length === 1
+    && (rule.selectors[0] === ':root' || rule.selectors[0] === '.dark')
     && rule.declarations.some(d => d.prop.startsWith(THEME_PREFIX));
 }
 
@@ -169,22 +167,55 @@ export function collectSection5(css, { registry = readRegistry() } = {}) {
 export function checkThemeFile(css, { registry = readRegistry() } = {}) {
   const { rules, atRules } = parseCss(css);
   const errors = [];
-  const registered = registry ? new Set(registry.tokens.map(t => t.name)) : null;
+  const registered = registry ? new Map(registry.tokens.map(t => [t.name, t])) : null;
   for (const at of atRules) errors.push(`at-rule not allowed in a theme file: ${at.prelude}`);
+  const declared = new Map();
+  const seenRules = new Set();
+  const groupType = r => {
+    if (r.selectors.length === 1 && r.selectors[0] === ':root') return 'root';
+    if (r.selectors.length === 1 && r.selectors[0] === '.dark') return 'dark';
+    if (POPUP_SCHEME_GROUPS.some(g => g.length === r.selectors.length && g.every((s,i) => s === r.selectors[i]))) return r.selectors[0].startsWith('.dark ') ? 'inverse-dark' : 'inverse-light';
+    return null;
+  };
   for (const r of rules) {
-    if (!isThemeBlock(r)) { errors.push(`selector not allowed in a theme file: ${r.selector}`); continue; }
+    const role = r.context.length ? null : groupType(r);
+    if (!role) { errors.push(`selector not allowed in a theme file: ${r.selector}`); continue; }
+    if (seenRules.has(role)) errors.push(`duplicate Theme owner block: ${role}`);
+    seenRules.add(role);
     for (const d of r.declarations) {
-      if (!d.prop.startsWith(THEME_PREFIX)) errors.push(`${r.selector}: only ${THEME_PREFIX}* is allowed, found ${d.prop}`);
-      else if (registered && !registered.has(d.prop)) errors.push(`${r.selector}: unregistered theme token ${d.prop}`);
+      if (d.prop === 'color-scheme') {
+        const expected = role === 'dark' || role === 'inverse-light' ? 'dark' : 'light';
+        if (d.value !== expected) errors.push(`${role}: color-scheme must be ${expected}, got ${d.value}`);
+        continue;
+      }
+      if (!d.prop.startsWith(THEME_PREFIX)) { errors.push(`${role}: illegal declaration ${d.prop}`); continue; }
+      if (role !== 'root' && !(role === 'dark' && d.prop === THEME_PREFIX + 'color-scheme')) {
+        errors.push(`${role}: Theme token redeclaration forbidden: ${d.prop}`);
+      }
+      if (registered && !registered.has(d.prop)) errors.push(`${role}: unregistered theme token ${d.prop}`);
+      const key = role + '§' + d.prop;
+      declared.set(key, (declared.get(key) || 0) + 1);
+      const reg = registered?.get(d.prop);
+      if (role === 'root' && reg?.kind === 'color' && (!d.value.startsWith('light-dark(') || !d.value.endsWith(')'))) {
+        errors.push(`${d.prop}: COLOR must use light-dark(light,dark)`);
+      }
+      if (reg?.kind !== 'color' && d.value.includes('light-dark(')) errors.push(`${d.prop}: non-COLOR cannot use light-dark()`);
+      if (d.prop === THEME_PREFIX + 'color-scheme' && d.value !== (role === 'dark' ? 'dark' : 'light')) {
+        errors.push(`${role}: scheme keyword mismatch`);
+      }
     }
+    if (!r.declarations.some(d => d.prop === 'color-scheme')) errors.push(`${role}: missing color-scheme`);
+    if ((role === 'inverse-dark' || role === 'inverse-light') && r.declarations.length !== 1) errors.push(`${role}: Popup must switch scheme only`);
   }
-  // v3 §5.2: both :root and .dark must declare the entire registered token inventory.
+  if (!seenRules.has('root') || !seenRules.has('dark')) errors.push('both :root and .dark scheme boundaries required');
+  if (seenRules.has('inverse-dark') !== seenRules.has('inverse-light')) errors.push('inverse Menu scheme roots must be paired');
   if (registry) {
-    const declared = sel => new Set(rules.filter(r => r.selectors.includes(sel)).flatMap(r => r.declarations.map(d => d.prop)));
-    const rootSet = declared(':root'), darkSet = declared('.dark');
-    for (const t of registry.tokens) {
-      if (!rootSet.has(t.name)) errors.push(`:root is missing ${t.name}`);
-      if (!darkSet.has(t.name)) errors.push(`.dark is missing ${t.name}`);
+    for (const token of registry.tokens) {
+      const rootCount = declared.get('root§' + token.name) || 0;
+      const darkCount = declared.get('dark§' + token.name) || 0;
+      if (rootCount !== 1) errors.push(`:root must declare ${token.name} exactly once (found ${rootCount})`);
+      const exception = token.name === THEME_PREFIX + 'color-scheme';
+      if (darkCount !== (exception ? 1 : 0)) errors.push(`.dark must declare ${token.name} ${exception ? 'once' : 'zero times'} (found ${darkCount})`);
     }
   }
   const bytes = Buffer.byteLength(css);

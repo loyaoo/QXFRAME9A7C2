@@ -141,7 +141,7 @@ export function compileTheme(config, { version = 'unknown', generatedAt = new Da
     ' * 生成工具: QXFRAME9A7C2 Create (docs/create)',
     ' * 配置:',
     ...configSummary(config).map(line => ' *   ' + line),
-    ' * 内容: --qxframe9a7c2-theme-* 封闭清单全量输出（:root 和 .dark 各自包含完整 token 清单）。',
+    ' * 内容: :root 单次声明封闭 Theme Token；.dark 与反色 Popup 仅切换 color-scheme（关键词例外除外）。',
     ' */'
   ].join('\n');
   return { css: `${header}\n${body}`, body, header };
@@ -197,7 +197,12 @@ export function parseThemeHeader(text) {
     errors.push('半透明菜单只支持柔和强调；导入配置项互相冲突。');
   }
   if (errors.length) return { ok: false, errors };
-  return { ok: true, config: normalizeConfig(raw) };
+  const config = normalizeConfig(raw);
+  // Import is a strict round-trip, not merely a trusted header: reject any
+  // altered, stale or partially exported CSS declaration body.
+  const expected = themeBody({ ...resolveConfig(config), explicit: config.ext }).trim();
+  if (source.slice(end + 2).trim() !== expected) return { ok: false, errors: ['主题 CSS 正文与配置不一致；请导入完整、未修改的当前版本 theme.css。'] };
+  return { ok: true, config };
 }
 
 /* ------------------------------------------------------------------ */

@@ -132,7 +132,7 @@ check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=
  const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
  assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(oklch\(0\.145 0 0\), oklch\(0\.985 0 0\)\)/,'default Menu ink uses both light/dark variants');
- assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(/g)||[]).length,2,'closed light/dark interface shares paired color expression');
+ assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(/g)||[]).length,1,'one COLOR owner for both modes');
  for(const component of ['notice-slot','message-root','notification-root'])
    assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
  for(const part of ['message-root','notification-root','notice-slot'])
@@ -486,28 +486,28 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 
-check('Theme color registry uses light-dark() at every style/mode boundary',()=>{
+check('All 78 COLOR Theme tokens have a single light-dark owner, with scheme-only dark boundary',()=>{
   const registry=read('tokens.js');
   const colors=[...registry.matchAll(/\bC\('([a-z0-9-]+)'/g)].map(m=>m[1]);
-  assert.equal(colors.length,78,'the entire closed Theme color registry is accounted for');
-  for(const style of ['nova','rhea','sera']){
+  assert.equal(colors.length,78,'closed COLOR inventory must not change');
+  for(const style of data.STYLES.map(s=>s.value)){
     const body=model.compileTheme(model.normalizeConfig({style})).body;
-    const lightStart=body.indexOf(':root {'),darkStart=body.indexOf('\n.dark {');
-    assert.ok(lightStart>=0&&darkStart>lightStart,style+' preserved two compatibility selector blocks');
-    const section=body.slice(lightStart,darkStart),reverse=body.slice(darkStart);
-    for(const t of colors){
-      const expr='--qxframe9a7c2-theme-'+t+': light-dark(';
-      assert.ok(section.includes(expr),style+'/'+t+' light scope must resolve light-dark');
-      assert.ok(reverse.includes(expr),style+'/'+t+' dark scope must resolve light-dark');
-      const line=section.split('\n').find(x=>x.includes(expr));
-      assert.ok(reverse.includes(line.trim()),style+'/'+t+' same CSS expression regardless of enclosing scheme');
+    const darkStart=body.indexOf('\n.dark {');
+    assert.ok(body.startsWith(':root {\n  color-scheme: light;\n')&&darkStart>0,style+' scheme boundaries');
+    const root=body.slice(0,darkStart),dark=body.slice(darkStart);
+    for(const name of colors){
+      const exp='--qxframe9a7c2-theme-'+name+': light-dark(';
+      assert.equal(body.split(exp).length-1,1,style+'/'+name+' single COLOR owner');
+      assert.ok(root.includes(exp),style+'/'+name+' root owns COLOR');
+      assert.ok(!dark.includes(exp),style+'/'+name+' .dark must never repeat COLOR');
     }
-    assert.ok(section.includes('--qxframe9a7c2-theme-color-scheme: light;'),'light scheme keyword is not a color');
-    assert.ok(reverse.includes('--qxframe9a7c2-theme-color-scheme: dark;'),'dark scheme keyword is not a color');
+    assert.match(root,/--qxframe9a7c2-theme-color-scheme: light;/);
+    assert.match(dark,/\.dark \{\n  color-scheme: dark;\n  --qxframe9a7c2-theme-color-scheme: dark;\n\}/);
+    const darkTokens=[...dark.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m=>m[0]);
+    assert.deepEqual(darkTokens,['--qxframe9a7c2-theme-color-scheme'],style+' only keyword exception in dark');
   }
   const values=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
-  assert.doesNotMatch(values,/color-scheme:\s*(?:light|dark);/,'fixed-values no longer hardcodes scheme keywords');
-  assert.ok((values.match(/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/g)||[]).length>=4);
+  assert.doesNotMatch(values,/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/,'fixed aliases cannot override local Popup color-scheme');
 });
 
 
@@ -1256,20 +1256,25 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
-check('Generated inverted Menu is CSS-only with real popup root aliases and no DOM markers',()=>{
-  const def=model.compileTheme(model.normalizeConfig({style:'nova',menuColor:'default'})).body;
-  const inverse=model.compileTheme(model.normalizeConfig({style:'nova',menuColor:'inverted'})).body;
-  assert.ok(def.startsWith(':root {\n'),'Default Theme retains canonical two blocks');
-  assert.ok(def.includes('\n.dark {'),'Default dark block unchanged');
-  assert.doesNotMatch(def,/data-qxframe9a7c2-scheme|qxframe9a7c2-popup-surface/,'No automatic inverse scope on normal menu');
-  assert.ok(inverse.startsWith(':root,\n.dark .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)'),'Inversion extends existing light token block');
-  assert.ok(inverse.includes(':root:not(.dark) .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.dark *)'),'Inversion extends existing dark token block');
-  for(const name of ['menu-submenu-panel','menu-overflow-panel'])assert.ok(inverse.includes('qxframe9a7c2-'+name),'Existing floating Menu '+name+' matches inversion');
-  assert.equal((inverse.match(/--qxframe9a7c2-theme-background:/g)||[]).length,2,'No third Theme declaration');
-  assert.doesNotMatch(inverse,/data-qxframe9a7c2-scheme|data-qxframe9a7c2-theme/,'No DOM mutation marker');
-  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
-  assert.ok(css.includes('color-scheme: var(--qxframe9a7c2-theme-color-scheme);'),'Native theme scheme tracks the generated color token');
+check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
+  const { checkThemeFile } = await import('../tools/css-gates.mjs');
+  for (const style of data.STYLES.map(s=>s.value)) for(const mode of ['default','default-translucent','inverted','inverted-translucent']){
+    const body=model.compileTheme(model.normalizeConfig({style,menuColor:mode})).body;
+    const inverse=mode.startsWith('inverted');
+    assert.ok(body.startsWith(':root {\n  color-scheme: light;'),'single root Theme');
+    assert.ok(body.includes('.dark {\n  color-scheme: dark;'),'dark only toggles scheme');
+    assert.equal((body.match(/--qxframe9a7c2-theme-background:/g)||[]).length,1,'exactly one COLOR owner');
+    for(const name of ['popup-surface:not(.qxframe9a7c2-popover-container)','menu-submenu-panel','menu-overflow-panel'])
+      assert.equal(body.includes('qxframe9a7c2-'+name),inverse,'inverse selectors match only selected Menu mode');
+    if(inverse){
+      assert.ok(body.includes('color-scheme: light;\n}\n:root:not(.dark)'),'dark page Popup selects light');
+      assert.ok(body.includes('color-scheme: dark;\n}'),'light page Popup selects dark');
+    }
+    assert.doesNotMatch(body,/data-qxframe9a7c2-scheme|data-qxframe9a7c2-theme/);
+    assert.deepEqual(checkThemeFile(body).errors,[],style+'/'+mode+' exact owner/schema');
+  }
 });
+
 check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode inventory', () => {
   const token = (css, key) => css.match(new RegExp('--qxframe9a7c2-theme-' + key + ':\\s*([^;]+);'))?.[1];
   for (const style of data.STYLES.map(s => s.value)) {
@@ -1280,9 +1285,9 @@ check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode invento
     }
     const body = model.compileTheme(model.normalizeConfig({style})).body;
     const blocks = body.match(/^:root \{([\s\S]*?)\}\n\.dark \{([\s\S]*?)\}\n$/);
-    assert.ok(blocks, style + ' light/dark blocks');
+    assert.ok(blocks, style + ' root registry + dark scheme boundary');
     const names = s => [...s.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m => m[0]);
-    assert.deepEqual(names(blocks[2]), names(blocks[1]), style + ' .dark must contain full ordered token registry');
+    assert.deepEqual(names(blocks[2]), ['--qxframe9a7c2-theme-color-scheme'], style + ' .dark only overrides non-COLOR scheme keyword');
     for (const alloc of ['standard','balanced','rounded','compact','soft','smooth']) {
       const shape = model.compileTheme(model.normalizeConfig({ style, radius:'xl', ext:{radiusAlloc:alloc}})).body;
       assert.ok(parseFloat(token(shape,'radius-card')) * 16 <= 24.0001, style+'/'+alloc+' Card cap');
@@ -1837,7 +1842,7 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.205 0 0 / 0.28), oklch(0.922 0 0 / 0.28))'),'generated Menu accent derives both modes');
-  assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,2,'Menu accent no longer stores independent per-mode literals');
+  assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,1,'Menu accent is declared once for both modes');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
   assert.ok(theme.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');

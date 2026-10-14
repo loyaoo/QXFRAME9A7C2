@@ -587,7 +587,6 @@
  * Legacy public color aliases are output-only adapters; canonical CSS never consumes them.
  */
 :root {
-  color-scheme: var(--qxframe9a7c2-theme-color-scheme);
 
   
   
@@ -645,7 +644,6 @@
 }
 
 .dark {
-  color-scheme: var(--qxframe9a7c2-theme-color-scheme);
 
   
   
@@ -928,7 +926,6 @@
    * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
    * global mode switch never leaks one mode's public semantic values into a nested boundary. */
   :root {
-    color-scheme: var(--qxframe9a7c2-theme-color-scheme);
     
     
     
@@ -1026,7 +1023,6 @@
   }
 
   .dark {
-    color-scheme: var(--qxframe9a7c2-theme-color-scheme);
     
     
     

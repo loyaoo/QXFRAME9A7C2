@@ -1,6 +1,6 @@
-// createApp theme compiler (v3 §5). Turns a resolved configuration into the complete
-// closed token list (tokens.js): both :root and .dark remain complete;
-// CSS light-dark() pairs each COLOR token and local color-scheme selects its mode.
+// createApp theme compiler (v3 §5). A single :root registry declaration owns
+// all COLOR light-dark() pairs and mode-invariant slots. Only the scheme keyword
+// and actual color-scheme property switch at .dark / existing inverse Popup roots.
 // Only fixed values are produced here; qxframe.css owns every formula (size curve,
 // color-mix states, concentric radii). Values with a shadcn source follow the measured
 // table (tools/qa/spec.json, shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c); values
@@ -617,30 +617,22 @@ export function themeTokens(resolved) {
   root['spinner-icon-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-spinner-icon-spin';
   root['loading-spin-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-loading-spin';
 
-  // Both blocks retain the closed export inventory; colors are paired by CSS
-  // light-dark(), rather than separately fixing a value per Theme mode.
+  // One owner for each COLOR (light-dark) or invariant token. The keyword
+  // color-scheme exception is the only registered value with a .dark override.
   const rootBlock = {}, darkBlock = {};
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
-      if (light[token.name] === undefined || dark[token.name] === undefined) throw new Error('Missing color token: ' + token.name);
-      if (token.kind === 'color') {
-        // light-dark() is resolved at the consuming element's color-scheme:
-        // full page, nested .dark, and the existing CSS-only inverse Popup.
-        // Keep both closed blocks during the compatibility migration. Their
-        // COLOR expressions are identical; only the keyword scheme differs.
-        const value = `light-dark(${light[token.name]}, ${dark[token.name]})`;
-        rootBlock[token.name] = value;
-        darkBlock[token.name] = value;
-      } else {
-        // color-scheme is a keyword, not a color: light-dark(light,dark)
-        // is invalid CSS. The existing scope aliases switch this keyword.
+      if (light[token.name] === undefined || dark[token.name] === undefined) throw new Error('Missing mode token: ' + token.name);
+      if (token.kind === 'color') rootBlock[token.name] = `light-dark(${light[token.name]}, ${dark[token.name]})`;
+      else {
+        // Keywords cannot be operands of light-dark(). This token remains
+        // an explicit, narrowly registered mode exception.
         rootBlock[token.name] = light[token.name];
         darkBlock[token.name] = dark[token.name];
       }
     } else {
       if (root[token.name] === undefined) throw new Error('Missing token: ' + token.name);
       rootBlock[token.name] = root[token.name];
-      darkBlock[token.name] = root[token.name];
     }
   }
   return { root: rootBlock, dark: darkBlock };
@@ -649,13 +641,20 @@ export function themeTokens(resolved) {
 export function themeBody(resolved) {
   const { root, dark } = themeTokens(resolved);
   const lines = block => Object.entries(block).map(([name, value]) => `  ${TOKEN_PREFIX}${name}: ${value};`).join('\n');
+  const rootCss = `:root {\n  color-scheme: light;\n${lines(root)}\n}\n`;
+  const darkCss = `.dark {\n  color-scheme: dark;\n${lines(dark)}\n}\n`;
+  if (!isInvertedMenu(resolved.menuColor)) return rootCss + darkCss;
+
+  // CSS-only inverse: exact existing Portal roots; no DOM attributes, new
+  // palettes, Theme token redeclarations or Controller/Portal manipulation.
   const popupRoots = [
     '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)',
     '.qxframe9a7c2-menu-submenu-panel',
     '.qxframe9a7c2-menu-overflow-panel'
   ];
-  const inverted = isInvertedMenu(resolved.menuColor);
-  const lightScope = [':root', ...(inverted ? popupRoots.map(selector => '.dark ' + selector) : [])].join(',\n');
-  const darkScope = ['.dark', ...(inverted ? popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)') : [])].join(',\n');
-  return `${lightScope} {\n${lines(root)}\n}\n${darkScope} {\n${lines(dark)}\n}\n`;
+  const inDark = popupRoots.map(selector => '.dark ' + selector).join(',\n');
+  const inLight = popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)').join(',\n');
+  return rootCss + darkCss
+    + `${inDark} {\n  color-scheme: light;\n}\n`
+    + `${inLight} {\n  color-scheme: dark;\n}\n`;
 }
