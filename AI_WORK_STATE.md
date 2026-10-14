@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 frozen Phase C fixture compliance (CI pending)
+- Prior QXFRAME #38651927510 stopped at the exact-frozen HOTFIX6 compatibility-fixture diff; the 0add6330 focus assertion was incorrectly edited directly in `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`. Restore those fixture bytes exactly from parent 297740de.
+- Browser validation now uses the existing `adaptLegacySmokeSource` projection in `tools/verify-browser-smoke.mjs`, replacing only the historical `.period-panel-cell` selector/check for this intentionally consolidated single Calendar. It retains ArrowRight keyboard test and requires one `Calendar.is-period` cell with computed solid outline >=2px.
+- No change to runtime or frozen Tree/Controller. CI must prove real keyboard visual focus and all regression gates on the same HEAD; #267 Draft/Open, main untouched. No credible Stage/global %.
+
 ## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 legacy keyboard-focus browser ratchet repair (CI pending)
 - The former 297740de QXFRAME #38650400583 reached legacy Phase C real Chromium smoke. Only failing check: `regression-period-panel-keyboard-focus` measured 0 on obsolete `.period-panel-cell.is-keyboard-focus`. Source Calendar now intentionally renders `.calendar-grid > .calendar-cell.date-panel-cell` for every unit; the activeKey correctly moved from 2026-08 to 2026-09. Do not revive standalone Period DOM or CSS.
 - Updated actual legacy browser test to find the one canonical Calendar active cell, and REQUIRE visible computed 2px solid keyboard outline, not merely count a class. Existing key ArrowRight and month/unit assertions kept. No changes to Calendar runtime or frozen Controllers/Tree.

@@ -66,6 +66,13 @@ function adaptLegacySmokeSource(source) {
         .replace(
             "var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,duration:{enter:90,leave:90},reducedMotion:false});",
             "motionBox.style.setProperty('--qxframe9a7c2-motion-duration-3','90ms');var transition=Transition.create({element:motionBox,transition:'fade',visible:false,appear:false,reducedMotion:false});"
+        )
+        // PeriodPanel now exports the same Calendar; adapt this *frozen fixture*
+        // to the current single Calendar DOM and keep its real 2px focus contract.
+        // Never change the HOTFIX6 file itself or resurrect the old Period painter.
+        .replace(
+            "var periodRoot=period.getRootElement(),periodRing=periodRoot.querySelectorAll('.qxframe9a7c2-period-panel-cell.is-keyboard-focus');record('regression-period-panel-keyboard-focus',periodRing.length===1,'rings='+periodRing.length+',state='+JSON.stringify(period.getState()));",
+            "var periodRoot=period.getRootElement(),periodRing=periodRoot.querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-keyboard-focus'),periodInk=periodRing.length?getComputedStyle(periodRing[0]):null;record('regression-period-panel-keyboard-focus',periodRoot.classList.contains('is-period')&&periodRing.length===1&&periodInk.outlineStyle==='solid'&&parseFloat(periodInk.outlineWidth)>=2,'rings='+periodRing.length+',outline='+(periodInk&&periodInk.outline)+',state='+JSON.stringify(period.getState()));"
         );
 }
 
