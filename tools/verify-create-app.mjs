@@ -125,14 +125,37 @@ check('font-mono and Alert radius consume registered Theme mapping',()=>{
 });
 
 
+check('Theme color registry uses light-dark() at every style/mode boundary',()=>{
+  const registry=read('tokens.js');
+  const colors=[...registry.matchAll(/\\bC\\('([a-z0-9-]+)'/g)].map(m=>m[1]);
+  assert.equal(colors.length,78,'the entire closed Theme color registry is accounted for');
+  for(const style of ['nova','rhea','sera']){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const lightStart=body.indexOf(':root {'),darkStart=body.indexOf('\\n.dark {');
+    assert.ok(lightStart>=0&&darkStart>lightStart,style+' preserved two compatibility selector blocks');
+    const section=body.slice(lightStart,darkStart),reverse=body.slice(darkStart);
+    for(const t of colors){
+      const expr='--qxframe9a7c2-theme-'+t+': light-dark(';
+      assert.ok(section.includes(expr),style+'/'+t+' light scope must resolve light-dark');
+      assert.ok(reverse.includes(expr),style+'/'+t.name+' dark scope must resolve light-dark');
+      const line=section.split('\\n').find(x=>x.includes(expr));
+      assert.ok(reverse.includes(line.trim()),style+'/'+t.name+' same CSS expression regardless of enclosing scheme');
+    }
+    assert.ok(section.includes('--qxframe9a7c2-theme-color-scheme: light;'),'light scheme keyword is not a color');
+    assert.ok(reverse.includes('--qxframe9a7c2-theme-color-scheme: dark;'),'dark scheme keyword is not a color');
+  }
+  const values=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+  assert.doesNotMatch(values,/color-scheme:\\s*(?:light|dark);/,'fixed-values no longer hardcodes scheme keywords');
+  assert.ok((values.match(/color-scheme:\\s*var\\(--qxframe9a7c2-theme-color-scheme\\)/g)||[]).length>=4);
+});
 check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=>{
  const compiler=read('compiler.js');
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
  const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
- assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.145 0 0\)/,'default light Menu ink');
- assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: oklch\(0\.985 0 0\)/,'default dark Menu ink');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(oklch\(0\.145 0 0\), oklch\(0\.985 0 0\)\)/,'default Menu ink uses both light/dark variants');
+ assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(/g)||[]).length,2,'closed light/dark interface shares paired color expression');
  for(const component of ['notice-slot','message-root','notification-root'])
    assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
  for(const part of ['message-root','notification-root','notice-slot'])
@@ -1812,8 +1835,8 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
   assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
-  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.205 0 0 / 0.28)'),'generated light menu accent synchronized');
-  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: oklch(0.922 0 0 / 0.28)'),'generated dark menu accent synchronized');
+  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.205 0 0 / 0.28), oklch(0.922 0 0 / 0.28))'),'generated Menu accent derives both modes');
+  assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,2,'Menu accent no longer stores independent per-mode literals');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
   assert.ok(theme.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
