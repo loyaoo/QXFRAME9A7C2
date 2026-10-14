@@ -536,8 +536,8 @@ check('Chromium native select picker inherits Menu colors and Popup geometry wit
   }
   for(const token of ['menu','menu-foreground','menu-accent','menu-accent-foreground','radius-popup','shadow-popup','popup-edge'])
     assert.ok(css.includes('--qxframe9a7c2-theme-'+token),'picker uses shared Theme token '+token);
-  assert.match(css,/\.dark \.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:dark;/,'OS fallback uses dark color-scheme');
-  assert.match(css,/\.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:light;/,'OS fallback light');
+  assert.doesNotMatch(css,/color-scheme:\\s*(?:light|dark);/,'Native Select must inherit global/local color-scheme rather than pinning the page mode');
+  assert.ok(css.includes('Native select inherits the computed Theme color-scheme'),'Native controls share the Theme scheme owner');
 });
 
 
