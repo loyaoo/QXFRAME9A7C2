@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {browserProbes} from './audit-css-schema-acceptance.mjs';
 import {verifySemanticRuleSource,V2_STYLE_MODULE} from './theme-v2-contract.mjs';
-import {COLOR_TOKENS as CORE_ROLES} from '../docs/create/tokens.js';
+import {THEME_TOKENS} from '../docs/create/tokens.js';
+const CORE_ROLES=THEME_TOKENS.filter(token=>token.kind==='color').map(token=>token.name);
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const verified=verifySemanticRuleSource(root);
@@ -18,11 +19,13 @@ assert.doesNotMatch(source,/rgb\(\s*var\(/,'Complete Theme colors must not be tr
 // Its light and dark values are selected at the consuming element's color-scheme,
 // never through redundant declarations in a .dark color table.
 const themeSource=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+assert.equal(CORE_ROLES.length,78,'only registered COLOR kind roles may use light-dark()');
 for(const role of CORE_ROLES){
   const pattern='--qxframe9a7c2-theme-'+role+': light-dark(';
   assert.equal(themeSource.split(pattern).length-1,1,'Missing single paired Theme COLOR owner: '+role);
   assert.equal(themeSource.split('--qxframe9a7c2-theme-'+role+':').length-1,1,'Duplicate Theme COLOR owner: '+role);
 }
+assert.equal(themeSource.split('--qxframe9a7c2-theme-color-scheme:').length-1,2,'scheme keyword exception belongs to root and .dark');
 assert.ok(verified.expressions.length>0,'Reviewed shadcn-derived color formulas must remain source-locked.');
 
 if(process.argv.includes('--browser')){
