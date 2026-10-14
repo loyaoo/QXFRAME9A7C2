@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 DateTime private sizing role fixes Theme Token ratchet
+- QXFRAME #38565566451 reached verify:theme-tokens and detected a NEW public component token declaration in picker-family `.date-picker-composite.has-time`: `--qxframe9a7c2-calendar-cell-size`, forbidden by public-token owner count. Replaced with context-specific override of existing **private** `--_qxframe9a7c2-calendar-adaptive-cell` on the actual adaptive Calendar consumer, which has enough specificity to override its own default and media setting. No new token/compat alias; preserves Theme control height sizing.
+- Keep all Theme Token ratchets and same-HEAD dual CI; do not claim full completion until browser validated.
+
 ## CURRENT — 2026-10-14 PeriodPanel CSS Flex structural gate aligned to zero-gap Ant selection (CI pending)
 - QXFRAME #38564865028 reached legacy verify:css-grid-layout-trio. Its original regex required 25%-less-gap period cells and now contradicted screenshot-mandated 25% full-width gap-zero range. Replaced assertion with more stringent 25% exact and `column-gap:0` plus original no-CSS-grid guard. No broad baseline change.
 - Need same-HEAD dual green and real browser tests; remaining screenshot focus areas documented.

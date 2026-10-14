@@ -1896,7 +1896,7 @@ check('Stage5 DateTime composite shares nine-row Wheel height and density',()=>{
  const js=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
  const build=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;"),'only default DateTime wheel expands to nine rows; custom options preserved');
- assert.ok(picker.includes('--qxframe9a7c2-calendar-cell-size:var(--_qxframe9a7c2-control-height)'),'DateTime Calendar cells use Theme control density');
+ assert.ok(picker.includes('--_qxframe9a7c2-calendar-adaptive-cell:var(--_qxframe9a7c2-control-height)'),'DateTime Calendar cells use existing private adaptive cell consumption, no public token declarations');
  assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'DateTime Calendar min-height equals TimePanel nine-row projection');
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
 });

@@ -257,9 +257,9 @@
    Scroll beyond its snap-padding contract. Standalone Date/Time are unchanged. */
 .qxframe9a7c2-date-picker-composite.has-time{
   --_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-control-height) + 2 * var(--qxframe9a7c2-theme-calendar-padding,.5rem));
-  --qxframe9a7c2-calendar-cell-size:var(--_qxframe9a7c2-control-height)
 }
 .qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar.is-adaptive-month{
+  --_qxframe9a7c2-calendar-adaptive-cell:var(--_qxframe9a7c2-control-height);
   min-height:calc(9 * var(--_qxframe9a7c2-control-height))
 }
 .qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto;align-self:stretch}
