@@ -323,8 +323,8 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
  const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
- assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
- assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-recipe-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-recipe-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
  assert.match(native,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-form-input:not\(:disabled\)/,'native Field success feedback');
@@ -340,8 +340,8 @@ check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
     assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
   }
-  assert.match(consumer,/--_qxframe9a7c2-v2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\)/,'native and JS Hover must update V2 physical border owner');
-  assert.match(consumer,/--_qxframe9a7c2-v2-control-bg:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field\)/,'native and JS Hover must update V2 physical background owner');
+  assert.match(consumer,/--_qxframe9a7c2-recipe-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\)/,'native and JS Hover must update V2 physical border owner');
+  assert.match(consumer,/--_qxframe9a7c2-recipe-control-bg:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field\)/,'native and JS Hover must update V2 physical background owner');
   assert.match(style,/\.qxframe9a7c2-field\.is-warning \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'warning feedback wins on hover');
   assert.match(style,/\.qxframe9a7c2-field\.is-invalid \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'invalid feedback wins on hover');
   assert.match(structure,/is-connected\.is-outline>\.qxframe9a7c2-flex>\.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corners scoped to Flex');
@@ -1269,21 +1269,28 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
-check('Private v2 names without collision are unversioned while colliding names keep independent scope',()=>{
+check('No v1/v2/v3 CSS token names remain; 12 colliding recipes keep a distinct semantic namespace',()=>{
  const css=fs.readFileSync(path.join(root,'dist/qxframe9a7c2.css'),'utf8');
- const safe=["action-current","action-hover","action-shadow","action-text","card-explicit-shadow","default-foreground","default-type","dialog-shadow","font-step","ghost-hover","item-hover","menu-border-neutral","menu-hover-soft","menu-primary-solid","menu-selected-soft","navigation-text","outline","outline-border","outline-hover","size-index","size-ratio","soft","soft-hover","solid-hover","surface-gap","surface-padding","type","type-foreground"];
- for(const n of safe)assert.ok(!css.includes('--_qxframe9a7c2-v2-'+n),'unambiguous private recipe token must drop v2: '+n);
- for(const n of ['action-bg','action-border','card-shadow','choice-bg','choice-border','control-bg','control-border','navigation-bg','popup-bg','popup-border','popup-shadow','popup-text']){
-   assert.ok(css.includes('--_qxframe9a7c2-v2-'+n),'colliding old recipe owner must not shadow existing '+n);
-   assert.ok(css.includes('--_qxframe9a7c2-'+n),'existing shared token must remain separate from versioned recipe '+n);
+ const sources=['src/styles/main/theme-visual-v2.css','src/styles/main/theme-visual-v2-consumers.css','src/styles/main/theme-visual-v2-style-consumers.css','src/styles/main/fixed-values.css',
+   'docs/create/app.css','docs/create/preview.css','docs/create/preview-03.css'];
+ const obsolete=/(?:--_?qxframe9a7c2-(?:[a-z0-9-]+-)?v[123](?:-|\\b))/g;
+ for(const [name,body] of [['dist CSS',css],...sources.map(p=>[p,fs.readFileSync(path.join(root,p),'utf8')])]){
+   assert.deepEqual([...body.matchAll(obsolete)].map(m=>m[0]),[],name+' must have no version-numbered private or Theme tokens');
  }
+ const recipe=["action-bg","action-border","card-shadow","choice-bg","choice-border","control-bg","control-border","navigation-bg","popup-bg","popup-border","popup-shadow","popup-text"];
+ for(const name of recipe){
+   assert.ok(css.includes('--_qxframe9a7c2-recipe-'+name),'renamed visual recipe must survive build: '+name);
+   assert.ok(css.includes('--_qxframe9a7c2-'+name),'preexisting non-recipe token owner must survive build: '+name);
+   assert.ok(!css.includes('--_qxframe9a7c2-v2-'+name),'retired v2 alias forbidden: '+name);
+ }
+ assert.ok(!fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8').includes('.dark { color: var(--qxframe9a7c2-theme-foreground); }'),'no redundant manual .dark foreground override');
 });
 
 check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
  const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  assert.ok(!visual.includes('.qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {'),'never override the complete family surface');
  assert.ok(!visual.includes('.qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg:'),'public Popover color retains its local owner');
- assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg)'),'generic surface background cannot override families');
+ assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-recipe-popup-bg)'),'generic surface background cannot override families');
  assert.ok(visual.includes('.qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {'),'navigation panels retain Menu paint');
 });
 
@@ -1951,7 +1958,7 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
  assert.ok(theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'Only the real TreeSelect portal owns the contextual checkbox paint');
- assert.ok(theme.includes('--_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
+ assert.ok(theme.includes('--_qxframe9a7c2-recipe-choice-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
  assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
