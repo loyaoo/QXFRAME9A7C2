@@ -56,7 +56,7 @@
  * native/interactive Item Surface remains a separate authoritative class. */
 .qxframe9a7c2-item{
   --_qxframe9a7c2-static-item-space:var(--qxframe9a7c2-item-space,var(--qxframe9a7c2-theme-item-space,.625rem));
-  box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;width:100%;
+  box-sizing:border-box;display:flex;flex-wrap:nowrap;align-items:center;width:100%;
   gap:var(--qxframe9a7c2-item-gap,var(--_qxframe9a7c2-static-item-space));
   padding-block:var(--qxframe9a7c2-item-padding-block,var(--_qxframe9a7c2-static-item-space));
   padding-inline:var(--qxframe9a7c2-item-padding-inline,calc(var(--_qxframe9a7c2-static-item-space) + .125rem));

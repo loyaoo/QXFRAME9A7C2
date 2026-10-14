@@ -23,7 +23,12 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-steps-subtitle,.qxframe9a7c2-steps-description{color:var(--_qxframe9a7c2-steps-text-muted);font-size:.9em}
 .qxframe9a7c2-steps-description{max-width:14rem;line-height:1.6}
 .qxframe9a7c2-steps-connector,.qxframe9a7c2-steps-item-rail{box-sizing:border-box;position:static;display:block;min-width:var(--_qxframe9a7c2-steps-gap);height:0;flex:1 1 auto;margin-inline-start:var(--_qxframe9a7c2-steps-gap);border:0;border-block-start:1px solid var(--_qxframe9a7c2-steps-border);background:none;pointer-events:none}
-.qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-connector{position:absolute;top:calc(var(--_qxframe9a7c2-steps-height) / 2);right:0;left:calc(var(--_qxframe9a7c2-steps-height) + var(--_qxframe9a7c2-steps-gap));width:auto;min-width:0;margin:0}
+/* Default horizontal Steps: the rail is a flex sibling after main, never an
+   absolutely painted layer over a title or its progress subtitle. */
+.qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-item{display:flex;align-items:flex-start}
+.qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-main{width:auto;flex:0 1 auto}
+.qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-content{flex:0 1 auto}
+.qxframe9a7c2-steps.is-horizontal:not(.is-label-vertical):not(.is-navigation):not(.is-inline) .qxframe9a7c2-steps-connector{position:static;inset:auto;width:auto;min-width:var(--_qxframe9a7c2-steps-gap);height:0;flex:1 1 auto;margin:calc(var(--_qxframe9a7c2-steps-height) / 2) var(--_qxframe9a7c2-steps-gap) 0;border-block-start:1px solid var(--_qxframe9a7c2-steps-border)}
 .qxframe9a7c2-steps-item.is-finish .qxframe9a7c2-steps-icon{border-color:var(--_qxframe9a7c2-steps-accent);color:var(--_qxframe9a7c2-steps-accent)}
 .qxframe9a7c2-steps-item.is-finish .qxframe9a7c2-steps-connector{border-color:var(--_qxframe9a7c2-steps-accent)}
 .qxframe9a7c2-steps-item.is-process .qxframe9a7c2-steps-icon{border-color:var(--_qxframe9a7c2-steps-accent);background:var(--_qxframe9a7c2-steps-accent);color:var(--_qxframe9a7c2-semantic-on-accent)}

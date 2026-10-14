@@ -1864,6 +1864,17 @@ check('Stage5 Alert and semantic Badge retain component paint',()=>{
  assert.ok(badge.includes('--_qxframe9a7c2-badge-bg:var(--_qxframe9a7c2-accent-soft)'),'Badge semantic statuses consume accent fill');
  assert.ok(!visual.includes('.qxframe9a7c2-tag, .qxframe9a7c2-badge {'),'Late Tag painter does not reset Badge status colors');
 });
+check('Stage5 Steps connector not over title, Item media fixed, Tags add inherits theme',()=>{
+ const steps=fs.readFileSync(path.join(root,'src/styles/components/steps.css'),'utf8');
+ const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+ const list=fs.readFileSync(path.join(root,'src/styles/components/list.css'),'utf8');
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ assert.ok(steps.includes('steps-connector{position:static;inset:auto;'),'horizontal connector cannot overlay step text');
+ assert.ok(item.includes('display:flex;flex-wrap:nowrap;align-items:center;width:100%'),'Item media/text remain on one line');
+ assert.ok(list.includes('list-content-slot{flex:1 1 0;min-width:0;white-space:normal}'),'List text wraps within its own slot');
+ assert.ok(tags.includes('tags-add{box-sizing:border-box;display:inline-flex;'),'Tag add shares source size and radius');
+ assert.ok(tags.includes('border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-subtle-hover);'),'Tag Add consumes matching theme surface');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

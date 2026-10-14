@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-14 Stage5 Steps/Item/List/Tags screenshot fix (CI pending)
+- Default horizontal Steps rail is now an in-flow flex sibling after the icon/title, preventing connector drawing through title/subtitle/percent; other Step modes stay untouched.
+- Static Item and vertical List no longer flex-wrap leading checkbox/icon onto its own line; content flexes and wraps inside its own min-width:0 column.
+- Tags Add and editing input now share tokenized Tag height/radius/ink/surface/border without dashed standalone appearance. Other Tag variants and hosted control architecture unchanged.
+- Await browser screenshot verification; no Tree/Controller/main edits.
+
 ## CURRENT — 2026-10-14 Stage5 Alert/Badge screenshot fixes (CI pending)
 - Alert source uses visible Theme border and configurable Theme shadow-card; removed late shadow:none. Badge statuses now use source own semantic accent/soft roles, no later neutral Tag background reset; outlined labels preserve status ink.
 - Remaining screenshots: Dropdown/Cascader Choice, group titles, Steps, Item, Tag Add, DatePicker composite geometry. PR #267 Draft; do not merge.

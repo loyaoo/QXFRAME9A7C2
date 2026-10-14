@@ -51,8 +51,8 @@
 .qxframe9a7c2-list.is-split .qxframe9a7c2-list-item+.qxframe9a7c2-list-item{border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-list-meta{display:block;margin-top:var(--_qxframe9a7c2-fixed-space-1);color:var(--_qxframe9a7c2-semantic-text-muted);font-size:.875em;white-space:normal}
 .qxframe9a7c2-list-actions{display:inline-flex;flex:0 0 auto;align-items:center;gap:var(--_qxframe9a7c2-fixed-space-1)}
-.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-item{align-items:flex-start;flex-wrap:wrap;padding-block:var(--_qxframe9a7c2-fixed-space-2);white-space:normal}
-.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-content-slot{flex-basis:calc(100% - 2rem);white-space:normal}
+.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-item{align-items:flex-start;flex-wrap:nowrap;padding-block:var(--_qxframe9a7c2-fixed-space-2);white-space:normal}
+.qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-content-slot{flex:1 1 0;min-width:0;white-space:normal}
 .qxframe9a7c2-list.is-vertical-layout .qxframe9a7c2-list-label{white-space:normal}
 .qxframe9a7c2-list.is-sticky-groups .qxframe9a7c2-list-group{position:sticky;top:0;z-index:var(--qxframe9a7c2-z-local-raised)}
 
