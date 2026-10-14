@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-14 Stage5 Alert/Badge screenshot fixes (CI pending)
+- Alert source uses visible Theme border and configurable Theme shadow-card; removed late shadow:none. Badge statuses now use source own semantic accent/soft roles, no later neutral Tag background reset; outlined labels preserve status ink.
+- Remaining screenshots: Dropdown/Cascader Choice, group titles, Steps, Item, Tag Add, DatePicker composite geometry. PR #267 Draft; do not merge.
+
 ## CURRENT — 2026-10-14 Stage5 screenshot batch: Mask default configuration and Image Preview toolbar (CI pending)
 - User explicitly said NOT to hard-clamp opacity. All eight style look mask default values now >=50% (six formerly 10/20/30 →60; Maia/Mira 80 unchanged); default CSS Nova overlay now 60%, custom Theme mask tokens retain precedence.
 - Image Preview fixed alpha compositing: own solid black mask default with editable mask color + 82% opacity, no Theme Overlay double alpha painting. Close button/nav hover now same translucent white as Preview toolbar hover; no unrelated button hover edits.

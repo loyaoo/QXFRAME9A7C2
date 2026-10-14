@@ -1854,6 +1854,16 @@ check('Stage5 configured Mask Style defaults and Image Preview chroma are consis
  assert.doesNotMatch(v,/\.qxframe9a7c2-image-preview-mask\[class\] \{ background-color:/,'no alpha-overlay multipainter on Image Preview');
  assert.match(image,/\.qxframe9a7c2-image-preview-tool\.qxframe9a7c2-image-preview-close:hover,\.qxframe9a7c2-image-preview-nav:hover\{background:rgb\(255 255 255 \/ \.14\)\}/,'close hover matches Image Preview toolbar actions');
 });
+check('Stage5 Alert and semantic Badge retain component paint',()=>{
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(alert.includes('border:1px solid var(--qxframe9a7c2-alert-border-color,var(--qxframe9a7c2-theme-border))'),'Alert surface has a border');
+ assert.ok(alert.includes('box-shadow:var(--qxframe9a7c2-alert-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Alert consumes configurable card shadow');
+ assert.ok(!visual.includes('.qxframe9a7c2-alert-root { box-shadow: none; }'),'Alert shadow may not be disabled downstream');
+ assert.ok(badge.includes('--_qxframe9a7c2-badge-bg:var(--_qxframe9a7c2-accent-soft)'),'Badge semantic statuses consume accent fill');
+ assert.ok(!visual.includes('.qxframe9a7c2-tag, .qxframe9a7c2-badge {'),'Late Tag painter does not reset Badge status colors');
+});
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

@@ -142,7 +142,7 @@
   [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
   [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
   /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
-  .qxframe9a7c2-tag, .qxframe9a7c2-badge {
+  .qxframe9a7c2-tag {
     background-color: var(--qxframe9a7c2-theme-secondary);
     color: var(--qxframe9a7c2-theme-secondary-foreground);
     border-color: transparent;
@@ -156,7 +156,7 @@
   }
   .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
   /* Outline Badge is a static label: a visible border, never a hoverable action. */
-  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border:1px solid var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--_qxframe9a7c2-badge-text); border:1px solid var(--qxframe9a7c2-theme-border); }
   .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent); }
   .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-solid-hover); }
   .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
@@ -212,7 +212,7 @@
   .qxframe9a7c2-switch-thumb { box-shadow: var(--qxframe9a7c2-theme-shadow-switch-thumb); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb); }
   .qxframe9a7c2-selectgroup-indicator.is-overlay { box-shadow: none; }
-  .qxframe9a7c2-alert-root { box-shadow: none; }
+  /* Alert keeps source-owned configurable elevation. */
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
   .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
