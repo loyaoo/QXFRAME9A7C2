@@ -1,13 +1,13 @@
-/** LIGHT-DARK-GLOBAL-001 — ONLY this batch's Button, TreeSelect Choice and Tooltip inverse fixes. */
+/** Stage5 current-only acceptance: one WheelPanel guide, consistent dividers, genuine overview Cards. */
 const groups = [
-  ['ui-elements','Button single state painter',[
-    ['.qxframe9a7c2-button','Button visual states','Theme action values feed original Button state resolver; remove duplicate background, border, text and shadow paint','__QA_BUNDLE_HEAD__']
-  ],'02'],
-  ['platform-tree','TreeSelect Choice indicator',[
-    ['[data-pv3-component="workspace-tree-select"]','TreeSelect checked marker','Checked and indeterminate glyph use the shared Checkbox primary-foreground, not Menu background','__QA_BUNDLE_HEAD__']
+  ['overview-metrics','Preview03 overview uses QX Card',[
+    ['.qxframe9a7c2-card','Four overview metric Cards','Card and CardContent now own radius, border, surface, shadow and padding','__QA_BUNDLE_HEAD__']
   ],'03'],
-  ['sla-tooltip','Tooltip inverse without Menu override',[
-    ['[data-pv3x-widget="sla-tooltip"]','Tooltip inverse surface','Light page dark tip / dark page light tip; Menu inversion does not double-invert Tooltip','__QA_BUNDLE_HEAD__']
+  ['shift-allocation','TimePanel shared guide',[
+    ['[data-pv3x-widget="shift-allocation"]','TimePanel Wheel guide','Bold Menu accent pairs with theme-aware selected ink; column separators use field-border','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['dial-settings','WheelPicker shared guide',[
+    ['[data-pv3x-widget="dial-settings"]','WheelPicker guide','No component-specific guide repaint; same WheelPanel accent/foreground and field-border family','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -19,7 +19,7 @@ function mark(){
   if(!preview)return;
   document.body.classList.toggle('qa-annotated',visible);
   for(const [id,name,changes] of groups){
-    const card=document.querySelector('[data-card="'+id+'"]');
+    const card=id==='overview-metrics'?document.querySelector('.pv3-overview'):document.querySelector('[data-card="'+id+'"]');
     if(!card)continue;
     card.classList.add('qa-changed-card');
     card.dataset.qaCardLabel='已改 '+changes.length+' 处';
@@ -47,7 +47,7 @@ function getDoc(){
 function locate(group,change){
   const [id]=group,[selector]=change;
   const jump=()=>{
-    const card=getDoc()?.querySelector('[data-card="'+id+'"]');
+    const card=id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):getDoc()?.querySelector('[data-card="'+id+'"]');
     const node=card?.querySelector(selector)||card;
     if(!node)return false;
     node.scrollIntoView({behavior:'smooth',block:'center'});
@@ -71,7 +71,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Button 状态单一绘制、TreeSelect 勾选前景色、Tooltip 排除 Menu 双重反色。旧轮次高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：WheelPanel/TimePicker/WheelPicker 统一选中颜色与分割线，以及 Preview03 指标使用真实 Card。旧轮次高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

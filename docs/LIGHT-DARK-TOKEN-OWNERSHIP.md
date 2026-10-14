@@ -31,3 +31,10 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - Button: original `button.css` remains the only background, border, text and shadow painter. The Theme visual module supplies existing normal/hover/focus/active/disabled variant state slots; the old late direct paint and `action-current` state surrogate are removed. An explicit `is-shadow` remains controlled by the component.
 - TreeSelect: the checked/indeterminate indicator uses the same primary/primary-foreground Choice painter as Checkbox; the former TreeSelect-only Menu background foreground override is removed. Tree CSS/JS remain frozen.
 - Tooltip: Tooltip uses the inverse **surface** pair (Theme foreground/background), just as Slider Tips. Inverted **Menu** changes `color-scheme` only for Menu-family popup roots; Tooltip is explicitly excluded from Menu inversion and Menu semantic projection, so it does not get inverted twice. Tooltip arrow consumes its own surface color.
+
+## 2026-10-14: WheelPanel selection and Picker partition ownership
+
+- **Single painter:** `.qxframe9a7c2-wheel-panel-center-guide` in `picker-family.css` alone paints its border and background. No `.picker-field-panel`-specific guide repaint is permitted; standalone WheelPanel, TimePanel, WheelPicker and TimePicker use the same source.
+- **Coupled Theme pair:** guide uses existing `theme-menu-accent`, selected row ink uses `theme-menu-accent-foreground`. Compiler already generates subtle alpha Primary + readable Popover foreground and bold solid Primary + Primary foreground; the local `color-scheme` supplies light/dark/inverse without more tokens or selector lists.
+- **Passive dividers:** WheelPanel column, Cascader column and TimePicker Now top edge all consume existing `theme-field-border`, not 26% Menu foreground or unrelated semantic border channels. Hover, keyboard Focus and checked indicators keep their own roles.
+- **Preview03 overview:** four metrics now use actual `Card > CardContent`; private Preview03 CSS controls flex arrangement only, with the framework owning Card surface/outline/shadow/radius/insets.

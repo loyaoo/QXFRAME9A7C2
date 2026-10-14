@@ -164,10 +164,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"ui-elements":[".qxframe9a7c2-button"],"platform-tree":['[data-pv3-component="workspace-tree-select"]'],"sla-tooltip":['[data-pv3x-widget="sla-tooltip"]']}; // Only this batch's three changed component regions.
+  const current={"overview-metrics":[".qxframe9a7c2-card"],"shift-allocation":['[data-pv3x-widget="shift-allocation"]'],"dial-settings":['[data-pv3x-widget="dial-settings"]']}; // Only this batch's overview Cards and shared WheelPanel examples.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(read(id==='ui-elements'?'preview-02.html':'preview-03.html').includes('data-card="'+id+'"'),'current Preview Card '+id);
+    assert.ok((id==='overview-metrics'?read('preview-03.html').includes('<section class="pv3-overview">'):read('preview-03.html').includes('data-card="'+id+'"')),'current Preview Card '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -1934,10 +1934,12 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.205 0 0 / 0.28), oklch(0.922 0 0 / 0.28))'),'generated Menu accent derives both modes');
   assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,1,'Menu accent is declared once for both modes');
-  for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
+  for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
   assert.ok(theme.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
-  assert.ok(theme.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel guide consumes Menu Primary accent');
+  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+  assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Single canonical WheelPanel guide paints Menu accent in both bold and subtle modes');
+  assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No second context-specific guide painter');
 });
 check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
   const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
@@ -1957,8 +1959,10 @@ check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection ar
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  assert.ok(css.includes('oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)'),'Picker derives opaque Menu Primary without new Theme inputs');
  assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today retains hue from Menu Primary');
- assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-selected-soft);'),'Wheel uses Menu accent tint');
- assert.ok(css.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel border matches Menu Primary');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Wheel guide consumes one accent paint in every host');
+ assert.ok(picker.includes('--_qxframe9a7c2-wheel-item-text:var(--qxframe9a7c2-time-panel-selected-text,var(--qxframe9a7c2-theme-menu-accent-foreground))'),'Selected Wheel item uses matched accent foreground');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No late Theme Wheel guide repaint');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
  assert.ok(!css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup must not override shared indeterminate Choice');
@@ -1967,6 +1971,25 @@ check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection ar
  assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-tree-check/,'do not repeat unreachable synthetic PickerField Tree selectors');
  assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
 });
+check('Stage5 WheelPanel selection/dividers and Preview03 overview Cards have one visual owner',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const html=read('preview-03.html'),css=read('preview-03.css');
+ assert.match(picker,/\.qxframe9a7c2-wheel-panel-center-guide\{[^}]*border-block:1px solid var\(--qxframe9a7c2-theme-menu-accent\);background:var\(--qxframe9a7c2-theme-menu-accent\)/,'WheelPanel owns bold/subtle guide');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'TimePicker/Picker cannot repaint WheelPanel guide');
+ assert.match(picker,/\.qxframe9a7c2-wheel-panel-item\.is-selected\{[^}]*var\(--qxframe9a7c2-theme-menu-accent-foreground\)/,'Wheel selected foreground pairs with Menu accent');
+ for(const marker of [
+   '.qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--qxframe9a7c2-theme-field-border)',
+   'border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)',
+   'border-top:1px solid var(--qxframe9a7c2-theme-field-border)'])
+   assert.ok(picker.includes(marker),'Wheel/Time/Cascader separator consumes one field border role: '+marker);
+ const overview=html.split('<section class="pv3-overview">')[1]?.split('</section>\n<div class="pv3-columns">')[0]||'';
+ assert.equal((overview.match(/class="qxframe9a7c2-card"/g)||[]).length,4,'Four overview metrics are real QX Cards');
+ assert.equal((overview.match(/class="qxframe9a7c2-card-content pv3-metric"/g)||[]).length,4,'CardContent owns spacing of every overview metric');
+ assert.doesNotMatch(css,/\.pv3-overview>\.pv3-metric\{[^}]*background:/,'No preview-owned imitation Card paint');
+ assert.equal((html.match(/data-card="/g)||[]).length,66,'Commercial gallery 66 Cards remain stable');
+});
+
 check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
   const js=read('preview-03.js');
   const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
