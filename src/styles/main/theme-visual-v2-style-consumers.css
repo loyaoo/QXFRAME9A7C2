@@ -122,7 +122,7 @@
   .qxframe9a7c2-card[class]{
     --_qxframe9a7c2-card-font-size:var(--qxframe9a7c2-card-font-size,var(--qxframe9a7c2-theme-card-font-size));
     --_qxframe9a7c2-v2-card-shadow:var(--qxframe9a7c2-theme-shadow-card);
-    --_qxframe9a7c2-v2-card-explicit-shadow:var(--qxframe9a7c2-theme-shadow-card);
+    --_qxframe9a7c2-card-explicit-shadow:var(--qxframe9a7c2-theme-shadow-card);
     box-shadow:var(--qxframe9a7c2-theme-shadow-card);
   }
   .qxframe9a7c2-card.is-shadow,.qxframe9a7c2-card.is-hover-shadow:hover,.qxframe9a7c2-card.is-hoverable:hover{box-shadow:var(--qxframe9a7c2-theme-shadow-card)}
@@ -152,7 +152,7 @@
   }
   .qxframe9a7c2-tabs-tab[class]{border-radius:var(--_qxframe9a7c2-tabs-item-radius)}
   .qxframe9a7c2-modal-container[class]{border-radius:var(--qxframe9a7c2-modal-radius,var(--qxframe9a7c2-theme-radius-dialog))}
-  .qxframe9a7c2-form-select[class],.qxframe9a7c2-input.qxframe9a7c2-select[class]{border-radius:round(nearest,calc(var(--qxframe9a7c2-theme-radius-select) * var(--_qxframe9a7c2-v2-size-ratio,1)),.125rem)}
+  .qxframe9a7c2-form-select[class],.qxframe9a7c2-input.qxframe9a7c2-select[class]{border-radius:round(nearest,calc(var(--qxframe9a7c2-theme-radius-select) * var(--_qxframe9a7c2-size-ratio,1)),.125rem)}
 
   /* Surface partition (theme input): footer band background and divider. */
   /* Card footer partition paint is owned by components/card.css. */

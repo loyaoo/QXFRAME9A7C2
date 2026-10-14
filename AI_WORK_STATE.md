@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 v2 private token collision audit and rename checkpoint (CI pending)
+- Scanned full ~1.1 MB concatenated CSS: 1,868 distinct CSS variable names; 40 private --_qxframe9a7c2-v2-* symbols. Exactly 12 have an already-existing unversioned target; 28 do NOT. Renamed all 28 safe v2 tokens consistently across definitions/consumers and located contract/browser/static references, without introducing aliases or redeclaring public Theme COLOR roles. Kept 12 versioned collision cases separate pending semantic owner consolidation; raw v2 count by itself is NOT proof of duplicate public Theme systems.
+- Strict static anti-regression assertions added: 28 names absent, all 12 colliding pairs distinct. Native Select Chromium checks closed control page scheme vs inverse top-layer picker scheme, without changes to selector color paints. Tooltip uses Popconfirm geometry, no clipped triangle.
+- Require same-HEAD double CI and real Chrome before acceptance. No Tree/Controller changes, PR #267 Draft.
+
 ## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 current batch (pending CI)
 - User correction: Native ::picker(select) inverse is ONLY a CSS color-scheme switch on the picker pseudo element, no CSS color declaration changes, no Popconfirm arrow on picker. Closed native Select remains page scheme. Generated theme includes paired top-layer picker scheme-only selectors; strict Theme schema and browser coverage being upgraded.
 - Tooltip arrow now matches Popconfirm/Popover rotated square size/offset and four-sided border geometry; removes divergent clip-path triangle, consumes Tooltip surface background and preserves alpha. No Tooltip/Popover/Controller JS changes.

@@ -25,7 +25,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.match(fixture.styles.sera.entries.find(e=>e.selector==='.cn-badge-variant-destructive').apply, /hover:text-destructive\/70/);
   // createApp v3: theme inputs are the closed --qxframe9a7c2-theme-* list; style-specific fills
   // are compiled into tokens, so only the shared (style-independent) formulas remain here.
-  const p='--qxframe9a7c2-theme-',t='--_qxframe9a7c2-v2-type';
+  const p='--qxframe9a7c2-theme-',t='--_qxframe9a7c2-type';
   const allowed=new Set();
   const alpha=(name,weights)=>weights.forEach(n=>allowed.add('color-mix(inoklab,var('+name+')'+n+'%,transparent)'));
   alpha(t,[10,20,30,40,70,80,90]);alpha(p+'muted',[50]);alpha(p+'destructive',[10,20,50]);

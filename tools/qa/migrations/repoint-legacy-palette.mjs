@@ -5,7 +5,7 @@ import path from 'node:path';
 const root = new URL('../../..', import.meta.url).pathname.replace(/\/$/, '');
 const T = n => `var(--qxframe9a7c2-theme-${n})`;
 const mix = (c, p) => `color-mix(in oklab, ${c} ${p}%, transparent)`;
-const TYPE = `var(--_qxframe9a7c2-v2-type, ${T('primary')})`;
+const TYPE = `var(--_qxframe9a7c2-type, ${T('primary')})`;
 const status = { success: 'success', warning: 'warning', error: 'destructive', info: 'info', accent: 'primary' };
 function map(name) {
   const n = name.replace(/^--_?qxframe9a7c2-/, '');

@@ -1269,6 +1269,16 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
+check('Private v2 names without collision are unversioned while colliding names keep independent scope',()=>{
+ const css=fs.readFileSync(path.join(root,'dist/qxframe9a7c2.css'),'utf8');
+ const safe=["action-current","action-hover","action-shadow","action-text","card-explicit-shadow","default-foreground","default-type","dialog-shadow","font-step","ghost-hover","item-hover","menu-border-neutral","menu-hover-soft","menu-primary-solid","menu-selected-soft","navigation-text","outline","outline-border","outline-hover","size-index","size-ratio","soft","soft-hover","solid-hover","surface-gap","surface-padding","type","type-foreground"];
+ for(const n of safe)assert.ok(!css.includes('--_qxframe9a7c2-v2-'+n),'unambiguous private recipe token must drop v2: '+n);
+ for(const n of ['action-bg','action-border','card-shadow','choice-bg','choice-border','control-bg','control-border','navigation-bg','popup-bg','popup-border','popup-shadow','popup-text']){
+   assert.ok(css.includes('--_qxframe9a7c2-v2-'+n),'colliding old recipe owner must not shadow existing '+n);
+   assert.ok(css.includes('--_qxframe9a7c2-'+n),'existing shared token must remain separate from versioned recipe '+n);
+ }
+});
+
 check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
   for (const style of data.STYLES.map(s=>s.value)) for(const mode of ['default','default-translucent','inverted','inverted-translucent']){
     const body=model.compileTheme(model.normalizeConfig({style,menuColor:mode})).body;
@@ -1281,6 +1291,14 @@ check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme 
     if(inverse){
       assert.ok(body.includes('color-scheme: light;\n}\n:root:not(.dark)'),'dark page Popup selects light');
       assert.ok(body.includes('color-scheme: dark;\n}'),'light page Popup selects dark');
+    }
+    assert.equal(body.includes('::picker(select)'),inverse,'only inverse Menu adds native picker scheme boundary');
+    if(inverse){
+      const schemes=body.split('::picker(select)');
+      assert.equal(schemes.length,3,'paired native picker color-scheme selectors');
+      const pickerRules=body.match(/(?:\\.dark|:root:not\\(\\.dark\\)) select:not\\(\\[multiple\\]\\):not\\(\\[size\\]\\)[^{]+\\{[^}]+\\}/g)||[];
+      assert.equal(pickerRules.length,2,'exact native picker scope roots');
+      assert.ok(pickerRules.every(rule=>/\\{\\s*color-scheme: (?:light|dark);\\s*\\}/.test(rule)),'native picker inversion never adds CSS colors');
     }
     assert.doesNotMatch(body,/data-qxframe9a7c2-scheme|data-qxframe9a7c2-theme/);
     assert.deepEqual(checkThemeFile(body).errors,[],style+'/'+mode+' exact owner/schema');
@@ -1669,7 +1687,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
   assert.match(button,/--_qxframe9a7c2-button-text:var\(--_qxframe9a7c2-button-on-accent\)/);
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   assert.match(v2,/\.qxframe9a7c2-button\.is-secondary\s*\{/,'v2 has secondary axis');
-  assert.match(v2,/--_qxframe9a7c2-v2-type: var\(--qxframe9a7c2-theme-secondary\)/);
+  assert.match(v2,/--_qxframe9a7c2-type: var\(--qxframe9a7c2-theme-secondary\)/);
   assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:var\(--qxframe9a7c2-theme-control-weight,500\)/);
@@ -1771,8 +1789,8 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected)',
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
-   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
+   '--_qxframe9a7c2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem)'), 'Cascader popup follows rendered column count');
 });
@@ -1781,13 +1799,13 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  for(const marker of [
    '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
-   'background: var(--_qxframe9a7c2-v2-menu-selected-soft)',
+   'background: var(--_qxframe9a7c2-menu-selected-soft)',
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',
-   '--_qxframe9a7c2-v2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
-   '--_qxframe9a7c2-v2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',
+   '--_qxframe9a7c2-menu-border-neutral: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 
@@ -1856,7 +1874,7 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.205 0 0 / 0.28), oklch(0.922 0 0 / 0.28))'),'generated Menu accent derives both modes');
   assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,1,'Menu accent is declared once for both modes');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','wheel-panel-center-guide','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
-  assert.ok(theme.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
+  assert.ok(theme.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
   assert.ok(theme.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel guide consumes Menu Primary accent');
 });
@@ -1877,14 +1895,14 @@ check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal be
 check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection are unified',()=>{
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  assert.ok(css.includes('oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)'),'Picker derives opaque Menu Primary without new Theme inputs');
- assert.ok(css.includes('background: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Today retains hue from Menu Primary');
- assert.ok(css.includes('background: var(--_qxframe9a7c2-v2-menu-selected-soft);'),'Wheel uses Menu accent tint');
+ assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today retains hue from Menu Primary');
+ assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-selected-soft);'),'Wheel uses Menu accent tint');
  assert.ok(css.includes('border-block-color: var(--qxframe9a7c2-theme-menu-accent);'),'Wheel border matches Menu Primary');
  assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
- assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
+ assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
  assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup Tree checkbox covers indeterminate');
  assert.ok(css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),'real popup checked indicator');
- assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) {\n    --_qxframe9a7c2-v2-menu-primary-solid:'),'Menu solid color belongs to shared Popup root, not Date-only Picker');
+ assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container) {\n    --_qxframe9a7c2-menu-primary-solid:'),'Menu solid color belongs to shared Popup root, not Date-only Picker');
  assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-tree-check/,'do not repeat unreachable synthetic PickerField Tree selectors');
  assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
 });
@@ -1924,7 +1942,7 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
  assert.ok(theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'Only the real TreeSelect portal owns the contextual checkbox paint');
- assert.ok(theme.includes('--_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-v2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
+ assert.ok(theme.includes('--_qxframe9a7c2-v2-choice-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'Popup Choice checked fill follows Menu Primary');
  assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
  assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
  assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
