@@ -152,3 +152,12 @@
 
 .qxframe9a7c2-card.is-outlined{outline-width:1px;--_qxframe9a7c2-card-shadow:none}
 .qxframe9a7c2-card.is-elevated{outline-width:0;--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))}
+
+/* Card composition uses the existing card surface and radius. */
+.qxframe9a7c2-card.is-stacked{isolation:isolate;margin-block-end:.375rem}
+.qxframe9a7c2-card.is-stacked::after{content:"";position:absolute;inset:0;z-index:-1;transform:translateY(.375rem);border:1px solid var(--_qxframe9a7c2-card-border);border-radius:inherit;background:var(--_qxframe9a7c2-card-bg);pointer-events:none}
+.qxframe9a7c2-card-stamp{position:absolute;inset-block-start:0;inset-inline-end:0;z-index:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:var(--qxframe9a7c2-card-stamp-size,5rem);height:var(--qxframe9a7c2-card-stamp-size,5rem);overflow:hidden;border-radius:0 var(--_qxframe9a7c2-card-radius) 0 var(--_qxframe9a7c2-card-radius);background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 9%,var(--_qxframe9a7c2-card-bg));color:var(--qxframe9a7c2-theme-primary);font-size:calc(var(--qxframe9a7c2-card-stamp-size,5rem) * .55);pointer-events:none}
+.qxframe9a7c2-card-stamp.is-lg{--qxframe9a7c2-card-stamp-size:7.5rem}
+.qxframe9a7c2-card-stamp+.qxframe9a7c2-card-body,.qxframe9a7c2-card-stamp+.qxframe9a7c2-card-content{position:relative;z-index:1}
+.qxframe9a7c2-card-deck{display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--qxframe9a7c2-card-deck-gap,1rem)}
+.qxframe9a7c2-card-deck>.qxframe9a7c2-card{min-width:min(100%,15rem);flex:1 1 15rem}
