@@ -1,5 +1,9 @@
+## CURRENT — 2026-10-15 Kbd single-owner reconciliation (final CI pending)
+- Exact CSS Theme gate exposed a duplicate: original Kbd is already in components/composition.css. Merged new sizes/outline/primary/group into that original owner, deleted new components/kbd.css and removed its manifest entry. Moved Card Stamp's is-lg to private size slot, removed duplicated FormHelp text painter (visual-recipe remains sole typography owner). Tests and design audit updated. Do not re-add second Kbd implementation.
+- PR #267 Draft. Both final GitHub Actions and Windows full dist+docs verification pending.
+
 ## CURRENT — 2026-10-15 Calendar geometry + Tabler static components (final CI pending)
-- Implementation: Calendar year/-12/+12 navigation, every Range row capped, two Calendar panels use 1rem gap without divider; existing Height/CellSize unchanged. Static CSS extends Card/Badge/Avatar/Alert/Progress/Tabs/Tag/NativeForm/InputGroup and adds exactly one Kbd module registered into CSS Manifest. The commercial Preview03 66 Card count stays unchanged; a separate non-Card static visual area shows representative skins.
+- Implementation: Calendar year/-12/+12 navigation, every Range row capped, two Calendar panels use 1rem gap without divider; existing Height/CellSize unchanged. Static CSS extends Card/Badge/Avatar/Alert/Progress/Tabs/Tag/NativeForm/InputGroup and adds exactly one preexisting Kbd owner extended in composition.css. The commercial Preview03 66 Card count stays unchanged; a separate non-Card static visual area shows representative skins.
 - Browser gate exercises real Calendar year buttons and static families across 8 Styles×light/dark; static gate verifies CSS classes and one Kbd entry; QA current-only ledger tracks ten regions. Specification/details: docs/create/STAGE5-TABLER-STATIC-FORMS-2026-10-15.md.
 - PR #267 remains Draft/Open. Final exact-HEAD QXFRAME CI and CSS Schema checks are pending. Need repair any genuine gate issues and produce official full Windows offline package, then owner visual verification. No main merge.
  
