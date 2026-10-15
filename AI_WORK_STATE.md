@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 Calendar Header capability contract gate repair (CI pending)
+- QXFRAME run #38668447618 exposed a real schema rejection: DatePicker previously refused the newly declared allowYearView/allowMonthView because the closed component contract did not register them.
+- Registered both as boolean fields in DatePicker's existing typed component contract, not as a new controller or duplicate API. Full current-head CI + Chromium still required.
+- Stage/overall unquantified; PR #267 Draft/Open; main untouched.
+
 ## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 new Chromium assertions (CI pending)
 - Added actual browser DOM geometry acceptance for 7 × 36px wheel=252px, 32px guide border-box, 108px leading pad, guide center, 264px Calendar/host, 252px seven-column grid, 36px day boxes, explicit visibleItemCount override, dual panels and header on/off + month/year drill same instance.
 - Tests have NOT yet been executed on final SHA; accept only real double green plus screenshot/ZIP. PR #267 Draft; main untouched; Stage/global percentages not credibly quantified.

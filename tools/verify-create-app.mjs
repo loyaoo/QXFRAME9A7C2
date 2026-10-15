@@ -1834,6 +1834,10 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
   assert.ok(json.includes('caret-color:currentColor'));
 });
+check('Calendar header allowed view controls are typed in the closed DatePicker contract',()=>{
+ const source=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
+ assert.match(source,/'allowYearView','allowMonthView'/,'only existing DatePicker contract owns title flags');
+});
 check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
  const cal=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
  const alias=fs.readFileSync(path.join(root,'src/components/period-panel.js'),'utf8');
