@@ -18,7 +18,7 @@ if(!refArg){console.error('usage: --reference=<main checkout>/dist');process.exi
 const reference=path.resolve(refArg.slice('--reference='.length));
 const mainRoot=path.dirname(reference),dist=path.join(root,'dist');
 const EXCLUDED=new Set(['qxframe9a7c2.css']);
-const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/popconfirm.js','src/components/tabs.js','src/components/date-picker.js','src/components/calendar.js','src/components/period-panel.js','src/components/image.js','src/components/tags.js','src/core/componentContracts.js','src/utils/wheelMetrics.js']);
+const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/popconfirm.js','src/components/tabs.js','src/components/date-picker.js','src/components/calendar.js','src/components/period-panel.js','src/components/image.js','src/components/tags.js','src/components/dropdown.js','src/core/componentContracts.js','src/utils/wheelMetrics.js']);
 function walk(dir,base=dir){
  if(!fs.existsSync(dir))return[];
  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
