@@ -49,7 +49,6 @@
     "src/styles/components/layout.css",
     "src/styles/components/empty.css",
     "src/styles/components/badge.css",
-    "src/styles/components/kbd.css",
     "src/styles/components/avatar.css",
     "src/styles/components/card.css",
     "src/styles/components/descriptions.css",
