@@ -38,3 +38,16 @@
 .qxframe9a7c2-progress.is-chart-3{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-chart-3)}
 
 .qxframe9a7c2-progress.is-full{display:flex;width:100%}
+
+/* Progress skins reuse one existing rail/bar state owner. */
+.qxframe9a7c2-progress.is-striped .qxframe9a7c2-progress-primary{background-image:repeating-linear-gradient(135deg,transparent 0,transparent .375rem,color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 12%,transparent) .375rem,color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 12%,transparent) .75rem)}
+.qxframe9a7c2-progress.is-striped.is-active .qxframe9a7c2-progress-primary{background-size:1.5rem 1.5rem;animation:qxframe9a7c2-progress-stripes 1.5s linear infinite}
+@keyframes qxframe9a7c2-progress-stripes{to{background-position:1.5rem 0}}
+.qxframe9a7c2-progress.is-muted{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-progress.is-warning{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-progress.is-error{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-progress-step.is-current{background:var(--_qxframe9a7c2-progress-primary)}
+.qxframe9a7c2-progress-step.is-error{background:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-progress-step.is-warning{background:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-progress-steps-labels{display:flex;align-items:center;justify-content:space-between;gap:.5rem;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem}
+.qxframe9a7c2-progress-steps-labels>.is-current{color:var(--qxframe9a7c2-theme-primary);font-weight:600}
