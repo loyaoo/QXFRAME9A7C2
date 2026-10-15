@@ -21,7 +21,7 @@
 | Form | help/hint/错误/成功状态、stacked field、输入图标辅助 | Native input/select/textarea、FormLayout、SelectGroup、验证 |
 | Kbd | 新增静态 `.qxframe9a7c2-kbd`，xs/sm/md/lg/xl、outline/primary、kbd-group | 无同职能原始组件 |
 
-新增样式直接写在已有家族 `src/styles/components/*.css`；唯一新增物理 CSS 模块 `src/styles/components/kbd.css` 在 `tools/manifests/css-order.json` 中仅注册一次。
+新增样式直接写在已有家族 `src/styles/components/*.css`；Kbd 实际上已有静态基础于 `src/styles/components/composition.css`，本轮只扩展这个原有所有者；不保留第二个 `kbd.css` 或 Manifest 模块。
 
 ## Calendar / RangePicker 当前几何
 
