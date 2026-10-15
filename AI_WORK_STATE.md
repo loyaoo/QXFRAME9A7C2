@@ -1,7 +1,7 @@
 ## CURRENT — 2026-10-15 Stage5 DROPDOWN-INSET-CI-RESTORE-001 (CI verification pending)
 - Verified GitHub head b39b7c69949317bbbe31e71a3259be8d82ab5f72; PR #267 Draft/Open against main. QXFRAME #38749981081 failed generated Dropdown inset API contract; CSS Schema #38749981183 measured paddingLeft on a closed and unmounted popup.
 - Canonical Dropdown inset is string; the sorted generated API JSON and sync:docs-api contract block were regenerated without weakening the verifier.
-- One ListFrame gutter CSS owner handles all/block/none on root/submenu. Chromium now opens the Popup and tests mounted padding on four edges in all modes, including a visible nested submenu; no allowance for empty computed styles.
+- Verified the one canonical ListFrame all/block/none gutter and item-radius painter already lives in src/styles/main/fixed-values.css. A diagnostic duplicate in picker-family.css tripped QXFRAME #38755844215 duplicate-owner ratchet; the duplicate was removed without changing the authoritative rule. Chromium opens real Popups and strictly measures mounted root/submenu padding in all modes (no empty-string allowance).
 - Earlier Calendar/Alert/Tags/ImagePreview implementations preserved. Pending final same-HEAD QXFRAME/CSS Schema CI, 8-Style visual checks, official dist+docs artifact and Windows ZIP, owner signoff. Main untouched; no merge and no unsupported Stage/overall % assertion.
 
 ## CURRENT — 2026-10-15 Stage 5 user visual batch (new Dropdown/Tags/playground/diagnostics; final gates pending)
