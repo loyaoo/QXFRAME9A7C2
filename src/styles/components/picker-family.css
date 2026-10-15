@@ -372,7 +372,7 @@
 .qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:0;gap:var(--qxframe9a7c2-date-picker-dual-gap,1rem)}
 .qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{box-shadow:none}
 .qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:100%;max-width:none}
-.qxframe9a7c2-date-picker-dual-inner-nav{display:none!important}
+.qxframe9a7c2-date-picker-calendar-group .qxframe9a7c2-date-picker-dual-inner-nav{display:none}
 .qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:0}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar.is-period,.qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{height:100%;flex:1 1 auto}
@@ -444,3 +444,5 @@
 .qxframe9a7c2-calendar-year-nav{padding:0}
 .qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-year-nav{display:none}
 .qxframe9a7c2-date-picker-composite.has-time{column-gap:var(--qxframe9a7c2-date-picker-time-gap,.75rem)}
+
+.qxframe9a7c2-calendar-year-nav .qxframe9a7c2-icon+.qxframe9a7c2-icon{margin-inline-start:-.625rem}
