@@ -647,6 +647,68 @@ try {
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','return from expanded-card state regression',15000);
   });
 
+  await step('Stage5 Tabler static families / Kbd + Calendar year navigation in 8 Styles and light/dark',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','Preview03 static family fixture',15000);
+    const result=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,app=window.QXFRAME9A7C2_CREATE;
+      const wrap=d.createElement('div'),theme=d.getElementById('qxframe9a7c2-create-theme'),original=theme.textContent;
+      const oldDark=d.documentElement.classList.contains('dark'),oldStyle=d.documentElement.getAttribute('data-create-style');
+      wrap.style.cssText='position:absolute;left:-7000px;top:0;width:65rem;display:flex;flex-wrap:wrap;gap:1rem';
+      wrap.innerHTML='<div class="qxframe9a7c2-card is-stacked"><div class="qxframe9a7c2-card-stamp">S</div><div class="qxframe9a7c2-card-body">Card</div></div>'+
+        '<span class="qxframe9a7c2-badge is-success is-soft">Healthy</span>'+
+        '<span class="qxframe9a7c2-avatar is-primary">AB</span>'+
+        '<div class="qxframe9a7c2-progress is-striped is-warning"><div class="qxframe9a7c2-progress-line"><div class="qxframe9a7c2-progress-outer"><div class="qxframe9a7c2-progress-inner"><div class="qxframe9a7c2-progress-primary" style="width:65%"></div></div></div></div></div>'+
+        '<div class="qxframe9a7c2-tabs is-pills"><button class="qxframe9a7c2-tabs-tab is-active">Selected</button></div>'+
+        '<span class="qxframe9a7c2-tag is-muted">Label</span><kbd class="qxframe9a7c2-kbd">Ctrl</kbd>'+
+        '<div class="qxframe9a7c2-form-hint">Shortcut hint</div>';
+      d.body.append(wrap);const calendarHost=d.createElement('div');wrap.append(calendarHost);
+      const Calendar=w.QXFRAME9A7C2?.BuildingBlocks?.Calendar,cal=Calendar?.create({container:calendarHost,value:'2026-10-15',size:'md'});
+      const rows=[],cs=sel=>w.getComputedStyle(wrap.querySelector(sel)),rect=sel=>wrap.querySelector(sel)?.getBoundingClientRect();
+      const refs=cal?.getRefs?.(),prev=refs?.prevYear,next=refs?.nextYear;
+      let years=null;
+      try{
+        if(prev&&next){
+          const before=cal.getState().viewValue.getFullYear();prev.click();
+          const previous=cal.getState().viewValue.getFullYear();next.click();
+          const back=cal.getState().viewValue.getFullYear();years={before,previous,back};
+        }
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
+        for(const dark of [false,true]){
+          d.documentElement.classList.toggle('dark',dark);
+          d.documentElement.setAttribute('data-create-style',style);
+          theme.textContent=app.compileTheme({...app.state.config,style},{generatedAt:''}).body;
+          rows.push({style,dark,kbd:rect('.qxframe9a7c2-kbd')?.height,stamp:rect('.qxframe9a7c2-card-stamp')?.width,
+            badge:rect('.qxframe9a7c2-badge')?.height,avatar:rect('.qxframe9a7c2-avatar')?.height,
+            progressBackground:cs('.qxframe9a7c2-progress-primary').backgroundImage,
+            progressColor:cs('.qxframe9a7c2-progress-primary').backgroundColor,
+            pillBackground:cs('.qxframe9a7c2-tabs-tab.is-active').backgroundColor,
+            cardBackground:cs('.qxframe9a7c2-card').backgroundColor,
+            mutedTagBackground:cs('.qxframe9a7c2-tag.is-muted').backgroundColor,
+            hintFont:parseFloat(cs('.qxframe9a7c2-form-hint').fontSize)});
+        }
+        return {years,rows,navCount:cal?.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-year-nav').length};
+      }finally{
+        cal?.destroy();wrap.remove();theme.textContent=original;
+        d.documentElement.classList.toggle('dark',oldDark);
+        if(oldStyle===null)d.documentElement.removeAttribute('data-create-style');
+        else d.documentElement.setAttribute('data-create-style',oldStyle);
+      }
+    })()`);
+    assert.deepEqual(result.years,{before:2026,previous:2025,back:2026},'Calendar delegated +/-12 month year nav');
+    assert.equal(result.navCount,2,'Calendar has both year controls');
+    assert.equal(result.rows.length,16,'8 Styles x light/dark');
+    for(const s of result.rows){
+      const label=s.style+'/'+(s.dark?'dark':'light');
+      assert.ok(s.kbd>=20&&s.stamp>=60&&s.badge>=12&&s.avatar>=20,label+' real static variant dimensions '+JSON.stringify(s));
+      assert.match(s.progressBackground,/repeating-linear-gradient/,label+' striped Progress gradient');
+      assert.notEqual(s.pillBackground,s.cardBackground,label+' active Pill Tab distinct from Card background');
+      assert.ok(s.mutedTagBackground&&s.hintFont<=14,label+' Tag and Form Theme text projection');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02 from static family QA',15000);
+  });
+
   await step('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click',async()=>{
     await click('document.querySelector(\'[data-create-item="03"]\')');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','real Cascader Preview03 runtime',15000);
