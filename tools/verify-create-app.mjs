@@ -2099,7 +2099,7 @@ check('Stage5 WheelPanel selection/dividers and Preview03 overview Cards have on
  assert.ok(runtime.includes('scrollMount.appendChild(guide)'),'Guide shares scrollMount with Scroll.create output');
  assert.ok(runtime.includes('container: scrollMount,'),'Wheel Scroll is mounted in the same parent as its guide');
  assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll{z-index:var(--qxframe9a7c2-z-local-above)}'),'Scroll receives a local layer above guide, without 999 or a global Scroll override');
- assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-raised)'),'Selection guide stays below the scroll content');
+ assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-center-guide{box-sizing:border-box;position:absolute;z-index:var(--qxframe9a7c2-z-local-raised)'),'Guide includes border within its 32px box and stays under scroll content');
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  const html=read('preview-03.html'),css=read('preview-03.css');
  assert.match(picker,/\.qxframe9a7c2-wheel-panel-center-guide\{[^}]*border-block:1px solid var\(--qxframe9a7c2-theme-menu-accent\);background:var\(--qxframe9a7c2-theme-menu-accent\)/,'WheelPanel owns bold/subtle guide');
