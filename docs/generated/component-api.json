@@ -793,6 +793,8 @@
       "name": "DatePicker",
       "schema": {
         "allowEmpty": "array",
+        "allowMonthView": "boolean",
+        "allowYearView": "boolean",
         "beforeClose": {
           "type": "function",
           "nullable": true
@@ -838,9 +840,9 @@
         "footer": "any",
         "footerEnd": "any",
         "footerStart": "any",
+        "format": "any",
         "formField": "any",
         "formTarget": "any",
-        "format": "any",
         "headless": "any",
         "hour": "any",
         "inputTarget": "any",

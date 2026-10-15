@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 Runtime Schema generated-contract sync (CI pending)
+- QXFRAME #38669282727 found generated docs/generated/component-api.json missing DatePicker allowYearView and allowMonthView after core contract change; no contract gate weakened.
+- Generated DatePicker fields now include both boolean capabilities; acceptance explicitly validates their type. This preserves one canonical component API, not a duplicate schema or historical alias.
+- Latest final Chromium, two green CI and exact artifact still pending. Stage/overall % not credibly quantified; PR #267 Draft and main untouched.
+
 ## CURRENT — 2026-10-15 legacy regression test adapted to single Calendar owner (CI pending)
 - QXFRAME #38668956123 failed because old browser regression still called getYearPanel() and getMonthPanel(), APIs removed with the detached instances.
 - Regression now accesses getCalendar() in both year/month mode and explicitly checks object identity with the original DatePicker Calendar; mouse modality/focus assertions preserved. No duplicated renderer or deprecated getter reinstated.

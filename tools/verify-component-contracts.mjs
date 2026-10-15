@@ -149,6 +149,7 @@ assertTypes('InputOTP', 'placeholder', ['string', 'array']);
 ['Menu','Dropdown'].forEach(name => assertTypes(name, 'submenuOffset', ['number', 'object', 'function']));
 ['Drawer','Modal'].forEach(name => assertTypes(name, 'closable', ['boolean', 'object']));
 assertTypes('Result', 'size', ['string', 'number']);
+['allowYearView','allowMonthView'].forEach(name=>assert(apiSchemaRule('DatePicker',name)==='boolean','DatePicker '+name+' must be a Boolean header capability'));
 ['Autocomplete','Cascader','ColorPicker','DatePicker','Select','TimePicker','TreeSelect','WheelPicker'].forEach(name => {
   assert(apiSchemaRule(name, 'renderControl') === 'boolean', `${name}.renderControl must remain boolean.`);
 });
