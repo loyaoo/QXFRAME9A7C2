@@ -2211,7 +2211,7 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
  assert.ok(picker.includes('background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary))'),'opaque Range endpoint does not expose half-width ::before');
  for(const role of ['is-muted','is-outline','is-shadow','is-success','is-error','is-warning','is-info'])assert.ok(alert.includes('.qxframe9a7c2-alert-root.'+role),'Alert owns '+role+' Appearance');
  assert.ok(collection.includes('.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group'),'Dropdown group title consumes canonical ItemCollection typography');
- assert.ok(collection.includes('font-size:.875em;'),'group typography is smaller than item');
+ assert.ok(collection.includes('font-size:var(--_qxframe9a7c2-item-collection-title-size,.75rem);'),'Dropdown heading shares canonical ItemCollection title font sizing');
  assert.ok(image.includes('color:var(--_qxframe9a7c2-image-preview-text);box-shadow:'),'Image Preview chrome uses explicit white-compatible foreground');
  assert.ok(imageJs.includes('// leave finalizer hands visual ownership back exactly once.'),'Image Preview never reveals source before mask and content both complete');
  assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
