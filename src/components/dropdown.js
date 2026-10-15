@@ -33,14 +33,20 @@ function validateItems(items) {
 }
 function requireState(instance) { const record = state.get(instance); if (!record) throw new TypeError('[QXFRAME9A7C2] Invalid Dropdown instance.'); return record; }
 
+function normalizeFrameInset(value) {
+  var mode=String(value==null?'all':value).toLowerCase();
+  if(!['all','block','none'].includes(mode))throw new TypeError('[QXFRAME9A7C2] Dropdown inset must be all, block or none.');
+  return mode;
+}
 function initializeDropdown(instance, options) {
   var opts = Utils.assignOwn({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined,
     searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
-    size: 'md', selectionAppearance: 'check-start', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,
+    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined,
     submenuTrigger: 'hover', submenuOpenDelay: 80, submenuLeaveDelay: 120, submenuOffset: 8
   }, options || {});
   validateItems(opts.items);
+  opts.inset=normalizeFrameInset(opts.inset);
   var doc = opts.document || globalThis.document;
   var reference = resolveElement(opts.reference, doc, 'reference');
   var portalContainer = opts.portalContainer ? resolveElement(opts.portalContainer, doc, 'portalContainer') : doc.body;
@@ -73,7 +79,9 @@ function initializeDropdown(instance, options) {
   }
   var panel = doc.createElement('div');
   var arrow = doc.createElement('div');
-  panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true;
+  function frameInsetClass(){return opts.inset==='block'?'is-block-inset':opts.inset==='none'?'is-flush':'is-inset';}
+  function syncFrameInset(target){target.classList.remove('is-inset','is-block-inset','is-flush');target.classList.add(frameInsetClass());}
+  panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; syncFrameInset(panel); panel.hidden = true;
   arrow.className = 'qxframe9a7c2-dropdown-arrow';
   var rootPopupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
   var triggerSession = null;
@@ -335,7 +343,7 @@ function initializeDropdown(instance, options) {
       var row = surface.list && typeof surface.list.getItemElement === 'function' ? surface.list.getItemElement(String(item.key)) : null;
       if (!row) return;
       row.classList.add('has-submenu');
-      var childPanel = doc.createElement('div'); childPanel.className = 'qxframe9a7c2-dropdown-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; childPanel.hidden = true;
+      var childPanel = doc.createElement('div'); childPanel.className = 'qxframe9a7c2-dropdown-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; syncFrameInset(childPanel); childPanel.hidden = true;
       var childFrame = PopupFrame.create({ panel: childPanel, document: doc });
       var childRecord = { key: String(item.key), item: item, trigger: null, popupFrame: childFrame, surface: null, panel: childPanel, parentSurface: surface };
       var childRuntime = PopupRuntime.create({
@@ -525,7 +533,9 @@ function initializeDropdown(instance, options) {
     if (own(next, 'items')) validateItems(next.items);
     if (own(next, 'multiple') && next.multiple !== opts.multiple) throw new Error('[QXFRAME9A7C2] Dropdown multiple is immutable; destroy and recreate to change selection shape.');
     var rebuild = ['items','searchable','selectable','readOnly','size','selectionAppearance'].some(function (name) { return own(next, name); });
+    if(own(next,'inset'))normalizeFrameInset(next.inset);
     Utils.copyOwn(opts, next);
+    if(own(next,'inset'))allSurfaces.forEach(function(surface){syncFrameInset(surface.panel);});
     if (own(next, 'controlled')) valueState.setControlled(opts.controlled === true);
     if (own(next, 'value')) {
       
@@ -606,7 +616,7 @@ export class Dropdown extends PopupComponent {
   });
   static options = Object.freeze({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined, searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
-    size: 'md', selectionAppearance: 'check-start', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,
+    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined,
     submenuTrigger: 'hover', submenuOpenDelay: 80, submenuLeaveDelay: 120, submenuOffset: 8
   });
 
