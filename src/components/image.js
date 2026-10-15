@@ -675,6 +675,7 @@ function setupImage(instance) {
     overlay.deactivate(detail);
     root.classList.remove('is-previewing');
     root.classList.remove('is-preview-source-hidden');
+    root.classList.remove('is-preview-source-handoff');
     call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
     return true;
   }
@@ -901,9 +902,14 @@ function setupImage(instance) {
         // while the mask is still fading it snaps back to its centered resting geometry.
         // Hide the landed copy first, then hand visual ownership back to the source.
         if (previewMotion) previewMotion.style.visibility = 'hidden';
-        // The source resumes ownership in the same frame that the landed copy
-        // becomes hidden. A still-fading mask must not expose a blank source.
+        // Source and copy have one paint owner. The authored image normally
+        // transitions opacity; do not animate opacity during this handoff or
+        // the source stays invisible after the preview copy disappears.
+        root.classList.add('is-preview-source-handoff');
         root.classList.remove('is-preview-source-hidden');
+        // Flush the now-opaque source while handoff disables the fade, before
+        // final mask teardown can remove the temporary handoff class.
+        void image.offsetWidth;
         leaveContentDone = true;
         finalizePreviewLeave(context);
       }
@@ -934,6 +940,7 @@ function setupImage(instance) {
     // Commit the newly mounted portal before starting presence motion. Without this
     // boundary Chromium can coalesce the mask/chrome `from` and `to` values into the first
     // painted frame, making the fade visually disappear even though Transition runs.
+    root.classList.remove('is-preview-source-handoff');
     previewRoot.classList.remove('is-chrome-visible');
     void previewRoot.offsetWidth;
     previewRoot.classList.add('is-chrome-visible');

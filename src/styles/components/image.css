@@ -7,6 +7,10 @@
 .qxframe9a7c2-image-error{z-index:var(--qxframe9a7c2-z-local-above);display:none}
 .qxframe9a7c2-image.is-error .qxframe9a7c2-image-error{display:flex}
 .qxframe9a7c2-image.is-loading .qxframe9a7c2-image-img,.qxframe9a7c2-image.is-preview-source-hidden .qxframe9a7c2-image-img{opacity:0}
+/* The preview trajectory hands image ownership back in one paint. Without a
+   handoff-local transition:none, the source still fades from opacity 0 after
+   the landed preview copy is hidden, causing a blank/flashing exit frame. */
+.qxframe9a7c2-image.is-preview-source-handoff .qxframe9a7c2-image-img{transition:none}
 .qxframe9a7c2-image-preview-trigger{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-focus);padding:0;border:0;background:transparent;color:transparent;font:inherit;cursor:zoom-in;outline:none}
 .qxframe9a7c2-image-preview-trigger[hidden]{display:none!important}
 .qxframe9a7c2-image-mask{position:absolute;inset:0;z-index:var(--qxframe9a7c2-z-local-overlay);display:flex;align-items:center;justify-content:center;background:var(--_qxframe9a7c2-image-mask-bg);color:var(--_qxframe9a7c2-semantic-overlay-text);opacity:0;transition:opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1);pointer-events:none}

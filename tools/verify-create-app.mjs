@@ -2230,6 +2230,8 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
  assert.ok(landed>=0&&sourceReturn>landed&&done>sourceReturn,'Image Preview hides landed copy before atomic source handoff; no duplicate/blank frame');
  assert.ok(imageJs.includes('!leaveMaskDone || !leaveContentDone'),'final portal teardown still waits for mask and content');
  assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
+ assert.ok(imageJs.includes("root.classList.add('is-preview-source-handoff');") && imageJs.includes('void image.offsetWidth;'),'Image Preview handoff forces opaque source paint before copy teardown');
+ assert.ok(image.includes('.qxframe9a7c2-image.is-preview-source-handoff .qxframe9a7c2-image-img{transition:none}'),'Image Preview source handoff suppresses opacity flash without disabling normal Image transition');
 });
 
 check('Stage5 Calendar year nav + range week caps and Tabler-inspired static Theme variants',()=>{
