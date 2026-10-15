@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 full offline QA ledger current changes (CI pending)
+- Offline QA yellow marks now only release-planner's DatePicker field and capacity-calendar's Calendar widget, with inner region metadata. Old Calendar-only last-round and all other card highlights removed.
+- Official dist/docs Windows ZIP must be rebuilt from the final successful HEAD using tools/qa/build-offline-demo.py, not from prior artifact; no artifact claimed here.
+- PR #267 remains Draft/Open. Stage/overall percentages unquantified.
+
 ## CURRENT — 2026-10-15 Calendar Header capability contract gate repair (CI pending)
 - QXFRAME run #38668447618 exposed a real schema rejection: DatePicker previously refused the newly declared allowYearView/allowMonthView because the closed component contract did not register them.
 - Registered both as boolean fields in DatePicker's existing typed component contract, not as a new controller or duplicate API. Full current-head CI + Chromium still required.

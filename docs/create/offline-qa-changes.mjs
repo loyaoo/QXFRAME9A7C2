@@ -1,7 +1,10 @@
-/** CALENDAR-RANGE-VISUAL-001 — current-only highlights, not historical Stage 5 regions. */
+/** CALENDAR-WHEEL-GEOMETRY-001 + CALENDAR-VIEW-MODE-OWNER-001: current-only highlights. */
 const groups = [
-  ['release-planner','Calendar shared range cells',[
-    ['[data-pv3-component="release-date"]','DatePicker Calendar continuous range','All Calendar date buttons retain their events; two visual children and CSS-only half-width start/end range stripes','__QA_BUNDLE_HEAD__']
+  ['release-planner','DatePicker calendar and wheel geometry',[
+    ['[data-pv3-component="release-date"]','DatePicker calendar width and month/year views','Calendar: 264px with seven 36px cells; embedded TimePanel: seven rows and 32px guide; year/month share one actual Calendar','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['capacity-calendar','Calendar single view-mode owner',[
+    ['[data-pv3x-widget="capacity-calendar"]','Calendar shared date/period visual rendering','One Calendar cell DOM and range painter for date/week/month/quarter/year; drill switches viewMode instead of creating another Calendar','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -65,7 +68,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：DatePicker、Menu、Alert、Badge、Cascader、Dropdown、Steps、Item、Tags、ImagePreview 截图整改。上一轮 WheelPanel 高亮已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：DatePicker 的 Calendar/TimePanel 几何及 Calendar 单实例视图切换；此前所有卡片高亮已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
