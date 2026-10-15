@@ -71,10 +71,10 @@
    ItemCollection title: smaller than actions, and 60% of the menu foreground. */
 .qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group,
 .qxframe9a7c2-dropdown-submenu-panel .qxframe9a7c2-item-collection-group{
-  font-size:.875em;
+  font-size:var(--_qxframe9a7c2-item-collection-title-size,.75rem);
   color:color-mix(in oklab,var(--_qxframe9a7c2-list-group-text) 60%,transparent)
 }
-.qxframe9a7c2-item-collection-title{box-sizing:border-box;min-height:var(--_qxframe9a7c2-list-row-height);display:flex;align-items:center;padding-inline:var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-semantic-text-muted);font-size:.875em;font-weight:600}
+.qxframe9a7c2-item-collection-title{box-sizing:border-box;min-height:var(--_qxframe9a7c2-list-row-height);display:flex;align-items:center;padding-inline:var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-semantic-text-muted);font-size:var(--_qxframe9a7c2-item-collection-title-size,.75rem);font-weight:600}
 .qxframe9a7c2-item-collection-content-slot{min-width:0;flex:1 1 auto;overflow-wrap:anywhere;white-space:normal}
 .qxframe9a7c2-item-collection-label{min-width:0;overflow-wrap:anywhere;white-space:normal}
 .qxframe9a7c2-item-collection-icon{display:inline-flex;width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);flex:0 0 var(--_qxframe9a7c2-control-icon-size);align-items:center;justify-content:center;overflow:hidden}
