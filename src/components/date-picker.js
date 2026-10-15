@@ -1,6 +1,7 @@
 import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
+import { WheelMetrics } from '../utils/wheelMetrics.js';
 
 import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
@@ -904,8 +905,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function resolvedTimeOptions(anchor, partIndex) {
     var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
-    // Keep shared TimePanel's 7-row default: md has 36px items, 252px viewport.
-    // Explicit time.visibleItemCount remains authoritative.
+    // Default to seven visible items; WheelPanel alone derives its scroll, guide and pads.
     if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 7;
     if (Utils.isFunction(opts.disabledTime)) {
       var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? (partIndex === 0 || partIndex === 1 ? partIndex : activeRangePart) : null, unit: unit, datePicker: api })) || {};
@@ -1320,6 +1320,16 @@ function setupDatePickerRuntime(instance, fieldInit) {
   instance.adoptPickerField(field);
   var popupFrame = field.getPopupFrame ? field.getPopupFrame() : null;
   if (!popupFrame) throw new Error('[QXFRAME9A7C2] DatePicker requires PickerField PopupFrame ownership.');
+  function syncCalendarWheelSize() {
+    // One shared Size for Calendar's seven date columns/rows and TimePanel's
+    // seven real items. No DatePicker override of WheelPanel's scroll geometry.
+    var shared = timeOptions && own(timeOptions,'itemHeight') ? Number(timeOptions.itemHeight) : WheelMetrics.itemHeight(opts.size);
+    if (!Number.isFinite(shared) || shared <= 0) throw new TypeError('[QXFRAME9A7C2] DatePicker time.itemHeight must be a positive number.');
+    var panel = field.getPanelElement();
+    if (panel) panel.style.setProperty('--_qxframe9a7c2-date-picker-default-cell-size', String(shared) + 'px');
+    return shared;
+  }
+  syncCalendarWheelSize();
 
   var doc = opts.document || globalThis.document;
   panelShell = doc.createElement('div');
@@ -1370,6 +1380,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
       value: selectionAnchor(draft.draftValue),
       viewValue: initialPrimaryView,
       weekStartsOn: opts.weekStartsOn,
+      size: opts.size,
+      cellSize: syncCalendarWheelSize(),
       disabledDate: disabledSelectionDate,
       renderCell: opts.renderCell,
       getCellState: stateForDate,
@@ -1391,6 +1403,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
         value: null,
         viewValue: dualSecondaryView(initialPrimaryView),
         weekStartsOn: opts.weekStartsOn,
+        size: opts.size,
+        cellSize: syncCalendarWheelSize(),
         disabledDate: disabledSelectionDate,
         renderCell: opts.renderCell,
         getCellState: stateForDate,
@@ -1656,9 +1670,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
       throw error;
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
+    syncCalendarWheelSize();
     field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, rangeSeparator:opts.rangeSeparator, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
-    if (calendar) calendar.updateOptions({ allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (calendarSecondary) calendarSecondary.updateOptions({ allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (calendar) calendar.updateOptions({ size:opts.size, cellSize:syncCalendarWheelSize(), allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (calendarSecondary) calendarSecondary.updateOptions({ size:opts.size, cellSize:syncCalendarWheelSize(), allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
