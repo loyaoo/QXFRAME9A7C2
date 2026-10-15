@@ -165,8 +165,9 @@
 
   .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
 
-  /* Feedback uses source Alert card/type text, not a per-status background matrix. */
-  .qxframe9a7c2-alert-root, .qxframe9a7c2-notification {
+  /* Alert owns its Appearance/semantic paint in components/alert.css.
+     This layer only maps Notification; no later Alert background override. */
+  .qxframe9a7c2-notification {
     background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
     border-color: var(--qxframe9a7c2-theme-border);
   }
@@ -177,7 +178,7 @@
   .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
   .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-alert-icon, .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
   .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
 
