@@ -62,9 +62,11 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - Calendar is the single DOM, date selection/value, active keyboard/virtual focus, delegated click, range painter owner for date, week, month, quarter and year. Only data labels/count/navigation page change with unit.
 - Month/quarter/year use existing Calendar button > cell-view > cell-inner DOM; `.calendar.is-period` expresses four-column unit geometry, not a separate widget. `PeriodPanel` old module is a direct import alias only; no second implementation. No new Theme tokens.
 
-## 2026-10-15 — CALENDAR-WHEEL-GEOMETRY-001: geometry owner
-- DatePicker `resolvedTimeOptions()` owns only embedded 7-item default; explicit `time.visibleItemCount` wins. WheelMetrics owns true item height (md=36px). WheelPanel alone computes viewport (252px), pad (108px) and snap.
-- WheelPanel's central Guide is visual only: inherited private `--_qxframe9a7c2-wheel-guide-trim` is 0.25rem when nested inside DatePicker TimePanel; guide is 32px, actual items remain 36px; standalone wheels unaffected.
+## 2026-10-15 — CALENDAR-WHEEL-GEOMETRY-001: shared 1+6=7 size owner
+- WheelMetrics owns all five shared row sizes (xs=24, sm=28, md=32, lg=36, xl=40px). WheelPanel defaults to seven visible items; physical Item, Scroll, Guide, Padding and Snap follow its original runtime calculation, with no guide-trim or separate scroll-height preset.
+- Calendar supports numeric `cellSize` in pixels for explicit independent overrides. A normal day/week Calendar defaults to the same WheelMetrics row size: one Weekdays row and six date rows, no Grid Gap; Calendar Header and Wheel Column Title each occupy RowSize + 8px external height. DatePicker forwards the shared size through its Calendar and embedded TimePanel consumers.
+- Default six-week Calendar width derives from seven times CellSize plus its true horizontal padding, 5px per side absent explicit `calendar-padding`. DatePicker calendar host width derives from the same source for both single/dual. The opt-in `is-adaptive-month` standalone commercial Card intentionally keeps its independently variable week-row and responsive DayPicker visual; do not use that opt-in for DateTime height composition.
+- DatePicker defaults to seven Wheel items; WheelPanel and TimePanel retain independent `visibleItemCount` configuration. No Scroll/Guide/Padding bespoke new options; no parallel CSS color or focus painters.
 - DatePicker owns hosted Calendar flex width = seven current control-size cells + two 0.375rem Calendar insets. Inner Calendar consumes same width; Calendar group/host min-width=0. A dual-calendar divider uses inset shadow, so second seven-column geometry does not lose 1px. Standalone Calendar's size ownership remains independent.
 
 ## 2026-10-15 — CALENDAR-VIEW-MODE-OWNER-001
