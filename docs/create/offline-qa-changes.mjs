@@ -1,10 +1,6 @@
-/** STAGE5-TAGS-PAINT-20261016: only this batch of user-visible changes. */
-/** Stage 5 current Tags-only correction; previous Calendar/Alert/Dropdown/Image highlights cleared. */
-const groups = [
- ['support-triage','Tags +Add 与 Tag 同外观',[
-  ['.qxframe9a7c2-tags-add','+ Add Tag 共用 Tag 皮肤','背景/前景/边框/圆角/高度/hover 均从 Tag 和 Theme 继承，只有触发与编辑焦点保留交互差异','__QA_BUNDLE_HEAD__']
- ],'03']
-];
+/** STAGE5-COMPONENT-MATRIX-20261016: documentation and verification only; no visual change. */
+/** Every previous visual QA group is cleared; 0 current changed regions. */
+const groups = [];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
 try{visible=localStorage.getItem(key)!=='0';folded=localStorage.getItem(foldkey)==='1'}catch(_){ }
@@ -66,7 +62,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Tags 的 + Add Tag 与普通 Tag 同一外观；此前 Calendar/Alert/Dropdown/Image 和 Tabler/Kbd 高亮全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">本轮仅更新组件覆盖及 CI 验收记录，没有修改卡片视觉；所有旧批黄色高亮均已清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 NONVISUAL-QA-OVERLAY-001 (new exact-HEAD CI pending)
+- This is a non-visual coverage audit follow-up: prior `TAGS-PAINT-OWNER-001` was validated and its old Support Triage +Add yellow highlight must **not** appear in a new docs/tests-only Windows ZIP.
+- Found the canonical offline packager incorrectly required at least one visual annotation; modified `tools/qa/build-offline-demo.py` to allow exactly 0 cards/0 regions only if `const groups = [];` is present, while retaining strict positive-batch distinct-group and exact-HEAD checks.
+- `docs/create/offline-qa-changes.mjs` now declares an empty current batch; updated `verify-create-app.mjs` to assert zero, reject historic Tags highlight, and keep production Create HTML free of QA modules. Offline full dist+docs and CRC/13 HTTP checks remain mandatory.
+- Next: verify QXFRAME CI and CSS Schema on this final branch HEAD, package the successful Actions dist+docs artifact, then continue per-family Theme/state/density/popup-role verification. PR #267 remains Draft; main untouched, owner signoff still pending.
+
 ## CURRENT — 2026-10-16 Stage5 FULL-COMPONENT-ACCEPTANCE-MATRIX-001 (CI pending)
 - Factual start: `17fce108d7b2692678b94aba068dab6528d58a4d` PR #267 Draft/Open, QXFRAME #38821636346 and CSS Schema #38821636219 both SUCCESS; main unchanged. Tag/Add last batch and 66 live Preview03 cards are frozen.
 - Found a **real missing Stage5 v3 §7(7) deliverable**: Preview03 registered 66 Cards / 65 unique families but had no explicit shadcn alignment, Theme verification, or manual owner-signoff statuses; `src/components/index.js` exports 10 additional modules absent from the 65-family inventory.

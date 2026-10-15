@@ -194,9 +194,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={
-    "support-triage":['.qxframe9a7c2-tags-add']
-  }; // Precisely one visual region changed in the current Tags-only batch.
+  const current={}; // Coverage audit/test update only: no visual changes and no leftover annotations.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -211,13 +209,15 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only current + Add Tag visual region highlighted; older marks are cleared');
+  assert.equal(count,0,'a non-visual audit must not highlight any old Preview Card');
+  assert.match(ledger,/const groups = \[\];/,'no-visual-change batch must publish an explicitly empty QA ledger');
+  assert.doesNotMatch(ledger,/\['support-triage'/,'previous Tags Add highlight is removed');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-track"/g)||[]).length,3,'each real QX Switch input has its track');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-thumb"/g)||[]).length,3,'each real QX Switch track has its thumb');
-  assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
+  assert.match(ledger,/const groups = \[/,'the same QA ledger exists for zero or positive change counts');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');

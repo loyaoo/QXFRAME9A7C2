@@ -45,10 +45,14 @@ with zipfile.ZipFile(artifact) as outer:
 # ZIP. Never leave a vague 'current run' label or stale hardcoded count.
 ledger_path=work/'docs/create/offline-qa-changes.mjs'
 ledger=ledger_path.read_text('utf-8')
-assert ledger.count('__QA_BUNDLE_HEAD__')>=1, 'current batch must contain exact-HEAD annotations'
+assert 'const groups = ' in ledger, 'QA ledger must declare the current batch, including zero-visual-change batches'
 active_regions = ledger.count('__QA_BUNDLE_HEAD__')
 active_cards = re.findall(r"^\s*\['([a-z0-9-]+)','([^']+)',\[$", ledger, flags=re.M)
-assert active_cards and len(set(id for id, _ in active_cards)) == len(active_cards), 'active annotation groups must be distinct'
+assert len(set(id for id, _ in active_cards)) == len(active_cards), 'active annotation groups must be distinct'
+if active_regions == 0:
+    assert not active_cards and 'const groups = [];' in ledger, 'a non-visual batch must clear all previous QA highlights'
+else:
+    assert active_cards, 'visual-change markers require real Card groups'
 active_summary = ', '.join(name for _, name in active_cards)
 # The acceptance batch may belong to Preview 01, Preview 02, or both.
 preview02_html = (work/'docs/create/preview-02.html').read_text('utf-8')
@@ -127,7 +131,8 @@ http.createServer((req,res)=>{
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
     '独立打开 Preview 01、02、03 也有同样的清单。所有改动标记只注入此本地包副本，'
     '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n' +
-    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
+    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。'
+     if active_regions else '本轮为组件覆盖清单及验收门禁更新，0 张视觉改动卡片，0 处高亮；原有 Preview 视觉不变。') +
     '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。' +
     ('本轮 Preview 03 为 Theme 全组件视觉统一，不再标注上一轮反色 Picker 卡片。' if preview03_changed else ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')) +
     '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
