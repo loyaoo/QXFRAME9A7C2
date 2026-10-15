@@ -91,13 +91,15 @@
   color:var(--_qxframe9a7c2-menu-primary-foreground,var(--qxframe9a7c2-theme-primary-foreground));
   border-color:transparent
 }
-/* Week Hover uses the same seven contiguous cells and ::before as Range,
-   but its preview endpoints are subtle instead of committed Primary. */
+/* Week hover covers seven consecutive dates, connected with the Range strip.
+   Endpoints need opaque pixels so the half-width ::before cannot bleed through. */
 .qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-start .qxframe9a7c2-calendar-cell-inner,
 .qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-end .qxframe9a7c2-calendar-cell-inner{
-  background:var(--_qxframe9a7c2-semantic-subtle-hover);
-  color:var(--_qxframe9a7c2-semantic-text);
-  border-color:transparent
+  background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,var(--_qxframe9a7c2-semantic-surface-raised));
+  color:var(--_qxframe9a7c2-semantic-text);border-color:transparent
+}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected)::before{
+  background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,var(--_qxframe9a7c2-semantic-surface-raised))
 }
 /* Calendar's today indicator is inside the inner square, not at the bottom
    of the padded outer button. PeriodPanel keeps its existing ::after painter. */
