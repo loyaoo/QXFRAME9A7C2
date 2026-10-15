@@ -1,20 +1,36 @@
 /** STAGE5-OWNER-VISUAL-20261015: only this batch of user-visible changes. */
+/** STAGE5-TABLER-STATIC-20261015: highlight current Calendar and static family work only. */
 const groups = [
-  ['capacity-calendar','Calendar range and full-week Hover',[
-    ['[data-pv3x-widget="capacity-calendar"]','Calendar Range endpoints / Week Hover','Range endpoints are fully opaque above their half-width strip; week Hover/selection connects all seven dates','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['alert-triage','Alert appearance combinations',[
-    ['.qxframe9a7c2-alert-root','Alert muting, outline, shadow and semantic status','Alert is-muted/is-outline/is-shadow with success/error/warning/info Appearance combinations','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['quick-action-menu','Dropdown group typography',[
-    ['[data-pv3x-widget="quick-action-menu"]','Dropdown group title','Group headers inherit ItemCollection title scale and 60% foreground opacity','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['customer-quality','Tags Add inherits Tag tokens',[
-    ['[data-pv3-component="customer-tags"]','Tag / Add Tag theme parity','Add Trigger shares Tag surface, radius, selection/variant Theme paint','__QA_BUNDLE_HEAD__']
-  ],'03'],
-  ['asset-preview','Image Preview foreground and lifecycle',[
-    ['[data-pv3x-widget="asset-preview"]','Preview title / close / exit motion','Title, Close and Toolbar use one background/border/white foreground; leave hides the landed copy before restoring its source; the mask finishes independently','__QA_BUNDLE_HEAD__']
-  ],'03']
+ ['capacity-calendar','Calendar range / week caps',[
+  ['[data-pv3x-widget="capacity-calendar"]','Calendar round week boundaries','Every displayed range row has its own rounded start/end; standalone Calendar has previous/next year navigation','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['revenue-surfaces','Card composition',[
+  ['.qxframe9a7c2-card-header','Card stamp / deck / paper layers','Theme-owned stacked, stamp and deck variants are included in static showcase','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['compliance-flags','Badge semantic appearance',[
+  ['.qxframe9a7c2-badge','Badge soft / subtle and status','Theme semantic Badge supports soft/subtle and status label treatments','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['stakeholder-roster','Avatar appearance',[
+  ['.qxframe9a7c2-avatar','Avatar presence and spacing','Avatar status and group spacing consume identity Theme colors','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['alert-triage','Alert compact layout',[
+  ['.qxframe9a7c2-alert-root','Compact Alert','Alert retains the previous completed semantic variants and adds compact spacing','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['service-health','Progress appearance',[
+  ['.qxframe9a7c2-progress','Progress stripes and step states','Additional stripe/muted/error/warning/step variants consume existing Progress tokens','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['segmented-console','Tabs appearance',[
+  ['.qxframe9a7c2-tabs','Pill and soft Tabs','Pill/soft display uses the existing Tabs state controller','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['support-triage','Tag appearance',[
+  ['.qxframe9a7c2-tag','Tag muted / outline / shadow','Static Tags styles share Tag presentation and Theme tokens','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['vendor-intake','Native Form helpers',[
+  ['.qxframe9a7c2-form-input','Form hints and InputGroup','Status hints and form composition use existing Field/Control roles','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['static-recipes','New static appearance showcase',[
+  ['.qxframe9a7c2-kbd','Kbd and Tabler-informed variants','Live Kbd keycaps and cross-family static recipes are theme-driven','__QA_BUNDLE_HEAD__']
+ ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -25,7 +41,7 @@ function mark(){
   if(!preview)return;
   document.body.classList.toggle('qa-annotated',visible);
   for(const [id,name,changes] of groups){
-    const card=id==='overview-metrics'?document.querySelector('.pv3-overview'):document.querySelector('[data-card="'+id+'"]');
+    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):document.querySelector('[data-card="'+id+'"]');
     if(!card)continue;
     card.classList.add('qa-changed-card');
     card.dataset.qaCardLabel='已改 '+changes.length+' 处';
@@ -53,7 +69,7 @@ function getDoc(){
 function locate(group,change){
   const [id]=group,[selector]=change;
   const jump=()=>{
-    const card=id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):getDoc()?.querySelector('[data-card="'+id+'"]');
+    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):getDoc()?.querySelector('[data-card="'+id+'"]');
     const node=card?.querySelector(selector)||card;
     if(!node)return false;
     node.scrollIntoView({behavior:'smooth',block:'center'});
@@ -77,7 +93,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Calendar 与 WheelPanel 的统一尺寸、日期网格与宽度公式；此前高亮全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Calendar 行圆角及导航、Tabler 静态组件形态、Kbd 新增；上一轮高亮全部清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
