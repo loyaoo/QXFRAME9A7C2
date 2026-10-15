@@ -26,7 +26,8 @@ check('Stage5 acceptance inventory covers every component export without false v
  assert.deepEqual(actualGallery,expectedGallery,'all Preview03 families have explicit statuses');
  const galleryIds=new Set(inventory.coverage.map(row=>row.card));
  const presentCards=new Set([...read('preview-03.html').matchAll(/data-card="([^"]+)"/g)].map(m=>m[1]));
- const exportNames=[...fs.readFileSync(path.join(root,'src/components/index.js'),'utf8').matchAll(/export\\s+\\{[^\\n}]+\\}\\s+from\\s+['"]\\.\\/([^'"]+)\\.js['"]/g)].map(m=>m[1]).sort();
+ const exportNames=[...fs.readFileSync(path.join(root,'src/components/index.js'),'utf8').matchAll(/export\s+\{[^\n}]+\}\s+from\s+['"]\.\/([^'"]+)\.js['"]/g)].map(m=>m[1]).sort();
+ assert.ok(exportNames.length>=50,'source barrel exports must be detected, not an empty regex match');
  const coverageNames=new Set([...a.previewFamilies,...a.additionalExports].map(x=>x.component));
  assert.equal(coverageNames.size,a.previewFamilies.length+a.additionalExports.length,'no duplicate family/export identity');
  for(const name of exportNames)assert.ok(coverageNames.has(name),'public export must be classified: '+name);
