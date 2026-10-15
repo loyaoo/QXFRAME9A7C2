@@ -145,3 +145,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.q
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly){
   outline:none
 }
+
+/* Joined InputGroup is the single focus owner; additions only tune authored chrome. */
+.qxframe9a7c2-input-group.is-soft{--_qxframe9a7c2-control-bg:var(--qxframe9a7c2-theme-muted)}
+.qxframe9a7c2-input-group.is-compact{--_qxframe9a7c2-control-padding-block:.25rem;--_qxframe9a7c2-control-padding-inline:.5rem}
+.qxframe9a7c2-input-group-addon.is-text{color:var(--qxframe9a7c2-theme-muted-foreground);white-space:nowrap}
+.qxframe9a7c2-input-group-addon.is-icon{display:inline-flex;align-items:center;justify-content:center;min-width:var(--_qxframe9a7c2-control-height);color:var(--qxframe9a7c2-theme-muted-foreground)}
