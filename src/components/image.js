@@ -165,6 +165,20 @@ function setupImage(instance) {
   var pendingCloseDetail = null;
   var leaveMaskDone = true;
   var leaveContentDone = true;
+  var previewDebugStart = 0;
+  /* Opt-in, zero-console-cost by default. Enable in the preview owner's window:
+     window.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG = true */
+  function tracePreviewLeave(phase){
+    var view=doc && doc.defaultView;
+    if (!view || view.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG !== true || !view.console) return;
+    var time=view.performance && view.performance.now ? view.performance.now() : Date.now();
+    if(phase==='close-request')previewDebugStart=time;
+    view.console.debug('[QXFRAME ImagePreview]',phase,{
+      elapsedMs:Math.round(time-previewDebugStart),maskDone:leaveMaskDone,copyDone:leaveContentDone,
+      previewOpen:previewOpen,sourceOpacity:image && view.getComputedStyle(image).opacity,
+      copyVisibility:previewMotion && view.getComputedStyle(previewMotion).visibility
+    });
+  }
   var previewRoot = null;
   var previewMask = null;
   var previewStage = null;
@@ -659,6 +673,7 @@ function setupImage(instance) {
   function finalizePreviewLeave(context) {
     if (previewOpen || destroyed || !leaveMaskDone || !leaveContentDone || !pendingCloseDetail) return false;
     var detail = pendingCloseDetail || previewDetail(context && context.reason || 'close', context && context.originalEvent || null);
+    tracePreviewLeave('finalize-start');
     pendingCloseDetail = null;
     drag = null;
     previewStage.classList.remove('is-dragging');
@@ -676,6 +691,7 @@ function setupImage(instance) {
     root.classList.remove('is-previewing');
     root.classList.remove('is-preview-source-hidden');
     root.classList.remove('is-preview-source-handoff');
+    tracePreviewLeave('finalize-end');
     call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
     return true;
   }
@@ -688,6 +704,7 @@ function setupImage(instance) {
     pendingCloseDetail = previewDetail(reason || 'api', event || null);
     leaveMaskDone = false;
     leaveContentDone = false;
+    tracePreviewLeave('close-request');
     // Return any user zoom/pan/rotate/flip to the canonical preview geometry while
     // the outer trajectory travels back to the authored source. Keeping those transforms
     // alive would make the return copy miss the source bounds even when the trajectory itself
@@ -883,6 +900,7 @@ function setupImage(instance) {
       },
       onAfterLeave: function (context) {
         leaveMaskDone = true;
+        tracePreviewLeave('mask-leave-done');
         finalizePreviewLeave(context);
       }
     });
@@ -911,6 +929,7 @@ function setupImage(instance) {
         // final mask teardown can remove the temporary handoff class.
         void image.offsetWidth;
         leaveContentDone = true;
+        tracePreviewLeave('image-trajectory-done');
         finalizePreviewLeave(context);
       }
     });
