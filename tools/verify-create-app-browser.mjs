@@ -3099,6 +3099,129 @@ try {
     }
   });
 
+  await step('Stage5 Calendar Week Hover selects seven contiguous dates with opaque Range endpoints',async()=>{
+    const rows=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const C=d.defaultView.QXFRAME9A7C2?.BuildingBlocks?.Calendar;
+      if(!C)return {error:'Calendar unavailable'};
+      const host=d.createElement('div');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);
+      const c=C.create({container:host,unit:'week',value:'2026-10-14',weekStartsOn:1});
+      const snapshot=()=>{
+        const cells=[...c.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')];
+        const selected=cells.filter(n=>n.classList.contains('is-week-selected'));
+        const hover=cells.filter(n=>n.classList.contains('is-week-hover'));
+        const range=cells.filter(n=>n.classList.contains('is-in-range'));
+        const starts=cells.filter(n=>n.classList.contains('is-range-start'));
+        const ends=cells.filter(n=>n.classList.contains('is-range-end'));
+        const boxes=starts.concat(ends).map(n=>d.defaultView.getComputedStyle(n.querySelector('.qxframe9a7c2-calendar-cell-inner')).backgroundColor);
+        const before=starts.map(n=>d.defaultView.getComputedStyle(n,'::before').width);
+        return {selected:selected.length,hover:hover.length,range:range.length,starts:starts.length,ends:ends.length,boxes,before,weekStyles:c.getRootElement().className};
+      };
+      try{
+        const initial=snapshot();
+        const nextWeek=c.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')[24];
+        nextWeek.dispatchEvent(new d.defaultView.PointerEvent('pointermove',{bubbles:true}));
+        const hovered=snapshot();
+        nextWeek.click();
+        const committed=snapshot();
+        c.getRootElement().dispatchEvent(new d.defaultView.PointerEvent('pointerleave',{bubbles:false}));
+        const cleared=snapshot();
+        return {initial,hovered,committed,cleared};
+      }finally{c.destroy();host.remove();}
+    })()`);
+    assert.equal(rows.error,undefined,'week Calendar runtime exists');
+    assert.equal(rows.initial.selected,7,'committed week highlights seven dates, not one date');
+    assert.equal(rows.initial.range,7,'selected week uses existing continuous Range strip');
+    assert.equal(rows.hovered.hover,7,'pointer Hover projects to all seven week cells');
+    assert.ok(rows.hovered.range>=7,'hovered week also uses Range strip');
+    assert.equal(rows.committed.selected,7,'selecting a new week keeps seven connected selected dates');
+    assert.equal(rows.cleared.hover,0,'pointer leave clears the entire weekly hover preview');
+    assert.equal(rows.cleared.selected,7,'clearing Hover does not clear committed week selection');
+    for(const key of ['initial','cleared']){
+      assert.equal(rows[key].starts,1,key+' one start for one week');
+      assert.equal(rows[key].ends,1,key+' one end for one week');
+      assert.ok(rows[key].boxes.every(x=>x&&x!=='rgba(0, 0, 0, 0)'&&x!=='transparent'),key+' raised endpoints are opaque above half width ::before');
+    }
+  });
+
+  await step('Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle',async()=>{
+    const result=await evaluate(`(async()=>{
+      const d=document.querySelector('[data-create-frame]').contentDocument,win=d.defaultView;
+      const q=win.QXFRAME9A7C2,theme=window.QXFRAME9A7C2_CREATE;
+      if(!q?.Components?.Image||!q?.Components?.Tags)return {error:'Image/Tags runtime unavailable'};
+      const host=d.createElement('section');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);
+      const alert=(classes)=>{const n=d.createElement('section');n.className='qxframe9a7c2-alert-root '+classes;
+        n.innerHTML='<div class="qxframe9a7c2-alert-wrapper"><span class="qxframe9a7c2-alert-icon">!</span>Alert content</div>';host.append(n);return n;};
+      const success=alert('is-outline is-success'),error=alert('is-outline is-error'),muted=alert('is-muted is-warning'),shadow=alert('is-shadow is-info');
+      const head=d.createElement('section');head.className='qxframe9a7c2-dropdown-panel';head.innerHTML='<div class="qxframe9a7c2-item-collection"><div class="qxframe9a7c2-item-collection-group">Group</div><div class="qxframe9a7c2-item-collection-title">Title</div></div>';host.append(head);
+      const chipHost=d.createElement('div');host.append(chipHost);
+      const tags=q.Components.Tags.create({container:chipHost,items:[{key:'one',value:'one',label:'One'}],editable:true,variant:'filled',creatable:true});
+      const imgHost=d.createElement('div');host.append(imgHost);
+      const source='data:image/svg+xml;base64,'+win.btoa('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80"><rect width="120" height="80" fill="blue"/></svg>');
+      const img=q.Components.Image.create({container:imgHost,src:source,alt:'Preview visibility',preview:true,width:120,height:80});
+      const cs=n=>win.getComputedStyle(n),colors=[];
+      const docRoot=d.documentElement,sty=d.getElementById('qxframe9a7c2-create-theme');
+      const oldCss=sty?.textContent,wasDark=docRoot.classList.contains('dark');
+      const styles=['vega','nova','maia','lyra','mira','luma','sera','rhea'];
+      try{
+        for(const style of styles)for(const dark of [false,true]){
+          docRoot.classList.toggle('dark',dark);
+          if(sty)sty.textContent=theme.compileTheme({...theme.state.config,style},{generatedAt:''}).body;
+          const chip=chipHost.querySelector('.qxframe9a7c2-tag:not(.qxframe9a7c2-tags-add)'),add=chipHost.querySelector('.qxframe9a7c2-tags-add');
+          colors.push({style,dark,success:cs(success.querySelector('.qxframe9a7c2-alert-icon')).color,error:cs(error.querySelector('.qxframe9a7c2-alert-icon')).color,
+            outline:cs(success).backgroundColor,muted:cs(muted).backgroundColor,shadow:cs(shadow).boxShadow,unshadow:cs(success).boxShadow,
+            groupFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-group')).fontSize),
+            titleFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-title')).fontSize),
+            tagBg:cs(chip).backgroundColor,addBg:cs(add).backgroundColor,tagRadius:cs(chip).borderTopLeftRadius,addRadius:cs(add).borderTopLeftRadius,
+            tagHeight:chip.getBoundingClientRect().height,addHeight:add.getBoundingClientRect().height});
+        }
+        docRoot.classList.toggle('dark',false);
+        if(sty)sty.textContent=theme.compileTheme({...theme.state.config,style:'nova'},{generatedAt:''}).body;
+        img.openPreview();
+        await new Promise(r=>setTimeout(r,160));
+        const preview=img.getPreviewElement();
+        const title=preview?.querySelector('.qxframe9a7c2-image-preview-title'),close=preview?.querySelector('.qxframe9a7c2-image-preview-close'),toolbar=preview?.querySelector('.qxframe9a7c2-image-preview-toolbar');
+        const chrome={title:!!title,close:!!close,toolbar:!!toolbar,
+          titleBackground:title&&cs(title).backgroundColor,closeBackground:close&&cs(close).backgroundColor,toolbarBackground:toolbar&&cs(toolbar).backgroundColor,
+          titleBorder:title&&cs(title).borderColor,closeBorder:close&&cs(close).borderColor,toolbarBorder:toolbar&&cs(toolbar).borderColor,
+          titleColor:title&&cs(title).color,closeColor:close&&cs(close).color,toolbarColor:toolbar&&cs(toolbar).color};
+        img.closePreview('qa-exit');
+        const during={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
+          rootHidden:preview.hidden,previewMotionVisible:preview.querySelector('.qxframe9a7c2-image-preview-motion')?.style.visibility};
+        await new Promise(r=>setTimeout(r,1000));
+        const finished={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
+          previewOpen:img.getState().previewOpen,previewPresent:img.getState().previewPresent};
+        return {colors,chrome,during,finished};
+      }finally{
+        if(sty)sty.textContent=oldCss;
+        docRoot.classList.toggle('dark',wasDark);
+        tags.destroy();img.destroy();host.remove();
+      }
+    })()`);
+    assert.equal(result.error,undefined,'runtime Image and Tags available');
+    assert.equal(result.colors.length,16,'eight Styles x two schemes');
+    for(const row of result.colors){
+      const k=row.style+'/'+row.dark;
+      assert.notEqual(row.success,row.error,k+' Alert success/error semantic icons differ');
+      assert.notEqual(row.outline,row.muted,k+' Outline/Muted Alert surfaces differ');
+      assert.notEqual(row.shadow,row.unshadow,k+' is-shadow alone enables elevation');
+      assert.ok(row.groupFont<=row.titleFont+.1,k+' Dropdown Group uses ItemCollection title font size');
+      assert.equal(row.tagBg,row.addBg,k+' Tags Add shares Tag background token');
+      assert.equal(row.tagRadius,row.addRadius,k+' Tags Add shares Tag radius');
+      assert.ok(Math.abs(row.tagHeight-row.addHeight)<.75,k+' Tags Add shares Tag height');
+    }
+    assert.ok(result.chrome.title&&result.chrome.close&&result.chrome.toolbar,'Image Preview has three chrome surfaces');
+    assert.equal(result.chrome.titleBackground,result.chrome.toolbarBackground,'Image title and toolbar share control background');
+    assert.equal(result.chrome.closeBackground,result.chrome.toolbarBackground,'Image close and toolbar share control background');
+    assert.equal(result.chrome.titleBorder,result.chrome.toolbarBorder,'Image title and toolbar share border');
+    assert.equal(result.chrome.closeBorder,result.chrome.toolbarBorder,'Image close and toolbar share border');
+    assert.equal(result.chrome.titleColor,result.chrome.toolbarColor,'Image title and toolbar share white foreground');
+    assert.equal(result.chrome.closeColor,result.chrome.toolbarColor,'Image close and toolbar share white foreground');
+    assert.equal(result.during.sourceHidden,true,'authored image stays hidden throughout leave');
+    assert.equal(result.finished.sourceHidden,false,'authored image recovers after completed leave');
+    assert.equal(result.finished.previewOpen,false,'preview public state closed');
+  });
+
   await step('CALENDAR-WHEEL-GEOMETRY-001 browser shared 36px, seven rows, dual and drill',async()=>{
     const v=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const q=d.defaultView.QXFRAME9A7C2,DP=q&&q.Components&&q.Components.DatePicker,WP=q&&q.BuildingBlocks&&q.BuildingBlocks.WheelPanel;\n if(!DP)return {error:'DatePicker unavailable'};\n const box=d.createElement('section');box.style.cssText='position:absolute;left:-4000px;top:0;width:60rem';\n d.body.append(box);const made=[];\n const near=(v,n)=>Math.abs(v-n)<.75;\n const make=(opts)=>{const mount=d.createElement('div');box.append(mount);const c=DP.create({...opts,container:mount,open:true});made.push(c);return c;};\n const measure=(c)=>{\n   const shell=c.getPanelOriginElement(),cal=c.getCalendar(),cals=c.getCalendars();\n   const time=c.getTimePanel(),wheel=time&&time.getWheelPanel(),w=wheel&&wheel.getRootElement();\n   const scroll=w&&w.querySelector('.qxframe9a7c2-wheel-panel-scroll');\n   const item=w&&w.querySelector('.qxframe9a7c2-wheel-panel-item'),guide=w&&w.querySelector('.qxframe9a7c2-wheel-panel-center-guide');\n   const pad=w&&w.querySelector('.qxframe9a7c2-wheel-panel-pad');\n   const host=shell&&shell.querySelector('.qxframe9a7c2-date-picker-calendar-host');\n   const grid=cal&&cal.getRootElement().querySelector('.qxframe9a7c2-calendar-grid');\n   const firstCell=grid&&grid.querySelector('.qxframe9a7c2-calendar-cell');\n   const cs=n=>n?d.defaultView.getComputedStyle(n):null;\n   const wh=n=>n?n.getBoundingClientRect().height:null;\n   const ww=n=>n?n.getBoundingClientRect().width:null;\n   return {\n     wheelCount:wheel&&wheel.getState().visibleItemCount,itemHeight:wh(item),scrollHeight:wh(scroll),guideHeight:wh(guide),\n     padHeight:wh(pad), itemInline:item&&item.style.height, centerDelta:scroll&&guide&&item?(guide.getBoundingClientRect().top+wh(guide)/2-scroll.getBoundingClientRect().top-wh(scroll)/2):null,\n     calendarWidth:ww(cal&&cal.getRootElement()),hostWidth:ww(host),gridWidth:ww(grid),dayWidth:ww(firstCell),dayHeight:wh(firstCell),\n     columns:cals.map(p=>ww(p.getRootElement())),columnCount:cals.length,\n     groupMin:shell&&cs(shell.querySelector('.qxframe9a7c2-date-picker-calendar-group'))?.minWidth,\n     hostMin:cs(host)?.minWidth,\n     gap:grid&&cs(grid)?.gap,\n     scrollInline:scroll&&scroll.style.height\n   };\n };\n const results={};\n try{\n   const std=make({value:'2026-10-15 12:34:00',time:{showSecond:false},needConfirm:true});\n   results.standard=measure(std);\n   const explicit=make({value:'2026-10-15 12:34:00',time:{showSecond:false,visibleItemCount:5},needConfirm:true});\n   results.custom=measure(explicit);\n   const dual=make({selection:'range',panelCount:2,value:['2026-10-10','2026-11-21'],needConfirm:true});\n   results.dual=measure(dual);\n   const disabled=make({value:'2026-10-15',allowYearView:false,allowMonthView:true});\n   const orig=disabled.getCalendar(),root=orig.getRootElement(),before=disabled.getState().value?.getTime();\n   const year=root.querySelector('.qxframe9a7c2-calendar-year'),month=root.querySelector('.qxframe9a7c2-calendar-month');\n   results.disabledTitle={yearDisabled:year?.disabled,monthDisabled:month?.disabled};\n   month?.click();\n   results.drilled={mode:disabled.getState().panelMode,unit:orig.getState().unit,viewMode:orig.getState().viewMode,\n     rootSame:disabled.getCalendar()===orig&&disabled.getCalendar().getRootElement()===root,\n     calendarCount:root.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length,\n     valueSame:disabled.getState().value?.getTime()===before};\n   const monthCell=root.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled)');\n   monthCell?.click();\n   results.returned={mode:disabled.getState().panelMode,viewMode:orig.getState().viewMode,unit:orig.getState().unit,valueSame:disabled.getState().value?.getTime()===before};\n   const opposite=make({value:'2026-10-15',allowYearView:true,allowMonthView:false});\n   const other=opposite.getCalendar().getRootElement();\n   results.opposite={yearDisabled:other.querySelector('.qxframe9a7c2-calendar-year')?.disabled,monthDisabled:other.querySelector('.qxframe9a7c2-calendar-month')?.disabled};\n   other.querySelector('.qxframe9a7c2-calendar-year')?.click();\n   results.yearDrill={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode,\n    rootCount:other.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length};\n   const yr=other.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled):not(.is-outside)');\n   yr?.click();\n   results.yearToMonth={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode};\n   return results;\n }finally{for(const c of made)try{c.destroy()}catch(e){}box.remove();}\n})()");
     assert.equal(v.error,undefined,'runtime DatePicker exists');
