@@ -65,5 +65,10 @@
 
 @keyframes qxframe9a7c2-badge-processing{0%{box-shadow:0 0 0 0 color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}100%{box-shadow:0 0 0 0.5rem transparent}}
 
-
-
+/* Soft status and editorial labels compose with the existing semantic Badge. */
+.qxframe9a7c2-badge.is-soft{--_qxframe9a7c2-badge-bg:color-mix(in oklab,var(--_qxframe9a7c2-accent,var(--qxframe9a7c2-theme-primary)) 9%,var(--qxframe9a7c2-theme-card));--_qxframe9a7c2-badge-text:var(--_qxframe9a7c2-accent,var(--qxframe9a7c2-theme-primary))}
+.qxframe9a7c2-badge.is-subtle{--_qxframe9a7c2-badge-bg:transparent}
+.qxframe9a7c2-badge-status-label{min-width:0;color:inherit;font:inherit;line-height:1.25}
+.qxframe9a7c2-badge-status.is-muted{color:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-badge-status.is-muted>.qxframe9a7c2-badge-status-dot{background:currentColor}
+.qxframe9a7c2-badge-status.is-pulsing>.qxframe9a7c2-badge-status-dot{box-shadow:0 0 0 .25rem color-mix(in oklab,currentColor 12%,transparent)}
