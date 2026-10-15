@@ -15,8 +15,8 @@
   margin:0
 }
 .qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-nav{
-  box-sizing:border-box;flex:0 0 var(--_qxframe9a7c2-calendar-cell-size);
-  width:var(--_qxframe9a7c2-calendar-cell-size);
+  box-sizing:border-box;flex:0 0 1.5rem;
+  width:1.5rem;
   height:var(--_qxframe9a7c2-calendar-cell-size)
 }
 .qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period)>.qxframe9a7c2-calendar-weekdays{
@@ -76,12 +76,6 @@
    paint stays on the raised square and may use the standard Theme radius. */
 .qxframe9a7c2-calendar-cell.is-in-range:not(.is-selected)>.qxframe9a7c2-calendar-cell-view>.qxframe9a7c2-calendar-cell-inner{
   background:transparent;border-color:transparent
-}
-.qxframe9a7c2-calendar-cell.is-range-start:not(.is-range-end) .qxframe9a7c2-calendar-cell-inner{
-  border-start-end-radius:0;border-end-end-radius:0
-}
-.qxframe9a7c2-calendar-cell.is-range-end:not(.is-range-start) .qxframe9a7c2-calendar-cell-inner{
-  border-start-start-radius:0;border-end-start-radius:0
 }
 /* Endpoints MUST be opaque. The half-width range ::before strip sits below
    the raised square and otherwise shows through a translucent endpoint. */
@@ -440,7 +434,6 @@
 .qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-start::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
 .qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-end::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
 .qxframe9a7c2-calendar-cell.is-range-start .qxframe9a7c2-calendar-cell-inner,.qxframe9a7c2-calendar-cell.is-range-end .qxframe9a7c2-calendar-cell-inner{border-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
-.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-nav{flex:0 0 auto;width:1.5rem;height:var(--_qxframe9a7c2-calendar-cell-size)}
 .qxframe9a7c2-calendar-year-nav{padding:0}
 .qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-year-nav{display:none}
 .qxframe9a7c2-date-picker-composite.has-time{column-gap:var(--qxframe9a7c2-date-picker-time-gap,.75rem)}
