@@ -2256,12 +2256,13 @@ check('Stage5 Calendar year nav + range week caps and Tabler-inspired static The
   'src/styles/components/tags.css':['.qxframe9a7c2-tag.is-muted','.qxframe9a7c2-tag.is-outline'],
   'src/styles/components/form-native.css':['.qxframe9a7c2-form-help','.qxframe9a7c2-form-hint'],
   'src/styles/components/native-input.css':['.qxframe9a7c2-input-group.is-soft'],
-  'src/styles/components/kbd.css':['.qxframe9a7c2-kbd{','.qxframe9a7c2-kbd-group']
+  'src/styles/components/composition.css':['.qxframe9a7c2-kbd{','.qxframe9a7c2-kbd-group']
  })){
   const source=css(path);
   for(const selector of sels)assert.ok(source.includes(selector),path+' missing '+selector);
  }
- assert.equal(manifest.sourceModules.filter(x=>x==='src/styles/components/kbd.css').length,1,'Kbd CSS is registered exactly once');
+ assert.ok(manifest.sourceModules.includes('src/styles/components/composition.css'),'Kbd stays in the existing Composition CSS owner');
+ assert.ok(!manifest.sourceModules.includes('src/styles/components/kbd.css'),'Kbd must not have a parallel component CSS module');
  assert.match(html,/data-pv3-static-recipes="tabler-theme"/,'Preview03 includes rendered static variants');
  assert.equal((html.match(/data-card="/g)||[]).length,66,'static showcase does not duplicate commercial Cards');
 });
