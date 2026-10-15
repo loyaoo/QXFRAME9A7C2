@@ -544,6 +544,109 @@ try {
   });
 
 
+  await step('Stage5 Preview03 expanded 48 Cards: real QX mounts, local actions and native choice across 16 modes',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3?.expanded','Preview03 expanded runtime',15000);
+    const actual=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const w=d.defaultView, api=window.QXFRAME9A7C2_CREATE, root=d.documentElement;
+      const state=w.QXFRAME9A7C2_PREVIEW3,expanded=state.expanded;
+      const card=id=>d.querySelector('[data-card="'+id+'"]');
+      const note=id=>card(id)?.querySelector('[data-pv3x-status]');
+      const demo=[...d.querySelectorAll('[data-pv3x-demo]')];
+      const result={newCards:expanded?.newCards,mounted:expanded?.mounted,
+        mountErrors:state.mountErrors?.slice(),expandedErrors:expanded?.errors?.slice(),
+        demoCount:demo.length};
+      const url=d.location.href;
+      result.demo=demo.map(button=>{
+        button.click();
+        const status=button.closest('[data-card]')?.querySelector('[data-pv3x-status]');
+        return {label:button.textContent.trim(),visible:status&&!status.hidden, text:status?.textContent||''};
+      });
+      const checkbox=card('audit-checklist').querySelector('input[type="checkbox"]');
+      const checkboxBefore=checkbox.checked;checkbox.click();
+      result.checkbox={before:checkboxBefore,after:checkbox.checked,message:note('audit-checklist')?.textContent};
+      checkbox.click();
+      const radio=[...card('fraud-decision').querySelectorAll('input[type="radio"]')];
+      const beforeRadio=radio.map(x=>x.checked);radio[0].click();
+      result.radio={count:radio.length,before:beforeRadio,after:radio.map(x=>x.checked),message:note('fraud-decision')?.textContent};
+      radio[1].click();
+      const flags=[...card('feature-flags').querySelectorAll('input[type="checkbox"]')];
+      const oldFlag=flags[1].checked;flags[1].click();
+      result.switch={before:oldFlag,after:flags[1].checked,message:note('feature-flags')?.textContent};
+      flags[1].click();
+      const form=card('vendor-intake')?.querySelector('[data-pv3x-form]');
+      if(form){form.requestSubmit();result.form={valid:form.checkValidity(),message:note('vendor-intake')?.textContent};
+        const mail=form.querySelector('[type=email]'),old=mail.value;
+        mail.value='not-a-valid-email';result.form.invalidRejected=!form.checkValidity();mail.value=old;
+      }
+      const events=d.querySelector('[data-pv3x-events]'),oldEvents=events?.children.length;
+      d.querySelector('[data-pv3x-add-event]')?.click();
+      result.events={before:oldEvents,after:events?.children.length,message:note('stream-animation')?.textContent};
+      const transition=card('state-transitions'),active=()=>[...transition.querySelectorAll('.pv3x-process-chip')].findIndex(x=>x.classList.contains('is-current'));
+      const first=active();transition.querySelector('[data-pv3x-transition]')?.click();
+      result.transition={before:first,after:active(),message:note('state-transitions')?.textContent};
+      result.sameUrl=d.location.href===url;
+      const sheet=d.getElementById('qxframe9a7c2-create-theme'),oldCss=sheet.textContent;
+      const oldDark=root.classList.contains('dark'),oldStyle=root.getAttribute('data-create-style');
+      result.states=[];
+      try{
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
+        for(const dark of [false,true]){
+          root.classList.toggle('dark',dark);root.setAttribute('data-create-style',style);
+          sheet.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;
+          const checked=radio[1],off=radio[0],checkedBox=checkbox;
+          const trackOn=flags[0].nextElementSibling,trackOff=flags[1].nextElementSibling;
+          const cs=node=>w.getComputedStyle(node);
+          result.states.push({style,dark,radioChecked:checked.checked,radioUnselected:off.checked,
+            radioSize:checked.getBoundingClientRect().width,radioOpacity:parseFloat(cs(checked).opacity),
+            checkChecked:checkedBox.checked,checkSize:checkedBox.getBoundingClientRect().width,
+            switchOn:flags[0].checked,switchOff:flags[1].checked,
+            switchOnBackground:cs(trackOn).backgroundColor,switchOffBackground:cs(trackOff).backgroundColor,
+            switchWidth:trackOn.getBoundingClientRect().width,
+            switchThumbHeight:trackOn.querySelector('.qxframe9a7c2-switch-thumb')?.getBoundingClientRect().height});
+        }
+      }finally{
+        sheet.textContent=oldCss;root.classList.toggle('dark',oldDark);
+        if(oldStyle===null)root.removeAttribute('data-create-style');else root.setAttribute('data-create-style',oldStyle);
+      }
+      return result;
+    })()`);
+    assert.equal(actual.newCards,48,'48 added Preview03 Cards');
+    assert.ok(actual.mounted>=20,'real QX component mounts in added Cards');
+    assert.deepEqual(actual.mountErrors,[],'neither Preview03 baseline nor expanded runtime reports a mount failure');
+    assert.deepEqual(actual.expandedErrors,[],'added runtime has no silent mount/empty-slot errors');
+    assert.equal(actual.demoCount,6,'all six authored local actions exist');
+    assert.ok(actual.demo.every(x=>x.visible&&x.text.includes(x.label)),'six local actions expose their own visible results: '+JSON.stringify(actual.demo));
+    assert.equal(actual.checkbox.before,true,'audit checkbox initially checked');
+    assert.equal(actual.checkbox.after,false,'checkbox pointer action changes native checked value');
+    assert.match(actual.checkbox.message,/Selection updated locally/,'checkbox change feedback visible');
+    assert.equal(actual.radio.count,3,'three native radio choices');
+    assert.deepEqual(actual.radio.before,[false,true,false],'original radio choice');
+    assert.deepEqual(actual.radio.after,[true,false,false],'radio activation keeps native exclusivity');
+    assert.match(actual.radio.message,/Selection updated locally/,'radio change feedback visible');
+    assert.equal(actual.switch.before,false,'switch starts unchecked');
+    assert.equal(actual.switch.after,true,'native Switch input toggle updates checked');
+    assert.match(actual.switch.message,/Selection updated locally/,'Switch status visible');
+    assert.ok(actual.form.valid&&actual.form.invalidRejected,'vendor form retains actual browser validation');
+    assert.match(actual.form.message,/validated locally/,'valid supplier form returns local result');
+    assert.equal(actual.events.after,actual.events.before+1,'transition-group adds a real DOM event');
+    assert.match(actual.events.message,/Event added/,'event stream reports local action');
+    assert.notEqual(actual.transition.before,actual.transition.after,'transition changes actual active chip');
+    assert.match(actual.transition.message,/Moved to next local workflow state/,'transition status feedback visible');
+    assert.ok(actual.sameUrl,'all actions remain local without navigating or sending users elsewhere');
+    assert.equal(actual.states.length,16,'8 Styles x Light/Dark native choice modes');
+    for(const s of actual.states){
+      const label=s.style+'/'+(s.dark?'dark':'light');
+      assert.ok(s.radioChecked&&!s.radioUnselected&&s.checkChecked&&s.switchOn&&!s.switchOff,label+' true native checked state');
+      assert.ok(s.radioSize>=12&&s.checkSize>=12&&s.radioOpacity>.5,label+' native Radio/Checkbox have usable visible dimensions');
+      assert.ok(s.switchWidth>=20&&s.switchThumbHeight>=10,label+' Switch track and thumb remain physically visible');
+      assert.notEqual(s.switchOnBackground,s.switchOffBackground,label+' checked Switch paints differently from unchecked Switch');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','return from expanded-card state regression',15000);
+  });
+
   await step('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click',async()=>{
     await click('document.querySelector(\'[data-create-item="03"]\')');
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','real Cascader Preview03 runtime',15000);
