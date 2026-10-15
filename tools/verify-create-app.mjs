@@ -2197,8 +2197,6 @@ check('Stage5 static Outline Badge alias and inherited List radius',()=>{
  assert.doesNotMatch(theme,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color/,'List and Tree inherit container colors');
 });
 
-console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
-
 check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings, Tag Add and Image Preview leave',()=>{
  const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
@@ -2218,3 +2216,5 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
  assert.ok(imageJs.includes('// leave finalizer hands visual ownership back exactly once.'),'Image Preview never reveals source before mask and content both complete');
  assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
 });
+
+console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
