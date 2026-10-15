@@ -1423,7 +1423,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var primaryRefs = calendar.getRefs ? calendar.getRefs() : null;
       var secondaryRefs = calendarSecondary.getRefs ? calendarSecondary.getRefs() : null;
       if (primaryRefs && primaryRefs.next) primaryRefs.next.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
+       if (primaryRefs && primaryRefs.nextYear) primaryRefs.nextYear.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
       if (secondaryRefs && secondaryRefs.prev) secondaryRefs.prev.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
+       if (secondaryRefs && secondaryRefs.prevYear) secondaryRefs.prevYear.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
     }
     setCalendarPanelMode('date', selectionAnchor(draft.draftValue) || opts.defaultPickerValue || new Date());
   } else {

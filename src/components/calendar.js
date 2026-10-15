@@ -22,9 +22,11 @@ var calendarDomainSequence = 0;
 var blueprint = DOMTemplate.staticHTML`
   <div class="qxframe9a7c2-calendar qxframe9a7c2-date-panel" data-qxframe9a7c2-ref="root">
     <div class="qxframe9a7c2-calendar-header qxframe9a7c2-date-panel-header" data-qxframe9a7c2-ref="header">
+      <button type="button" class="qxframe9a7c2-button is-default is-text is-square qxframe9a7c2-calendar-nav qxframe9a7c2-calendar-year-nav qxframe9a7c2-calendar-prev-year" data-qxframe9a7c2-ref="prev-year" title="Previous year"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-chevrons-left"></span></button>
       <button type="button" class="qxframe9a7c2-button is-default is-text is-square qxframe9a7c2-calendar-nav qxframe9a7c2-date-panel-nav" data-qxframe9a7c2-ref="prev"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-left is-line is-round is-stroke-3"></span></button>
       <div class="qxframe9a7c2-calendar-title qxframe9a7c2-date-panel-title" data-qxframe9a7c2-ref="title"><button type="button" class="qxframe9a7c2-calendar-title-button qxframe9a7c2-date-panel-title-action qxframe9a7c2-calendar-year" data-qxframe9a7c2-ref="year-title"></button><button type="button" class="qxframe9a7c2-calendar-title-button qxframe9a7c2-date-panel-title-action qxframe9a7c2-calendar-month" data-qxframe9a7c2-ref="month-title"></button></div>
       <button type="button" class="qxframe9a7c2-button is-default is-text is-square qxframe9a7c2-calendar-nav qxframe9a7c2-date-panel-nav" data-qxframe9a7c2-ref="next"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-caret-right is-line is-round is-stroke-3"></span></button>
+      <button type="button" class="qxframe9a7c2-button is-default is-text is-square qxframe9a7c2-calendar-nav qxframe9a7c2-calendar-year-nav qxframe9a7c2-calendar-next-year" data-qxframe9a7c2-ref="next-year" title="Next year"><span class="qxframe9a7c2-icon qxframe9a7c2-icon-chevrons-right"></span></button>
     </div>
     <div class="qxframe9a7c2-calendar-weekdays" data-qxframe9a7c2-ref="weekdays"></div>
     <div class="qxframe9a7c2-calendar-grid" data-qxframe9a7c2-ref="grid"></div>
@@ -223,6 +225,8 @@ function create(options) {
     if (domBinding.refs.header) domBinding.refs.header.classList.add('qxframe9a7c2-calendar-header');
     if (domBinding.refs.prev) { domBinding.refs.prev.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.prev, 'calendarNav', '-1'); domBinding.refs.prev.tabIndex = -1; }
     if (domBinding.refs.next) { domBinding.refs.next.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.next, 'calendarNav', '1'); domBinding.refs.next.tabIndex = -1; }
+    if (domBinding.refs.prevYear) { domBinding.refs.prevYear.classList.add('qxframe9a7c2-calendar-nav','qxframe9a7c2-calendar-year-nav'); DOM.setPrivate(domBinding.refs.prevYear,'calendarNav','-12'); domBinding.refs.prevYear.tabIndex=-1; }
+    if (domBinding.refs.nextYear) { domBinding.refs.nextYear.classList.add('qxframe9a7c2-calendar-nav','qxframe9a7c2-calendar-year-nav'); DOM.setPrivate(domBinding.refs.nextYear,'calendarNav','12'); domBinding.refs.nextYear.tabIndex=-1; }
     title.classList.add('qxframe9a7c2-calendar-title');
     if (domBinding.refs.yearTitle) { domBinding.refs.yearTitle.tabIndex = 0; domBinding.refs.yearTitle.classList.add('qxframe9a7c2-calendar-title-button','qxframe9a7c2-calendar-year'); DOM.setPrivate(domBinding.refs.yearTitle, 'calendarTitle', isPeriod?'period':'year'); }
     if (domBinding.refs.monthTitle) { domBinding.refs.monthTitle.tabIndex = 0; domBinding.refs.monthTitle.classList.add('qxframe9a7c2-calendar-title-button','qxframe9a7c2-calendar-month'); DOM.setPrivate(domBinding.refs.monthTitle, 'calendarTitle', 'month'); }

@@ -369,11 +369,11 @@
 .qxframe9a7c2-date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto;min-width:0;max-width:none}
 .qxframe9a7c2-date-picker-calendar-host{box-sizing:border-box;display:flex;flex:0 0 var(--_qxframe9a7c2-date-picker-calendar-width);min-width:0}
 .qxframe9a7c2-date-picker-calendar-host>.qxframe9a7c2-calendar{--_qxframe9a7c2-date-panel-width:var(--_qxframe9a7c2-date-picker-calendar-width);height:100%;width:100%;min-width:0;max-width:none;flex:1 1 auto}
-.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:0}
-.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{box-shadow:inset 1px 0 var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:0;gap:var(--qxframe9a7c2-date-picker-dual-gap,1rem)}
+.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{box-shadow:none}
 .qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:100%;max-width:none}
-.qxframe9a7c2-date-picker-dual-inner-nav{visibility:hidden;pointer-events:none}
-.qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-date-picker-dual-inner-nav{display:none!important}
+.qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:0}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar.is-period,.qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{height:100%;flex:1 1 auto}
 @media (max-width:760px){.qxframe9a7c2-date-picker-selection-panel{overflow-x:auto}.qxframe9a7c2-date-picker-composite.has-time{flex-direction:column}.qxframe9a7c2-date-picker-time-panel{border-inline-start:0;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}}
@@ -433,3 +433,14 @@
 .qxframe9a7c2-color-picker-gradient-add:focus-visible:not(:disabled),.qxframe9a7c2-color-picker-gradient-remove:focus-visible:not(:disabled){--_qxframe9a7c2-color-picker-action-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-color-picker-action-focus-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-color-picker-gradient-add:disabled,.qxframe9a7c2-color-picker-gradient-remove:disabled{--_qxframe9a7c2-color-picker-action-bg:var(--_qxframe9a7c2-semantic-bg);--_qxframe9a7c2-color-picker-action-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-color-picker-action-focus-shadow:none;--_qxframe9a7c2-color-picker-action-cursor:not-allowed;--_qxframe9a7c2-color-picker-action-opacity:.45}
 
+
+/* S5 source-like date bands: each displayed week begins and ends with a rounded cap. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range:nth-child(7n+1)::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range:nth-child(7n)::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-start::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-end::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-cell.is-range-start .qxframe9a7c2-calendar-cell-inner,.qxframe9a7c2-calendar-cell.is-range-end .qxframe9a7c2-calendar-cell-inner{border-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-nav{flex:0 0 auto;width:1.5rem;height:var(--_qxframe9a7c2-calendar-cell-size)}
+.qxframe9a7c2-calendar-year-nav{padding:0}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-year-nav{display:none}
+.qxframe9a7c2-date-picker-composite.has-time{column-gap:var(--qxframe9a7c2-date-picker-time-gap,.75rem)}
