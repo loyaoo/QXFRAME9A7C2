@@ -106,4 +106,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tabs-tab:focus-withi
 .qxframe9a7c2-tabs.is-stretch .qxframe9a7c2-tabs-tab-shell{flex:1 1 0}
 .qxframe9a7c2-tabs.is-stretch .qxframe9a7c2-tabs-tab{width:100%;flex:1 1 0}
 
-
+/* Pill and soft trigger appearances reuse Tabs' existing selection controller. */
+.qxframe9a7c2-tabs.is-pills .qxframe9a7c2-tabs-tab{--_qxframe9a7c2-tabs-tab-bg:transparent;--_qxframe9a7c2-tabs-tab-border:transparent;border-radius:var(--_qxframe9a7c2-tabs-item-radius)}
+.qxframe9a7c2-tabs.is-pills .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-tabs-tab-text:var(--qxframe9a7c2-theme-primary-foreground);--_qxframe9a7c2-tabs-tab-weight:600}
+.qxframe9a7c2-tabs.is-pills .qxframe9a7c2-tabs-indicator{display:none}
+.qxframe9a7c2-tabs.is-pills .qxframe9a7c2-tabs-tab:not(.is-active):hover{--_qxframe9a7c2-tabs-tab-bg:var(--_qxframe9a7c2-navigation-hover-bg)}
+.qxframe9a7c2-tabs.is-soft .qxframe9a7c2-tabs-tab.is-active{--_qxframe9a7c2-tabs-tab-bg:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 12%,var(--qxframe9a7c2-theme-card));--_qxframe9a7c2-tabs-tab-text:var(--qxframe9a7c2-theme-primary)}
