@@ -1,7 +1,7 @@
 // Canonical wheel sizing metrics. Components may choose options; size-to-metric projection lives here.
 import { Utils } from './utils.js';
 
-const ITEM_HEIGHT_BY_SIZE = Object.freeze({ xs:24, sm:28, md:32, lg:36, xl:40 });
+const ITEM_HEIGHT_BY_SIZE = Object.freeze({ xs:28, sm:32, md:36, lg:40, xl:44 });
 function normalizeSize(value) { return Utils.normalizeSize(value, 'md'); }
 function itemHeight(value) { return ITEM_HEIGHT_BY_SIZE[normalizeSize(value)]; }
 function viewportHeight(visibleItemCount, height) { return Math.max(1, Math.trunc(Number(visibleItemCount) || 1)) * Math.max(1, Number(height) || itemHeight('md')); }

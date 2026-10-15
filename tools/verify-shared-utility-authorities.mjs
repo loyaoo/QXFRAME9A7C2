@@ -13,7 +13,7 @@ const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 // 76→80: pure time/wheel algorithms have one owner.
 assert.deepEqual(TimeUnit.parse('11:22:33 PM',{showSecond:true,use12Hours:true}),{hour:23,minute:22,second:33});
 assert.equal(TimeUnit.format({hour:23,minute:22,second:33},{showSecond:true,use12Hours:true}),'11:22:33 PM');
-assert.deepEqual(['xs','sm','md','lg','xl'].map(size=>WheelMetrics.itemHeight(size)),[24,28,32,36,40]);
+assert.deepEqual(['xs','sm','md','lg','xl'].map(size=>WheelMetrics.itemHeight(size)),[28,32,36,40,44]);
 
 for(const file of ['src/components/time-picker.js','src/components/time-panel.js']){
   const source=read(file);

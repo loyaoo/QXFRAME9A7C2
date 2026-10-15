@@ -1952,7 +1952,7 @@ check('CALENDAR-WHEEL-GEOMETRY-001 7-row Wheel and one Calendar dimension owner'
  assert.match(picker,/wheel-panel-center-guide\{box-sizing:border-box/,'Guide border and item share a single physical height');
   const metrics=fs.readFileSync(path.join(root,'src/utils/wheelMetrics.js'),'utf8');
   const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
-  assert.ok(metrics.includes('xs:24, sm:28, md:32, lg:36, xl:40'),'single five-size WheelMetrics projection');
+  assert.ok(metrics.includes('xs:28, sm:32, md:36, lg:40, xl:44'),'single five-size WheelMetrics projection');
   assert.ok(calendar.includes("root.style.setProperty('--qxframe9a7c2-calendar-cell-size'"),'Calendar exposes numeric cellSize');
   assert.ok(picker.includes('height:calc(var(--qxframe9a7c2-wheel-item-height,2rem) + .5rem)'),'Wheel title matches Calendar Header formula');
   assert.ok(picker.includes('height:calc(var(--_qxframe9a7c2-calendar-cell-size) + .5rem)'),'Calendar Header matches Wheel title formula');

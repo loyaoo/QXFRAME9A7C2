@@ -1,10 +1,10 @@
 /** CALENDAR-WHEEL-GEOMETRY-001: current-only shared 1+6=7 row-size highlights. */
 const groups = [
   ['release-planner','DatePicker / WheelPanel unified row size',[
-    ['[data-pv3-component="release-date"]','Calendar / TimePanel row and heading geometry','Five shared sizes; md=32px Cell and Item, seven weekday/date rows equal seven Wheel items; Calendar width=7×CellSize+horizontal padding; Guide follows Item','__QA_BUNDLE_HEAD__']
+    ['[data-pv3-component="release-date"]','Calendar / TimePanel row and heading geometry','Five shared sizes xs/sm/md/lg/xl = 28/32/36/40/44px; md=36px Cell and Item, seven weekday/date rows equal seven Wheel items; Calendar width=7×CellSize+horizontal padding; Guide follows Item','__QA_BUNDLE_HEAD__']
   ],'03'],
   ['capacity-calendar','Calendar shared CellSize',[
-    ['[data-pv3x-widget="capacity-calendar"]','Standalone Calendar CellSize and six-week layout','Calendar default CellSize follows WheelMetrics xs/sm/md/lg/xl, supports explicit cellSize override; standard date view maintains six grid rows','__QA_BUNDLE_HEAD__']
+    ['[data-pv3x-widget="capacity-calendar"]','Standalone Calendar CellSize and six-week layout','Calendar default CellSize follows updated WheelMetrics 28/32/36/40/44px, supports explicit cellSize override; standard date view maintains six grid rows','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
