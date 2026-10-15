@@ -5536,6 +5536,8 @@
  * Item/ItemCollection remain the row-state owner. Flush mode removes row corners because there is no inner gutter. */
 .qxframe9a7c2-list-frame{--_qxframe9a7c2-list-frame-gutter:var(--qxframe9a7c2-list-frame-gutter,0.375rem);box-sizing:border-box}
 .qxframe9a7c2-list-frame.is-inset{padding:var(--_qxframe9a7c2-list-frame-gutter);--_qxframe9a7c2-item-radius:var(--_qxframe9a7c2-navigation-radius)}
+/* Tabler: vertical outer gap only; action backgrounds extend to both inline edges. */
+.qxframe9a7c2-list-frame.is-block-inset{padding-block:var(--_qxframe9a7c2-list-frame-gutter);padding-inline:0;--_qxframe9a7c2-item-radius:0px}
 .qxframe9a7c2-list-frame.is-flush{padding:0;--_qxframe9a7c2-item-radius:0px}
 
 /* Calendar date/week/month/quarter/year units share one panel owner. */
