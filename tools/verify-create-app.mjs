@@ -1932,12 +1932,16 @@ check('Stage5 DatePicker width and preset scroll border are owner-aligned',()=>{
  assert.ok(picker.includes('date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto'),'Calendar group does not stretch');
  assert.ok(picker.includes('presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto;border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)'),'Presets scroll shell owns border');
 });
-check('Stage5 DateTime composite shares nine-row Wheel height and density',()=>{
+check('CALENDAR-WHEEL-GEOMETRY-001 7-row Wheel and one Calendar dimension owner',()=>{
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  const js=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
  const build=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
- assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;"),'only default DateTime wheel expands to nine rows; custom options preserved');
- assert.ok(picker.includes('min-height:calc(9 * var(--_qxframe9a7c2-control-height))'),'canonical Calendar minimum height covers TimePanel nine-row projection for every consumer');
+ assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 7;"),'DatePicker defaults to seven items; explicit consumer count survives');
+ assert.match(picker,/--_qxframe9a7c2-date-picker-calendar-width:calc\(7 \* var\(--_qxframe9a7c2-date-picker-day-size\) \+ 0\.75rem\)/,'seven cells + two 6px insets');
+ assert.match(picker,/--_qxframe9a7c2-date-panel-width:var\(--_qxframe9a7c2-date-picker-calendar-width\)/,'host and Calendar share width');
+ assert.match(picker,/date-picker-calendar-host\{[^}]*min-width:0/,'host min-width 0');
+ assert.match(picker,/date-picker-calendar-group\{[^}]*min-width:0/,'group min-width 0');
+ assert.match(picker,/date-picker-time-panel\{--_qxframe9a7c2-wheel-guide-trim:0\.25rem/,'guide height separate from item/snap');
  assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'DatePicker may not duplicate Calendar cell/size ownership');
  assert.doesNotMatch(picker,/\.qxframe9a7c2-date-picker-composite\.has-time\{[^}]*--_qxframe9a7c2-(?:calendar|date-picker-calendar)/,'DateTime host must not override Calendar size; responsive flex-direction may remain');
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');

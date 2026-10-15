@@ -141,7 +141,7 @@
 .qxframe9a7c2-wheel-panel.is-readonly .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-cursor:default}
 .qxframe9a7c2-wheel-panel-item.is-disabled,.qxframe9a7c2-wheel-panel.is-disabled .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:not-allowed;--_qxframe9a7c2-wheel-item-opacity:.5}
 .qxframe9a7c2-wheel-panel-pad{flex:0 0 auto;pointer-events:none}
-.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);inset-inline:0;top:50%;height:var(--qxframe9a7c2-wheel-item-height,2.25rem);transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)}
+.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);inset-inline:0;top:50%;height:calc(var(--qxframe9a7c2-wheel-item-height,2.25rem) - var(--_qxframe9a7c2-wheel-guide-trim,0rem));transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)}
 
 .qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--qxframe9a7c2-theme-field-border)}
 
@@ -306,24 +306,25 @@
 .qxframe9a7c2-tree-select-tree-host>.qxframe9a7c2-item-collection{background:transparent}
 
 .qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active),.qxframe9a7c2-date-picker-drill-panel:not(.is-date-picker-active){display:none!important}
-.qxframe9a7c2-date-picker-panel{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 2.5rem);--_qxframe9a7c2-date-picker-time-width:15rem;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height)}
-.qxframe9a7c2-date-picker-panel.is-xs{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 1.5rem);--_qxframe9a7c2-date-picker-time-width:14rem}
-.qxframe9a7c2-date-picker-panel.is-sm{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 2rem);--_qxframe9a7c2-date-picker-time-width:calc(14rem + 0.5rem)}
-.qxframe9a7c2-date-picker-panel.is-lg{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3rem);--_qxframe9a7c2-date-picker-time-width:calc(15rem + 0.5rem)}
-.qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3.5rem);--_qxframe9a7c2-date-picker-time-width:16rem}
+/* Hosted Calendar: 7 day cells + two 0.375rem insets, shared with its host. */
+.qxframe9a7c2-date-picker-panel{--_qxframe9a7c2-date-picker-day-size:var(--qxframe9a7c2-calendar-cell-size,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-date-picker-day-size) + 0.75rem);--_qxframe9a7c2-date-picker-time-width:15rem;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height)}
+.qxframe9a7c2-date-picker-panel.is-xs{--_qxframe9a7c2-date-picker-time-width:14rem}
+.qxframe9a7c2-date-picker-panel.is-sm{--_qxframe9a7c2-date-picker-time-width:calc(14rem + 0.5rem)}
+.qxframe9a7c2-date-picker-panel.is-lg{--_qxframe9a7c2-date-picker-time-width:calc(15rem + 0.5rem)}
+.qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-time-width:16rem}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar{border:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-composite{display:flex;align-items:stretch;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:min(calc(16rem * 4),100%)}
 .qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto;align-self:stretch}
 .qxframe9a7c2-date-picker-selection-panel{display:flex;align-self:stretch;flex:1 1 auto;min-width:0;overflow:hidden}
 .qxframe9a7c2-date-picker-selection-scroll>.qxframe9a7c2-date-picker-selection-panel.qxframe9a7c2-scroll-viewport{width:100%;height:100%;min-width:0}
-.qxframe9a7c2-date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:none}
-.qxframe9a7c2-date-picker-calendar-host{box-sizing:border-box;display:flex;flex:0 0 var(--_qxframe9a7c2-date-picker-calendar-width);min-width:var(--_qxframe9a7c2-date-picker-calendar-width)}
-.qxframe9a7c2-date-picker-calendar-host>.qxframe9a7c2-calendar{height:100%;flex:1 1 auto}
-.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:calc(var(--_qxframe9a7c2-date-picker-calendar-width) + var(--_qxframe9a7c2-date-picker-calendar-width))}
-.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
-.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:none}
+.qxframe9a7c2-date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto;min-width:0;max-width:none}
+.qxframe9a7c2-date-picker-calendar-host{box-sizing:border-box;display:flex;flex:0 0 var(--_qxframe9a7c2-date-picker-calendar-width);min-width:0}
+.qxframe9a7c2-date-picker-calendar-host>.qxframe9a7c2-calendar{--_qxframe9a7c2-date-panel-width:var(--_qxframe9a7c2-date-picker-calendar-width);height:100%;width:100%;min-width:0;max-width:none;flex:1 1 auto}
+.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:0}
+.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{box-shadow:inset 1px 0 var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:100%;max-width:none}
 .qxframe9a7c2-date-picker-dual-inner-nav{visibility:hidden;pointer-events:none}
-.qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-date-picker-time-panel{--_qxframe9a7c2-wheel-guide-trim:0.25rem;display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar.is-period,.qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{height:100%;flex:1 1 auto}
 @media (max-width:760px){.qxframe9a7c2-date-picker-selection-panel{overflow-x:auto}.qxframe9a7c2-date-picker-composite.has-time{flex-direction:column}.qxframe9a7c2-date-picker-time-panel{border-inline-start:0;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}}

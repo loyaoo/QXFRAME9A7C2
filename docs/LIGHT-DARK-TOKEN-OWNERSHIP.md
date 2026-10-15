@@ -61,3 +61,8 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 
 - Calendar is the single DOM, date selection/value, active keyboard/virtual focus, delegated click, range painter owner for date, week, month, quarter and year. Only data labels/count/navigation page change with unit.
 - Month/quarter/year use existing Calendar button > cell-view > cell-inner DOM; `.calendar.is-period` expresses four-column unit geometry, not a separate widget. `PeriodPanel` old module is a direct import alias only; no second implementation. No new Theme tokens.
+
+## 2026-10-15 — CALENDAR-WHEEL-GEOMETRY-001: geometry owner
+- DatePicker `resolvedTimeOptions()` owns only embedded 7-item default; explicit `time.visibleItemCount` wins. WheelMetrics owns true item height (md=36px). WheelPanel alone computes viewport (252px), pad (108px) and snap.
+- WheelPanel's central Guide is visual only: inherited private `--_qxframe9a7c2-wheel-guide-trim` is 0.25rem when nested inside DatePicker TimePanel; guide is 32px, actual items remain 36px; standalone wheels unaffected.
+- DatePicker owns hosted Calendar flex width = seven current control-size cells + two 0.375rem Calendar insets. Inner Calendar consumes same width; Calendar group/host min-width=0. A dual-calendar divider uses inset shadow, so second seven-column geometry does not lose 1px. Standalone Calendar's size ownership remains independent.

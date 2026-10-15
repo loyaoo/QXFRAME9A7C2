@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 source changes (CI pending)
+- Verified previous development HEAD fd9bd1a180b6fb8eedc819737b7f1808a3306816, PR #267 Draft/Open, main 718da2a6be0bc71520adb0451429cd3d3d8320b3. Earlier dual green CI predates these changes.
+- DatePicker internal TimePanel defaults to 7 visible rows; WheelMetrics.md remains 36px, WheelPanel computes 252px scroll and 108px top/bottom pads. Explicit time.visibleItemCount remains higher priority.
+- WheelPanel guide visual trim is 0.25rem only within DatePicker's TimePanel; md guide 32px vs real 36px item. No runtime DOM correction, global WheelMetrics change or new Theme token.
+- DatePicker Calendar host and internal date-panel share one derived width: 7 × active control height + 12px inset (md=264px). Group/hosts min-width=0; dual separator does not consume 1px width. Calendar grid remains gap:0 with shared range ::before.
+- Remaining: Chromium geometry/snap boundary and cross-theme tests, single Calendar viewMode + year/month title gate, two workflows green on final SHA, exact-HEAD official Windows zip. Stage/overall % not credibly quantified. Tree/Controller/main untouched, PR remains Draft.
+
 ## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 frozen Phase C fixture compliance (CI pending)
 - Prior QXFRAME #38651927510 stopped at the exact-frozen HOTFIX6 compatibility-fixture diff; the 0add6330 focus assertion was incorrectly edited directly in `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`. Restore those fixture bytes exactly from parent 297740de.
 - Browser validation now uses the existing `adaptLegacySmokeSource` projection in `tools/verify-browser-smoke.mjs`, replacing only the historical `.period-panel-cell` selector/check for this intentionally consolidated single Calendar. It retains ArrowRight keyboard test and requires one `Calendar.is-period` cell with computed solid outline >=2px.

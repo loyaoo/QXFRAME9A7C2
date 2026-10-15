@@ -909,9 +909,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function resolvedTimeOptions(anchor, partIndex) {
     var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
-    // Calendar + TimePanel uses a nine-row wheel alongside the six-week
-    // calendar. Keep explicit consumer-supplied visibleItemCount untouched.
-    if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 9;
+    // Keep shared TimePanel's 7-row default: md has 36px items, 252px viewport.
+    // Explicit time.visibleItemCount remains authoritative.
+    if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 7;
     if (Utils.isFunction(opts.disabledTime)) {
       var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? (partIndex === 0 || partIndex === 1 ? partIndex : activeRangePart) : null, unit: unit, datePicker: api })) || {};
       if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
