@@ -510,7 +510,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 .qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-label{box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-choice-focus-shadow)}
 
 /* Native form text helpers use the Theme text/status roles. */
-.qxframe9a7c2-form-help{display:block;min-width:0;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem;line-height:1.5}
+.qxframe9a7c2-form-help{display:block;min-width:0;line-height:1.5}
 .qxframe9a7c2-form-hint{display:flex;align-items:center;justify-content:space-between;gap:.5rem;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem;line-height:1.5}
 .qxframe9a7c2-form-hint.is-error{color:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-form-hint.is-success{color:var(--qxframe9a7c2-theme-success)}
