@@ -3157,7 +3157,9 @@ try {
       const chipHost=d.createElement('div');host.append(chipHost);
       const tags=q.Components.Tags.create({container:chipHost,items:[{key:'one',value:'one',label:'One'}],editable:true,variant:'filled',creatable:true});
       const imgHost=d.createElement('div');host.append(imgHost);
-      const source='data:image/svg+xml;base64,'+win.btoa('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80"><rect width="120" height="80" fill="blue"/></svg>');
+      const paint=d.createElement('canvas');paint.width=120;paint.height=80;
+      const ctx=paint.getContext('2d');ctx.fillStyle='#1969ef';ctx.fillRect(0,0,120,80);
+      const source=paint.toDataURL('image/png'); // accepted by URLPolicy; SVG data URIs are forbidden.
       const img=q.Components.Image.create({container:imgHost,src:source,alt:'Preview visibility',preview:true,width:120,height:80});
       const cs=n=>win.getComputedStyle(n),colors=[];
       const docRoot=d.documentElement,sty=d.getElementById('qxframe9a7c2-create-theme');
