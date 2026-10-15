@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 dual-calendar browser smoke test migrated (CI pending)
+- QXFRAME #38669779570 reached full Chromium suite and found the old dual-year/month drill smoke test still called removed getYearPanel/getMonthPanel functions.
+- The existing drill smoke test now selects year/month cells in its already captured active drillPanel Calendar instance; left/right, draft, keyboard first-arrow, focus-ring and view-preservation assertions remain unchanged. Added static assertion against stale API reuse.
+- Full latest-head QXFRAME and CSS Schema success / official Windows ZIP still pending; no credible Stage/global percentage. PR #267 Draft/Open, main untouched.
+
 ## CURRENT — 2026-10-15 generated Docs API sync (CI pending)
 - QXFRAME #38669536969 failed the existing sync-docs-api --check because docs/assets/qxframe9a7c2-component-api.js still embedded prior generated contract payload.
 - Synchronized existing generated marker block exactly from docs/generated/component-api.json using the canonical tools/sync-docs-api-contracts.mjs algorithm; no manual parallel option API.

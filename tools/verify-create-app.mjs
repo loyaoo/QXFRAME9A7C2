@@ -1851,6 +1851,7 @@ check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
  assert.ok(cal.includes("requestTitle(titleUnit,event,'keyboard')"),'all Calendar title keyboard activation shares one capability decision');
  assert.equal((date.match(/Calendar\.create\(/g)||[]).length,3,'DatePicker only creates primary, secondary, or period Calendar');
   assert.ok(!date.includes('yearPanel = Calendar.create')&&!date.includes('monthPanel = Calendar.create'),'no detached drill calendars');
+  assert.doesNotMatch(fs.readFileSync(path.join(root,'tools/verify-browser-smoke.html'),'utf8'),/drillPicker\.get(?:Year|Month)Panel\(/,'dual drill Chrome regression only uses actual physical Calendar roots');
   assert.match(cal,/setViewMode: setViewMode/,'Calendar owns viewMode separately from unit');
  assert.doesNotMatch(date,/PeriodPanel\.create\(/,'no second period runtime');
  assert.match(css,/\.qxframe9a7c2-calendar\.is-period \.qxframe9a7c2-calendar-cell-inner\{/,'unified inner painter for period data');
