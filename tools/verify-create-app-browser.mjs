@@ -3252,10 +3252,20 @@ try {
         img.closePreview('qa-exit');
         const during={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
           rootHidden:preview.hidden,previewMotionVisible:preview.querySelector('.qxframe9a7c2-image-preview-motion')?.style.visibility};
-        await new Promise(r=>setTimeout(r,1000));
+        const paintFrames=[];
+        // Sample Chromium rendered frames, not only final state: a landed copy
+        // cannot be hidden while the original is still fading up from opacity 0.
+        for(let frame=0;frame<40;frame++){
+          await new Promise(r=>win.requestAnimationFrame(r));
+          const copy=preview.querySelector('.qxframe9a7c2-image-preview-motion');
+          paintFrames.push({copyHidden:copy?.style.visibility==='hidden',
+            originalOpacity:parseFloat(cs(img.getImageElement()).opacity),
+            sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden')});
+        }
+        await new Promise(r=>setTimeout(r,250));
         const finished={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
           previewOpen:img.getState().previewOpen,previewPresent:img.getState().previewPresent};
-        return {colors,chrome,during,finished};
+        return {colors,chrome,during,paintFrames,finished};
       }finally{
         if(sty)sty.textContent=oldCss;
         docRoot.classList.toggle('dark',wasDark);
@@ -3282,6 +3292,9 @@ try {
     assert.equal(result.chrome.titleColor,result.chrome.toolbarColor,'Image title and toolbar share white foreground');
     assert.equal(result.chrome.closeColor,result.chrome.toolbarColor,'Image close and toolbar share white foreground');
     assert.equal(result.during.sourceHidden,true,'authored image stays hidden throughout leave');
+    assert.ok(result.paintFrames.some(frame=>frame.copyHidden),'Chromium observed the landed preview copy become hidden');
+    assert.ok(result.paintFrames.filter(frame=>frame.copyHidden).every(frame=>frame.originalOpacity>=.98&&!frame.sourceHidden),
+      'The source must be fully opaque on every rendered frame after preview copy relinquishes paint ownership: '+JSON.stringify(result.paintFrames));
     assert.equal(result.finished.sourceHidden,false,'authored image recovers after completed leave');
     assert.equal(result.finished.previewOpen,false,'preview public state closed');
   });
