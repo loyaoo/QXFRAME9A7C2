@@ -88,3 +88,6 @@
 .pv3x-field-label{display:flex;flex-direction:column;gap:.4rem;font-size:.75rem}
 .pv3x-card [data-pv3x-status][hidden]{display:none}
 .pv3x-card [data-pv3x-status]{margin:0}
+
+/* Alert is a static framework primitive; Preview03 only owns the three-sample flow. */
+.pv3x-alert-variants{display:flex;flex-direction:column;gap:.5rem;min-width:0}
