@@ -83,6 +83,22 @@
 .qxframe9a7c2-calendar-cell.is-range-end:not(.is-range-start) .qxframe9a7c2-calendar-cell-inner{
   border-start-start-radius:0;border-end-start-radius:0
 }
+/* Endpoints MUST be opaque. The half-width range ::before strip sits below
+   the raised square and otherwise shows through a translucent endpoint. */
+.qxframe9a7c2-calendar-cell.is-in-range.is-range-start .qxframe9a7c2-calendar-cell-inner,
+.qxframe9a7c2-calendar-cell.is-in-range.is-range-end .qxframe9a7c2-calendar-cell-inner{
+  background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary));
+  color:var(--_qxframe9a7c2-menu-primary-foreground,var(--qxframe9a7c2-theme-primary-foreground));
+  border-color:transparent
+}
+/* Week Hover uses the same seven contiguous cells and ::before as Range,
+   but its preview endpoints are subtle instead of committed Primary. */
+.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-start .qxframe9a7c2-calendar-cell-inner,
+.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-end .qxframe9a7c2-calendar-cell-inner{
+  background:var(--_qxframe9a7c2-semantic-subtle-hover);
+  color:var(--_qxframe9a7c2-semantic-text);
+  border-color:transparent
+}
 /* Calendar's today indicator is inside the inner square, not at the bottom
    of the padded outer button. PeriodPanel keeps its existing ::after painter. */
 .qxframe9a7c2-calendar-cell.is-today:not(.is-selected):not(:disabled) .qxframe9a7c2-calendar-cell-inner::after,

@@ -67,6 +67,13 @@
 
 /* Original List parity projection */
 .qxframe9a7c2-item-collection-divider{height:1px;margin:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-list-padding-x);background:var(--_qxframe9a7c2-semantic-border-subtle)}
+/* Dropdown group headings consume the same typography role as the canonical
+   ItemCollection title: smaller than actions, and 60% of the menu foreground. */
+.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group,
+.qxframe9a7c2-dropdown-submenu-panel .qxframe9a7c2-item-collection-group{
+  font-size:.875em;
+  color:color-mix(in oklab,var(--_qxframe9a7c2-list-group-text) 60%,transparent)
+}
 .qxframe9a7c2-item-collection-title{box-sizing:border-box;min-height:var(--_qxframe9a7c2-list-row-height);display:flex;align-items:center;padding-inline:var(--_qxframe9a7c2-list-padding-x);color:var(--_qxframe9a7c2-semantic-text-muted);font-size:.875em;font-weight:600}
 .qxframe9a7c2-item-collection-content-slot{min-width:0;flex:1 1 auto;overflow-wrap:anywhere;white-space:normal}
 .qxframe9a7c2-item-collection-label{min-width:0;overflow-wrap:anywhere;white-space:normal}

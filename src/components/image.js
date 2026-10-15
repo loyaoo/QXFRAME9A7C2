@@ -668,10 +668,13 @@ function setupImage(instance) {
     // Releasing width/height/transform while the surface is still paintable lets the
     // copy snap back to its centered resting geometry for one frame at the end of leave.
     surface.hide(detail);
-    root.classList.remove('is-previewing');
-    root.classList.remove('is-preview-source-hidden');
+    // Once hidden, it is safe to reset transformed media and unlock geometry.
+    // Do not reveal the source until BOTH content and mask have left.
+    if (imagePreviewActive()) resetTransform('preview-close-complete');
     releasePreviewTrajectoryGeometry('leave-complete');
     overlay.deactivate(detail);
+    root.classList.remove('is-previewing');
+    root.classList.remove('is-preview-source-hidden');
     call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
     return true;
   }
@@ -688,7 +691,6 @@ function setupImage(instance) {
     // the outer trajectory travels back to the authored source. Keeping those transforms
     // alive would make the return copy miss the source bounds even when the trajectory itself
     // is correct.
-    if (imagePreviewActive()) resetTransform('preview-close');
     preparePreviewTrajectory('leave');
     // Keep the authored source hidden for the entire leave trajectory. Ownership only returns
     // in finalizePreviewLeave(), after the physical preview copy has reached the source bounds;
@@ -899,7 +901,8 @@ function setupImage(instance) {
         // while the mask is still fading it snaps back to its centered resting geometry.
         // Hide the landed copy first, then hand visual ownership back to the source.
         if (previewMotion) previewMotion.style.visibility = 'hidden';
-        root.classList.remove('is-preview-source-hidden');
+        // Mask may still be fading. The source stays hidden until the shared
+        // leave finalizer hands visual ownership back exactly once.
         leaveContentDone = true;
         finalizePreviewLeave(context);
       }

@@ -139,6 +139,14 @@ function create(options) {
   var api = null;
     
   function weekStartsOn() { var n = Number(opts.weekStartsOn); return Number.isFinite(n) ? ((n % 7) + 7) % 7 : 0; }
+  // Week is a single Calendar value with a seven-day visual projection;
+  // selection, Hover and Range share the existing Cell and ::before strip.
+  function weekBounds(value) {
+    if (!value) return null;
+    var start = stripTime(value);
+    start.setDate(start.getDate() - (start.getDay() - weekStartsOn() + 7) % 7);
+    return { start:start, end:addDays(start,6) };
+  }
   function isDisabledDate(date) { var guard=isPeriod?(opts.disabledValue||opts.disabledDate):opts.disabledDate;return opts.disabled===true||(typeof guard==='function'&&guard(cloneDate(date),Object.freeze({unit:unit,calendar:api}))===true); }
   function isReadOnly() { return opts.readOnly === true; }
   function canNavigate() { return capabilityController.can('navigate'); }
@@ -372,21 +380,31 @@ function create(options) {
     if (!grid) return;
     var nodes = DOM.findAllPrivate(grid, 'calendarDate');
     var today = normalizeValue(new Date());
+    var selectedWeek = unit === 'week' ? weekBounds(valueState.value) : null;
+    var hoveredWeek = unit === 'week' ? weekBounds(hoveredKey ? parseDate(hoveredKey) : null) : null;
     for (var i = 0; i < nodes.length; i += 1) {
       var date = parseDate(DOM.getPrivate(nodes[i], 'calendarDate'));
       var getState=isPeriod&&valueUnit==='date'?null:opts.getCellState||opts.getItemState;
       var external=typeof getState==='function'?getState(cloneDate(date),{unit:unit,calendar:api,entry:cells.find(function(c){return sameDay(c.date,date);})||null}):null;
       var state = external && typeof external === 'object' ? external : {};
-      var selected = Object.prototype.hasOwnProperty.call(state, 'selected') ? state.selected === true : sameDay(date, valueState.value);
+      var weekSelected = !!(selectedWeek && date >= selectedWeek.start && date <= selectedWeek.end);
+      var weekHovered = !!(hoveredWeek && date >= hoveredWeek.start && date <= hoveredWeek.end);
+      var weekStart = !!((weekSelected && sameDay(date, selectedWeek.start)) || (weekHovered && sameDay(date, hoveredWeek.start)));
+      var weekEnd = !!((weekSelected && sameDay(date, selectedWeek.end)) || (weekHovered && sameDay(date, hoveredWeek.end)));
+      var selected = Object.prototype.hasOwnProperty.call(state, 'selected') ? state.selected === true
+        : unit === 'week' ? weekSelected && (sameDay(date,selectedWeek.start) || sameDay(date,selectedWeek.end))
+        : sameDay(date, valueState.value);
       nodes[i].classList.toggle('is-selected', selected);
       nodes[i].classList.toggle('is-today', !isPeriod&&sameDay(date,today));
       nodes[i].classList.toggle('is-current', isPeriod&&sameDay(date,today));
-      nodes[i].classList.toggle('is-in-range', state.inRange === true);
-      nodes[i].classList.toggle('is-range-start', state.rangeStart === true);
-      nodes[i].classList.toggle('is-range-end', state.rangeEnd === true);
+      nodes[i].classList.toggle('is-week-selected', weekSelected);
+      nodes[i].classList.toggle('is-week-hover', weekHovered);
+      nodes[i].classList.toggle('is-in-range', state.inRange === true || weekSelected || weekHovered);
+      nodes[i].classList.toggle('is-range-start', state.rangeStart === true || weekStart);
+      nodes[i].classList.toggle('is-range-end', state.rangeEnd === true || weekEnd);
       var visualActiveOwner = !hostedVirtualFocus || (virtualFocusController && virtualFocusDomain && virtualFocusController.getState().domain === virtualFocusDomain.name);
       nodes[i].classList.toggle('is-active', visualActiveOwner && DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
-      nodes[i].classList.toggle('is-hover', state.hover === true || DOM.getPrivate(nodes[i], 'calendarDate') === hoveredKey);
+      nodes[i].classList.toggle('is-hover', state.hover === true || (unit === 'week' ? weekHovered : DOM.getPrivate(nodes[i], 'calendarDate') === hoveredKey));
       nodes[i];
     }
   }
