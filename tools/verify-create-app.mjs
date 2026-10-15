@@ -2233,7 +2233,7 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
 });
 
 check('Stage5 Calendar year nav + range week caps and Tabler-inspired static Theme variants',()=>{
- const css=path=>fs.readFileSync(path.join(root,path),'utf8');
+ const css=filePath=>fs.readFileSync(path.join(root,filePath),'utf8');
  const picker=css('src/styles/components/picker-family.css');
  const calendar=css('src/components/calendar.js');
  const html=read('preview-03.html');
