@@ -14,6 +14,34 @@ const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
+
+check('Stage5 acceptance inventory covers every component export without false visual-signoff claims',()=>{
+ const inventory=JSON.parse(read('preview-03-coverage.json'));
+ const a=inventory.stage5Acceptance;
+ assert.equal(a.status,'in-progress','Stage5 cannot claim completion from Preview03 alone');
+ assert.equal(a.previewFamilies.length,65,'record each distinct Preview03 family');
+ assert.equal(a.additionalExports.length,10,'record every additionally exported public/shared component');
+ const expectedGallery=[...new Set(inventory.coverage.map(row=>row.component))].sort();
+ const actualGallery=a.previewFamilies.map(row=>row.component).sort();
+ assert.deepEqual(actualGallery,expectedGallery,'all Preview03 families have explicit statuses');
+ const galleryIds=new Set(inventory.coverage.map(row=>row.card));
+ const presentCards=new Set([...read('preview-03.html').matchAll(/data-card="([^"]+)"/g)].map(m=>m[1]));
+ const exportNames=[...fs.readFileSync(path.join(root,'src/components/index.js'),'utf8').matchAll(/export\\s+\\{[^\\n}]+\\}\\s+from\\s+['"]\\.\\/([^'"]+)\\.js['"]/g)].map(m=>m[1]).sort();
+ const coverageNames=new Set([...a.previewFamilies,...a.additionalExports].map(x=>x.component));
+ assert.equal(coverageNames.size,a.previewFamilies.length+a.additionalExports.length,'no duplicate family/export identity');
+ for(const name of exportNames)assert.ok(coverageNames.has(name),'public export must be classified: '+name);
+ for(const row of [...a.previewFamilies,...a.additionalExports]){
+   assert.ok(galleryIds.has(row.representedBy),'every acceptance row references an actual tracked gallery Card: '+row.component);
+   assert.ok(presentCards.has(row.representedBy),'every acceptance row references a real DOM Card: '+row.component);
+   assert.equal(row.ownerVisual,'pending-owner-signoff','automated source coverage is not human visual acceptance');
+   assert.ok(['pending-individual-review','not-applicable-shared-surface'].includes(row.shadcnAlignment),'no unverified shadcn pixel alignment claims');
+   assert.ok(['targeted-browser-evidence','individual-theme-matrix-pending','inherited-through-owner-not-independently-certified'].includes(row.themeIntegration),'theme status must distinguish source from evidence');
+   if(row.browserEvidence)assert.ok(fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8').includes(row.browserEvidence),'named browser evidence must be present: '+row.component);
+ }
+ assert.equal(a.additionalExports.filter(row=>!exportNames.includes(row.component)).length,0,'additional rows must be actual module exports');
+ assert.ok(fs.readFileSync(path.join(root,'docs/create/STAGE5-COMPONENT-ACCEPTANCE-2026-10-16.md'),'utf8').includes('66 张卡片覆盖 65 种'),'final status document explains gallery-vs-export distinction');
+});
+
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
   const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];

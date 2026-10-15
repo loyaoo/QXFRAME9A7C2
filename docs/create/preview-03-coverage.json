@@ -673,5 +673,708 @@
       "component": "combo-revenue",
       "sector": "Finance"
     }
-  ]
+  ],
+  "stage5Acceptance": {
+    "status": "in-progress",
+    "scope": "all Preview03 families + every src/components/index.js module export; cards are samples, not full acceptance",
+    "shadcnSource": "shadcn/ui pinned 295a1f114a138f23b5dfee0e0c6812394dfeb90c (Stage3/4 source measurement is separate)",
+    "themeTarget": "8 styles x light/dark, per-component, across state/density/shape/popup roles",
+    "previewFamilies": [
+      {
+        "component": "alert",
+        "kind": "preview-family",
+        "representedBy": "alert-triage",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "autocomplete",
+        "kind": "preview-family",
+        "representedBy": "contact-lookup",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "avatar",
+        "kind": "preview-family",
+        "representedBy": "stakeholder-roster",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "badge",
+        "kind": "preview-family",
+        "representedBy": "compliance-flags",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "button",
+        "kind": "preview-family",
+        "representedBy": "trading-toolbar",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "calendar",
+        "kind": "preview-family",
+        "representedBy": "fiscal-periods",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 Calendar Week Hover selects seven contiguous dates with opaque Range endpoints",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "card",
+        "kind": "preview-family",
+        "representedBy": "revenue-surfaces",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 shape parity: 8 styles",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "carousel",
+        "kind": "preview-family",
+        "representedBy": "marketing-creative",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "cascader",
+        "kind": "preview-family",
+        "representedBy": "order-routing",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "checkbox",
+        "kind": "preview-family",
+        "representedBy": "audit-checklist",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "collapse",
+        "kind": "preview-family",
+        "representedBy": "rules-automation",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "color-panel",
+        "kind": "preview-family",
+        "representedBy": "palette-laboratory",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "color-picker",
+        "kind": "preview-family",
+        "representedBy": "brand-studio",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "control",
+        "kind": "preview-family",
+        "representedBy": "field-workbench",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "date-picker",
+        "kind": "preview-family",
+        "representedBy": "release-planner",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "descriptions",
+        "kind": "preview-family",
+        "representedBy": "asset-properties",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "drawer",
+        "kind": "preview-family",
+        "representedBy": "account-drawer",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "dropdown",
+        "kind": "preview-family",
+        "representedBy": "quick-action-menu",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 Dropdown all/block/none list-frame padding owns root/submenus and dynamic updates",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "empty",
+        "kind": "preview-family",
+        "representedBy": "blank-workspace",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "form",
+        "kind": "preview-family",
+        "representedBy": "vendor-intake",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "grid",
+        "kind": "preview-family",
+        "representedBy": "product-bins",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "icon",
+        "kind": "preview-family",
+        "representedBy": "icon-tokens",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "image",
+        "kind": "preview-family",
+        "representedBy": "asset-preview",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "input-number",
+        "kind": "preview-family",
+        "representedBy": "finance-approval",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "input-otp",
+        "kind": "preview-family",
+        "representedBy": "identity-otp",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "item",
+        "kind": "preview-family",
+        "representedBy": "approval-queue-item",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "json",
+        "kind": "preview-family",
+        "representedBy": "data-inspector",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "layout",
+        "kind": "preview-family",
+        "representedBy": "admin-shell-layout",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "list",
+        "kind": "preview-family",
+        "representedBy": "activity-timeline",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "loading",
+        "kind": "preview-family",
+        "representedBy": "task-processing",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "menu",
+        "kind": "preview-family",
+        "representedBy": "navigation-workspace",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Inverted Select ItemCollection idle/selected/hover/disabled colors",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "message",
+        "kind": "preview-family",
+        "representedBy": "inbox-notice",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "modal",
+        "kind": "preview-family",
+        "representedBy": "danger-dialog",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "notification",
+        "kind": "preview-family",
+        "representedBy": "alerts-center",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "option-list",
+        "kind": "preview-family",
+        "representedBy": "command-palette",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "pagination",
+        "kind": "preview-family",
+        "representedBy": "plan-governance",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "popconfirm",
+        "kind": "preview-family",
+        "representedBy": "delete-policy",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "popover",
+        "kind": "preview-family",
+        "representedBy": "customer-insights",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "progress",
+        "kind": "preview-family",
+        "representedBy": "service-health",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "radio",
+        "kind": "preview-family",
+        "representedBy": "fraud-decision",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "rate",
+        "kind": "preview-family",
+        "representedBy": "customer-quality",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "result",
+        "kind": "preview-family",
+        "representedBy": "transaction-outcome",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "ripple",
+        "kind": "preview-family",
+        "representedBy": "ripple-commands",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "scroll",
+        "kind": "preview-family",
+        "representedBy": "operational-feed",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "select",
+        "kind": "preview-family",
+        "representedBy": "order-routing",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Inverted Select ItemCollection idle/selected/hover/disabled colors",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "slider",
+        "kind": "preview-family",
+        "representedBy": "usage-meter",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "sort",
+        "kind": "preview-family",
+        "representedBy": "backlog-ordering",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "steps",
+        "kind": "preview-family",
+        "representedBy": "onboarding-flow",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "switch",
+        "kind": "preview-family",
+        "representedBy": "feature-flags",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "table",
+        "kind": "preview-family",
+        "representedBy": "plan-governance",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tabs",
+        "kind": "preview-family",
+        "representedBy": "segmented-console",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "FAQ segmented Tabs typography",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tag-input",
+        "kind": "preview-family",
+        "representedBy": "customer-quality",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tags",
+        "kind": "preview-family",
+        "representedBy": "support-triage",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "time-panel",
+        "kind": "preview-family",
+        "representedBy": "shift-allocation",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 shared WheelPanel / WheelPicker / TimePicker guide and unified passive dividers",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "time-picker",
+        "kind": "preview-family",
+        "representedBy": "release-planner",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 shared WheelPanel / WheelPicker / TimePicker guide and unified passive dividers",
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tooltip",
+        "kind": "preview-family",
+        "representedBy": "sla-tooltip",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "transfer",
+        "kind": "preview-family",
+        "representedBy": "workforce-access",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "transition",
+        "kind": "preview-family",
+        "representedBy": "state-transitions",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "transition-group",
+        "kind": "preview-family",
+        "representedBy": "stream-animation",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tree",
+        "kind": "preview-family",
+        "representedBy": "org-hierarchy",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "tree-select",
+        "kind": "preview-family",
+        "representedBy": "platform-tree",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "trigger",
+        "kind": "preview-family",
+        "representedBy": "context-triggers",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "upload",
+        "kind": "preview-family",
+        "representedBy": "contract-documents",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "virtual-list",
+        "kind": "preview-family",
+        "representedBy": "virtual-monitor",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "individual-theme-matrix-pending",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "wheel-picker",
+        "kind": "preview-family",
+        "representedBy": "dial-settings",
+        "shadcnAlignment": "pending-individual-review",
+        "themeIntegration": "targeted-browser-evidence",
+        "browserEvidence": "Stage5 shared WheelPanel / WheelPicker / TimePicker guide and unified passive dividers",
+        "ownerVisual": "pending-owner-signoff"
+      }
+    ],
+    "additionalExports": [
+      {
+        "component": "field",
+        "kind": "exported-shared-surface",
+        "representedBy": "field-workbench",
+        "usage": "Control / Field semantic projection",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "text-field",
+        "kind": "exported-shared-surface",
+        "representedBy": "field-workbench",
+        "usage": "native and JS TextField in the Control family",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "period-panel",
+        "kind": "exported-shared-surface",
+        "representedBy": "fiscal-periods",
+        "usage": "Calendar period/unit selector",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "popup-field",
+        "kind": "exported-shared-surface",
+        "representedBy": "release-planner",
+        "usage": "DatePicker hosted PopupField",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "popup",
+        "kind": "exported-shared-surface",
+        "representedBy": "quick-action-menu",
+        "usage": "Dropdown PopupComponent base",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "item-collection",
+        "kind": "exported-shared-surface",
+        "representedBy": "quick-action-menu",
+        "usage": "Dropdown ItemCollection rows and groups",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "overlay",
+        "kind": "exported-shared-surface",
+        "representedBy": "danger-dialog",
+        "usage": "Modal OverlayComponent base",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "picker",
+        "kind": "exported-shared-surface",
+        "representedBy": "release-planner",
+        "usage": "DatePicker PickerComponent base",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "picker-field",
+        "kind": "exported-shared-surface",
+        "representedBy": "release-planner",
+        "usage": "DatePicker PickerField host",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      },
+      {
+        "component": "wheel-panel",
+        "kind": "exported-shared-surface",
+        "representedBy": "shift-allocation",
+        "usage": "TimePanel WheelPanel columns",
+        "shadcnAlignment": "not-applicable-shared-surface",
+        "themeIntegration": "inherited-through-owner-not-independently-certified",
+        "browserEvidence": null,
+        "ownerVisual": "pending-owner-signoff"
+      }
+    ],
+    "evidenceLimits": {
+      "targeted-browser-evidence": "Matching named Chromium step exists; does NOT prove all per-component states, densities, shape or popup combinations.",
+      "individual-theme-matrix-pending": "Rendered gallery card is NOT proof of 8x2 computed Theme behavior.",
+      "inherited-through-owner-not-independently-certified": "Shared facade used through a parent component; needs dedicated computed-value/state probes.",
+      "pending-individual-review": "No source-backed shadcn pixel-geometry acceptance for this specific Preview03 family in this manifest.",
+      "not-applicable-shared-surface": "Low-level QX infrastructure, not a one-to-one shadcn create component."
+    },
+    "releaseGate": "Never classify owner-signed until the owner reviews the exact-HEAD Windows offline package."
+  }
 }
