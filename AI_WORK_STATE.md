@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 unified 1+6=7 implementation (CI pending)
+- Owner approved one shared five-size metric: WheelMetrics xs/sm/md/lg/xl=24/28/32/36/40px; default Wheel itemHeight=32px for md and seven visible items. WheelPanel original Scroll, Guide, Padding and Snap calculations remain intact; the erroneous DatePicker guide trim is gone.
+- Ordinary six-row Calendar now maps Header height to Wheel Column Title height, Weekdays to one Item and six Calendar Grid rows to six Items. Calendar exposes a numeric pixel cellSize option for standalone overrides. DatePicker Calendar hosts derive width from 7×CellSize+actual horizontal padding (default 5px×2).
+- Source updated: wheelMetrics, calendar, date-picker, picker-family.css; static + Chromium browser five-size geometry assertions updated; technical ownership docs updated. New exact-HEAD QXFRAME/CSS CI both green, real browser execution and official full dist+docs ZIP are REQUIRED before acceptance.
+- Task progress is implementation submitted, validation pending. Stage/global percentages not reliably quantifiable. PR #267 Draft/Open, main untouched. No autonomous merge.
+
 ## CURRENT — 2026-10-15 dual-calendar browser smoke test migrated (CI pending)
 - QXFRAME #38669779570 reached full Chromium suite and found the old dual-year/month drill smoke test still called removed getYearPanel/getMonthPanel functions.
 - The existing drill smoke test now selects year/month cells in its already captured active drillPanel Calendar instance; left/right, draft, keyboard first-arrow, focus-ring and view-preservation assertions remain unchanged. Added static assertion against stale API reuse.
