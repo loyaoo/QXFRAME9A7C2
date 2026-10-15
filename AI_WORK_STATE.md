@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 legacy regression test adapted to single Calendar owner (CI pending)
+- QXFRAME #38668956123 failed because old browser regression still called getYearPanel() and getMonthPanel(), APIs removed with the detached instances.
+- Regression now accesses getCalendar() in both year/month mode and explicitly checks object identity with the original DatePicker Calendar; mouse modality/focus assertions preserved. No duplicated renderer or deprecated getter reinstated.
+- Other real browser geometry/CI/official ZIP still under verification. No Stage/overall % denominator; PR #267 Draft/Open; main untouched.
+
 ## CURRENT — 2026-10-15 full offline QA ledger current changes (CI pending)
 - Offline QA yellow marks now only release-planner's DatePicker field and capacity-calendar's Calendar widget, with inner region metadata. Old Calendar-only last-round and all other card highlights removed.
 - Official dist/docs Windows ZIP must be rebuilt from the final successful HEAD using tools/qa/build-offline-demo.py, not from prior artifact; no artifact claimed here.
