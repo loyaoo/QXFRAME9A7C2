@@ -2219,7 +2219,11 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
  assert.ok(collection.includes('.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group'),'Dropdown group title consumes canonical ItemCollection typography');
  assert.ok(collection.includes('font-size:var(--_qxframe9a7c2-item-collection-title-size,.75rem);'),'Dropdown heading shares canonical ItemCollection title font sizing');
  assert.ok(image.includes('color:var(--_qxframe9a7c2-image-preview-text);box-shadow:'),'Image Preview chrome uses explicit white-compatible foreground');
- assert.ok(imageJs.includes('// leave finalizer hands visual ownership back exactly once.'),'Image Preview never reveals source before mask and content both complete');
+ const landed=imageJs.indexOf("if (previewMotion) previewMotion.style.visibility = 'hidden';");
+ const sourceReturn=imageJs.indexOf("root.classList.remove('is-preview-source-hidden');",landed);
+ const done=imageJs.indexOf('leaveContentDone = true;',landed);
+ assert.ok(landed>=0&&sourceReturn>landed&&done>sourceReturn,'Image Preview hides landed copy before atomic source handoff; no duplicate/blank frame');
+ assert.ok(imageJs.includes('!leaveMaskDone || !leaveContentDone'),'final portal teardown still waits for mask and content');
  assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
 });
 
