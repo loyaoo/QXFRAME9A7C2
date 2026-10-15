@@ -1944,6 +1944,7 @@ check('CALENDAR-WHEEL-GEOMETRY-001 7-row Wheel and one Calendar dimension owner'
  assert.match(picker,/date-picker-calendar-host\{[^}]*min-width:0/,'host min-width 0');
  assert.match(picker,/date-picker-calendar-group\{[^}]*min-width:0/,'group min-width 0');
  assert.match(picker,/date-picker-time-panel\{--_qxframe9a7c2-wheel-guide-trim:0\.25rem/,'guide height separate from item/snap');
+ assert.match(picker,/wheel-panel-center-guide\{box-sizing:border-box/,'guide border included in physical 32px height');
  assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'DatePicker may not duplicate Calendar cell/size ownership');
  assert.doesNotMatch(picker,/\.qxframe9a7c2-date-picker-composite\.has-time\{[^}]*--_qxframe9a7c2-(?:calendar|date-picker-calendar)/,'DateTime host must not override Calendar size; responsive flex-direction may remain');
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');

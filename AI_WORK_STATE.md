@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 new Chromium assertions (CI pending)
+- Added actual browser DOM geometry acceptance for 7 × 36px wheel=252px, 32px guide border-box, 108px leading pad, guide center, 264px Calendar/host, 252px seven-column grid, 36px day boxes, explicit visibleItemCount override, dual panels and header on/off + month/year drill same instance.
+- Tests have NOT yet been executed on final SHA; accept only real double green plus screenshot/ZIP. PR #267 Draft; main untouched; Stage/global percentages not credibly quantified.
+
 ## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 DatePicker consolidation (CI pending)
 - Calendar now separates immutable unit from mutable viewMode; date/year/month drill reuses originating Calendar root. DatePicker creates only primary, optional physically visible secondary, and period Calendar per unit, without detached year/month instances.
 - allowYearView and allowMonthView default true, have independent disabled state for title and keyboard/mouse gate; explicit option overrides supported. All real browser/Focus/snap gates must still run before completed claim.
