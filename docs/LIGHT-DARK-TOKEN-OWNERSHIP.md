@@ -66,3 +66,7 @@ All existing theme combinations, light/dark and inverse Menu cases, Chromium com
 - DatePicker `resolvedTimeOptions()` owns only embedded 7-item default; explicit `time.visibleItemCount` wins. WheelMetrics owns true item height (md=36px). WheelPanel alone computes viewport (252px), pad (108px) and snap.
 - WheelPanel's central Guide is visual only: inherited private `--_qxframe9a7c2-wheel-guide-trim` is 0.25rem when nested inside DatePicker TimePanel; guide is 32px, actual items remain 36px; standalone wheels unaffected.
 - DatePicker owns hosted Calendar flex width = seven current control-size cells + two 0.375rem Calendar insets. Inner Calendar consumes same width; Calendar group/host min-width=0. A dual-calendar divider uses inset shadow, so second seven-column geometry does not lose 1px. Standalone Calendar's size ownership remains independent.
+
+## 2026-10-15 — CALENDAR-VIEW-MODE-OWNER-001
+- Calendar immutable unit selects value precision. Mutable viewMode selects displayed date/month/year/decade and shares root/Focus/cell/Range painter. Intermediate year/month click triggers drill, not committed date selection.
+- DatePicker removed detached year/month Calendar instances. Only primary/secondary actual display calendars remain; allowYearView and allowMonthView separately gate title disabled state and mouse/keyboard activation. The existing PeriodPanel alias remains one-line.

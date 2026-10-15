@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 DatePicker consolidation (CI pending)
+- Calendar now separates immutable unit from mutable viewMode; date/year/month drill reuses originating Calendar root. DatePicker creates only primary, optional physically visible secondary, and period Calendar per unit, without detached year/month instances.
+- allowYearView and allowMonthView default true, have independent disabled state for title and keyboard/mouse gate; explicit option overrides supported. All real browser/Focus/snap gates must still run before completed claim.
+- Stage/global percentages not credibly quantifiable; PR #267 Draft/Open, main/frozen Tree+Controller unchanged.
+
 ## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 Calendar source (CI pending)
 - Calendar now distinguishes immutable selection unit from mutable viewMode; title mouse/keyboard delegates to one capability check, allowing independent allowYearView/allowMonthView and preserving period onTitleRequest.
 - DatePicker integration still needs to eliminate extra year/month instances; next commit must implement that before final acceptance. PR #267 stays Draft, main unchanged; no credible Stage/global percent.

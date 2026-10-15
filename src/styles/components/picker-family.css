@@ -305,7 +305,7 @@
 .qxframe9a7c2-tree-select-panel[hidden]{display:none}
 .qxframe9a7c2-tree-select-tree-host>.qxframe9a7c2-item-collection{background:transparent}
 
-.qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active),.qxframe9a7c2-date-picker-drill-panel:not(.is-date-picker-active){display:none!important}
+.qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active){display:none!important}
 /* Hosted Calendar: 7 day cells + two 0.375rem insets, shared with its host. */
 .qxframe9a7c2-date-picker-panel{--_qxframe9a7c2-date-picker-day-size:var(--qxframe9a7c2-calendar-cell-size,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-date-picker-day-size) + 0.75rem);--_qxframe9a7c2-date-picker-time-width:15rem;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height)}
 .qxframe9a7c2-date-picker-panel.is-xs{--_qxframe9a7c2-date-picker-time-width:14rem}

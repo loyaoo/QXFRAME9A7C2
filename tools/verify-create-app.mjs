@@ -1844,8 +1844,10 @@ check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
  assert.ok(cal.includes("classList.toggle('is-period',isPeriod)"),'period units are one CSS variant on shared root');
  assert.ok(cal.includes("cellInner = button.firstElementChild.firstElementChild"),'same view/inner DOM for every unit');
  assert.ok(cal.includes("columns:isPeriod?4:7"),'one keyboard handler switches grid columns, not controllers');
- assert.ok(cal.includes("titleUnit==='period'"),'month/quarter/year title keyboard interaction shares Calendar');
- assert.equal((date.match(/Calendar\.create\(/g)||[]).length,5,'DatePicker only creates Calendar for date, year/month drill and period');
+ assert.ok(cal.includes("requestTitle(titleUnit,event,'keyboard')"),'all Calendar title keyboard activation shares one capability decision');
+ assert.equal((date.match(/Calendar\.create\(/g)||[]).length,3,'DatePicker only creates primary, secondary, or period Calendar');
+  assert.ok(!date.includes('yearPanel = Calendar.create')&&!date.includes('monthPanel = Calendar.create'),'no detached drill calendars');
+  assert.match(cal,/setViewMode: setViewMode/,'Calendar owns viewMode separately from unit');
  assert.doesNotMatch(date,/PeriodPanel\.create\(/,'no second period runtime');
  assert.match(css,/\.qxframe9a7c2-calendar\.is-period \.qxframe9a7c2-calendar-cell-inner\{/,'unified inner painter for period data');
  assert.doesNotMatch(css,/\.qxframe9a7c2-period-panel-grid\{/,'no second period grid DOM paint');
