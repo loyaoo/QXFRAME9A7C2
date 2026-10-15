@@ -2227,4 +2227,37 @@ check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings
  assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
 });
 
+check('Stage5 Calendar year nav + range week caps and Tabler-inspired static Theme variants',()=>{
+ const css=path=>fs.readFileSync(path.join(root,path),'utf8');
+ const picker=css('src/styles/components/picker-family.css');
+ const calendar=css('src/components/calendar.js');
+ const html=read('preview-03.html');
+ const manifest=JSON.parse(css('tools/manifests/css-order.json'));
+ assert.match(calendar,/data-qxframe9a7c2-ref="prev-year"/,'Calendar includes previous year');
+ assert.match(calendar,/data-qxframe9a7c2-ref="next-year"/,'Calendar includes next year');
+ assert.match(calendar,/DOM\.setPrivate\(domBinding\.refs\.prevYear,'calendarNav','-12'\)/,'Year nav uses canonical Calendar delegated controller');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell\.is-in-range:nth-child\(7n\+1\)::before/,'range left cap each week');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell\.is-in-range:nth-child\(7n\)::before/,'range right cap each week');
+ assert.match(picker,/\.qxframe9a7c2-date-picker-calendar-group\.is-dual\{min-width:0;gap:/,'dual Calendar gap');
+ assert.match(picker,/calendar-host\+\.qxframe9a7c2-date-picker-calendar-host\{box-shadow:none\}/,'no central divider');
+ assert.match(picker,/calendar-group \.qxframe9a7c2-date-picker-dual-inner-nav\{display:none\}/,'no empty inner nav slots');
+ for(const [path,sels]of Object.entries({
+  'src/styles/components/card.css':['.qxframe9a7c2-card.is-stacked','.qxframe9a7c2-card-stamp','.qxframe9a7c2-card-deck'],
+  'src/styles/components/badge.css':['.qxframe9a7c2-badge.is-soft','.qxframe9a7c2-badge-status-label'],
+  'src/styles/components/avatar.css':['.qxframe9a7c2-avatar.is-primary','.qxframe9a7c2-avatar-status.is-online'],
+  'src/styles/components/alert.css':['.qxframe9a7c2-alert-root.is-compact'],
+  'src/styles/components/progress.css':['.qxframe9a7c2-progress.is-striped','.qxframe9a7c2-progress-steps-labels'],
+  'src/styles/components/tabs.css':['.qxframe9a7c2-tabs.is-pills','.qxframe9a7c2-tabs.is-soft'],
+  'src/styles/components/tags.css':['.qxframe9a7c2-tag.is-muted','.qxframe9a7c2-tag.is-outline'],
+  'src/styles/components/form-native.css':['.qxframe9a7c2-form-help','.qxframe9a7c2-form-hint'],
+  'src/styles/components/native-input.css':['.qxframe9a7c2-input-group.is-soft'],
+  'src/styles/components/kbd.css':['.qxframe9a7c2-kbd{','.qxframe9a7c2-kbd-group']
+ })){
+  const source=css(path);
+  for(const selector of sels)assert.ok(source.includes(selector),path+' missing '+selector);
+ }
+ assert.equal(manifest.sourceModules.filter(x=>x==='src/styles/components/kbd.css').length,1,'Kbd CSS is registered exactly once');
+ assert.match(html,/data-pv3-static-recipes="tabler-theme"/,'Preview03 includes rendered static variants');
+ assert.equal((html.match(/data-card="/g)||[]).length,66,'static showcase does not duplicate commercial Cards');
+});
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
