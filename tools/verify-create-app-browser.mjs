@@ -2996,25 +2996,25 @@ try {
     }
   });
 
-  await step('CALENDAR-WHEEL-GEOMETRY-001 browser real 264/36/252/32, 7 rows, dual and single Calendar drill',async()=>{
+  await step('CALENDAR-WHEEL-GEOMETRY-001 browser shared 32px, seven rows, dual and drill',async()=>{
     const v=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const q=d.defaultView.QXFRAME9A7C2,DP=q&&q.Components&&q.Components.DatePicker,WP=q&&q.BuildingBlocks&&q.BuildingBlocks.WheelPanel;\n if(!DP)return {error:'DatePicker unavailable'};\n const box=d.createElement('section');box.style.cssText='position:absolute;left:-4000px;top:0;width:60rem';\n d.body.append(box);const made=[];\n const near=(v,n)=>Math.abs(v-n)<.75;\n const make=(opts)=>{const mount=d.createElement('div');box.append(mount);const c=DP.create({...opts,container:mount,open:true});made.push(c);return c;};\n const measure=(c)=>{\n   const shell=c.getPanelOriginElement(),cal=c.getCalendar(),cals=c.getCalendars();\n   const time=c.getTimePanel(),wheel=time&&time.getWheelPanel(),w=wheel&&wheel.getRootElement();\n   const scroll=w&&w.querySelector('.qxframe9a7c2-wheel-panel-scroll');\n   const item=w&&w.querySelector('.qxframe9a7c2-wheel-panel-item'),guide=w&&w.querySelector('.qxframe9a7c2-wheel-panel-center-guide');\n   const pad=w&&w.querySelector('.qxframe9a7c2-wheel-panel-pad');\n   const host=shell&&shell.querySelector('.qxframe9a7c2-date-picker-calendar-host');\n   const grid=cal&&cal.getRootElement().querySelector('.qxframe9a7c2-calendar-grid');\n   const firstCell=grid&&grid.querySelector('.qxframe9a7c2-calendar-cell');\n   const cs=n=>n?d.defaultView.getComputedStyle(n):null;\n   const wh=n=>n?n.getBoundingClientRect().height:null;\n   const ww=n=>n?n.getBoundingClientRect().width:null;\n   return {\n     wheelCount:wheel&&wheel.getState().visibleItemCount,itemHeight:wh(item),scrollHeight:wh(scroll),guideHeight:wh(guide),\n     padHeight:wh(pad), itemInline:item&&item.style.height, centerDelta:scroll&&guide&&item?(guide.getBoundingClientRect().top+wh(guide)/2-scroll.getBoundingClientRect().top-wh(scroll)/2):null,\n     calendarWidth:ww(cal&&cal.getRootElement()),hostWidth:ww(host),gridWidth:ww(grid),dayWidth:ww(firstCell),dayHeight:wh(firstCell),\n     columns:cals.map(p=>ww(p.getRootElement())),columnCount:cals.length,\n     groupMin:shell&&cs(shell.querySelector('.qxframe9a7c2-date-picker-calendar-group'))?.minWidth,\n     hostMin:cs(host)?.minWidth,\n     gap:grid&&cs(grid)?.gap,\n     scrollInline:scroll&&scroll.style.height\n   };\n };\n const results={};\n try{\n   const std=make({value:'2026-10-15',time:{showSecond:false},needConfirm:true});\n   results.standard=measure(std);\n   const explicit=make({value:'2026-10-15',time:{showSecond:false,visibleItemCount:5},needConfirm:true});\n   results.custom=measure(explicit);\n   const dual=make({selection:'range',panelCount:2,value:['2026-10-10','2026-11-21'],needConfirm:true});\n   results.dual=measure(dual);\n   const disabled=make({value:'2026-10-15',allowYearView:false,allowMonthView:true});\n   const orig=disabled.getCalendar(),root=orig.getRootElement(),before=disabled.getState().value?.getTime();\n   const year=root.querySelector('.qxframe9a7c2-calendar-year'),month=root.querySelector('.qxframe9a7c2-calendar-month');\n   results.disabledTitle={yearDisabled:year?.disabled,monthDisabled:month?.disabled};\n   month?.click();\n   results.drilled={mode:disabled.getState().panelMode,unit:orig.getState().unit,viewMode:orig.getState().viewMode,\n     rootSame:disabled.getCalendar()===orig&&disabled.getCalendar().getRootElement()===root,\n     calendarCount:root.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length,\n     valueSame:disabled.getState().value?.getTime()===before};\n   const monthCell=root.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled)');\n   monthCell?.click();\n   results.returned={mode:disabled.getState().panelMode,viewMode:orig.getState().viewMode,unit:orig.getState().unit,valueSame:disabled.getState().value?.getTime()===before};\n   const opposite=make({value:'2026-10-15',allowYearView:true,allowMonthView:false});\n   const other=opposite.getCalendar().getRootElement();\n   results.opposite={yearDisabled:other.querySelector('.qxframe9a7c2-calendar-year')?.disabled,monthDisabled:other.querySelector('.qxframe9a7c2-calendar-month')?.disabled};\n   other.querySelector('.qxframe9a7c2-calendar-year')?.click();\n   results.yearDrill={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode,\n    rootCount:other.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length};\n   const yr=other.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled):not(.is-outside)');\n   yr?.click();\n   results.yearToMonth={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode};\n   return results;\n }finally{for(const c of made)try{c.destroy()}catch(e){}box.remove();}\n})()");
     assert.equal(v.error,undefined,'runtime DatePicker exists');
     const s=v.standard;
     assert.equal(s.wheelCount,7,'DatePicker embeds 7 wheel items');
-    assert.ok(Math.abs(s.itemHeight-36)<.75,'md physical item is 36px: '+JSON.stringify(s));
-    assert.ok(Math.abs(s.scrollHeight-252)<.75,'7x36 viewport 252px: '+JSON.stringify(s));
-    assert.ok(Math.abs(s.guideHeight-32)<.75,'guide 32px border-box: '+JSON.stringify(s));
-    assert.ok(Math.abs(s.padHeight-108)<.75,'symmetric 108px snap pad');
-    assert.equal(s.itemInline,'36px','actual wheel items retain runtime item height');
+    assert.ok(Math.abs(s.itemHeight-32)<.75,'md physical item is 32px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.scrollHeight-224)<.75,'WheelPanel computes 7x32 viewport 224px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.guideHeight-s.itemHeight)<.75,'Guide directly uses actual item height: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.padHeight-96)<.75,'WheelPanel calculates symmetric 96px snap pad');
+    assert.equal(s.itemInline,'32px','real Wheel Item remains the CSS Guide owner');
     assert.ok(Math.abs(s.centerDelta)<.75,'guide centered in scroll');
-    assert.ok(Math.abs(s.calendarWidth-264)<.75&&Math.abs(s.hostWidth-264)<.75,'host/calendar both 264px: '+JSON.stringify(s));
-    assert.ok(Math.abs(s.gridWidth-252)<.75&&Math.abs(s.dayWidth-36)<.75&&Math.abs(s.dayHeight-36)<.75,'seven complete 36px date cells: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.calendarWidth-234)<.75&&Math.abs(s.hostWidth-234)<.75,'host/calendar both 7*32 + 2*5 = 234px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.gridWidth-224)<.75&&Math.abs(s.dayWidth-32)<.75&&Math.abs(s.dayHeight-32)<.75,'seven complete square 32px date cells: '+JSON.stringify(s));
     assert.equal(s.gap,'0px','continuous range strips retain gap zero');
     assert.equal(s.groupMin,'0px');assert.equal(s.hostMin,'0px');
     assert.equal(v.custom.wheelCount,5,'explicit count priority');
-    assert.ok(Math.abs(v.custom.scrollHeight-180)<.75&&Math.abs(v.custom.padHeight-72)<.75,'custom 5x36 and 72px pads');
+    assert.ok(Math.abs(v.custom.scrollHeight-160)<.75&&Math.abs(v.custom.padHeight-64)<.75,'explicit 5x32 and symmetric 64px pads');
     assert.equal(v.dual.columnCount,2,'dual two actually displayed calendars');
-    assert.ok(v.dual.columns.every(x=>Math.abs(x-264)<.75),'dual same 264px columns '+JSON.stringify(v.dual));
+    assert.ok(v.dual.columns.every(x=>Math.abs(x-234)<.75),'dual same 234px columns '+JSON.stringify(v.dual));
     assert.equal(v.disabledTitle.yearDisabled,true);
     assert.equal(v.disabledTitle.monthDisabled,false);
     assert.deepEqual(v.drilled,{mode:'month',unit:'date',viewMode:'month',rootSame:true,calendarCount:1,valueSame:true},'month drilled within same Calendar');
@@ -3022,6 +3022,53 @@ try {
     assert.deepEqual(v.opposite,{yearDisabled:false,monthDisabled:true},'independent header capabilities');
     assert.deepEqual(v.yearDrill,{mode:'year',viewMode:'year',rootCount:1},'year title enters same Calendar');
     assert.deepEqual(v.yearToMonth,{mode:'month',viewMode:'month'},'year pick drills to month');
+  });
+
+  await step('CALENDAR-WHEEL-7-ROW-OWNER browser five Sizes, six full weeks and numeric Calendar cellSize overrides',async()=>{
+    const v=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const q=d.defaultView.QXFRAME9A7C2, DP=q?.Components?.DatePicker, Calendar=q?.BuildingBlocks?.Calendar;
+      if(!DP||!Calendar)return {error:'Missing Calendar or DatePicker'};
+      const container=d.createElement('section');container.style.cssText='position:absolute;left:-9999px;top:0;width:100rem';d.body.append(container);
+      const out={};
+      const height=el=>el?.getBoundingClientRect().height??null;
+      const width=el=>el?.getBoundingClientRect().width??null;
+      try {
+        for(const [size,expected] of Object.entries({xs:24,sm:28,md:32,lg:36,xl:40})){
+          const host=d.createElement('div');container.append(host);
+          const picker=DP.create({container:host,size,value:'2026-10-15',time:{showSecond:false},needConfirm:true,open:true});
+          try{
+            const root=picker.getCalendar().getRootElement(), wheel=picker.getTimePanel().getWheelPanel().getRootElement();
+            const header=root.querySelector('.qxframe9a7c2-calendar-header'),weekday=root.querySelector('.qxframe9a7c2-calendar-weekdays');
+            const grid=root.querySelector('.qxframe9a7c2-calendar-grid'),cell=grid.querySelector('.qxframe9a7c2-calendar-cell');
+            const title=wheel.querySelector('.qxframe9a7c2-wheel-panel-column-title');
+            const item=wheel.querySelector('.qxframe9a7c2-wheel-panel-item'),scroll=wheel.querySelector('.qxframe9a7c2-wheel-panel-scroll');
+            out[size]={expected,header:height(header),weekday:height(weekday),grid:height(grid),cellH:height(cell),cellW:width(cell),gridW:width(grid),calendarW:width(root),title:height(title),item:height(item),scroll:height(scroll),calendarH:height(root),wheelH:height(wheel),dates:grid.children.length};
+          }finally{picker.destroy();host.remove();}
+        }
+        const mount=d.createElement('div');container.append(mount);
+        const standalone=Calendar.create({container:mount,cellSize:34,size:'sm',value:new Date(2026,9,15)});
+        try{
+          const root=standalone.getRootElement(),cell=root.querySelector('.qxframe9a7c2-calendar-cell');
+          out.explicit={before:height(cell),width:width(root)};
+          standalone.updateOptions({cellSize:38});
+          out.explicit.after=height(root.querySelector('.qxframe9a7c2-calendar-cell'));
+        }finally{standalone.destroy();}
+        return out;
+      }finally{container.remove();}
+    })()`);
+    assert.equal(v.error,undefined,'Calendar and DatePicker available');
+    for(const size of ['xs','sm','md','lg','xl']){
+      const a=v[size],s=a.expected;
+      assert.ok(Math.abs(a.cellH-s)<.75&&Math.abs(a.cellW-s)<.75,size+' square CellSize '+JSON.stringify(a));
+      assert.ok(Math.abs(a.weekday-s)<.75&&Math.abs(a.item-s)<.75,size+' shared weekday/item size '+JSON.stringify(a));
+      assert.equal(a.dates,42,size+' exactly six calendar weeks');
+      assert.ok(Math.abs(a.grid-s*6)<.75&&Math.abs(a.scroll-s*7)<.75,size+' 6+1 date rows match 7 visible Wheel rows');
+      assert.ok(Math.abs(a.header-a.title)<.75,size+' Header and Wheel Column Title exterior height equal '+JSON.stringify(a));
+      assert.ok(Math.abs(a.calendarH-a.wheelH)<.75,size+' total Calendar/Wheel heights match '+JSON.stringify(a));
+      assert.ok(Math.abs(a.calendarW-(7*s+10))<.75&&Math.abs(a.gridW-7*s)<.75,size+' Calendar width from 7 Cells + horizontal padding');
+    }
+    assert.ok(Math.abs(v.explicit.before-34)<.75&&Math.abs(v.explicit.after-38)<.75,'standalone Calendar cellSize and updateOptions');
   });
 
   await step('CALENDAR-RANGE-VISUAL-001 real Calendar wrappers/pseudo geometry and delegated click in page/popup light/dark',async()=>{
