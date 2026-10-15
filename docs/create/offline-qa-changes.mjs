@@ -1,35 +1,20 @@
 /** STAGE5-OWNER-VISUAL-20261015: only this batch of user-visible changes. */
-/** STAGE5-TABLER-STATIC-20261015: highlight current Calendar and static family work only. */
+/** Stage 5 current user visual corrections; old Tabler/Card/Kbd highlights are cleared. */
 const groups = [
- ['capacity-calendar','Calendar range / week caps',[
-  ['[data-pv3x-widget="capacity-calendar"]','Calendar round week boundaries','Every displayed range row has its own rounded start/end; standalone Calendar has previous/next year navigation','__QA_BUNDLE_HEAD__']
+ ['capacity-calendar','Calendar 选中与整周投影',[
+  ['.qxframe9a7c2-calendar','完整 7 天 Week 范围和 Today 圆点','Range 跨月及整周 Hover/Selected 复用 Calendar Cell + ::before，边界圆角及 Today 指示不丢失','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['revenue-surfaces','Card composition',[
-  ['.qxframe9a7c2-card-header','Card stamp / deck / paper layers','Theme-owned stacked, stamp and deck variants are included in static showcase','__QA_BUNDLE_HEAD__']
+ ['alert-triage','Alert 语义外观',[
+  ['.qxframe9a7c2-alert-root','Alert 状态和外观组合','is-muted/is-outline/is-shadow 与 success/error/warning/info 共用 Alert Theme','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['compliance-flags','Badge semantic appearance',[
-  ['.qxframe9a7c2-badge','Badge soft / subtle and status','Theme semantic Badge supports soft/subtle and status label treatments','__QA_BUNDLE_HEAD__']
+ ['quick-action-menu','Dropdown 仅上下间距',[
+  ['.qxframe9a7c2-dropdown-panel','Dropdown all / block / none','新 inset=block 使用原 ListFrame；菜单整行 Hover 填满，两侧无额外内距','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['stakeholder-roster','Avatar appearance',[
-  ['.qxframe9a7c2-avatar','Avatar presence and spacing','Avatar status and group spacing consume identity Theme colors','__QA_BUNDLE_HEAD__']
+ ['support-triage','Tags +Add / 编辑焦点',[
+  ['.qxframe9a7c2-tag','Tags 添加项和焦点','透明背景、Control 虚线边框；编辑后实线并继承鼠标与键盘焦点','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['alert-triage','Alert compact layout',[
-  ['.qxframe9a7c2-alert-root','Compact Alert','Alert retains the previous completed semantic variants and adds compact spacing','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['service-health','Progress appearance',[
-  ['.qxframe9a7c2-progress','Progress stripes and step states','Additional stripe/muted/error/warning/step variants consume existing Progress tokens','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['segmented-console','Tabs appearance',[
-  ['.qxframe9a7c2-tabs','Pill and soft Tabs','Pill/soft display uses the existing Tabs state controller','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['support-triage','Tag appearance',[
-  ['.qxframe9a7c2-tag','Tag muted / outline / shadow','Static Tags styles share Tag presentation and Theme tokens','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['vendor-intake','Native Form helpers',[
-  ['.qxframe9a7c2-form-input','Form hints and InputGroup','Status hints and form composition use existing Field/Control roles','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['static-recipes','New static appearance showcase',[
-  ['.qxframe9a7c2-kbd','Kbd and Tabler-informed variants','Live Kbd keycaps and cross-family static recipes are theme-driven','__QA_BUNDLE_HEAD__']
+ ['asset-preview','Image Preview 退场',[
+  ['.qxframe9a7c2-image','Preview 遮罩与源图交接','同色 Tool/Title/Close，关闭轨迹与源图不闪；允许可选控制台耗时诊断','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -93,7 +78,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Calendar 行圆角及导航、Tabler 静态组件形态、Kbd 新增；上一轮高亮全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Calendar 范围/整周、Alert、Dropdown、Tags、Image Preview 相关改动；之前的 Tabler/Kbd 高亮全部清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
