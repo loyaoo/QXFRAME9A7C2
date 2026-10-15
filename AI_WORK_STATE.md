@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 browser fixture correction (CI pending)
+- Source and static acceptance (133 checks), Windows Tools and build stages progressed on `ddbf7e1`; QXFRAME #38676126267 and CSS Schema #38676126282 both reached actual Chromium, then failed at geometry test initialization because an embedded DatePicker with `time` received a date-only string not valid for the DateTime default format.
+- `2f4c769` replaces those two fixture values and the five-size geometry fixture with real Date objects including time. The production date parser and WheelPanel behavior are unchanged; no gate weakened. Latest exact HEAD double-green CI, five-size browser equal heights and artifact remain pending.
+- PR #267 remains Draft/Open; main and frozen Tree/Controller untouched. Overall and Stage percentage cannot credibly be quantified.
+
 ## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 unified 1+6=7 implementation (CI pending)
 - Owner approved one shared five-size metric: WheelMetrics xs/sm/md/lg/xl=24/28/32/36/40px; default Wheel itemHeight=32px for md and seven visible items. WheelPanel original Scroll, Guide, Padding and Snap calculations remain intact; the erroneous DatePicker guide trim is gone.
 - Ordinary six-row Calendar now maps Header height to Wheel Column Title height, Weekdays to one Item and six Calendar Grid rows to six Items. Calendar exposes a numeric pixel cellSize option for standalone overrides. DatePicker Calendar hosts derive width from 7×CellSize+actual horizontal padding (default 5px×2).
