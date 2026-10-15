@@ -3071,6 +3071,76 @@ try {
     assert.ok(Math.abs(v.explicit.before-34)<.75&&Math.abs(v.explicit.after-38)<.75,'standalone Calendar cellSize and updateOptions');
   });
 
+  await step('Stage5 Calendar/Wheel 8 Styles x light/dark x five Sizes: actual seven-row geometry',async()=>{
+    const actual=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const app=window.QXFRAME9A7C2_CREATE,q=d.defaultView.QXFRAME9A7C2;
+      const DP=q?.Components?.DatePicker;
+      if(!DP||!app?.compileTheme)return {error:'DatePicker or Theme compiler unavailable'};
+      const originalDark=d.documentElement.classList.contains('dark');
+      const sheet=d.createElement('style'),fixture=d.createElement('section'),pickers=[];
+      fixture.style.cssText='position:absolute;left:-5000px;top:0;display:flex;gap:1rem';
+      d.head.append(sheet);d.body.append(fixture);
+      const height=n=>n?.getBoundingClientRect().height??NaN;
+      const width=n=>n?.getBoundingClientRect().width??NaN;
+      const sizes={xs:28,sm:32,md:36,lg:40,xl:44},rows=[];
+      try{
+        for(const [size,expected] of Object.entries(sizes)){
+          const host=d.createElement('div');fixture.append(host);
+          const picker=DP.create({container:host,size,value:'2026-10-15 12:34:00',time:{showSecond:false},needConfirm:true,open:true});
+          pickers.push({picker,size,expected});
+        }
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+          sheet.textContent=app.compileTheme({...app.state.config,style},{generatedAt:''}).body;
+          for(const dark of [false,true]){
+            d.documentElement.classList.toggle('dark',dark);
+            for(const {picker,size,expected} of pickers){
+              const cal=picker.getCalendar()?.getRootElement();
+              const wheel=picker.getTimePanel()?.getWheelPanel()?.getRootElement();
+              const day=cal?.querySelector('.qxframe9a7c2-calendar-cell');
+              const grid=cal?.querySelector('.qxframe9a7c2-calendar-grid');
+              const weekday=cal?.querySelector('.qxframe9a7c2-calendar-weekdays');
+              const heading=cal?.querySelector('.qxframe9a7c2-calendar-header');
+              const title=wheel?.querySelector('.qxframe9a7c2-wheel-panel-column-title');
+              const scroll=wheel?.querySelector('.qxframe9a7c2-wheel-panel-scroll');
+              const item=wheel?.querySelector('.qxframe9a7c2-wheel-panel-item');
+              const guide=wheel?.querySelector('.qxframe9a7c2-wheel-panel-center-guide');
+              const host=cal?.closest('.qxframe9a7c2-date-picker-calendar-host');
+              rows.push({style,dark,size,expected,day:height(day),dayWidth:width(day),
+                weekday:height(weekday),grid:height(grid),gridWidth:width(grid),
+                header:height(heading),title:height(title),scroll:height(scroll),
+                item:height(item),guide:height(guide),calendar:height(cal),wheel:height(wheel),
+                calendarWidth:width(cal),hostWidth:width(host),weekCount:grid?.children.length,
+                scrollClient:scroll?.clientHeight??0,scrollOverflow:scroll?.scrollHeight??0});
+            }
+          }
+        }
+        return {rows};
+      }finally{
+        pickers.forEach(({picker})=>picker.destroy());
+        fixture.remove();sheet.remove();
+        d.documentElement.classList.toggle('dark',originalDark);
+      }
+    })()`);
+    assert.equal(actual.error,undefined,'DatePicker and Theme compiler available');
+    assert.equal(actual.rows.length,80,'8 styles x 2 modes x 5 sizes');
+    for(const row of actual.rows){
+      const {expected:s}=row, label=row.style+'/'+(row.dark?'dark':'light')+'/'+row.size;
+      const approx=(a,b,part)=>assert.ok(Number.isFinite(a)&&Math.abs(a-b)<.75,label+' '+part+': '+a+' vs '+b);
+      approx(row.day,s,'day height');approx(row.dayWidth,s,'day width');
+      approx(row.weekday,s,'weekday height');approx(row.item,s,'wheel item');
+      approx(row.guide,s,'guide follows item');approx(row.grid,s*6,'six day rows');
+      approx(row.gridWidth,s*7,'seven date columns');
+      approx(row.scroll,s*7,'seven wheel items viewport');
+      approx(row.header,row.title,'header equals wheel title');
+      approx(row.calendar,row.wheel,'total calendar/wheel height');
+      approx(row.calendarWidth,7*s+10,'calendar derives width');
+      approx(row.hostWidth,row.calendarWidth,'host matches calendar width');
+      assert.equal(row.weekCount,42,label+' fixed six-week Calendar DOM');
+      assert.ok(row.scrollOverflow>=row.scrollClient,label+' Wheel scroll not physically undersized');
+    }
+  });
+
   await step('CALENDAR-RANGE-VISUAL-001 real Calendar wrappers/pseudo geometry and delegated click in page/popup light/dark',async()=>{
     const value=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const q=d.defaultView.QXFRAME9A7C2,app=window.QXFRAME9A7C2_CREATE;\n if(!q?.BuildingBlocks?.Calendar?.create)return {error:'Real Calendar BuildingBlock unavailable'};\n const savedDark=d.documentElement.classList.contains('dark'),theme=d.createElement('style');\n const holder=d.createElement('div');holder.style.cssText='position:absolute;left:-3000px;top:0;width:44rem;display:flex;gap:1rem';\n const plain=d.createElement('div'),popup=d.createElement('div');\n popup.className='qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel';\n holder.append(plain,popup);d.body.append(holder);d.head.append(theme);\n const callbacks=[],instances=[];\n const range=(date)=>{\n   const inMonth=date.getFullYear()===2026&&date.getMonth()===9;\n   const day=date.getDate();\n   return {selected:inMonth&&(day===1||day===7),inRange:inMonth&&day>=1&&day<=7,rangeStart:inMonth&&day===1,rangeEnd:inMonth&&day===7};\n };\n const results=[];\n try {\n   for(const [key,host] of [['standalone',plain],['popup',popup]]){\n     const calendar=q.BuildingBlocks.Calendar.create({\n       container:host,document:d,viewValue:new Date(2026,9,1),value:new Date(2026,9,1),\n       getCellState:range,\n       renderCell:(date)=>{const span=d.createElement('span');span.textContent=String(date.getDate());return span;},\n       onSelect:(date)=>callbacks.push({key,day:date.getDate(),month:date.getMonth()})\n     });\n     instances.push(calendar);\n   }\n   const select=(root,day)=>{\n     return [...root.querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')]\n       .find(b=>b.textContent.trim()===String(day)&&!b.classList.contains('is-outside'));\n   };\n   for(const dark of [false,true])\n   for(const accent of ['subtle','bold']){\n     d.documentElement.classList.toggle('dark',dark);\n     theme.textContent=app.compileTheme({...app.state.config,style:'nova',menuAccent:accent},{generatedAt:''}).body;\n     for(const [key,host] of [['standalone',plain],['popup',popup]]){\n       const grid=host.querySelector('.qxframe9a7c2-calendar-grid');\n       const cells=grid.querySelectorAll(':scope>.qxframe9a7c2-calendar-cell');\n       const start=select(host,1),middle=select(host,2),end=select(host,7),normal=select(host,12);\n       const css=(node,pseudo)=>d.defaultView.getComputedStyle(node,pseudo);\n       const sample=cell=>{\n         const view=cell?.firstElementChild,inner=view?.firstElementChild,ps=cell?css(cell,'::before'):null;\n         const rc=inner?.getBoundingClientRect(),r=cell?.getBoundingClientRect();\n         return {\n           childCount:cell?.childElementCount,viewClass:view?.className,innerClass:inner?.className,\n           children:view?.childElementCount,buttonTag:cell?.tagName,spanCount:inner?.querySelectorAll('span').length,\n           beforeContent:ps?.content,beforePosition:ps?.position,beforeBg:ps?.backgroundColor,\n           beforeWidth:ps?parseFloat(ps.width):null,beforeLeft:ps?parseFloat(ps.left):null,\n           width:r?.width,innerWidth:rc?.width,innerHeight:rc?.height,\n           outerBg:cell?css(cell).backgroundColor:null,innerBg:inner?css(inner).backgroundColor:null,\n           innerZ:inner?css(inner).zIndex:null\n         };\n       };\n       results.push({dark,accent,key,cellCount:cells.length,gridGap:css(grid).gap,start:sample(start),middle:sample(middle),end:sample(end),normal:sample(normal)});\n     }\n   }\n   const target=select(popup,5);const span=target?.querySelector('.qxframe9a7c2-calendar-cell-inner span');\n   span?.click();\n   return {results,clicked:callbacks.some(c=>c.key==='popup'&&c.day===5&&c.month===9)};\n } finally {\n   for(const instance of instances)try{instance.destroy()}catch(_){}\n   holder.remove();theme.remove();d.documentElement.classList.toggle('dark',savedDark);\n }\n})()");
     assert.equal(value.error,undefined,'real Calendar must be available in preview runtime');
