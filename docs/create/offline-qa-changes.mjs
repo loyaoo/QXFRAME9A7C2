@@ -13,7 +13,7 @@ const groups = [
     ['[data-pv3-component="customer-tags"]','Tag / Add Tag theme parity','Add Trigger shares Tag surface, radius, selection/variant Theme paint','__QA_BUNDLE_HEAD__']
   ],'03'],
   ['asset-preview','Image Preview foreground and lifecycle',[
-    ['[data-pv3x-widget="asset-preview"]','Preview title / close / exit motion','Title, Close and Toolbar use one background/border/white foreground; leave keeps source hidden until both layers finish','__QA_BUNDLE_HEAD__']
+    ['[data-pv3x-widget="asset-preview"]','Preview title / close / exit motion','Title, Close and Toolbar use one background/border/white foreground; leave hides the landed copy before restoring its source; the mask finishes independently','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
