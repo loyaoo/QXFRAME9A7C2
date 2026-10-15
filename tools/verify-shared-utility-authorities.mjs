@@ -13,20 +13,18 @@ const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 // 76→80: pure time/wheel algorithms have one owner.
 assert.deepEqual(TimeUnit.parse('11:22:33 PM',{showSecond:true,use12Hours:true}),{hour:23,minute:22,second:33});
 assert.equal(TimeUnit.format({hour:23,minute:22,second:33},{showSecond:true,use12Hours:true}),'11:22:33 PM');
-assert.equal(WheelMetrics.itemHeight('xs'),28);
-assert.equal(WheelMetrics.itemHeight('md'),36);
-assert.equal(WheelMetrics.itemHeight('xl'),44);
+assert.deepEqual(['xs','sm','md','lg','xl'].map(size=>WheelMetrics.itemHeight(size)),[24,28,32,36,40]);
 
 for(const file of ['src/components/time-picker.js','src/components/time-panel.js']){
   const source=read(file);
   assert.match(source,/from ['"]\.\.\/utils\/timeUnit\.js['"]/,`${file} must import TimeUnit.`);
   assert.ok(!/function\s+(?:pad|normalizeTime|formatTime|parseTime|currentTime|cloneTime|sameTime|timeNumber)\s*\(/.test(source),`${file} must not re-own canonical time helpers.`);
 }
-for(const file of ['src/components/time-panel.js','src/components/wheel-panel.js','src/components/wheel-picker.js']){
+for(const file of ['src/components/calendar.js','src/components/time-panel.js','src/components/wheel-panel.js','src/components/wheel-picker.js']){
   const source=read(file);
   assert.match(source,/from ['"]\.\.\/utils\/wheelMetrics\.js['"]/,`${file} must import WheelMetrics.`);
   assert.ok(!/function\s+(?:defaultItemHeight|normalizeWheelSize)\s*\(/.test(source),`${file} must not re-own wheel metrics.`);
-  assert.ok(!/\b(?:xs|sm|md|lg|xl)\s*:\s*(?:28|32|36|40|44)\b/.test(source),`${file} must not duplicate the canonical wheel size map.`);
+  assert.ok(!/\b(?:xs|sm|md|lg|xl)\s*:\s*(?:24|28|32|36|40|44)\b/.test(source),`${file} must not duplicate the canonical wheel size map.`);
 }
 
 // 80→84: hierarchy lookup/traversal lives in TreeQuery and item semantics in ItemAccessors.
