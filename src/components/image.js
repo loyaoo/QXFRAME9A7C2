@@ -167,7 +167,7 @@ function setupImage(instance) {
   var leaveContentDone = true;
   var previewDebugStart = 0;
   /* Opt-in, zero-console-cost by default. Enable in the preview owner's window:
-     window.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG = true */
+     preview document debug flag: QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG = true */
   function tracePreviewLeave(phase){
     var view=doc && doc.defaultView;
     if (!view || view.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG !== true || !view.console) return;
