@@ -14,6 +14,7 @@ import { DOMTemplate } from '../core/domTemplate.js';
 import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { mergeOptions } from '../core/options.js';
 import { DateUnit } from '../utils/dateUnit.js';
+import { WheelMetrics } from '../utils/wheelMetrics.js';
 
 let DOMFactory;
 var WEEKDAYS = ['日','一','二','三','四','五','六'];
@@ -64,7 +65,18 @@ function startMonth(value) { return new Date(value.getFullYear(), value.getMonth
 function sameMonth(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth(); }
     
 function create(options) {
-  var opts = mergeOptions({}, options);
+  var opts = mergeOptions({ size:'md' }, options);
+  function applyCellSize() {
+    if (!root) return;
+    // Standalone Calendar defaults to the canonical Wheel size for this Size.
+    // An explicit numeric cellSize customizes Calendar without mutating WheelPanel.
+    root.style.setProperty('--_qxframe9a7c2-calendar-default-cell-size', String(WheelMetrics.itemHeight(opts.size)) + 'px');
+    if (opts.cellSize !== undefined && opts.cellSize !== null) {
+      var custom = Number(opts.cellSize);
+      if (!Number.isFinite(custom) || custom <= 0) throw new TypeError('[QXFRAME9A7C2] Calendar cellSize must be a positive pixel number.');
+      root.style.setProperty('--qxframe9a7c2-calendar-cell-size', String(custom) + 'px');
+    } else root.style.removeProperty('--qxframe9a7c2-calendar-cell-size');
+  }
 
   /* A single Calendar state and renderer: unit changes only the data/view policy. */
   var unit=String(opts.unit||'date').toLowerCase();
@@ -199,6 +211,7 @@ function create(options) {
     title = domBinding.refs.title;
     grid = domBinding.refs.grid;
     root.classList.add('qxframe9a7c2-calendar','is-unit-'+unit);root.classList.toggle('is-period',isPeriod);root.tabIndex = 0;
+    applyCellSize();
     if (domBinding.refs.header) domBinding.refs.header.classList.add('qxframe9a7c2-calendar-header');
     if (domBinding.refs.prev) { domBinding.refs.prev.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.prev, 'calendarNav', '-1'); domBinding.refs.prev.tabIndex = -1; }
     if (domBinding.refs.next) { domBinding.refs.next.classList.add('qxframe9a7c2-button','is-default','is-text','is-square','qxframe9a7c2-calendar-nav'); DOM.setPrivate(domBinding.refs.next, 'calendarNav', '1'); domBinding.refs.next.tabIndex = -1; }
@@ -570,6 +583,7 @@ function create(options) {
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { setValue(next.value, { source: 'options', reason: 'options-value', silent: true }); }
     if (Object.prototype.hasOwnProperty.call(Object(next), 'viewValue')) changeView(next.viewValue, { source: 'options', reason: 'controlled-view', silent: true });
     if (keyboardRegion) keyboardRegion.setDisabled(opts.disabled === true);
+    applyCellSize();
     render();
     return api;
   }
