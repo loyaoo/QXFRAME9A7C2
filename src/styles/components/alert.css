@@ -37,6 +37,7 @@
   --_qxframe9a7c2-alert-bg:transparent;
   --_qxframe9a7c2-alert-border:color-mix(in oklab,var(--_qxframe9a7c2-alert-accent) 48%,var(--qxframe9a7c2-theme-border))
 }
-.qxframe9a7c2-alert-root.is-shadow{--_qxframe9a7c2-alert-shadow:var(--qxframe9a7c2-theme-shadow-card)}
+/* Explicit elevation is independent of a Style's optional global Card shadow toggle. */
+.qxframe9a7c2-alert-root.is-shadow{--_qxframe9a7c2-alert-shadow:0 .25rem .75rem color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 15%,transparent)}
 .qxframe9a7c2-alert-root[hidden]{display:none}
 
