@@ -69,7 +69,23 @@ function create(options) {
   /* A single Calendar state and renderer: unit changes only the data/view policy. */
   var unit=String(opts.unit||'date').toLowerCase();
   if(!['date','week','month','quarter','year'].includes(unit))throw new TypeError('[QXFRAME9A7C2] Calendar unit must be date, week, month, quarter or year.');
-  var periodUnit=unit==='week'?'date':unit,isPeriod=periodUnit!=='date';
+  var valueUnit=unit==='week'?'date':unit;
+  // The immutable value precision is independent of the currently rendered grid.
+  var viewMode=String(opts.viewMode||(unit==='week'?'date':unit)).toLowerCase();
+  if(!['date','month','quarter','year','decade'].includes(viewMode))throw new TypeError('[QXFRAME9A7C2] Invalid Calendar viewMode.');
+  var periodUnit=viewMode==='decade'?'year':viewMode,isPeriod=periodUnit!=='date';
+  function parseCommitted(v){return DateUnit.parse(v,{unit:valueUnit});}
+  function normalizeCommitted(v){return !v?null:valueUnit==='date'?stripTime(v):DateUnit.start(v,valueUnit,0,false);}
+  function sameCommitted(a,b){return (!a&&!b)||!!a&&!!b&&DateUnit.same(a,b,valueUnit,0);}
+  function canOpenTitle(kind){
+    if(opts.disabled===true)return false;
+    if(kind==='month')return (unit==='date'||unit==='week')&&viewMode==='date'&&opts.allowMonthView!==false;
+    if(kind==='year'||kind==='period'){
+      if(unit==='date'||unit==='week')return viewMode!=='year'&&viewMode!=='decade'&&opts.allowYearView!==false;
+      return kind==='period'&&typeof opts.onTitleRequest==='function';
+    }
+    return false;
+  }
   function parseDate(v){return DateUnit.parse(v,{unit:periodUnit});}
   function keyOf(v){return DateUnit.key(v,periodUnit,0);}
   function sameDay(a,b){return DateUnit.same(a,b,periodUnit,0);}
@@ -95,12 +111,12 @@ function create(options) {
   var interactionController = null;
   scope.add(function () { if (capabilityController) capabilityController.destroy(); capabilityController = null; });
   var cells = [];
-  var initialCommitted = parseDate(opts.value !== undefined ? opts.value : opts.defaultValue);
+  var initialCommitted = parseCommitted(opts.value !== undefined ? opts.value : opts.defaultValue);
   var valueState = ValueController.create({
     value: initialCommitted,
     controlled: opts.controlled === true,
-    normalizeValue: function (next) { return next == null || next === '' ? null : parseDate(next); },
-    equals: sameNullableDay,
+    normalizeValue: function (next) { return next == null || next === '' ? null : parseCommitted(next); },
+    equals: sameCommitted,
     copyValue: cloneDate
   });
   scope.add(function () { valueState.destroy(); });
@@ -222,12 +238,7 @@ function create(options) {
       focusKeyboardHost();
     });
     delegation.on('click', DOM.privateMatcher('calendarTitle'), function (payload) {
-      if (!canNavigate()) return;
-      var unit = String(DOM.getPrivate(payload.target, 'calendarTitle') || '');
-      var detail = { unit: unit, viewValue: cloneDate(viewValue), originalEvent: payload.event, source: DOM.activationSource(payload.event), reason: 'title', calendar: api };
-      if(unit==='period'&&typeof opts.onTitleRequest==='function'){detail.unit=periodUnit;opts.onTitleRequest(cloneDate(viewValue),detail);emitter.emit('titleRequest',detail);}
-      else if(unit==='year'&&typeof opts.onYearRequest==='function')opts.onYearRequest(cloneDate(viewValue),detail);
-      else if(unit==='month'&&typeof opts.onMonthRequest==='function')opts.onMonthRequest(cloneDate(viewValue),detail);
+      if(canNavigate())requestTitle(String(DOM.getPrivate(payload.target,'calendarTitle')||''),payload.event,DOM.activationSource(payload.event));
     });
     delegation.on('click', DOM.privateMatcher('calendarDate'), function (payload) {
       if (opts.disabled === true) return;
@@ -304,12 +315,15 @@ function create(options) {
 
   function render(meta) {
     if (!root || destroyed) return;
+    root.classList.toggle('is-period',isPeriod);
+    if(domBinding.refs.weekdays)domBinding.refs.weekdays.hidden=isPeriod;
+    if(domBinding.refs.yearTitle)DOM.setPrivate(domBinding.refs.yearTitle,'calendarTitle',isPeriod?'period':'year');
     buildCells();
     if(domBinding&&domBinding.refs.yearTitle&&domBinding.refs.monthTitle){
       domBinding.refs.yearTitle.textContent=isPeriod?periodTitle(viewValue):String(viewValue.getFullYear());
       domBinding.refs.monthTitle.textContent=String(viewValue.getMonth()+1).padStart(2,'0');
-      domBinding.refs.yearTitle.disabled=opts.disabled===true||(isPeriod?typeof opts.onTitleRequest!=='function':typeof opts.onYearRequest!=='function');
-      domBinding.refs.monthTitle.disabled=isPeriod||opts.disabled===true||typeof opts.onMonthRequest!=='function';
+      domBinding.refs.yearTitle.disabled=!canOpenTitle(isPeriod?'period':'year');
+      domBinding.refs.monthTitle.disabled=!canOpenTitle('month');
       domBinding.refs.monthTitle.hidden=isPeriod;
     }else title.textContent=isPeriod?periodTitle(viewValue):viewValue.getFullYear()+'-'+String(viewValue.getMonth()+1).padStart(2,'0');
     grid.textContent = '';
@@ -320,7 +334,7 @@ function create(options) {
       // Render only the visible inner square; do not remove the style wrappers
       // or move the calendarDate private key/event delegation off the button.
       var cellInner = button.firstElementChild.firstElementChild;
-      var cellOutput=typeof opts.renderCell==='function'?opts.renderCell(cloneDate(entry.date),{entry:entry,unit:unit,calendar:api}):(isPeriod?entry.label:String(entry.date.getDate()));
+      var cellOutput=typeof opts.renderCell==='function'&&(!isPeriod||valueUnit!=='date')?opts.renderCell(cloneDate(entry.date),{entry:entry,unit:unit,viewMode:viewMode,calendar:api}):(isPeriod?entry.label:String(entry.date.getDate()));
       Renderer.append(cellInner, cellOutput);
       DOM.setPrivate(button, 'calendarDate', entry.key);
       button.tabIndex = -1;
@@ -347,7 +361,7 @@ function create(options) {
     var today = normalizeValue(new Date());
     for (var i = 0; i < nodes.length; i += 1) {
       var date = parseDate(DOM.getPrivate(nodes[i], 'calendarDate'));
-      var getState=opts.getCellState||opts.getItemState;
+      var getState=isPeriod&&valueUnit==='date'?null:opts.getCellState||opts.getItemState;
       var external=typeof getState==='function'?getState(cloneDate(date),{unit:unit,calendar:api,entry:cells.find(function(c){return sameDay(c.date,date);})||null}):null;
       var state = external && typeof external === 'object' ? external : {};
       var selected = Object.prototype.hasOwnProperty.call(state, 'selected') ? state.selected === true : sameDay(date, valueState.value);
@@ -364,6 +378,37 @@ function create(options) {
     }
   }
     
+  function setViewMode(next,meta){
+    if(destroyed)return false;
+    var mode=String(next||'').toLowerCase();
+    if(!['date','month','quarter','year','decade'].includes(mode))throw new TypeError('[QXFRAME9A7C2] Invalid Calendar viewMode.');
+    if(valueUnit!=='date'&&mode!==unit)throw new Error('[QXFRAME9A7C2] Calendar period unit fixes its selection view.');
+    if(mode===viewMode)return true;
+    var previous=viewMode;
+    viewMode=mode;periodUnit=mode==='decade'?'year':mode;isPeriod=periodUnit!=='date';
+    opts.viewMode=mode;viewValue=startMonth(viewValue);hoveredKey=null;
+    render(meta);
+    if(!(meta&&meta.silent)){
+      var detail={viewMode:mode,previousViewMode:previous,viewValue:cloneDate(viewValue),source:meta&&meta.source||'api',reason:meta&&meta.reason||'view-mode',calendar:api};
+      if(typeof opts.onViewModeChange==='function')opts.onViewModeChange(mode,detail);
+      emitter.emit('viewModeChange',detail);
+    }
+    return true;
+  }
+  function requestTitle(kind,event,source){
+    if(!canOpenTitle(kind))return false;
+    var detail={unit:kind==='period'?periodUnit:kind,viewMode:viewMode,viewValue:cloneDate(viewValue),originalEvent:event||null,source:source||'api',reason:'title',calendar:api};
+    if(kind==='month'){
+      if(typeof opts.onMonthRequest==='function')opts.onMonthRequest(cloneDate(viewValue),detail);
+      else setViewMode('month',detail);
+    }else if((unit==='date'||unit==='week')&&(kind==='year'||kind==='period')){
+      if(typeof opts.onYearRequest==='function')opts.onYearRequest(cloneDate(viewValue),detail);
+      else setViewMode('year',detail);
+    }else if(kind==='period'&&typeof opts.onTitleRequest==='function'){
+      opts.onTitleRequest(cloneDate(viewValue),detail);emitter.emit('titleRequest',detail);
+    }
+    return true;
+  }
   function changeView(next, meta) {
     if (destroyed) return false;
     var parsed = parseDate(next); if (!parsed) return false;
@@ -385,7 +430,17 @@ function create(options) {
   function selectDate(next, meta) {
     if (destroyed || !canSelect()) return false;
     var parsed = parseDate(next); if (!parsed || isDisabledDate(parsed)) return false;
-    var selected = normalizeValue(parsed);
+    if(valueUnit==='date'&&isPeriod){
+      var drill={viewMode:viewMode,viewValue:cloneDate(viewValue),source:meta&&meta.source||'api',reason:meta&&meta.reason||'drill-select',originalEvent:meta&&meta.originalEvent||null,calendar:api};
+      if(typeof opts.onDrillSelect==='function')opts.onDrillSelect(cloneDate(parsed),drill);
+      else{
+        setViewMode(periodUnit==='year'?'month':'date',{silent:true,source:drill.source});
+        changeView(parsed,{silent:true,source:drill.source});
+      }
+      emitter.emit('drillSelect',drill);
+      return true;
+    }
+    var selected = normalizeCommitted(parsed);
     var previous = cloneDate(valueState.value);
     var stateMeta = { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'select', originalEvent: meta && meta.originalEvent || null };
     if (valueState.controlled) valueState.requestChange(selected, stateMeta); else valueState.setValue(selected, stateMeta);
@@ -400,9 +455,9 @@ function create(options) {
     
   function setValue(next, meta) {
     if (destroyed) return false;
-    var parsed = next === null || next === undefined || next === '' ? null : parseDate(next); if (next !== null && next !== undefined && next !== '' && !parsed) return false;
+    var parsed = next === null || next === undefined || next === '' ? null : parseCommitted(next); if (next !== null && next !== undefined && next !== '' && !parsed) return false;
     var previous = cloneDate(valueState.value);
-    valueState.setValue(parsed ? normalizeValue(parsed) : null, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-value', originalEvent: meta && meta.originalEvent || null });
+    valueState.setValue(parsed ? normalizeCommitted(parsed) : null, { silent: true, source: meta && meta.source || 'api', reason: meta && meta.reason || 'set-value', originalEvent: meta && meta.originalEvent || null });
     var committed = valueState.value;
     var preserveView = !!(meta && meta.syncView === false);
     if (committed && !preserveView) changeView(committed, { source: meta && meta.source || 'api', reason: 'value-view-sync', silent: true });
@@ -431,13 +486,7 @@ function create(options) {
     if (titleTarget) {
       var titleUnit = String(DOM.getPrivate(titleTarget, 'calendarTitle') || '');
       if (actionName === 'ACTIVATE') {
-        var requestDetail = { unit:titleUnit, viewValue:cloneDate(viewValue), originalEvent:event, source:'keyboard', reason:'title-keyboard', calendar:api };
-        if(titleUnit==='period'&&typeof opts.onTitleRequest==='function'){
-          requestDetail.unit=periodUnit;opts.onTitleRequest(cloneDate(viewValue),requestDetail);emitter.emit('titleRequest',requestDetail);
-        } else if (titleUnit === 'year' && typeof opts.onYearRequest === 'function') opts.onYearRequest(cloneDate(viewValue), requestDetail);
-        else if (titleUnit === 'month' && typeof opts.onMonthRequest === 'function') opts.onMonthRequest(cloneDate(viewValue), requestDetail);
-        else return false;
-        return true;
+        return requestTitle(titleUnit,event,'keyboard');
       }
       if (['MOVE_LEFT','MOVE_RIGHT','MOVE_UP','MOVE_DOWN'].indexOf(actionName) >= 0) {
         var direction = actionName === 'MOVE_LEFT' || actionName === 'MOVE_UP' ? -1 : 1;
@@ -515,6 +564,7 @@ function create(options) {
   function updateOptions(nextOptions) {
     if (destroyed) return api;
     var next=nextOptions||{};if(Object.prototype.hasOwnProperty.call(next,'unit')&&String(next.unit)!==unit)throw new Error('[QXFRAME9A7C2] Calendar unit is immutable.');opts=mergeOptions(opts,next);
+    if(Object.prototype.hasOwnProperty.call(next,'viewMode'))setViewMode(next.viewMode,{silent:true,source:'options'});
     capabilityController.updateOptions({});
     if (Object.prototype.hasOwnProperty.call(Object(next), 'controlled')) valueState.setControlled(opts.controlled === true);
     if (Object.prototype.hasOwnProperty.call(Object(next), 'value')) { setValue(next.value, { source: 'options', reason: 'options-value', silent: true }); }
@@ -532,6 +582,7 @@ function create(options) {
     setValue: setValue,
     clear: function (meta) { return setValue(null, meta); },
     setViewValue: changeView,
+    setViewMode: setViewMode,
     prev: function () { return changeView(addPage(viewValue, -1), { source: 'api', reason: 'prev' }); },
     next: function () { return changeView(addPage(viewValue, 1), { source: 'api', reason: 'next' }); },
     setActiveDate: setActiveDate,
@@ -543,7 +594,7 @@ function create(options) {
     refresh: function () { render(); return api; },
     refreshStates: function () { syncCellStates(); return api; },
     updateOptions: updateOptions,
-    getState: function () {return Object.freeze({unit:unit,value:cloneDate(valueState.value),viewValue:cloneDate(viewValue),activeKey:activeItem.activeKey,activeValue:parseDate(activeItem.activeKey),hoverValue:parseDate(hoveredKey),disabled:opts.disabled===true,readOnly:isReadOnly(),destroyed:destroyed});},
+    getState: function () {return Object.freeze({unit:unit,viewMode:viewMode,value:cloneDate(valueState.value),viewValue:cloneDate(viewValue),activeKey:activeItem.activeKey,activeValue:parseDate(activeItem.activeKey),hoverValue:parseDate(hoveredKey),disabled:opts.disabled===true,readOnly:isReadOnly(),destroyed:destroyed});},
     getItems: function(){return cells.map(function(c){return {key:c.key,date:cloneDate(c.date),label:c.label||String(c.date.getDate()),disabled:c.disabled};});},
     getRootElement: function () { return root; },
     getRefs: function () { return domBinding ? domBinding.refs : null; },

@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 Calendar source (CI pending)
+- Calendar now distinguishes immutable selection unit from mutable viewMode; title mouse/keyboard delegates to one capability check, allowing independent allowYearView/allowMonthView and preserving period onTitleRequest.
+- DatePicker integration still needs to eliminate extra year/month instances; next commit must implement that before final acceptance. PR #267 stays Draft, main unchanged; no credible Stage/global percent.
+
 ## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 source changes (CI pending)
 - Verified previous development HEAD fd9bd1a180b6fb8eedc819737b7f1808a3306816, PR #267 Draft/Open, main 718da2a6be0bc71520adb0451429cd3d3d8320b3. Earlier dual green CI predates these changes.
 - DatePicker internal TimePanel defaults to 7 visible rows; WheelMetrics.md remains 36px, WheelPanel computes 252px scroll and 108px top/bottom pads. Explicit time.visibleItemCount remains higher priority.
