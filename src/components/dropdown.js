@@ -42,7 +42,7 @@ function initializeDropdown(instance, options) {
   var opts = Utils.assignOwn({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined,
     searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
-    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined,
+    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,
     submenuTrigger: 'hover', submenuOpenDelay: 80, submenuLeaveDelay: 120, submenuOffset: 8
   }, options || {});
   validateItems(opts.items);
@@ -616,7 +616,7 @@ export class Dropdown extends PopupComponent {
   });
   static options = Object.freeze({
     trigger: 'click', placement: 'bottom-start', closeOnSelect: undefined, searchable: false, selectable: true, multiple: false, disabled: false, readOnly: false,
-    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined,
+    size: 'md', selectionAppearance: 'check-start', inset:'all', showArrow: false, arrowPadding: 8, flipOnOverflow: true, open: false, openDelay: undefined, closeDelay: undefined,
     submenuTrigger: 'hover', submenuOpenDelay: 80, submenuLeaveDelay: 120, submenuOffset: 8
   });
 
