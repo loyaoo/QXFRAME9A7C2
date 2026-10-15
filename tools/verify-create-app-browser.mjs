@@ -3206,6 +3206,30 @@ try {
     }
   });
 
+  await step('Stage5 Dropdown all/block/none list-frame padding owns root/submenus and dynamic updates',async()=>{
+    const got=await evaluate(`(() => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument,q=doc.defaultView.QXFRAME9A7C2;
+      if(!q?.Components?.Dropdown)return {error:'Dropdown runtime missing'};
+      const btn=doc.createElement('button');btn.type='button';btn.textContent='Actions';doc.body.append(btn);
+      const inst=q.Components.Dropdown.create({reference:btn,inset:'block',items:[{key:'group',type:'group',label:'Actions'},{key:'root',value:'root',label:'More',items:[{key:'child',value:'child',label:'Child'}]}]});
+      try{
+        const panel=inst.getPopupElement();
+        const measure=()=>({block:panel.classList.contains('is-block-inset'),all:panel.classList.contains('is-inset'),none:panel.classList.contains('is-flush'),paddingInline:doc.defaultView.getComputedStyle(panel).paddingLeft});
+        const block=measure();inst.updateOptions({inset:'all'});const all=measure();
+        inst.updateOptions({inset:'none'});const none=measure();
+        let rejects=false;try{inst.updateOptions({inset:'diagonal'});}catch(_){rejects=true;}
+        return {block,all,none,rejects};
+      }finally{inst.destroy();btn.remove();}
+    })()`);
+    assert.equal(got.error,undefined,'Dropdown runtime exists');
+    assert.equal(got.block.block,true,'only vertical outer inset class applied');
+    assert.equal(got.block.paddingInline,'0px','block inset leaves inline edges flush');
+    assert.equal(got.all.all,true,'normal gutter mode restored by updateOptions');
+    assert.equal(got.none.none,true,'flush gutter mode restored by updateOptions');
+    assert.equal(got.none.paddingInline,'0px','flush mode has no inline padding');
+    assert.equal(got.rejects,true,'invalid inset enum rejected');
+  });
+
   await step('Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle',async()=>{
     const result=await evaluate(`(async()=>{
       const d=document.querySelector('[data-create-frame]').contentDocument,win=d.defaultView;
