@@ -901,8 +901,9 @@ function setupImage(instance) {
         // while the mask is still fading it snaps back to its centered resting geometry.
         // Hide the landed copy first, then hand visual ownership back to the source.
         if (previewMotion) previewMotion.style.visibility = 'hidden';
-        // Mask may still be fading. The source stays hidden until the shared
-        // leave finalizer hands visual ownership back exactly once.
+        // The source resumes ownership in the same frame that the landed copy
+        // becomes hidden. A still-fading mask must not expose a blank source.
+        root.classList.remove('is-preview-source-hidden');
         leaveContentDone = true;
         finalizePreviewLeave(context);
       }
