@@ -168,7 +168,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const current={
     "capacity-calendar":['[data-pv3x-widget="capacity-calendar"]'],
     "alert-triage":['.qxframe9a7c2-alert-root'],
-    "quick-action-menu":['.pv3x-actions'],
+    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],
     "customer-quality":['[data-pv3-component="customer-tags"]'],
     "asset-preview":['[data-pv3x-widget="asset-preview"]']
   }; // Only this round's five component visual corrections.
