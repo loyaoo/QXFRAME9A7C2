@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-15 generated Docs API sync (CI pending)
+- QXFRAME #38669536969 failed the existing sync-docs-api --check because docs/assets/qxframe9a7c2-component-api.js still embedded prior generated contract payload.
+- Synchronized existing generated marker block exactly from docs/generated/component-api.json using the canonical tools/sync-docs-api-contracts.mjs algorithm; no manual parallel option API.
+- Stage/global progress unquantified. Two CI successes on latest final SHA plus Chromium and official full ZIP still required. PR #267 stays Draft/Open; main untouched.
+
 ## CURRENT — 2026-10-15 Runtime Schema generated-contract sync (CI pending)
 - QXFRAME #38669282727 found generated docs/generated/component-api.json missing DatePicker allowYearView and allowMonthView after core contract change; no contract gate weakened.
 - Generated DatePicker fields now include both boolean capabilities; acceptance explicitly validates their type. This preserves one canonical component API, not a duplicate schema or historical alias.
