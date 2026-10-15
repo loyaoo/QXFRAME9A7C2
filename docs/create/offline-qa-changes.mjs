@@ -7,7 +7,7 @@ const groups = [
     ['.qxframe9a7c2-alert-root','Alert muting, outline, shadow and semantic status','Alert is-muted/is-outline/is-shadow with success/error/warning/info Appearance combinations','__QA_BUNDLE_HEAD__']
   ],'03'],
   ['quick-action-menu','Dropdown group typography',[
-    ['.pv3x-actions','Dropdown group title','Group headers inherit ItemCollection title scale and 60% foreground opacity','__QA_BUNDLE_HEAD__']
+    ['[data-pv3x-widget="quick-action-menu"]','Dropdown group title','Group headers inherit ItemCollection title scale and 60% foreground opacity','__QA_BUNDLE_HEAD__']
   ],'03'],
   ['customer-quality','Tags Add inherits Tag tokens',[
     ['[data-pv3-component="customer-tags"]','Tag / Add Tag theme parity','Add Trigger shares Tag surface, radius, selection/variant Theme paint','__QA_BUNDLE_HEAD__']
