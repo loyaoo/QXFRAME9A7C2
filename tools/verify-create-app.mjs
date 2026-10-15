@@ -1907,8 +1907,8 @@ check('Stage5 Alert and semantic Badge retain component paint',()=>{
  const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
  const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
- assert.ok(alert.includes('border:1px solid var(--qxframe9a7c2-alert-border-color,var(--qxframe9a7c2-theme-border))'),'Alert surface has a border');
- assert.ok(alert.includes('box-shadow:var(--qxframe9a7c2-alert-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Alert consumes configurable card shadow');
+ assert.ok(alert.includes('border:1px solid var(--_qxframe9a7c2-alert-border)'),'Alert surface border derives from one semantic Appearance owner');
+ assert.ok(alert.includes('box-shadow:var(--qxframe9a7c2-alert-shadow,var(--_qxframe9a7c2-alert-shadow))'),'Alert supports opt-in shadow Appearance without a duplicated painter');
  assert.ok(!visual.includes('.qxframe9a7c2-alert-root { box-shadow: none; }'),'Alert shadow may not be disabled downstream');
  assert.ok(badge.includes('--_qxframe9a7c2-badge-bg:var(--_qxframe9a7c2-accent-soft)'),'Badge semantic statuses consume accent fill');
  assert.ok(!visual.includes('.qxframe9a7c2-tag, .qxframe9a7c2-badge {'),'Late Tag painter does not reset Badge status colors');
@@ -1921,8 +1921,8 @@ check('Stage5 Steps connector not over title, Item media fixed, Tags add inherit
  assert.ok(steps.includes('steps-connector{position:static;inset:auto;'),'horizontal connector cannot overlay step text');
  assert.ok(item.includes('display:flex;flex-wrap:nowrap;align-items:center;width:100%'),'Item media/text remain on one line');
  assert.ok(list.includes('list-content-slot{flex:1 1 0;min-width:0;white-space:normal}'),'List text wraps within its own slot');
- assert.ok(tags.includes('tags-add{box-sizing:border-box;display:inline-flex;'),'Tag add shares source size and radius');
- assert.ok(tags.includes('border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-semantic-subtle-hover);'),'Tag Add consumes matching theme surface');
+ assert.ok(tags.includes('.qxframe9a7c2-tags-add{flex:0 0 auto;white-space:nowrap;'),'Tag Add only owns Add-specific layout, not separate Tag paint');
+ assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add literally consumes same Tag component paint, variant and Theme tokens');
 });
 check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an option',()=>{
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
@@ -2198,3 +2198,23 @@ check('Stage5 static Outline Badge alias and inherited List radius',()=>{
 });
 
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));
+
+check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings, Tag Add and Image Preview leave',()=>{
+ const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const collection=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const imageJs=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ assert.ok(calendar.includes('var selectedWeek = unit === \'week\' ? weekBounds(valueState.value) : null;'),'one Calendar week selection projection');
+ assert.ok(calendar.includes('nodes[i].classList.toggle(\'is-week-hover\', weekHovered);'),'whole-week Hover projects to each Cell');
+ assert.ok(calendar.includes('state.inRange === true || weekSelected || weekHovered'),'whole-week Range strip reuses Calendar selection painter');
+ assert.ok(picker.includes('.qxframe9a7c2-calendar-cell.is-in-range.is-range-start .qxframe9a7c2-calendar-cell-inner,'),'range-start/end have opaque raised background');
+ assert.ok(picker.includes('background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary))'),'opaque Range endpoint does not expose half-width ::before');
+ for(const role of ['is-muted','is-outline','is-shadow','is-success','is-error','is-warning','is-info'])assert.ok(alert.includes('.qxframe9a7c2-alert-root.'+role),'Alert owns '+role+' Appearance');
+ assert.ok(collection.includes('.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group'),'Dropdown group title consumes canonical ItemCollection typography');
+ assert.ok(collection.includes('font-size:.875em;'),'group typography is smaller than item');
+ assert.ok(image.includes('color:var(--_qxframe9a7c2-image-preview-text);box-shadow:'),'Image Preview chrome uses explicit white-compatible foreground');
+ assert.ok(imageJs.includes('// leave finalizer hands visual ownership back exactly once.'),'Image Preview never reveals source before mask and content both complete');
+ assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
+});

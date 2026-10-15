@@ -1,10 +1,19 @@
-/** CALENDAR-WHEEL-GEOMETRY-001: current-only shared 1+6=7 row-size highlights. */
+/** STAGE5-OWNER-VISUAL-20261015: only this batch of user-visible changes. */
 const groups = [
-  ['release-planner','DatePicker / WheelPanel unified row size',[
-    ['[data-pv3-component="release-date"]','Calendar / TimePanel row and heading geometry','Five shared sizes xs/sm/md/lg/xl = 28/32/36/40/44px; md=36px Cell and Item, seven weekday/date rows equal seven Wheel items; Calendar width=7×CellSize+horizontal padding; Guide follows Item','__QA_BUNDLE_HEAD__']
+  ['capacity-calendar','Calendar range and full-week Hover',[
+    ['[data-pv3x-widget="capacity-calendar"]','Calendar Range endpoints / Week Hover','Range endpoints are fully opaque above their half-width strip; week Hover/selection connects all seven dates','__QA_BUNDLE_HEAD__']
   ],'03'],
-  ['capacity-calendar','Calendar shared CellSize',[
-    ['[data-pv3x-widget="capacity-calendar"]','Standalone Calendar CellSize and six-week layout','Calendar default CellSize follows updated WheelMetrics 28/32/36/40/44px, supports explicit cellSize override; standard date view maintains six grid rows','__QA_BUNDLE_HEAD__']
+  ['alert-triage','Alert appearance combinations',[
+    ['.qxframe9a7c2-alert-root','Alert muting, outline, shadow and semantic status','Alert is-muted/is-outline/is-shadow with success/error/warning/info Appearance combinations','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['quick-action-menu','Dropdown group typography',[
+    ['.pv3x-actions','Dropdown group title','Group headers inherit ItemCollection title scale and 60% foreground opacity','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['customer-quality','Tags Add inherits Tag tokens',[
+    ['[data-pv3-component="customer-tags"]','Tag / Add Tag theme parity','Add Trigger shares Tag surface, radius, selection/variant Theme paint','__QA_BUNDLE_HEAD__']
+  ],'03'],
+  ['asset-preview','Image Preview foreground and lifecycle',[
+    ['[data-pv3x-widget="asset-preview"]','Preview title / close / exit motion','Title, Close and Toolbar use one background/border/white foreground; leave keeps source hidden until both layers finish','__QA_BUNDLE_HEAD__']
   ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
