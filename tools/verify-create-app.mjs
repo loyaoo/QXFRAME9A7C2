@@ -1927,7 +1927,9 @@ check('Stage5 Steps connector not over title, Item media fixed, Tags add inherit
  assert.ok(steps.includes('steps-connector{position:static;inset:auto;'),'horizontal connector cannot overlay step text');
  assert.ok(item.includes('display:flex;flex-wrap:nowrap;align-items:center;width:100%'),'Item media/text remain on one line');
  assert.ok(list.includes('list-content-slot{flex:1 1 0;min-width:0;white-space:normal}'),'List text wraps within its own slot');
- assert.ok(tags.includes('.qxframe9a7c2-tags-add{flex:0 0 auto;white-space:nowrap;'),'Tag Add only owns Add-specific layout, not separate Tag paint');
+ assert.ok(tags.includes('.qxframe9a7c2-tags-add{')&&tags.includes('border-style:dashed')&&tags.includes('--_qxframe9a7c2-tag-bg:transparent'),'Add Tag reuses Tag height/radius and only overrides requested transparent dashed Control border');
+ assert.ok(tags.includes('background:transparent;')&&tags.includes('.qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{'),'standalone Add editor stays transparent, solid and follows Control focus');
+ assert.ok(tags.includes('html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus-visible{'),'Tag editor keyboard outline comes from Theme keyboard focus');
  assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add literally consumes same Tag component paint, variant and Theme tokens');
 });
 check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an option',()=>{
