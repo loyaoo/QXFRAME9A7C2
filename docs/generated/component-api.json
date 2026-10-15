@@ -1209,6 +1209,7 @@
         "formField": "any",
         "formTarget": "any",
         "inputTarget": "any",
+        "inset": "string",
         "items": "array",
         "middleware": "array",
         "multiple": "boolean",

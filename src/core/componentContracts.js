@@ -24,7 +24,7 @@ var ARRAY_OPTIONS = Object.freeze(new Set([
   'files','titles','allowEmpty','rangePlaceholders','sorters','filters'
 ]));
 var OBJECT_OPTIONS = Object.freeze(new Set(['elements','attrs','closeOptions','autoUpdateOptions','inlinePositioningOptions']));
-var STRING_OPTIONS = Object.freeze(new Set(['name','placeholder','placement','size','status','strategy','variant','trigger','type','direction','orientation','selection','separator','rangeSeparator','rangeControl','responsiveMode']));
+var STRING_OPTIONS = Object.freeze(new Set(['name','placeholder','placement','size','status','strategy','variant','trigger','type','direction','orientation','selection','separator','rangeSeparator','rangeControl','responsiveMode','inset']));
 var CLASS_OPTION = Object.freeze({ types: Object.freeze(['string','array','function','object']), nullable: true });
 var STYLE_OPTION = Object.freeze({ types: Object.freeze(['object','function']), nullable: true });
 var DURATION_OPTION = Object.freeze({ types: Object.freeze(['number','string','function','object']), nullable: true });

@@ -3207,26 +3207,54 @@ try {
   });
 
   await step('Stage5 Dropdown all/block/none list-frame padding owns root/submenus and dynamic updates',async()=>{
-    const got=await evaluate(`(() => {
-      const doc=document.querySelector('[data-create-frame]').contentDocument,q=doc.defaultView.QXFRAME9A7C2;
+    const got=await evaluate(`(async () => {
+      const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,q=win.QXFRAME9A7C2;
       if(!q?.Components?.Dropdown)return {error:'Dropdown runtime missing'};
       const btn=doc.createElement('button');btn.type='button';btn.textContent='Actions';doc.body.append(btn);
-      const inst=q.Components.Dropdown.create({reference:btn,inset:'block',items:[{key:'group',type:'group',label:'Actions'},{key:'root',value:'root',label:'More',items:[{key:'child',value:'child',label:'Child'}]}]});
+      const inst=q.Components.Dropdown.create({reference:btn,inset:'block',submenuTrigger:'click',submenuOpenDelay:0,items:[{key:'group',type:'group',label:'Actions'},{key:'root',value:'root',label:'More',items:[{key:'child',value:'child',label:'Child'}]}]});
+      const settle=()=>new Promise(resolve=>win.requestAnimationFrame(()=>win.requestAnimationFrame(resolve)));
+      const measure=panel=>{
+        const style=win.getComputedStyle(panel);
+        return {connected:panel.isConnected,hidden:panel.hidden,display:style.display,block:panel.classList.contains('is-block-inset'),all:panel.classList.contains('is-inset'),none:panel.classList.contains('is-flush'),
+          inlineStart:style.paddingLeft,inlineEnd:style.paddingRight,top:style.paddingTop,bottom:style.paddingBottom};
+      };
       try{
+        await Promise.resolve(inst.open('test-inset'));
+        await settle();
         const panel=inst.getPopupElement();
-        const measure=()=>({block:panel.classList.contains('is-block-inset'),all:panel.classList.contains('is-inset'),none:panel.classList.contains('is-flush'),paddingInline:doc.defaultView.getComputedStyle(panel).paddingLeft});
-        const block=measure();inst.updateOptions({inset:'all'});const all=measure();
-        inst.updateOptions({inset:'none'});const none=measure();
+        const block=measure(panel);
+        inst.updateOptions({inset:'all'});await settle();const all=measure(panel);
+        inst.updateOptions({inset:'none'});await settle();const none=measure(panel);
+        inst.updateOptions({inset:'block'});await settle();
+        const row=panel.querySelector('.has-submenu');
+        if(!row)return {error:'Dropdown branch row unavailable',block,all,none};
+        row.click();
+        await new Promise(resolve=>win.setTimeout(resolve,160));
+        const child=[...doc.querySelectorAll('.qxframe9a7c2-dropdown-submenu-panel')].find(n=>n.isConnected&&!n.hidden);
+        const submenu=child?measure(child):null;
         let rejects=false;try{inst.updateOptions({inset:'diagonal'});}catch(_){rejects=true;}
-        return {block,all,none,rejects};
+        return {block,all,none,submenu,rejects};
       }finally{inst.destroy();btn.remove();}
     })()`);
-    assert.equal(got.error,undefined,'Dropdown runtime exists');
+    assert.equal(got.error,undefined,'Dropdown runtime and nested row are available');
+    for(const mode of ['block','all','none']){
+      assert.equal(got[mode].connected,true,mode+' popup must be mounted before CSS measurement');
+      assert.equal(got[mode].hidden,false,mode+' popup must be visible');
+      assert.notEqual(got[mode].display,'none',mode+' popup must participate in layout');
+    }
     assert.equal(got.block.block,true,'only vertical outer inset class applied');
-    assert.equal(got.block.paddingInline,'0px','block inset leaves inline edges flush');
-    assert.equal(got.all.all,true,'normal gutter mode restored by updateOptions');
-    assert.equal(got.none.none,true,'flush gutter mode restored by updateOptions');
-    assert.equal(got.none.paddingInline,'0px','flush mode has no inline padding');
+    assert.equal(got.block.inlineStart,'0px','block inset leaves left edge flush');
+    assert.equal(got.block.inlineEnd,'0px','block inset leaves right edge flush');
+    assert.ok(parseFloat(got.block.top)>0&&parseFloat(got.block.bottom)>0,'block inset retains vertical gutter');
+    assert.equal(got.all.all,true,'all mode applied by updateOptions');
+    assert.ok(parseFloat(got.all.inlineStart)>0&&parseFloat(got.all.inlineEnd)>0,'all mode has both horizontal gutters');
+    assert.equal(got.none.none,true,'none mode applied by updateOptions');
+    for(const edge of ['inlineStart','inlineEnd','top','bottom'])assert.equal(got.none[edge],'0px','none mode has zero '+edge);
+    assert.ok(got.submenu&&got.submenu.connected&&!got.submenu.hidden,'nested submenu is mounted and visible');
+    assert.equal(got.submenu.block,true,'submenu inherits the parent inset mode');
+    assert.equal(got.submenu.inlineStart,'0px','nested block mode has zero left inset');
+    assert.equal(got.submenu.inlineEnd,'0px','nested block mode has zero right inset');
+    assert.ok(parseFloat(got.submenu.top)>0&&parseFloat(got.submenu.bottom)>0,'nested block mode retains vertical inset');
     assert.equal(got.rejects,true,'invalid inset enum rejected');
   });
 
