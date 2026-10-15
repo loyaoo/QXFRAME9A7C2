@@ -1,20 +1,8 @@
-/** STAGE5-OWNER-VISUAL-20261015: only this batch of user-visible changes. */
-/** Stage 5 current user visual corrections; old Tabler/Card/Kbd highlights are cleared. */
+/** STAGE5-TAGS-PAINT-20261016: only this batch of user-visible changes. */
+/** Stage 5 current Tags-only correction; previous Calendar/Alert/Dropdown/Image highlights cleared. */
 const groups = [
- ['capacity-calendar','Calendar 选中与整周投影',[
-  ['[data-pv3x-widget="capacity-calendar"]','完整 7 天 Week 范围和 Today 圆点','Range 跨月及整周 Hover/Selected 复用 Calendar Cell + ::before，边界圆角及 Today 指示不丢失','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['alert-triage','Alert 语义外观',[
-  ['.qxframe9a7c2-alert-root','Alert 状态和外观组合','is-muted/is-outline/is-shadow 与 success/error/warning/info 共用 Alert Theme','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['quick-action-menu','Dropdown 仅上下间距',[
-  ['[data-pv3x-widget="quick-action-menu"]','Dropdown all / block / none','新 inset=block 使用原 ListFrame；菜单整行 Hover 填满，两侧无额外内距','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['support-triage','Tags +Add / 编辑焦点',[
-  ['.qxframe9a7c2-tag','Tags 添加项和焦点','透明背景、Control 虚线边框；编辑后实线并继承鼠标与键盘焦点','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['asset-preview','Image Preview 退场',[
-  ['[data-pv3x-widget="asset-preview"]','Preview 遮罩与源图交接','同色 Tool/Title/Close，关闭轨迹与源图不闪；允许可选控制台耗时诊断','__QA_BUNDLE_HEAD__']
+ ['support-triage','Tags +Add 与 Tag 同外观',[
+  ['.qxframe9a7c2-tags-add','+ Add Tag 共用 Tag 皮肤','背景/前景/边框/圆角/高度/hover 均从 Tag 和 Theme 继承，只有触发与编辑焦点保留交互差异','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -78,7 +66,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮：Calendar 范围/整周、Alert、Dropdown、Tags、Image Preview 相关改动；之前的 Tabler/Kbd 高亮全部清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮：Tags 的 + Add Tag 与普通 Tag 同一外观；此前 Calendar/Alert/Dropdown/Image 和 Tabler/Kbd 高亮全部清除。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

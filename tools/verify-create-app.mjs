@@ -166,12 +166,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
   const current={
-    "capacity-calendar":['[data-pv3x-widget="capacity-calendar"]'],
-    "alert-triage":['.qxframe9a7c2-alert-root'],
-    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],
-    "support-triage":['.qxframe9a7c2-tag'],
-    "asset-preview":['[data-pv3x-widget="asset-preview"]']
-  }; // Current Calendar/Alert/Dropdown/Tags/Image Preview owner batch only.
+    "support-triage":['.qxframe9a7c2-tags-add']
+  }; // Precisely one visual region changed in the current Tags-only batch.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -186,7 +182,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,5,'exactly five current visual regions highlighted, no older highlights');
+  assert.equal(count,1,'only current + Add Tag visual region highlighted; older marks are cleared');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1927,10 +1923,14 @@ check('Stage5 Steps connector not over title, Item media fixed, Tags add inherit
  assert.ok(steps.includes('steps-connector{position:static;inset:auto;'),'horizontal connector cannot overlay step text');
  assert.ok(item.includes('display:flex;flex-wrap:nowrap;align-items:center;width:100%'),'Item media/text remain on one line');
  assert.ok(list.includes('list-content-slot{flex:1 1 0;min-width:0;white-space:normal}'),'List text wraps within its own slot');
- assert.ok(tags.includes('.qxframe9a7c2-tags-add{')&&tags.includes('border-style:dashed')&&tags.includes('--_qxframe9a7c2-tag-bg:transparent'),'Add Tag reuses Tag height/radius and only overrides requested transparent dashed Control border');
+ const addStyle=tags.split('.qxframe9a7c2-tags-add{')[1]?.split('}')[0]||'';
+ assert.ok(addStyle.includes('height:var(--_qxframe9a7c2-tag-height)'),'Add Tag shares canonical Tag height');
+ assert.doesNotMatch(addStyle,/--_qxframe9a7c2-tag-(bg|border|text)|border-style/,'Add must never replace the canonical Tag surface painter');
+ assert.doesNotMatch(tags,/\.qxframe9a7c2-tags-add:hover:not\(:disabled\)/,'Add hover must use the canonical Tag hover painter');
  assert.ok(tags.includes('background:transparent;')&&tags.includes('.qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{'),'standalone Add editor stays transparent, solid and follows Control focus');
  assert.ok(tags.includes('html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus-visible{'),'Tag editor keyboard outline comes from Theme keyboard focus');
- assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add literally consumes same Tag component paint, variant and Theme tokens');
+ assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add consumes the canonical Tag painter');
+ assert.ok(read('preview-03.js').includes("checkable:true,closable:false,editable:true"),'Support Triage exposes the actual Add Tag in the offline owner QA sample');
 });
 check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an option',()=>{
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');

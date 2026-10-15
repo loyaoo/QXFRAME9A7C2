@@ -3288,7 +3288,7 @@ try {
             outline:cs(success).backgroundColor,muted:cs(muted).backgroundColor,shadow:cs(shadow).boxShadow,unshadow:cs(success).boxShadow,
             groupFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-group')).fontSize),
             titleFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-title')).fontSize),
-            tagBg:cs(chip).backgroundColor,addBg:cs(add).backgroundColor,tagRadius:cs(chip).borderTopLeftRadius,addRadius:cs(add).borderTopLeftRadius,
+            tagBg:cs(chip).backgroundColor,addBg:cs(add).backgroundColor,tagBorder:cs(chip).borderColor,addBorder:cs(add).borderColor,tagBorderStyle:cs(chip).borderStyle,addBorderStyle:cs(add).borderStyle,tagInk:cs(chip).color,addInk:cs(add).color,tagRadius:cs(chip).borderTopLeftRadius,addRadius:cs(add).borderTopLeftRadius,
             tagHeight:chip.getBoundingClientRect().height,addHeight:add.getBoundingClientRect().height});
         }
         docRoot.classList.toggle('dark',false);
@@ -3333,6 +3333,9 @@ try {
       assert.notEqual(row.shadow,row.unshadow,k+' is-shadow alone enables elevation');
       assert.ok(row.groupFont<=row.titleFont+.1,k+' Dropdown Group uses ItemCollection title font size');
       assert.equal(row.tagBg,row.addBg,k+' Tags Add shares Tag background token');
+      assert.equal(row.tagBorder,row.addBorder,k+' Tags Add shares Tag border color');
+      assert.equal(row.tagBorderStyle,row.addBorderStyle,k+' Tags Add shares Tag border style');
+      assert.equal(row.tagInk,row.addInk,k+' Tags Add shares Tag foreground');
       assert.equal(row.tagRadius,row.addRadius,k+' Tags Add shares Tag radius');
       assert.ok(Math.abs(row.tagHeight-row.addHeight)<.75,k+' Tags Add shares Tag height');
     }

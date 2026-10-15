@@ -53,16 +53,12 @@
 .qxframe9a7c2-tags-input:disabled,.qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tags-input{--_qxframe9a7c2-tags-input-border:var(--_qxframe9a7c2-semantic-border-disabled);--_qxframe9a7c2-tags-input-bg:var(--_qxframe9a7c2-semantic-bg-disabled);--_qxframe9a7c2-tags-input-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-tags-input-focus-shadow:none;--_qxframe9a7c2-tags-input-cursor:not-allowed}
 .qxframe9a7c2-tags.is-disabled{cursor:not-allowed}
 .qxframe9a7c2-tags.is-readonly{cursor:default}
+/* + Add Tag is the same Tag surface: its only special role is activation. */
 .qxframe9a7c2-tags-add{
   flex:0 0 auto;white-space:nowrap;
   height:var(--_qxframe9a7c2-tag-height);
-  --_qxframe9a7c2-tag-cursor:pointer;
-  --_qxframe9a7c2-tag-bg:transparent;
-  --_qxframe9a7c2-tag-border:var(--_qxframe9a7c2-control-border);
-  --_qxframe9a7c2-tag-text:var(--_qxframe9a7c2-semantic-text-secondary);
-  border-style:dashed
+  --_qxframe9a7c2-tag-cursor:pointer
 }
-.qxframe9a7c2-tags-add:hover:not(:disabled){--_qxframe9a7c2-tag-border:var(--_qxframe9a7c2-control-border-hover,var(--_qxframe9a7c2-control-border));--_qxframe9a7c2-tag-bg:transparent}
 .qxframe9a7c2-tags-add:focus-visible:not(:disabled){--_qxframe9a7c2-tag-border:var(--_qxframe9a7c2-semantic-focus);outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-tags-add:disabled{--_qxframe9a7c2-tag-cursor:not-allowed;--_qxframe9a7c2-tag-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-tag-border:var(--_qxframe9a7c2-semantic-border-disabled)}
 .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input{
