@@ -238,10 +238,8 @@
   .qxframe9a7c2-carousel-arrow { --_qxframe9a7c2-carousel-arrow-bg: var(--qxframe9a7c2-theme-background); --_qxframe9a7c2-carousel-arrow-bg-hover: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-carousel-caption { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
-  /* Image Preview owns a solid, adjustable mask; avoid multiplying two alpha values. */
-  .qxframe9a7c2-image-preview-toolbar { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-image-preview-tool[class] { color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
+  /* Image Preview owns its one chrome background/border/foreground and hover in
+     components/image.css. Do not repaint toolbar or tools from the page Theme. */
   .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
 
