@@ -66,4 +66,7 @@
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input{height:var(--_qxframe9a7c2-compound-item-height,calc(var(--_qxframe9a7c2-control-local-height, var(--_qxframe9a7c2-control-height)) - 0.625rem));min-height:var(--_qxframe9a7c2-compound-item-height,calc(var(--_qxframe9a7c2-control-local-height, var(--_qxframe9a7c2-control-height)) - 0.625rem));min-width:2rem;flex:1 1 3rem;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;font-size:inherit;line-height:1}
 .qxframe9a7c2-tags.is-hosted .qxframe9a7c2-tags-input:focus{border:0;box-shadow:none}
 
-
+/* Standalone Tag appearances; +Add already reuses the literal Tag class. */
+.qxframe9a7c2-tag.is-outline,.qxframe9a7c2-tag.is-outlined{--_qxframe9a7c2-tag-bg:transparent;--_qxframe9a7c2-tag-border:var(--_qxframe9a7c2-semantic-border)}
+.qxframe9a7c2-tag.is-muted{--_qxframe9a7c2-tag-bg:var(--qxframe9a7c2-theme-muted);--_qxframe9a7c2-tag-text:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-tag.is-shadow{--_qxframe9a7c2-tag-focus-shadow:var(--qxframe9a7c2-theme-shadow-control)}
