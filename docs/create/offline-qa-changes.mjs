@@ -56,7 +56,7 @@ function locate(group,change){
     setTimeout(()=>node.classList.remove('qa-jump-flash'),1800);
     return true;
   };
-  if(!preview){document.querySelector('[data-create-item="'+((group[3]||'01'))+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
+  if(!preview){document.querySelector('[data-create-item="'+((group[3]==='04'?'04':group[3]==='03'?'03':group[3]==='02'?'02':'01'))+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
 }
 function toggleFold(v){
   folded=!!v;

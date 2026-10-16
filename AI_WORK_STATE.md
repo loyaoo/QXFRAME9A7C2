@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-LOCATOR-001 (CI pending)
+- Exact-head QXFRAME CI #38884927899 failed at existing static contract requiring explicit Preview03 navigation in offline QA. Previous routing simplification to group[3]||'01' was valid functionally but removed an audited explicit mapping. Restored explicit 04/03/02/01 routing, retaining both original third-page and new fourth-page locator paths. Gate itself unchanged.
+- No visual acceptances or CI declared green. PR #267 Draft, main untouched. Next: verify source/Chromium/Schema and Actions artifact before offline bundle.
+
 ## CURRENT — 2026-10-16 Stage5 PREVIEW04-TOGGLE-STATIC-GATE-001 (CI pending)
 - Exact-head QXFRAME #38884717800 reaches createApp static gates; new strict no-collapse check caught a stale unused selector for the removed expand button. Deleted the dead selector rather than loosening the assertion; dynamic Preview04 always mounts all canonical demos.
 - CSS schema color problem previously corrected with palette-black Theme token; no new Theme token or ratchet exception.
