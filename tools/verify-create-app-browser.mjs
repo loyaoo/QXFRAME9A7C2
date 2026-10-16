@@ -3248,6 +3248,7 @@ try {
     await click('document.querySelector(\'[data-create-item="04"]\')');
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("theme-playground.html")','Preview04 route',15000);
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert")','Preview04 live gallery',15000);
+    await evaluate("document.querySelector('[data-create-frame]').contentDocument.getElementById('component-alert').scrollIntoView({block:'center'})");
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")','Preview04 theme bridge',15000);
     await waitFor('document.querySelector("[data-create-frame]").contentDocument.querySelectorAll("#component-alert .qxframe9a7c2-play-example").length>=2','all Alert demos mounted',20000);
     const result=await evaluate(`(() => {

@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-LAZY-GALLERY-BROWSER-001 (CI pending)
+- CSS Schema Actions #38885893121 reached real Chromium Preview04 acceptance; waited for all Alert demos without scrolling the iframe to their offscreen card. Canonical Gallery deliberately schedules demo mounts only near its viewport; a hidden/offscreen Alert has no need to load. Fixed strict test to scroll canonical Alert card into view before requiring actual mounted examples, live compiled CSS, no folds and dark-black shadow. Retains real mounting assertion and lazy rendering performance policy; does not weaken gate.
+- Next: run exact-head CSS + QXFRAME CI, obtain complete Action dist+docs artifact, prepare offline QA. PR #267 Draft; main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 QA-LEDGER-MAPPING-001 (CI pending)
 - Exact-head QXFRAME CI #38885641939 failed because existing strict offline QA gate still demanded old ImagePreview highlight from the preceding batch. Updated only its expected current-round mapping to Modal/Drawer/Preview04 Alert, and added a real canonical playground card-id authority check. Kept the exactly-three-annotations assertion, stale-highlight exclusion and bundling checks; no gate weakened. PR #267 Draft; main untouched. Next exact-head Actions and offline ZIP.
 
