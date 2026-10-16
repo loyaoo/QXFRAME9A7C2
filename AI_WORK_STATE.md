@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 SELECT-LISTFRAME-MOUNTED-GEOMETRY-001 (latest CI required)
+- Live GitHub head `44be3f0ccaf57ad610072ab846018bb90eaa7a5f` had CSS Schema #38840566907 fail at real Chromium `select flush x: '' !== '0px'`. This differs from Theme CSS style failure: Select popup exists by getter but was not yet visibly mounted in the fixture. Prior `q.BuildingBlocks.List` test entry correction proceeded to Select as expected.
+- Retained the **strict 0px/6px** geometry gate: explicitly `select.setOpen(true,'theme-padding')`, wait for two animation frames, reject disconnected/hidden/display:none Select popup as a separate failure before querying computed padding. No accepting empty strings, no CSS/Theme/Controller modifications.
+- Eight-Style default all/block and serialized override static gate is committed. Pending latest exact-head two CI results, artifact and Windows `dist+docs` packaging CRC/13 HTTP. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 MENU-STYLE-MODE-PARITY-GATE-001 (new CI required)
 - Authoritative user request: shared Dropdown/Select/List/menu popup frame spacing is Theme-driven `list-padding-x/y`, not JS `inset`; menu mode presets differ across the 8 Styles, with an explicit user override. Production CSS/compiler/data/config implementation was present at `b9794e71`.
 - QXFRAME CI #38837608098 and CSS Schema #38837608175 were red because Chromium fixture incorrectly read `QXFRAME9A7C2.Components.List`; List intentionally belongs to `QXFRAME9A7C2.BuildingBlocks.List`. Corrected the test in commit `c14ba43d`; strict popup geometry assertions retained.
