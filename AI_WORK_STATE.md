@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 CROSSMONTH-DIALOG-ACCEPTANCE-001 (CI pending)
+- Baseline last full green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`; current source commits `b34de0c` and `be7a26d` update Calendar/DatePicker and Modal/Drawer/Theme compiler.
+- Added strict static + Chromium regression: July27–Aug2 selected week (seven days with opaque endpoints), Sept–Oct two-panel clipping using visual-only month edge flags; Theme section lines/partition, menu/dialog blur independence, five distinct dialog shadow grades, none = truly none for all roles.
+- Current offline QA marks ONLY four affected Preview03 Cards; old Tags/Image/ScrollLock highlights removed, because they did not change in this batch.
+- Next latest-HEAD QXFRAME+CSS Schema CI; fix strictly evidenced failures; official exact-HEAD Actions dist+docs Windows ZIP CRC and 13 HTTP resources. Browser performance profile remains separate and not yet completed; no stutter-success claim. PR #267 Draft and main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 DIALOG-THEME-PARTITION-SHADOW-001 (CI pending)
 - Baseline previous commit `b34de0cafd60c0c3b1b80d2f75fd9cbe043dea58` first fixed Calendar cross-month visible clips and week endpoints; no main/PR merge.
 - In createApp compiler the surface shadow tiers now move monotonically: none emits none for all surfaces; Popup tiers xs/sm/md/lg, Dialog has separately tuned low-alpha soft two-layer elevation in four steps instead of medium jumping to xl and heavy to 25% black 2xl.

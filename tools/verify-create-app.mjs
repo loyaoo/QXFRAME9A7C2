@@ -106,6 +106,38 @@ check('Stage5 Tags input and Tag share one radius owner across all Theme shapes'
  const styleConsumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.ok(!styleConsumers.includes('.qxframe9a7c2-tag[class]{border-radius:'),'late Theme Style consumer may not reintroduce an independent Tag-only radius owner');
 });
+check('Stage5 cross-month caps and dialog style tokens keep shared owners',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const datepicker=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const modal=fs.readFileSync(path.join(root,'src/styles/components/modal.css'),'utf8');
+ const drawer=fs.readFileSync(path.join(root,'src/styles/components/drawer.css'),'utf8');
+ assert.ok(calendar.includes('is-range-clip-start')&&calendar.includes('is-range-clip-end'),'Calendar owns visible month cuts');
+ assert.ok(datepicker.includes("outside === true && unit !== 'week'"),'only ordinary dates clip outside month');
+ assert.ok(picker.includes(':not(.is-selected):not(.is-range-start):not(.is-range-end)'),'range transparent middle excludes real endpoints');
+ for(const token of ['dialog-padding-x','dialog-padding-y','dialog-body-padding-y','dialog-divider-width'])
+   assert.ok(compiler.includes("root['"+token+"']"),'Theme compiler emits '+token);
+ assert.ok(!compiler.includes("root['dialog-mask-blur'] = translucent"),'dialog blur must not inherit menu translucent switch');
+ for(const css of [modal,drawer]){
+   assert.ok(css.includes('theme-dialog-padding-x'),'dialog section horizontal inset is Theme driven');
+   assert.ok(css.includes('theme-dialog-divider-width'),'section dividers follow sections style');
+   assert.ok(css.includes('theme-card-section'),'dialog uses shared Card section color');
+ }
+ const make=(style,shadow,sections,menuColor)=>model.compileTheme(model.normalizeConfig({style,menuColor,ext:{shadow,sections}}),{generatedAt:''}).body;
+ const token=(css,name)=>new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);').exec(css)?.[1];
+ for(const style of data.STYLES.map(s=>s.value)){
+   const blurs=['default','default-translucent'].map(menu=>token(make(style,'medium','divider',menu),'dialog-mask-blur'));
+   assert.equal(blurs[0],blurs[1],'menu color must not change dialog blur for '+style);
+   assert.equal(token(make(style,'none','none','default'),'shadow-popup'),'none','zero surface strength means popup none');
+   assert.equal(token(make(style,'none','none','default'),'shadow-dialog'),'none','zero surface strength means dialog none');
+   const tiers=['none','light','medium','strong','heavy'].map(t=>token(make(style,t,'divider','default'),'shadow-dialog'));
+   assert.equal(new Set(tiers).size,5,'distinct dialog elevation grades for '+style);
+   assert.equal(token(make(style,'light','none','default'),'dialog-divider-width'),'0px','no-section has no line');
+   assert.equal(token(make(style,'light','muted','default'),'dialog-divider-width'),'0px','muted section has no redundant line');
+   assert.equal(token(make(style,'light','divider','default'),'dialog-divider-width'),'1px','divider section uses line');
+ }
+});
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
   const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];

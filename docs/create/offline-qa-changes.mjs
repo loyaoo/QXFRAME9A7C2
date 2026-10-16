@@ -1,17 +1,17 @@
 /** TAGS-SCROLL-MOTION-20261016: this batch changes actual popup ListFrame geometry. */
 /** Previous annotations cleared; only Tags/Modal/Drawer/Image current changes remain. */
 const groups = [
- ['support-triage','Tags 主题联动输入态',[
-  ['.qxframe9a7c2-tags-input','输入边框与圆角','Tag 和编辑输入框一起消费 Theme 边框宽度、圆角与阴影','__QA_BUNDLE_HEAD__']
+ ['capacity-calendar','Calendar 跨月范围圆角',[
+  ['[data-pv3x-widget="capacity-calendar"]','跨月色带视觉收口','可见月界的色带端点跟随 Theme 圆角，不再假装实际选中','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['danger-dialog','Modal 动画与滚动锁定',[
-  ['[data-pv3x-widget="danger-dialog"]','中心缩放与固定页面','Modal 默认中心缩放，ScrollLock 使用稳定滚动条槽位','__QA_BUNDLE_HEAD__']
+ ['release-planner','DatePicker 跨月和跨周',[
+  ['[data-pv3x-widget="release-planner"]','周选择跨月不透底','2026-07-27 至 08-02 整周端点实色，9–10 月可见范围切口有主题圆角','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['account-drawer','Drawer 动画与滚动锁定',[
-  ['[data-pv3x-widget="account-drawer"]','抽屉合成层','Drawer 位移动画不再重复执行全屏亮度滤镜','__QA_BUNDLE_HEAD__']
+ ['danger-dialog','Modal 主题分区阴影',[
+  ['[data-pv3x-widget="danger-dialog"]','Theme 留白/分区/柔和阴影','标题/内容/底部随容器留白、无分割线/灰底/分隔线 Theme 策略联动','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['asset-preview','Image Preview 动画',[
-  ['[data-pv3x-widget="asset-preview"]','预览合成层','独立预览图从中心缩放并使用 transform/opacity 合成','__QA_BUNDLE_HEAD__']
+ ['account-drawer','Drawer 主题分区阴影',[
+  ['[data-pv3x-widget="account-drawer"]','Theme 留白/分区/柔和阴影','Drawer 内部分区接入同一 Theme 而不影响贴边 viewport gap','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
