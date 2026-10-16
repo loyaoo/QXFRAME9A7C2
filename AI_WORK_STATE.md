@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SCHEMA-001 (CI pending)
+- QXFRAME CI on previous new HEAD failed because `preview-03-coverage.json` referenced retired Dropdown JS inset browser step. Retargeted to current real CSS Theme-run-time geometry step; guard not relaxed.
+- Public docs/generated/theme-public-schema.json now mirrors both new Theme tokens, default Nova values and closed token registry (214 → 216, 21 → 23 geometry roles); canonical Schema gate updated accordingly.
+- Windows offline QA active overlay cleared older 5 regions and targets only current quick-action-menu region. No direct modification to other previously accepted Preview Cards.
+- New Theme CSS system and demo/browser gate committed in prior two commits, awaiting both exact-HEAD QXFRAME CI and CSS Schema Chrome checks. PR #267 Draft; main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SPACING-TESTS-001 (CI pending)
 - Updated canonical demos: Dropdown/Select spacing is Theme-only; List illustrates x=0/6px via local CSS custom property, never `inset` JS args. New visible Dropdown demo title in Theme Playground.
 - Replaced obsolete Dropdown runtime inset mode Chromium test with real CSS Theme mutations: Dropdown root/submenu + Select + List must respond immediately to x=0/y=8px and x=6px without rebuilding JS; flush row corners must be 0. Reject removed `drop.updateOptions({inset})`. Static gate enforces no old JS owner and one shared CSS shorthand.

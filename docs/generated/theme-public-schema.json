@@ -4,7 +4,7 @@
   "authority": "docs/create/tokens.js",
   "defaultSource": "src/styles/main/theme.css",
   "mode": "single :root COLOR light-dark(light,dark), .dark changes only color-scheme and keyword exception",
-  "tokenCount": 214,
+  "tokenCount": 216,
   "colorCount": 78,
   "geometryInputs": [
     "--qxframe9a7c2-theme-control-height",
@@ -13,6 +13,8 @@
     "--qxframe9a7c2-theme-control-icon",
     "--qxframe9a7c2-theme-control-font-size",
     "--qxframe9a7c2-theme-control-line-height",
+    "--qxframe9a7c2-theme-list-padding-x",
+    "--qxframe9a7c2-theme-list-padding-y",
     "--qxframe9a7c2-theme-card-padding",
     "--qxframe9a7c2-theme-card-gap",
     "--qxframe9a7c2-theme-switch-width",
@@ -659,6 +661,18 @@
       "kind": "length",
       "mode": "root",
       "defaultRoot": "1px"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-list-padding-x",
+      "kind": "length",
+      "mode": "root",
+      "defaultRoot": "0rem"
+    },
+    {
+      "name": "--qxframe9a7c2-theme-list-padding-y",
+      "kind": "length",
+      "mode": "root",
+      "defaultRoot": "0.375rem"
     },
     {
       "name": "--qxframe9a7c2-theme-card-padding",

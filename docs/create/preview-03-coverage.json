@@ -839,7 +839,7 @@
         "representedBy": "quick-action-menu",
         "shadcnAlignment": "pending-individual-review",
         "themeIntegration": "targeted-browser-evidence",
-        "browserEvidence": "Stage5 Dropdown all/block/none list-frame padding owns root/submenus and dynamic updates",
+        "browserEvidence": "Stage5 CSS Theme controls Dropdown, Select, List and submenu inset without JS",
         "ownerVisual": "pending-owner-signoff"
       },
       {

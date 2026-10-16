@@ -229,12 +229,8 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
   const current={
-    "support-triage":['.qxframe9a7c2-tags-input'],
-    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],
-    "capacity-calendar":['[data-pv3x-widget="capacity-calendar"]'],
-    "release-planner":['[data-pv3x-widget="release-planner"]'],
-    "asset-preview":['[data-pv3x-widget="asset-preview"]']
-  }; // Five screenshot-driven visual regions in this batch only.
+    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]']
+  }; // Only current ListFrame Theme spacing family is highlighted.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -249,7 +245,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,5,'only five screenshot-driven changed regions are highlighted');
+  assert.equal(count,1,'only this batch menu spacing region is highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -1356,7 +1352,7 @@ check('Canonical public Theme Schema mirrors all live registry tokens, no histor
  assert.equal(data.schema,3,'canonical schema version is metadata, not a Token name');
  assert.equal(data.status,'CANONICAL_REGISTRY_MIRROR');
  assert.equal(data.tokenCount,data.tokens.length);
- assert.equal(data.geometryInputs.length,21);
+ assert.equal(data.geometryInputs.length,23);
  assert.deepEqual([...new Set(data.tokens.map(x=>x.name))].sort(),readRegistry().tokens.map(x=>x.name).sort(),'JSON Theme token catalog equals live compiler registry');
  for(const token of data.tokens)assert.ok(!/--qxframe9a7c2-theme-v[123]-/.test(token.name),'no v1/v2/v3 Theme Token names');
  const canonicalCss=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');

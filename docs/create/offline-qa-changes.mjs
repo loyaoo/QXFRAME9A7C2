@@ -1,20 +1,8 @@
-/** STAGE5-COMPONENT-MATRIX-20261016: documentation and verification only; no visual change. */
-/** Every previous visual QA group is cleared; 0 current changed regions. */
+/** LISTFRAME-THEME-SPACING-20261016: this batch changes actual popup ListFrame geometry. */
+/** Previous annotations cleared; only current menu spacing region remains. */
 const groups = [
- ['support-triage','Tags 编辑态',[
-  ['.qxframe9a7c2-tags-input','Tags 输入外观','Standalone Tags 输入态与 Tag 弱着色背景协调','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['quick-action-menu','Dropdown 两侧间距',[
-  ['[data-pv3x-widget="quick-action-menu"]','Dropdown block inset','选项悬停填满菜单左右边缘；all/none 仍是显式选项','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['capacity-calendar','Calendar 周选择复用',[
-  ['[data-pv3x-widget="capacity-calendar"]','周范围统一','DatePicker unit=week 转交 Calendar，共用七日 RangePainter','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['release-planner','日期时间分隔线',[
-  ['[data-pv3x-widget="release-planner"]','Calendar / TimePanel','日期与时间区域恢复 Theme 边框分割线','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['asset-preview','预览从中心缩放',[
-  ['[data-pv3x-widget="asset-preview"]','Image Preview 中心缩放','新预览图独立淡入/缩放，原始图片不隐藏；导航深色白字','__QA_BUNDLE_HEAD__']
+ ['quick-action-menu','Theme 菜单留白统一',[
+  ['[data-pv3x-widget="quick-action-menu"]','菜单左右/上下内距跟随主题','Dropdown/Select/List 统一读取 Theme list-padding-x/y，不使用组件 JS inset 参数','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
