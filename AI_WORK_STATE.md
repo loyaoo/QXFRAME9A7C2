@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-ITEM-SURFACE-RADIUS-FIX-002 (CI pending)
+- CSS Schema run #38832416256 Chromium found actual `block.itemRadius = 24px` despite ListFrame 0px. Root cause: `.qxframe9a7c2-item-surface` redeclared `--_qxframe9a7c2-item-radius` on the row, masking the inherited ListFrame mode. Removed that redeclaration; `.item-surface` and `.item` radius consumers now read existing structural private slot first and fall back to public/theme radius only when unframed. One owner, no duplicate override selector.
+- Strict Dropdown Browser gate still forces public 24px radius and demands block/none/nested 0px; retains full four-edge padding checks. Never weaken the gate.
+- Latest exact-HEAD QXFRAME and CSS Schema must pass; owner visual signoff and official Windows dist+docs bundle pending. PR #267 remains Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 THEME-PLAYGROUND-BROWSER-001 (CI pending)
 - Real Chromium opens `docs/theme-playground.html` and scrolls lazy canonical Alert/DatePicker/Form cards into view; verifies 12 official Alert skins, 2 combined-shadow skins, 2 live week picker demos and 4 Kbd controls. This closes source-only visibility verification.
 - Previous visual source edits retained; next exact HEAD two CI plus official Windows dist+docs owner QA. PR #267 Draft, main not modified.
