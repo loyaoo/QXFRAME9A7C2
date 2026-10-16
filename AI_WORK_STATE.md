@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 OVERLAY-FRAME-TIMING-001 (CI pending)
+- Added real Chromium diagnostic for Modal/Drawer/Image independent open+leave timing, recording synchronous call cost, time to first requestAnimationFrame, max/mean frame gap and >34ms frame count, printed as `[Stage5 overlay-frame-profile]`. It is a diagnostic, **not a passed FPS gate** and cannot certify owners' perception or real GPU performance on their machine.
+- No MotionCore surgery yet: two-frame boundaries and forced layout reads are proven code paths but their contribution to stutter needs actual runtime evidence.
+- Cross-month date/week, Theme dialog partition, independent blur and monotonic Dialog shadows remain on branch; latest exact-HEAD QXFRAME+CSS Schema and Windows package pending. PR Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 DIALOG-SHADOW-ROLE-CONSUMER-001 (CI pending)
 - Source inspection proved `src/styles/components/modal.css` and `drawer.css` consumed `--qxframe9a7c2-theme-shadow-popup` as default root fallback, despite separate compiler `shadow-dialog` values. This contradicts older analytical statement that dialog role was already attached.
 - Replaced both fallback slots with `--qxframe9a7c2-theme-shadow-dialog` while preserving explicit per-component shadow overrides, and added strict source assertion requiring dialog role and rejecting popup role in both stylesheets.
