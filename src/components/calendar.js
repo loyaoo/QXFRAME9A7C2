@@ -406,6 +406,12 @@ function create(options) {
       nodes[i].classList.toggle('is-in-range', state.inRange === true || weekSelected || weekHovered);
       nodes[i].classList.toggle('is-range-start', state.rangeStart === true || weekStart);
       nodes[i].classList.toggle('is-range-end', state.rangeEnd === true || weekEnd);
+      // Visible band clips are structural boundaries, not selected endpoints:
+      // never invent an opaque selected cap when an ordinary range crosses months.
+      var outsideCell = cells.some(function(entry) { return sameDay(entry.date,date) && entry.outside === true; });
+      var ordinaryBand = unit === 'date' && !isPeriod && state.inRange === true && !outsideCell;
+      nodes[i].classList.toggle('is-range-clip-start',ordinaryBand && date.getDate() === 1 && state.rangeStart !== true);
+      nodes[i].classList.toggle('is-range-clip-end',ordinaryBand && date.getDate() === new Date(date.getFullYear(),date.getMonth()+1,0).getDate() && state.rangeEnd !== true);
       var visualActiveOwner = !hostedVirtualFocus || (virtualFocusController && virtualFocusDomain && virtualFocusController.getState().domain === virtualFocusDomain.name);
       nodes[i].classList.toggle('is-active', visualActiveOwner && DOM.getPrivate(nodes[i], 'calendarDate') === activeItem.activeKey);
       nodes[i].classList.toggle('is-hover', state.hover === true || (unit === 'week' ? weekHovered : DOM.getPrivate(nodes[i], 'calendarDate') === hoveredKey));

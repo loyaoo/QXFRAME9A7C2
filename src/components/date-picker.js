@@ -448,7 +448,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return field && field.getState().open ? draft.draftValue : draft.value;
   }
   function stateForDate(date, info) {
-    if (info && info.entry && info.entry.outside === true) return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
+    // Keep full seven-day strips across month boundaries in week mode.
+    // Ordinary date ranges remain clipped to each visible month panel.
+    if (info && info.entry && info.entry.outside === true && unit !== 'week')
+      return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
     var selectedValue = selectionVisualValue();
     if (selection === 'single') return unit === 'week' ? {} : { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
     if (selection === 'multiple') return { selected: (selectedValue || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };

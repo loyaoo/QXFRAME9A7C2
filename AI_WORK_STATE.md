@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-16 Stage5 CALENDAR-MONTH-CLIP-001 (CI pending)
+- Resumed exact previous green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`, PR #267 Draft, main unchanged.
+- Corrected DatePicker outside-date projection for `unit:'week'`: maintain full week range across displayed adjacent-month dates; ordinary date range still clips at month panel.
+- Calendar single owner now projects `is-range-clip-start/end` at actual visible first/last date of ordinary month-range strips; these are visual `::before` corners only, never selected/dark endpoints.
+- Corrected transparent range middle selector to exclude `is-range-start/end` so real cross-month week endpoints retain opaque Theme primary fill and contrast.
+- Next: real Chromium for 2026-07-27..08-02 and Aug/Sep or Sep/Oct month clips + strict CSS role check, then shadows/Modal/Drawer Theme partition, dual CI and successful offline ZIP. No fabricated animation performance conclusions.
+
 ## CURRENT — 2026-10-16 Stage5 SCROLLLOCK-PARITY-STATIC-GATE-001 (both final CI pending)
 - Previous HEAD `79aae66381d1f3b17b552253a7dcca9fe4753291`, CSS Schema run #38855234984 pending at start. QXFRAME #38855235140 blocked in **static** `verify-create-app.mjs:2163`: it asserted the old literal `unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))`, which no longer represents the narrowly guarded ScrollLock source approval. This is not a runtime or build-parity failure.
 - Updated that test to require the exact **guarded** `unauthorized` predicate plus explicit approved-scrollLock fragments and restoration. Strict rejection of all other unauthorized Core/Tree/TreeSelect source deltas is preserved; no changed browser tolerance or component behavior.

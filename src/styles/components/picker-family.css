@@ -74,9 +74,13 @@
 .qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-range-start.is-range-end::before{content:none}
 /* Nonselected middle dates show only the continuous strip; selection endpoint
    paint stays on the raised square and may use the standard Theme radius. */
-.qxframe9a7c2-calendar-cell.is-in-range:not(.is-selected)>.qxframe9a7c2-calendar-cell-view>.qxframe9a7c2-calendar-cell-inner{
+.qxframe9a7c2-calendar-cell.is-in-range:not(.is-selected):not(.is-range-start):not(.is-range-end)>.qxframe9a7c2-calendar-cell-view>.qxframe9a7c2-calendar-cell-inner{
   background:transparent;border-color:transparent
 }
+/* A month-panel visual cut has the Theme radius but does not change the
+   committed selection or draw a false opaque endpoint. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-clip-start::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-clip-end::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
 /* Endpoints MUST be opaque. The half-width range ::before strip sits below
    the raised square and otherwise shows through a translucent endpoint. */
 .qxframe9a7c2-calendar-cell.is-in-range.is-range-start .qxframe9a7c2-calendar-cell-inner,
