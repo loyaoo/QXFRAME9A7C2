@@ -11,8 +11,6 @@
 .qxframe9a7c2-drawer-wrap.is-top>.qxframe9a7c2-drawer,.qxframe9a7c2-drawer-wrap.is-bottom>.qxframe9a7c2-drawer{width:100%;height:min(var(--_qxframe9a7c2-fixed-drawer-horizontal-height),70%);max-height:100%}
 .qxframe9a7c2-drawer-header,.qxframe9a7c2-drawer-footer{display:flex;align-items:center;gap:0.75rem;flex:none}
 .qxframe9a7c2-drawer-header{min-height:3.25rem;padding:var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem) var(--qxframe9a7c2-theme-dialog-padding-x,1.125rem);justify-content:space-between;border-bottom:var(--qxframe9a7c2-theme-dialog-divider-width,1px) solid var(--qxframe9a7c2-theme-card-section-border,var(--_qxframe9a7c2-drawer-border));background:var(--qxframe9a7c2-theme-card-section,transparent)}
-.qxframe9a7c2-drawer-header{padding-block-end:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}
-.qxframe9a7c2-drawer-footer{padding-block-start:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}
 .qxframe9a7c2-drawer-title{font-weight:600;min-width:0;flex:1}
 .qxframe9a7c2-drawer-close{margin-inline-start:auto;flex:none}
 .qxframe9a7c2-drawer-close.is-close-start{margin-inline-start:0}
@@ -22,4 +20,5 @@
 .qxframe9a7c2-drawer-footer{padding:var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem) var(--qxframe9a7c2-theme-dialog-padding-x,1.125rem);justify-content:flex-end;border-top:var(--qxframe9a7c2-theme-dialog-divider-width,1px) solid var(--qxframe9a7c2-theme-card-section-border,var(--_qxframe9a7c2-drawer-border));background:var(--qxframe9a7c2-theme-card-section,transparent)}
 .qxframe9a7c2-drawer.is-headerless .qxframe9a7c2-drawer-body{padding-top:var(--qxframe9a7c2-theme-dialog-padding-y,1rem)}
 .qxframe9a7c2-drawer.is-footerless .qxframe9a7c2-drawer-body{padding-bottom:var(--qxframe9a7c2-theme-dialog-padding-y,1rem)}
-
+.qxframe9a7c2-drawer-header{padding-block-end:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}
+.qxframe9a7c2-drawer-footer{padding-block-start:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}

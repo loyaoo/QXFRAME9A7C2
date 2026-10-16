@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DRAWER-FOOTER-CASCADE-001 (CI pending)
+- Exact HEAD 93437e79 Chromium QXFRAME Actions #38876758290 failed at newly added *real computed-style* check: drawer divider-free footer top padding remained nonzero.
+- Root cause verified in CSS source: Drawer footer's existing full `padding:` shorthand followed our early `padding-block-start` override; CSS cascade silently replaced it. Moved the exact same Theme-derived header/footer logical edge-padding rules AFTER all Drawer footer shorthand declarations. No assertion removed or loosened; browser still asserts actual 0px for Modal and Drawer.
+- PR #267 remains Draft, main unchanged. New QXFRAME and CSS Schema CI pending. No visual/performance signoff; Stage5 not complete.
+
 ## CURRENT — 2026-10-16 Stage5 IMAGE-CHROME-MOTIONCORE-ACTIVE-001 (CI pending)
 - After Modal origin test migration commit 32f56de2, inspected shared MotionCore startFresh/onActive: open media enters on the second animation frame, leave media begins on the first leave frame. Previous ImagePreview root chrome was toggled synchronously in openPreview/closePreview, a full scheduler frame before image transition; uniform duration alone was not synchronized.
 - Move ImagePreview is-chrome-visible/is-chrome-leaving toggles to the existing previewMotion Transition onActive context (enter/leave) so image and positional control motion start at the same active frame; preserve no new timers, both presence owners and last-frame handoff safeguards.
