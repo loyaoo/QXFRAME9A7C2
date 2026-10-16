@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 TAGS-THREE-VARIANT-EDITOR-001 (latest CI pending)
+- Standalone Tags input now mirrors filled/outlined/solid Tag appearance: base input consumes public/tag Theme slots; outlined uses transparent bg/semantic border, solid uses semantic text/inverse foreground, default filled stays subtle. Existing Tag renderer/controller unmodified, no duplicate input JS parameter.
+- Static gate added to stop outlined/solid editor regression. Earlier ScrollLock and compositor-overlay motion patches preserved; Chromium Tags edit state still checked, full CI pending at new HEAD.
+- User's observed native scrollbar "overlay" cannot be enforced by browser CSS across all OS; stable native gutter avoids layout jump, framework Scroll component already supports overlaid custom tracks for scrollable regions.
+- PR #267 Draft, main untouched. No Stage or overall signoff.
+
 ## CURRENT — 2026-10-16 Stage5 MODAL-CENTER-DEFAULT-REGRESSION-001 (latest CI pending)
 - Earlier QXFRAME CI #38846412043 correctly flagged obsolete Phase E fixture: first-trigger Modal was implicitly exercising default origin zoom, but the user requested a center zoom default without costly force-layout. Kept exact trigger origin assertion by explicitly selecting `animation:'zoom-origin'`, then added separate strict default center zoom assertion with triggerTarget set.
 - Chromium createApp Stage5 ScrollLock fixture now supplies exact iframe `document` and `portalContainer` to Modal, matching the canonical constructor (not top-level global document). Real center/gutter validation preserved.

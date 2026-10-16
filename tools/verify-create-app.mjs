@@ -2298,6 +2298,12 @@ check('Stage5 static Outline Badge alias and inherited List radius',()=>{
  assert.doesNotMatch(theme,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color/,'List and Tree inherit container colors');
 });
 
+check('Stage5 Tags variant editor uses the same Theme appearance contract as Tag',()=>{
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ for(const cls of ['is-variant-outlined','is-variant-solid'])
+   assert.ok(tags.includes('.qxframe9a7c2-tags.'+cls+'{--qxframe9a7c2-tag-input-bg:'),'Tag editor variant '+cls+' must have its Theme-linked field source');
+ assert.ok(tags.includes('--_qxframe9a7c2-tags-input-text:var(--qxframe9a7c2-tag-input-text,'),'editor foreground resolves the appearance token');
+});
 check('Stage5 Tags edit, ScrollLock and Overlay motion share Theme and compositor owners',()=>{
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
  const lock=fs.readFileSync(path.join(root,'src/core/scrollLock.js'),'utf8');
