@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-VEGA-MIST-BLUE-001 (CI pending)
+- User supplied a 2026-10-16 15:52:47 Create 2.19.81 CSS export and asked for this as the bundled default framework CSS. Settings: Vega / Mist base / Blue theme+chart / Sans / default radius / block-only menu padding / wide Switch / medium elevation / pointer Focus outline in theme blue / pill Slider handle. The owner text has 220 unique :root Theme slots, plus the sole legal .dark color-scheme keyword override.
+- Latest pre-work HEAD 2f4b23fa9ab304b289d01493b1fd2c60099eb5b9, PR #267 Draft/Open, both QXFRAME #38921190457 and CSS Schema #38921190380 success. Preserves all preceding Stage5 Slider, Mist, Preview04 and Modal fixes.
+- Used actual compiler from current same-tree GitHub Actions dist+docs locally; compared the exact owner config against the supplied CSS: all 220 root values identical, body byte-for-byte identical. Changed only tools/build-theme.mjs to compile the pinned embedded config, the generated sole owner src/styles/main/theme.css, the 220 defaultRoot mirrors in docs/generated/theme-public-schema.json, plus strict source gates. No second overriding CSS. Create editor defaultConfig()/URL/Reset stays Nova/Neutral (distinct v3 editor baseline); no blind UI reset changes.
+- Next: exact-head QXFRAME + CSS Schema CI, revalidate all source gates without relaxing them, obtain official same-tree dist+docs artifact, build Windows local ZIP and report evidence. Stage5 user visual signoff outstanding; PR Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 PREVIEW04-QA-NEWLINE-001 (CI pending)
 - Corrected an unnecessary double-escaped newline in local-only Theme Playground QA injections. The packager now inserts standard source line breaks before </head> and </body>, matching the existing Preview01–03 injection method. No change to production pages, no test disable. Next exact-head CI and official same-tree Windows ZIP.
 

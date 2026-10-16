@@ -275,7 +275,7 @@ check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=
  const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
  const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
- assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(oklch\(0\.145 0 0\), oklch\(0\.985 0 0\)\)/,'default Menu ink uses both light/dark variants');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(oklch\(0\.148 0\.004 228\.8\), oklch\(0\.987 0\.002 197\.1\)\)/,'embedded Mist Menu ink supports light and dark');
  assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(/g)||[]).length,1,'one COLOR owner for both modes');
  for(const component of ['notice-slot','message-root','notification-root'])
    assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
@@ -1351,6 +1351,29 @@ check('option tables match v3 §4', () => {
   }
 });
 
+check('owner Vega Mist Blue embedded CSS default and public schema remain the one compiler output',()=>{
+ const embedded=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const builder=fs.readFileSync(path.join(root,'tools/build-theme.mjs'),'utf8');
+ const registry=JSON.parse(fs.readFileSync(path.join(root,'docs/generated/theme-public-schema.json'),'utf8'));
+ const config=model.normalizeConfig({
+  style:'vega',baseColor:'mist',theme:'blue',chartColor:'blue',font:'sans',
+  fontHeading:'inherit',radius:'default',menuColor:'default',menuAccent:'subtle',
+  ext:{menuInset:'block',switchLook:'wide',shadow:'medium',pointerFocus:'outline',pointerFocusColor:'theme',shapeThumb:'pill'}
+ });
+ const body=model.compileTheme(config).body;
+ assert.equal(embedded.slice(embedded.indexOf(':root {')),body,'built-in source equals Create generated CSS byte-for-byte');
+ assert.match(builder,/model\.compileTheme\(embeddedTheme\)/,'default CSS generated from explicit owner preset');
+ assert.match(embedded,/--qxframe9a7c2-theme-slider-thumb-width: 1\.5rem;/,'pill Thumb');
+ assert.match(embedded,/--qxframe9a7c2-theme-slider-track: 0\.375rem;/,'6px rail unaffected by Thumb');
+ assert.match(embedded,/--qxframe9a7c2-theme-switch-width: 2\.75rem;/,'wide Switch');
+ assert.match(embedded,/--qxframe9a7c2-theme-list-padding-x: 0rem;/,'block menu inset');
+ const vars=new Map([...embedded.split('.dark {')[0].matchAll(/(--qxframe9a7c2-theme-[a-z0-9-]+):\s*([^;]+);/g)].map(m=>[m[1],m[2]]));
+ assert.equal(vars.size,220,'exact closed Theme registry');
+ assert.equal(registry.tokens.length,220,'schema registry count');
+ for(const token of registry.tokens)assert.equal(token.defaultRoot,vars.get(token.name),'schema default mirror '+token.name);
+ assert.equal(model.defaultConfig().style,'nova','Create reset stays separately owned');
+});
+
 check('default configuration is Nova + neutral (v3 §5.10)', () => {
   const c = model.defaultConfig();
   assert.equal(c.style, 'nova'); assert.equal(c.baseColor, 'neutral'); assert.equal(c.theme, 'neutral');
@@ -2278,7 +2301,7 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
   assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
-  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.205 0 0 / 0.28), oklch(0.922 0 0 / 0.28))'),'generated Menu accent derives both modes');
+  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.488 0.243 264.376 / 0.28), oklch(0.424 0.199 265.638 / 0.28))'),'embedded Blue Menu accent derives both modes');
   assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,1,'Menu accent is declared once for both modes');
   for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
   assert.ok(theme.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
