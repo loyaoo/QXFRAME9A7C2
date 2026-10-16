@@ -602,6 +602,8 @@ check('Stage5 cross-month caps and dialog style tokens keep shared owners',()=>{
  assert.ok(!compiler.includes("root['dialog-mask-blur'] = translucent"),'dialog blur must not inherit menu translucent switch');
  for(const css of [modal,drawer]){
    assert.ok(css.includes('theme-dialog-padding-x'),'dialog section horizontal inset is Theme driven');
+   assert.ok(css.includes('theme-shadow-dialog'),'dialog surface resolves the high-elevation Dialog Theme role');
+   assert.ok(!css.includes('var(--qxframe9a7c2-theme-shadow-popup)'),'dialog never silently falls back to Popup shadow');
    assert.ok(css.includes('theme-dialog-divider-width'),'section dividers follow sections style');
    assert.ok(css.includes('theme-card-section'),'dialog uses shared Card section color');
  }

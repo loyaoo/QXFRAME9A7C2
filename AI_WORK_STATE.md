@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DIALOG-SHADOW-ROLE-CONSUMER-001 (CI pending)
+- Source inspection proved `src/styles/components/modal.css` and `drawer.css` consumed `--qxframe9a7c2-theme-shadow-popup` as default root fallback, despite separate compiler `shadow-dialog` values. This contradicts older analytical statement that dialog role was already attached.
+- Replaced both fallback slots with `--qxframe9a7c2-theme-shadow-dialog` while preserving explicit per-component shadow overrides, and added strict source assertion requiring dialog role and rejecting popup role in both stylesheets.
+- Prior Calendar visible-month endpoints/opaque week endpoints, Style-based section spacing/soft shadow and blur independence preserved. Next final same-HEAD dual CI, browser acceptance and official ZIP. Performance trace still pending, no stutter fix claim. PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 QA-MARKERS-CURRENT-BATCH-001 (CI pending)
 - Latest QXFRAME #38865310442 advanced past theme-tokens and failed static `verify-create-app.mjs` on `support-triage`: current QA ledger correctly cleared previous Tags/Image batch and marks capacity-calendar, release-planner, danger-dialog, account-drawer, but static gate still expected prior four.
 - Updated strict one-to-one QA Card/region map to exactly the four currently changed Cards, with unchanged checks for correct Card existence, no stale highlights, and exact HEAD placeholder count. No component CSS/JS regression gate modified.
