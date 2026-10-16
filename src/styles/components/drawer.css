@@ -21,4 +21,10 @@
 .qxframe9a7c2-drawer.is-headerless .qxframe9a7c2-drawer-body{padding-top:var(--qxframe9a7c2-theme-dialog-padding-y,1rem)}
 .qxframe9a7c2-drawer.is-footerless .qxframe9a7c2-drawer-body{padding-bottom:var(--qxframe9a7c2-theme-dialog-padding-y,1rem)}
 .qxframe9a7c2-drawer-header{padding-block-end:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}
-.qxframe9a7c2-drawer-footer{padding-block-start:min(var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem),calc(var(--qxframe9a7c2-theme-dialog-divider-width,1px) * 32))}
+.qxframe9a7c2-drawer-footer{padding-block-start:var(--qxframe9a7c2-theme-dialog-padding-y,0.75rem)}
+
+/* Divider-free sections follow the panel background; footer buttons retain spacing. */
+.qxframe9a7c2-drawer{container-name:qxframe9a7c2-drawer-divider}
+@container qxframe9a7c2-drawer-divider style(--qxframe9a7c2-theme-dialog-divider-width: 0px){
+ .qxframe9a7c2-drawer-header,.qxframe9a7c2-drawer-footer{background:inherit}
+}

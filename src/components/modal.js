@@ -107,7 +107,7 @@ function createModalController(instance, options) {
     ctx.surface.style.transformOrigin = '50% 50%';
     ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-x', x + 'px');
     ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-y', y + 'px');
-    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-scale', point ? '.8' : '.94');
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-scale', point ? '.7' : '.86');
   }
   function dialogMotion(ctx) {
     var opts = ctx.options();
