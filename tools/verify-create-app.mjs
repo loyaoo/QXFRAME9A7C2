@@ -15,6 +15,16 @@ const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
 
+check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
+ const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
+ const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ assert.match(badge,/border-radius:var\(--qxframe9a7c2-badge-radius,var\(--qxframe9a7c2-theme-radius-badge\)\)/,'Badge consumes Theme radius-badge');
+ assert.doesNotMatch(recipe,/\.qxframe9a7c2-badge,\.qxframe9a7c2-tabs-tab/,'compact shape visual recipe must not replace Badge Theme radius');
+ assert.doesNotMatch(consumers,/\.qxframe9a7c2-badge\[class\]/,'Badge Theme owner must not be hidden in a second tabs selector');
+ assert.ok(tags.includes('var(--qxframe9a7c2-theme-radius-badge,'),'Tags and input share Theme radius-badge with Badge');
+});
 check('Stage5 acceptance inventory covers every component export without false visual-signoff claims',()=>{
  const inventory=JSON.parse(read('preview-03-coverage.json'));
  const a=inventory.stage5Acceptance;

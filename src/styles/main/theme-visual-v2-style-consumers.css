@@ -140,9 +140,8 @@
   .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
   .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
 
-  /* Category radii (createApp v3 §4.5): badges/tags, tabs, dialogs follow their own theme roles. */
-  .qxframe9a7c2-badge[class]:not(.is-dot),/* Tag and standalone Tags editor consume theme-radius-badge in components/tags.css;
-     no later independent Tag-only radius override. */
+  /* Badge and Tag each consume the one Theme radius-badge role in their component
+     CSS; tabs own only tabs tokens here. Do not combine unlike categories. */
   .qxframe9a7c2-tabs[class]{
     --_qxframe9a7c2-tabs-radius:var(--qxframe9a7c2-tabs-radius,var(--qxframe9a7c2-theme-radius-tabs));
     --_qxframe9a7c2-tabs-item-radius:var(--qxframe9a7c2-tabs-item-radius,max(0rem,calc(var(--_qxframe9a7c2-tabs-radius) - .125rem)));
