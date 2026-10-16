@@ -90,9 +90,9 @@ assert 'data-create-preview="04"' in playground_html, 'Preview04 must be the can
 assert 'offline-qa-changes' not in playground_html, 'Production Theme Playground must stay unannotated'
 assert playground_html.count('</head>') == playground_html.count('</body>') == 1
 playground_html = playground_html.replace('</head>',
-    '  <link rel="stylesheet" href="create/offline-qa-changes.css">\\n</head>')
+    '  <link rel="stylesheet" href="create/offline-qa-changes.css">\n</head>')
 playground_html = playground_html.replace('</body>',
-    '  <script type="module" src="create/offline-qa-changes.mjs"></script>\\n</body>')
+    '  <script type="module" src="create/offline-qa-changes.mjs"></script>\n</body>')
 playground_file.write_text(playground_html, 'utf-8')
 
 (work / 'START-DEMO.cmd').write_text(

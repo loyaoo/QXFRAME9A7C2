@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-QA-NEWLINE-001 (CI pending)
+- Corrected an unnecessary double-escaped newline in local-only Theme Playground QA injections. The packager now inserts standard source line breaks before </head> and </body>, matching the existing Preview01–03 injection method. No change to production pages, no test disable. Next exact-head CI and official same-tree Windows ZIP.
+
 ## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-ANNOTATION-001 (CI pending)
 - Found genuine local QA delivery omission: tools/qa/build-offline-demo.py injected change markup only into docs/create/index and Preview01–03, not docs/theme-playground.html (actual Preview04). Consequently this batch's four Preview04 Slider/Calendar/Dropdown/Card markers could not render in the official Windows ZIP.
 - Packager now injects CSS/JS relative to docs/ only into local extracted canonical Theme Playground, while Create and Preview01–03 behavior remains unchanged. Added exact strict static gates for Preview04 injection and production HTML isolation. Parent change list remains exactly four; no prior QA highlights carried forward.
