@@ -3261,7 +3261,7 @@ try {
     assert.ok(result.theme>100,'live Create compiled theme applied to Preview04');
     assert.ok(result.examples>=2,'all canonical Alert demos visible');
     assert.equal(result.folds,0,'no collapsed cards in Preview04');
-    assert.ok(!/oklch\\(0\\.9|rgba\\(255, 255, 255|color\\(srgb 1 1 1/.test(result.shadow),'dark Alert shadow must not use white foreground: '+result.shadow);
+    assert.ok(!result.shadow.includes('rgba(255, 255, 255') && !result.shadow.includes('oklch(0.9'),'dark Alert shadow must not use white foreground: '+result.shadow);
     await click('document.querySelector(\'[data-create-item="02"]\')');
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02',15000);
   });

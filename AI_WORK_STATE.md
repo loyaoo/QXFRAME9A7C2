@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-16 Stage5 CHROMIUM-ALERT-TEST-SYNTAX-001 (CI pending)
+- Exact-head QXFRAME #38885225745 failed at Node --check of new browser-only Alert assertion: mistakenly double-escaped regex with an unterminated group. Replaced regex with equivalent string-based non-white computed shadow assertion; did not disable checking and did not change production behavior. Next: rerun strict real Chromium + Schema gates, create verified latest-head ZIP. PR Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-LOCATOR-001 (CI pending)
 - Exact-head QXFRAME CI #38884927899 failed at existing static contract requiring explicit Preview03 navigation in offline QA. Previous routing simplification to group[3]||'01' was valid functionally but removed an audited explicit mapping. Restored explicit 04/03/02/01 routing, retaining both original third-page and new fourth-page locator paths. Gate itself unchanged.
 - No visual acceptances or CI declared green. PR #267 Draft, main untouched. Next: verify source/Chromium/Schema and Actions artifact before offline bundle.
