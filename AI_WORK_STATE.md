@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 TAGS-SCROLL-OVERLAY-BROWSER-001 (latest CI pending)
+- Added strict source gate for editable Tag border width/radius, shared root ScrollLock stable gutter, Modal center zoom without forced layout, Modal/Drawer mask compositor and Image Preview compositing.
+- Added real Chromium active Tags editing and Modal lock/center geometry test, asserting Theme-consistent tag radius, scrolling disabled while overlay active, fixed center position unchanged, and stable native scrollbar gutter when width>0. No empty-computed-style allowance.
+- Current offline QA ledger highlights only four changed Preview03 Cards: Tags, Modal, Drawer, Image Preview. Earlier Theme ListFrame yellow highlight removed, theme-driven menu spacing functionality preserved.
+- Two GitHub Actions gates for this final HEAD still pending; any browser failures must be diagnosed before closing. Then official full dist+docs Windows ZIP and owner video signoff, PR Draft and main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 OVERLAY-COMPOSITOR-001 (latest CI pending)
 - Source-level performance change: Modal now defaults to centered zoom rather than expensive pointer-origin layout remeasurement. Explicit `animation:'zoom-origin'` remains supported; removed the style transition/transform override-read-restore sequence and kept at most one ordinary rect read for explicit origin requests. Both documented default-option sources updated together. Zoom transform shrank from .86 to .94.
 - Modal/Drawer masks retain theme-configured optional blur but eliminate full-screen brightness backdrop processing: overlay background already tints. Active surfaces use transform/opacity compositing; Image Preview center-zoom copy uses composited transform/opacity. Drawer panel motion remains the existing single motion descriptor.

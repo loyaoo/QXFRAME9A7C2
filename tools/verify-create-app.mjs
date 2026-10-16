@@ -232,8 +232,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
   const current={
-    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]']
-  }; // Only current ListFrame Theme spacing family is highlighted.
+    "support-triage":['.qxframe9a7c2-tags-input'],
+    "danger-dialog":['[data-pv3x-widget="danger-dialog"]'],
+    "account-drawer":['[data-pv3x-widget="account-drawer"]'],
+    "asset-preview":['[data-pv3x-widget="asset-preview"]']
+  }; // Only this screenshot-driven Tags/Overlay motion batch is highlighted.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -248,7 +251,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,1,'only this batch menu spacing region is highlighted');
+  assert.equal(count,4,'only the four current Tags/Overlay visual regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -2295,6 +2298,21 @@ check('Stage5 static Outline Badge alias and inherited List radius',()=>{
  assert.doesNotMatch(theme,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color/,'List and Tree inherit container colors');
 });
 
+check('Stage5 Tags edit, ScrollLock and Overlay motion share Theme and compositor owners',()=>{
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ const lock=fs.readFileSync(path.join(root,'src/core/scrollLock.js'),'utf8');
+ const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+ const modalCss=fs.readFileSync(path.join(root,'src/styles/components/modal.css'),'utf8');
+ const drawerCss=fs.readFileSync(path.join(root,'src/styles/components/drawer.css'),'utf8');
+ const imageCss=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ assert.ok(tags.includes('border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--_qxframe9a7c2-tags-input-border)'),'Tags editor border consumes the Theme control width');
+ assert.ok(tags.includes('border-radius:var(--qxframe9a7c2-tag-radius,var(--_qxframe9a7c2-control-radius))'),'Tags editor uses the same Tag radius consumer');
+ assert.doesNotMatch(tags,/is-adding \.qxframe9a7c2-tags-input\{[^}]*border:1px solid transparent/,'standalone editor may not hardcode a transparent border');
+ assert.ok(lock.includes("win.CSS.supports('scrollbar-gutter', 'stable')"),'root scrollbar-gutter stability is feature checked');
+ assert.ok(modal.includes("animation:'zoom'")&&!modal.includes('measureSurfaceRect(ctx)'),'Modal center zoom has no forced preanimation measure');
+ for(const css of [modalCss,drawerCss]){assert.doesNotMatch(css,/backdrop-filter:brightness\(/,'fullscreen mask avoids brightness filter');assert.ok(css.includes('will-change:transform,opacity'),'overlay motion is compositor-promoted');}
+ assert.ok(imageCss.includes('.qxframe9a7c2-image-preview-root.is-center-zoom .qxframe9a7c2-image-preview-motion{will-change:transform,opacity}'),'independent preview image uses composited transform and opacity');
+});
 check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings, Tag Add and Image Preview leave',()=>{
  const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');

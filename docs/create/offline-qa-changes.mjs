@@ -1,8 +1,17 @@
-/** LISTFRAME-THEME-SPACING-20261016: this batch changes actual popup ListFrame geometry. */
-/** Previous annotations cleared; only current menu spacing region remains. */
+/** TAGS-SCROLL-MOTION-20261016: this batch changes actual popup ListFrame geometry. */
+/** Previous annotations cleared; only Tags/Modal/Drawer/Image current changes remain. */
 const groups = [
- ['quick-action-menu','Theme 菜单留白统一',[
-  ['[data-pv3x-widget="quick-action-menu"]','菜单左右/上下内距跟随主题','Dropdown/Select/List 统一读取 Theme list-padding-x/y，不使用组件 JS inset 参数','__QA_BUNDLE_HEAD__']
+ ['support-triage','Tags 主题联动输入态',[
+  ['.qxframe9a7c2-tags-input','输入边框与圆角','Tag 和编辑输入框一起消费 Theme 边框宽度、圆角与阴影','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['danger-dialog','Modal 动画与滚动锁定',[
+  ['[data-pv3x-widget="danger-dialog"]','中心缩放与固定页面','Modal 默认中心缩放，ScrollLock 使用稳定滚动条槽位','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['account-drawer','Drawer 动画与滚动锁定',[
+  ['[data-pv3x-widget="account-drawer"]','抽屉合成层','Drawer 位移动画不再重复执行全屏亮度滤镜','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['asset-preview','Image Preview 动画',[
+  ['[data-pv3x-widget="asset-preview"]','预览合成层','独立预览图从中心缩放并使用 transform/opacity 合成','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';

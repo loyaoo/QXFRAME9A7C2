@@ -3224,6 +3224,17 @@ try {
     assert.equal(got.rejects,true,'removed JS inset option is rejected');
   });
 
+  await step('Stage5 Tags editable surface uses Theme dimensions and ScrollLock does not shift page',async()=>{
+    const got=await evaluate("(async()=>{\n  const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,cs=n=>win.getComputedStyle(n),q=win.QXFRAME9A7C2;\n  const host=doc.createElement('div');doc.body.append(host);\n  const tags=q.Components.Tags.create({container:host,items:[{key:'alpha',value:'alpha',label:'alpha'}],editable:true,closable:true});\n  const chip=host.querySelector('.qxframe9a7c2-tag:not(.qxframe9a7c2-tags-add)');\n  const add=tags.getAddTriggerElement();\n  if(add)add.click();\n  await new Promise(done=>win.requestAnimationFrame(done));\n  const input=tags.getInputElement(),inputStyle=input&&cs(input),chipStyle=chip&&cs(chip);\n  const tagState={chipRadius:chipStyle?.borderTopLeftRadius,inputRadius:inputStyle?.borderTopLeftRadius,inputWidth:inputStyle?.borderTopWidth,\n    configuredWidth:cs(host).getPropertyValue('--_qxframe9a7c2-control-border-width').trim(),fieldColor:inputStyle?.borderTopColor};\n  tags.destroy();host.remove();\n  const beforeWidth=win.innerWidth-doc.documentElement.clientWidth;\n  const current=doc.createElement('div');current.style.cssText='position:fixed;left:50%;top:3px;width:10px;height:10px';doc.body.append(current);\n  const baseline=current.getBoundingClientRect().left;\n  const modal=q.Components.Modal.create({container:doc.body,title:'Scroll geometry',content:'Overlay probe',autoOpen:false,lockScroll:true,animation:'zoom'});\n  let scroll;\n  try{\n    await Promise.resolve(modal.open('scroll-geometry'));\n    await new Promise(done=>win.requestAnimationFrame(()=>win.requestAnimationFrame(done)));\n    scroll={gutter:cs(doc.documentElement).scrollbarGutter,overflow:cs(doc.documentElement).overflow,left:current.getBoundingClientRect().left-baseline,\n      compositor:cs(modal.getDialogElement()).willChange};\n  }finally{modal.destroy();current.remove()}\n  return {tags:tagState,scroll,beforeWidth,defaultAnimation:q.Components.Modal.options.animation};\n})()");
+    assert.equal(got.tags.inputRadius,got.tags.chipRadius,'Tag editor radius follows the same Theme Tag radius');
+    assert.ok(parseFloat(got.tags.inputWidth)>=0,'Tag editor border width is resolved');
+    assert.equal(got.defaultAnimation,'zoom','Modal defaults to compositor center zoom');
+    assert.equal(got.scroll.overflow,'hidden','Modal locks root document scrolling');
+    assert.ok(Math.abs(got.scroll.left)<1,'scroll lock does not move fixed centered content');
+    if(got.beforeWidth>0)assert.equal(got.scroll.gutter,'stable','layout scrollbars reserve a stable gutter instead of padding compensation');
+    assert.match(got.scroll.compositor,/transform/,'dialog is promoted for transform-only motion');
+  });
+
   await step('Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle',async()=>{
     const result=await evaluate(`(async()=>{
       const d=document.querySelector('[data-create-frame]').contentDocument,win=d.defaultView;
