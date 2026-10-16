@@ -3601,6 +3601,22 @@ try {
     assert.ok(rows>0&&rows<150,'official Tree stays virtual after disclosure');
   });
 
+  await step('Stage5 Theme Playground visibly mounts new Alert, week picker and Kbd demos',async()=>{
+    await s('Page.navigate',{url:origin+'/docs/theme-playground.html'});
+    await waitFor("!!window.QXFRAME9A7C2ComponentDemos&&!!document.getElementById('component-alert')",'canonical theme playground mounts',15000);
+    for(const [slug,title] of [['alert','Alert：语义 × 外观 × 阴影'],['date-picker','周选择与 Calendar 共用 Range Painter'],['form','Kbd 命令键组合']]){
+      await evaluate("document.getElementById('component-"+slug+"').scrollIntoView({block:'center'})");
+      const expr="Array.from(document.querySelectorAll('#component-"+slug+" .qxframe9a7c2-play-example-title strong')).some(n=>n.textContent==="+JSON.stringify(title)+")";
+      await waitFor(expr,'new '+slug+' demo visible by default',15000);
+    }
+    const actual=await evaluate("(() => {\n const alert=document.querySelector('#component-alert'),week=document.querySelector('#component-date-picker'),form=document.querySelector('#component-form');\n const rows=[...alert.querySelectorAll('.qxframe9a7c2-alert-root')];\n return {alertCount:rows.length,officialCount:rows.filter(x=>x.querySelector('.qxframe9a7c2-alert-wrapper .qxframe9a7c2-alert-icon')&&x.querySelector('.qxframe9a7c2-alert-section .qxframe9a7c2-alert-title')).length,\n shadowCombined:rows.filter(x=>x.classList.contains('is-shadow')&&(x.classList.contains('is-outline')||x.classList.contains('is-muted'))).length,\n weekNames:[...week.querySelectorAll('.qxframe9a7c2-play-example-title strong')].map(x=>x.textContent),\n liveWeek:week.querySelectorAll('.qxframe9a7c2-date-picker').length,kbd:form.querySelectorAll('.qxframe9a7c2-kbd').length};\n})()");
+    assert.ok(actual.alertCount>=12&&actual.officialCount>=12,'all 12 semantic Alert skins use canonical DOM: '+JSON.stringify(actual));
+    assert.ok(actual.shadowCombined>=2,'combined shadow/muted/outline Alert appears');
+    assert.ok(actual.weekNames.includes('周选择与 Calendar 共用 Range Painter'),'week picker visible without expanding');
+    assert.ok(actual.liveWeek>=2,'two live week pickers exist');
+    assert.ok(actual.kbd>=4,'real Kbd group visible under Form');
+  });
+
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));
   console.log(JSON.stringify({ ok: true, browser: path.basename(browserBin), steps: results.length, names: results }));
 } catch (error) {

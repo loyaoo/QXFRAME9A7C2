@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 THEME-PLAYGROUND-BROWSER-001 (CI pending)
+- Real Chromium opens `docs/theme-playground.html` and scrolls lazy canonical Alert/DatePicker/Form cards into view; verifies 12 official Alert skins, 2 combined-shadow skins, 2 live week picker demos and 4 Kbd controls. This closes source-only visibility verification.
+- Previous visual source edits retained; next exact HEAD two CI plus official Windows dist+docs owner QA. PR #267 Draft, main not modified.
+
 ## CURRENT — 2026-10-16 Stage5 DROPDOWN-INSET-POLICY-001 (pending CI)
 - Corrected ListFrame→Item row radius consumer precedence: private `--_qxframe9a7c2-item-radius` from structural all/block/none must override public item radius only when framed; unframed Item still reads its public fallback.
 - Browser gate now sets a conflicting explicit 1.5rem public radius on the real open popup and demands block/none rows + submenu stay 0px. No extra painter and no relaxed tests. The Screenshot source owner fix remains.
