@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 IMAGE-NAV-SINGLE-OWNER-001 (final CI pending)
+- QXFRAME CI run #38830861623 failure exposed actual CSS duplicate-owner growth `components/image: 11 -> 13`: nav had border/bg/color declared by both toolbar family rule and nav own rule, and inherited transparent button painter. Solved at source: exclude nav from toolbar and generic tool selectors, give nav one self-contained border/bg/ink/sizing rule. No baseline relaxation.
+- Previous commits: DatePicker(Calendar week owner), DateTime border, Tags editor; Image Preview center zoom; canonical theme-playground recent demos and tests. Remaining: exact-HEAD QXFRAME and CSS Schema + image visual owner signoff, official Windows bundle. Draft PR #267, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-ACCEPTANCE-001 (CI pending)
 - User screenshots revealed unresolved Tags edit state, Dropdown inline hover gap, DatePicker week mismatch/range caps, DateTime separator, Image Preview return flash and dark nav, plus missing visible theme playground variants.
 - Source commits preceding this checkpoint repaired unit week propagation to actual Calendar; Calendar remains sole date/week painter; DateTime field border; Tags input skin; separate Image Preview center-scale/fade with source kept visible; high contrast preview nav.
