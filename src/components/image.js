@@ -26,7 +26,7 @@ const IMAGE_DEFAULTS = Object.freeze({
   keyboard: true, wheelZoom: true, doubleClickZoom: true, draggable: true, destroyOnClose: true, minScale: 0.2, maxScale: 5,
   scaleStep: 0.25, rotateStep: 90, showToolbar: true, showNavigation: true, showClose: true,
   showTitle: true, showCounter: true, showZoom: true, showRotate: true, showFlip: true, showReset: true,
-  download: false
+  download: false, trajectory:false
 });
 const imageState = new WeakMap();
 
@@ -36,15 +36,15 @@ var REMOVED_PREVIEW_ITEM_FIELDS = Object.freeze(['url', 'name']);
 var PREVIEW_TRANSITION = Object.freeze({
   enter: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) }),
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))', opacity:'0' }) }),
     active: 'qxframe9a7c2-image-preview-trajectory-enter-active',
-    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) })
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)', opacity:'1' }) })
   }),
   leave: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) }),
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)', opacity:'1' }) }),
     active: 'qxframe9a7c2-image-preview-trajectory-leave-active',
-    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) })
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))', opacity:'0' }) })
   })
 });
 var own = Utils.own;
@@ -609,7 +609,7 @@ function setupImage(instance) {
     return { width: nw, height: nh };
   }
   function lockPreviewTrajectoryGeometry(mode) {
-    if (!previewMotion || !previewImage || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
+    if (!previewMotion || !previewImage || !imagePreviewActive() || cfg('trajectory', false) === false) return false;
     var width = 0, height = 0;
     if (mode === 'current' && previewMotion.getBoundingClientRect) {
       var painted = previewMotion.getBoundingClientRect();
@@ -641,7 +641,7 @@ function setupImage(instance) {
     reconcilePreviewTransform(reason || 'motion-complete');
   }
   function preparePreviewTrajectory(mode) {
-    if (!previewMotion || !root || !previewRoot || previewRoot.hidden || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
+    if (!previewMotion || !root || !previewRoot || previewRoot.hidden || !imagePreviewActive() || cfg('trajectory', false) === false) return false;
     lockPreviewTrajectoryGeometry(mode === 'leave' ? 'current' : 'canonical');
     var sourceRect = image && image.getBoundingClientRect ? image.getBoundingClientRect() : root.getBoundingClientRect();
     var targetRect = previewMotion.getBoundingClientRect();
@@ -923,8 +923,10 @@ function setupImage(instance) {
         // Source and copy have one paint owner. The authored image normally
         // transitions opacity; do not animate opacity during this handoff or
         // the source stays invisible after the preview copy disappears.
-        root.classList.add('is-preview-source-handoff');
-        root.classList.remove('is-preview-source-hidden');
+        if (cfg('trajectory',false) === true) {
+          root.classList.add('is-preview-source-handoff');
+          root.classList.remove('is-preview-source-hidden');
+        }
         // Flush the now-opaque source while handoff disables the fade, before
         // final mask teardown can remove the temporary handoff class.
         void image.offsetWidth;
@@ -961,13 +963,15 @@ function setupImage(instance) {
     // painted frame, making the fade visually disappear even though Transition runs.
     root.classList.remove('is-preview-source-handoff');
     previewRoot.classList.remove('is-chrome-visible');
+    previewRoot.classList.toggle('is-center-zoom',cfg('trajectory',false)!==true);
     void previewRoot.offsetWidth;
     previewRoot.classList.add('is-chrome-visible');
     preparePreviewTrajectory();
     // Hide the authored source while the physical preview copy owns the trajectory.
     // This prevents the two-image ghosting visible during open/close handoff.
     root.classList.add('is-previewing');
-    root.classList.add('is-preview-source-hidden');
+    if (cfg('trajectory',false) === true) root.classList.add('is-preview-source-hidden');
+    else root.classList.remove('is-preview-source-hidden');
     if (!overlay.getState().active) overlay.activate(pendingOpenDetail);
     maskPresence.setVisible(true, { reason: pendingOpenDetail.reason, originalEvent: pendingOpenDetail.originalEvent });
     presence.setVisible(true, { reason: pendingOpenDetail.reason, originalEvent: pendingOpenDetail.originalEvent });

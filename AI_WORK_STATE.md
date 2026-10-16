@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 IMAGE-CENTER-ZOOM-001 (CI pending)
+- User disallowed source-position trajectory due repeat flashing. Image now defaults to independent centered preview DOM (already exists) and a centered scale+fade Transition. Source image stays fully paintable for default preview; legacy trajectory remains explicit opt-in.
+- Navigation arrow was dark because shared button rule set nav background transparent/ink inherit; restored preview dark surface and white foreground directly on nav, no second Theme token. Source handoff executes only if trajectory is explicitly true.
+- Next exact-HEAD browser check for preview opening/close; compare latest Windows screenshot, then produce official verified QA ZIP. PR Draft, main frozen.
+
 ## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-CALENDAR-001 (new CI pending)
 - User screenshots: DatePicker week did not forward unit to its Calendar instances and single week range painting diverged; corrected owner wiring and calculated actual week endpoints, leaving Calendar sole renderer and RangePainter.
 - DateTime calendar/time split uses Theme border again. Standalone Tags active editor base fill now matches Tag semantic skin rather than unthemed outlined field.
