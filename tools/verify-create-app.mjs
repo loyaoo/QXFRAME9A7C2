@@ -558,6 +558,30 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 
+check('Eight Style presets drive Menu padding mode through theme x/y and round-trip overrides',()=>{
+ const axis=data.EXT_AXES.find(x=>x.key==='menuInset');
+ assert.ok(axis,'Menu spacing is one createApp Style extension axis');
+ assert.deepEqual(axis.options.map(x=>x.value),['all','block'],'Menu includes all-around and vertical-only choices');
+ const expected={vega:'all',nova:'block',maia:'all',lyra:'block',mira:'block',luma:'all',sera:'block',rhea:'block'};
+ assert.deepEqual(axis.defaults,expected,'exactly eight Style defaults own Menu padding types');
+ const token=(css,name)=>new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);').exec(css)?.[1];
+ for(const [style,mode] of Object.entries(expected)){
+  const config=model.normalizeConfig({style});
+  const resolved=model.resolveConfig(config);
+  assert.equal(resolved.ext.menuInset,mode,style+' uses its Style-specific Menu mode');
+  const css=model.compileTheme(config,{generatedAt:''}).body;
+  assert.equal(token(css,'list-padding-x'),mode==='all'?'0.375rem':'0rem',style+' has correct Menu inline gutter');
+  assert.equal(token(css,'list-padding-y'),'0.375rem',style+' retains independent top/bottom gutter');
+  const flipped=mode==='all'?'block':'all';
+  const override=model.normalizeConfig({style,ext:{menuInset:flipped}});
+  assert.equal(model.resolveConfig(override).ext.menuInset,flipped,style+' explicit choice overrides Style');
+  const roundTrip=model.parseConfig(model.serializeConfig(override)).config;
+  assert.equal(roundTrip.ext.menuInset,flipped,style+' URL configuration preserves Menu spacing choice');
+  const overridden=model.compileTheme(roundTrip,{generatedAt:''}).body;
+  assert.equal(token(overridden,'list-padding-x'),flipped==='all'?'0.375rem':'0rem',style+' overridden Theme CSS');
+ }
+});
+
 check('All 78 COLOR Theme tokens have a single light-dark owner, with scheme-only dark boundary',()=>{
   const registry=read('tokens.js');
   const colors=[...registry.matchAll(/\bC\('([a-z0-9-]+)'/g)].map(m=>m[1]);

@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 MENU-STYLE-MODE-PARITY-GATE-001 (new CI required)
+- Authoritative user request: shared Dropdown/Select/List/menu popup frame spacing is Theme-driven `list-padding-x/y`, not JS `inset`; menu mode presets differ across the 8 Styles, with an explicit user override. Production CSS/compiler/data/config implementation was present at `b9794e71`.
+- QXFRAME CI #38837608098 and CSS Schema #38837608175 were red because Chromium fixture incorrectly read `QXFRAME9A7C2.Components.List`; List intentionally belongs to `QXFRAME9A7C2.BuildingBlocks.List`. Corrected the test in commit `c14ba43d`; strict popup geometry assertions retained.
+- This increment adds a static 8-Style authoritative parity gate for expected all/block defaults, compiled x/y tokens, user override, and URL round-trip. No runtime/style changes or acceptance threshold reductions.
+- Next: exact-HEAD QXFRAME and CSS Schema CI, official same-HEAD Actions `dist+docs` artifact to full Windows ZIP, ZIP CRC, localhost HTTP QA. PR #267 stays Draft, main unchanged. Owner screenshot visual signoff still pending.
+
 ## CURRENT — 2026-10-16 Stage5 LISTFRAME-BUILDINGBLOCKS-TEST-FIX-001 (final CI pending)
 - Latest live GitHub baseline `b9794e71feb0d8732f1e6316011618275255a04e` is PR #267 Draft/Open. Both QXFRAME CI #38837608098 and CSS Schema #38837608175 failed the new Chromium Theme-menu-spacing step before geometry validation: it accessed non-existent `QXFRAME9A7C2.Components.List` though the canonical runtime intentionally publishes List as `QXFRAME9A7C2.BuildingBlocks.List`. This is a test entrypoint error, not evidence of a List runtime rendering defect.
 - Updated only the real Chromium fixture to use BuildingBlocks.List; retained strict Dropdown/Select/List/submenu x/y and radius assertions, live CSS theme updates and rejection of retired Dropdown JS inset. No production code, Theme output or validation thresholds weakened.
