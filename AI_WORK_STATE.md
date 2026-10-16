@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 IMAGE-TRAJECTORY-EXPLICIT-REGRESSION-001
+- On screenshot-source HEAD `f4b988886b7909787043f6952c3bdd8a31383d76`, QXFRAME CI #38831110093 advanced past CSS gate but old `verify-final-audit-regressions.mjs` fixture demanded source-position trajectory on `preview:true`, which now correctly means center zoom by owner request. Kept strict trajectory test by making its fixture explicitly `preview:{trajectory:true}`; did not relax geometry or source-handoff assertions. Default center path separately tested by `verify-create-app-browser.mjs`.
+- Next run exact-HEAD QXFRAME and CSS Schema; investigate additional red tests by root cause. Draft PR #267; main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 IMAGE-NAV-SINGLE-OWNER-001 (final CI pending)
 - QXFRAME CI run #38830861623 failure exposed actual CSS duplicate-owner growth `components/image: 11 -> 13`: nav had border/bg/color declared by both toolbar family rule and nav own rule, and inherited transparent button painter. Solved at source: exclude nav from toolbar and generic tool selectors, give nav one self-contained border/bg/ink/sizing rule. No baseline relaxation.
 - Previous commits: DatePicker(Calendar week owner), DateTime border, Tags editor; Image Preview center zoom; canonical theme-playground recent demos and tests. Remaining: exact-HEAD QXFRAME and CSS Schema + image visual owner signoff, official Windows bundle. Draft PR #267, main unchanged.
