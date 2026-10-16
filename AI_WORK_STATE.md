@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 NATIVE-SELECT-PICKER-SPACING-001 (CI pending)
+- Native Chromium customizable `select::picker(select)` used an independent fixed 0.25rem padding. Now it consumes the same Theme `list-padding-y/x` pair as all JS ListFrames, and its native option corner radius becomes zero automatically when x=0. Existing native color-scheme inverse rules untouched.
+- Static consumer gate asserts native x/y and radius formula; previous named tests and Theme Schema ownership retained. Two CI gates must still pass latest exact HEAD; PR #267 stays Draft/main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 SOURCE-ESM-LIST-CLOSEOUT-001 (new CI pending)
 - QXFRAME CI `ef4d19e2` passed source/static gates through browser suite but failed an obsolete `verify-source-esm-browser.mjs` List fixture that updated `inset:false` and demanded `getState().inset`. Removed obsolete option expectations, retained `bordered:false` runtime check, and asserted inset is absent from JS state. Actual CSS switching is tested on live Dropdown/Select/List/submenu in `verify-create-app-browser.mjs`.
 - No runtime/theme changes in this commit, PR #267 stays Draft, main untouched. Next exact-HEAD QXFRAME/CSS Schema, inspect any further browser failures and build official Windows acceptance ZIP only from passing artifact.

@@ -50,6 +50,9 @@ check('Theme controls shared list surface padding; JS inset paths are absent',()
  const dropdown=fs.readFileSync(path.join(root,'src/components/dropdown.js'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/select.js'),'utf8');
  const list=fs.readFileSync(path.join(root,'src/components/list.js'),'utf8');
+ const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+ assert.ok(native.includes('padding:var(--qxframe9a7c2-theme-list-padding-y,0.375rem) var(--qxframe9a7c2-theme-list-padding-x,0.375rem)'),'native customizable select popup shares CSS x/y');
+ assert.ok(native.includes('calc(var(--qxframe9a7c2-theme-list-padding-x,0.375rem) * 100)'),'native select options flatten with zero x');
  assert.match(data,/key: 'menuInset'/,'createApp has one Style-following menu spacing axis');
  for(const token of ['list-padding-x','list-padding-y']){
    assert.ok(compiler.includes("root['"+token+"']"),'compiler owns '+token);
