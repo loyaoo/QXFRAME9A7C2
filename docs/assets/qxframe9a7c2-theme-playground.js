@@ -67,7 +67,7 @@ function selectedLatestSpecs(rec,specs){
     Alert:['Alert：语义 × 外观 × 阴影','Alert 叠加外观'],
     Calendar:['周 hover / 连续高亮 / 跨月圆角'],
     DatePicker:['周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'],
-    Dropdown:['Tabler 菜单内距 all / block / none'],
+    Dropdown:['Theme 菜单留白（四周 / 上下）'],
     Tags:['Standalone FormBridge + Add Tag'],
     Image:['图片预览退场 / 控制条同色'],
     Card:['Stacked / Stamp / Deck'],Badge:['Soft / Subtle / Status'],

@@ -43,6 +43,23 @@ check('Stage5 acceptance inventory covers every component export without false v
  assert.ok(fs.readFileSync(path.join(root,'docs/create/STAGE5-COMPONENT-ACCEPTANCE-2026-10-16.md'),'utf8').includes('66 张卡片覆盖 65 种'),'final status document explains gallery-vs-export distinction');
 });
 
+check('Theme controls shared list surface padding; JS inset paths are absent',()=>{
+ const data=fs.readFileSync(path.join(root,'docs/create/data.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const frame=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const dropdown=fs.readFileSync(path.join(root,'src/components/dropdown.js'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/components/select.js'),'utf8');
+ const list=fs.readFileSync(path.join(root,'src/components/list.js'),'utf8');
+ assert.match(data,/key: 'menuInset'/,'createApp has one Style-following menu spacing axis');
+ for(const token of ['list-padding-x','list-padding-y']){
+   assert.ok(compiler.includes("root['"+token+"']"),'compiler owns '+token);
+   assert.ok(frame.includes('theme-'+token),'ListFrame reads '+token);
+ }
+ assert.match(frame,/padding:var\(--_qxframe9a7c2-list-frame-padding-y\) var\(--_qxframe9a7c2-list-frame-padding-x\)/,'one shared CSS shorthand owns frame x/y');
+ assert.doesNotMatch(dropdown,/function normalizeFrameInset|syncFrameInset|inset:'all'/,'Dropdown does not compute inset in JS');
+ assert.doesNotMatch(select,/qxframe9a7c2-list-frame is-inset/,'Select does not pin an inset mode');
+ assert.doesNotMatch(list,/classList\.toggle\('is-inset'/,'List does not pin an inset mode');
+});
 check('Stage5 screenshot defects map to canonical DatePicker, Image and visible theme demos',()=>{
  const dp=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
  const image=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');

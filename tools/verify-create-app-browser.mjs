@@ -3206,62 +3206,22 @@ try {
     }
   });
 
-  await step('Stage5 Dropdown all/block/none list-frame padding owns root/submenus and dynamic updates',async()=>{
-    const got=await evaluate(`(async () => {
-      const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,q=win.QXFRAME9A7C2;
-      if(!q?.Components?.Dropdown)return {error:'Dropdown runtime missing'};
-      const btn=doc.createElement('button');btn.type='button';btn.textContent='Actions';doc.body.append(btn);
-      const inst=q.Components.Dropdown.create({reference:btn,inset:'block',submenuTrigger:'click',submenuOpenDelay:0,items:[{key:'group',type:'group',label:'Actions'},{key:'root',value:'root',label:'More',items:[{key:'child',value:'child',label:'Child'}]}]});
-      const settle=()=>new Promise(resolve=>win.requestAnimationFrame(()=>win.requestAnimationFrame(resolve)));
-      const measure=panel=>{
-        const style=win.getComputedStyle(panel);
-        return {connected:panel.isConnected,hidden:panel.hidden,display:style.display,block:panel.classList.contains('is-block-inset'),all:panel.classList.contains('is-inset'),none:panel.classList.contains('is-flush'),
-          inlineStart:style.paddingLeft,inlineEnd:style.paddingRight,top:style.paddingTop,bottom:style.paddingBottom,
-          itemRadius:win.getComputedStyle(panel.querySelector('.qxframe9a7c2-item-collection-item')).borderTopLeftRadius};
-      };
-      try{
-        await Promise.resolve(inst.open('test-inset'));
-        await settle();
-        const panel=inst.getPopupElement();
-        panel.style.setProperty('--qxframe9a7c2-item-radius','1.5rem'); // explicit user radius must not defeat block/flush geometry
-        const block=measure(panel);
-        inst.updateOptions({inset:'all'});await settle();const all=measure(panel);
-        inst.updateOptions({inset:'none'});await settle();const none=measure(panel);
-        inst.updateOptions({inset:'block'});await settle();
-        const row=panel.querySelector('.has-submenu');
-        if(!row)return {error:'Dropdown branch row unavailable',block,all,none};
-        row.click();
-        await new Promise(resolve=>win.setTimeout(resolve,160));
-        const child=[...doc.querySelectorAll('.qxframe9a7c2-dropdown-submenu-panel')].find(n=>n.isConnected&&!n.hidden);
-        const submenu=child?measure(child):null;
-        let rejects=false;try{inst.updateOptions({inset:'diagonal'});}catch(_){rejects=true;}
-        return {block,all,none,submenu,rejects};
-      }finally{inst.destroy();btn.remove();}
-    })()`);
-    assert.equal(got.error,undefined,'Dropdown runtime and nested row are available');
-    for(const mode of ['block','all','none']){
-      assert.equal(got[mode].connected,true,mode+' popup must be mounted before CSS measurement');
-      assert.equal(got[mode].hidden,false,mode+' popup must be visible');
-      assert.notEqual(got[mode].display,'none',mode+' popup must participate in layout');
+  await step('Stage5 CSS Theme controls Dropdown, Select, List and submenu inset without JS',async()=>{
+    const got=await evaluate("(async () => {\n const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,q=win.QXFRAME9A7C2;\n if(!q?.Components?.Dropdown||!q?.Components?.Select||!q?.Components?.List)return {error:'list family unavailable'};\n const btn=doc.createElement('button');btn.textContent='Menu';doc.body.append(btn);\n const host=doc.createElement('div');doc.body.append(host);\n const root=doc.documentElement;\n const oldX=root.style.getPropertyValue('--qxframe9a7c2-theme-list-padding-x');\n const oldY=root.style.getPropertyValue('--qxframe9a7c2-theme-list-padding-y');\n const drop=q.Components.Dropdown.create({reference:btn,submenuTrigger:'click',submenuOpenDelay:0,items:[{key:'branch',value:'branch',label:'Branch',items:[{key:'child',value:'child',label:'Child'}]},{key:'action',value:'action',label:'Action'}]});\n const select=q.Components.Select.create({container:host,items:[{key:'a',value:'a',label:'Alpha'},{key:'b',value:'b',label:'Beta'}],open:true});\n const listHost=doc.createElement('div');host.append(listHost);\n const list=q.Components.List.create({container:listHost,items:[{key:'x',value:'x',label:'X'}]});\n const settle=()=>new Promise(done=>win.requestAnimationFrame(()=>win.requestAnimationFrame(done)));\n const check=panel=>{\n  const css=win.getComputedStyle(panel),item=panel.querySelector('.qxframe9a7c2-item-collection-item,.qxframe9a7c2-list-item,.qxframe9a7c2-menu-item');\n  return {x:css.paddingLeft,xEnd:css.paddingRight,y:css.paddingTop,yEnd:css.paddingBottom,\n   radius:item?win.getComputedStyle(item).borderTopLeftRadius:null,\n   classes:panel.className};\n };\n try {\n  await Promise.resolve(drop.open('theme-padding'));await settle();\n  const panel=drop.getPopupElement(),selectPanel=select.getPopupElement?select.getPopupElement():null;\n  if(!selectPanel)return {error:'Select popup absent'};\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-x','0rem');\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-y','0.5rem');\n  await settle(); const flush={drop:check(panel),select:check(selectPanel),list:check(list.getRootElement())};\n  const row=panel.querySelector('.has-submenu');if(!row)return {error:'no submenu row',flush};\n  row.click();await new Promise(done=>win.setTimeout(done,180));\n  const sub=[...doc.querySelectorAll('.qxframe9a7c2-dropdown-submenu-panel')].find(n=>n.isConnected&&!n.hidden);\n  const submenu=sub?check(sub):null;\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-x','0.375rem');\n  await settle(); const inset={drop:check(panel),select:check(selectPanel),list:check(list.getRootElement()),submenu:sub?check(sub):null};\n  let rejects=false;try{drop.updateOptions({inset:'all'})}catch(e){rejects=true}\n  return {flush,submenu,inset,rejects};\n }finally{\n  if(oldX)root.style.setProperty('--qxframe9a7c2-theme-list-padding-x',oldX);else root.style.removeProperty('--qxframe9a7c2-theme-list-padding-x');\n  if(oldY)root.style.setProperty('--qxframe9a7c2-theme-list-padding-y',oldY);else root.style.removeProperty('--qxframe9a7c2-theme-list-padding-y');\n  drop.destroy();select.destroy();list.destroy();host.remove();btn.remove();\n }\n})()");
+    assert.equal(got.error,undefined,'shared list-family owners mounted: '+JSON.stringify(got));
+    for(const kind of ['drop','select','list']){
+      assert.equal(got.flush[kind].x,'0px',kind+' flush x');
+      assert.equal(got.flush[kind].xEnd,'0px',kind+' flush right x');
+      assert.equal(got.flush[kind].y,'8px',kind+' independently themed y');
+      assert.equal(got.flush[kind].radius,'0px',kind+' flush item corners');
+      assert.equal(got.inset[kind].x,'6px',kind+' all-sides themed x');
+      assert.equal(got.inset[kind].xEnd,'6px',kind+' all-sides right');
     }
-    assert.equal(got.block.block,true,'only vertical outer inset class applied');
-    assert.equal(got.block.inlineStart,'0px','block inset leaves left edge flush');
-    assert.equal(got.block.inlineEnd,'0px','block inset leaves right edge flush');
-    assert.equal(got.block.itemRadius,'0px','block inset flattens the real ItemCollection row corners');
-    assert.ok(parseFloat(got.block.top)>0&&parseFloat(got.block.bottom)>0,'block inset retains vertical gutter');
-    assert.equal(got.all.all,true,'all mode applied by updateOptions');
-    assert.ok(parseFloat(got.all.inlineStart)>0&&parseFloat(got.all.inlineEnd)>0,'all mode has both horizontal gutters');
-    assert.ok(parseFloat(got.all.itemRadius)>=0,'all mode item corner is resolved');
-    assert.equal(got.none.none,true,'none mode applied by updateOptions');
-    for(const edge of ['inlineStart','inlineEnd','top','bottom'])assert.equal(got.none[edge],'0px','none mode has zero '+edge);
-    assert.equal(got.none.itemRadius,'0px','none mode removes real row corner rounding');
-    assert.ok(got.submenu&&got.submenu.connected&&!got.submenu.hidden,'nested submenu is mounted and visible');
-    assert.equal(got.submenu.block,true,'submenu inherits the parent inset mode');
-    assert.equal(got.submenu.inlineStart,'0px','nested block mode has zero left inset');
-    assert.equal(got.submenu.inlineEnd,'0px','nested block mode has zero right inset');
-    assert.equal(got.submenu.itemRadius,'0px','nested submenu row has no pill corner gaps');
-    assert.ok(parseFloat(got.submenu.top)>0&&parseFloat(got.submenu.bottom)>0,'nested block mode retains vertical inset');
-    assert.equal(got.rejects,true,'invalid inset enum rejected');
+    assert.ok(got.submenu,'Dropdown submenu must be present');
+    assert.equal(got.submenu.x,'0px','submenu follows vertical-only CSS Theme');
+    assert.equal(got.submenu.radius,'0px','submenu item corners flush at x=0');
+    assert.equal(got.inset.submenu.x,'6px','submenu follows all-sided Theme without reinsertion');
+    assert.equal(got.rejects,true,'removed JS inset option is rejected');
   });
 
   await step('Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle',async()=>{

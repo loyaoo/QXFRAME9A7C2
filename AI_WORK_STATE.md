@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SPACING-TESTS-001 (CI pending)
+- Updated canonical demos: Dropdown/Select spacing is Theme-only; List illustrates x=0/6px via local CSS custom property, never `inset` JS args. New visible Dropdown demo title in Theme Playground.
+- Replaced obsolete Dropdown runtime inset mode Chromium test with real CSS Theme mutations: Dropdown root/submenu + Select + List must respond immediately to x=0/y=8px and x=6px without rebuilding JS; flush row corners must be 0. Reject removed `drop.updateOptions({inset})`. Static gate enforces no old JS owner and one shared CSS shorthand.
+- Exact previous green `a75b1504`; new head pending final two CI gates and Windows dist+docs. PR #267 Draft and main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SPACING-001 (source implementation; CI pending)
 - User explicitly requires all Dropdown/Select/related select-list popups to take side inset from Theme CSS, **not** Dropdown/List JS `inset` option. New canonical Theme tokens `--qxframe9a7c2-theme-list-padding-x/y` feed shared `.qxframe9a7c2-list-frame` padding shorthand; x=0 removes side gutter and clips row-radius by shared structural calculation; y remains independent.
 - All ListFrame owners (Dropdown with nested submenu, Select, TreeSelect, Autocomplete, Cascader, Table filter, Menu submenu, standalone List) no longer hard-code is-inset/is-flush class. Dropdown/List reject obsolete `inset` options instead of silently applying JS state. Menu submenu avoids double padding by reusing existing level padding role (0 when framed).
