@@ -81,6 +81,20 @@ for name in ('index.html', 'preview-01.html', 'preview-02.html', 'preview-03.htm
         '  <script type="module" src="./offline-qa-changes.mjs"></script>\n</body>')
     file.write_text(html, 'utf-8')
 
+# Preview04 is the canonical Theme Playground, routed directly from Create.
+# It lives at docs/ rather than docs/create/, so preserve its original
+# stylesheet/runtime references and only inject annotated local QA copies.
+playground_file = work / 'docs/theme-playground.html'
+playground_html = playground_file.read_text('utf-8')
+assert 'data-create-preview="04"' in playground_html, 'Preview04 must be the canonical Create-linked full gallery'
+assert 'offline-qa-changes' not in playground_html, 'Production Theme Playground must stay unannotated'
+assert playground_html.count('</head>') == playground_html.count('</body>') == 1
+playground_html = playground_html.replace('</head>',
+    '  <link rel="stylesheet" href="create/offline-qa-changes.css">\\n</head>')
+playground_html = playground_html.replace('</body>',
+    '  <script type="module" src="create/offline-qa-changes.mjs"></script>\\n</body>')
+playground_file.write_text(playground_html, 'utf-8')
+
 (work / 'START-DEMO.cmd').write_text(
     '@echo off\ncd /d "%~dp0"\nwhere node >nul 2>nul\n'
     'if %errorlevel%==0 (node demo-server.mjs) else (call START-DEMO-PYTHON.cmd)\n'

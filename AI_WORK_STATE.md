@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-ANNOTATION-001 (CI pending)
+- Found genuine local QA delivery omission: tools/qa/build-offline-demo.py injected change markup only into docs/create/index and Preview01–03, not docs/theme-playground.html (actual Preview04). Consequently this batch's four Preview04 Slider/Calendar/Dropdown/Card markers could not render in the official Windows ZIP.
+- Packager now injects CSS/JS relative to docs/ only into local extracted canonical Theme Playground, while Create and Preview01–03 behavior remains unchanged. Added exact strict static gates for Preview04 injection and production HTML isolation. Parent change list remains exactly four; no prior QA highlights carried forward.
+- Full exact-HEAD QXFRAME/CSS Schema Actions and official same-tree artifact/Windows ZIP still pending. Preserve PR #267 Draft and main; no Stage5 signoff.
+
 ## CURRENT — 2026-10-16 Stage5 SLIDER-LUMA-SHAPE-OWNER-001 (CI pending)
 - Cross-Style audit caught a subtle remaining ambiguity: Luma source default had a 1.5rem-wide thumb while its config falsely labeled it shapeThumb=circle. Set Luma's style-following default to shapeThumb=pill; result stays 24×16px (no visual regression). All explicit circle selections become width=height; explicit pill widens it 1.5× across ALL eight Styles. Removing the Luma hardcoded width branch makes Shape Policy sole owner. No new knob token or shadow exception. Updated source test for preserved Luma default semantics.
 - Revised exact-HEAD GitHub Actions pending; previous ad7d3dde checks no longer latest after this commit. Owner Mist/Slider signoff and ZIP pending. PR Draft; main untouched.

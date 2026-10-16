@@ -342,6 +342,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
+  assert.match(packager,/playground_file = work \/ 'docs\/theme-playground\.html'/,'local package must also annotate canonical Preview04');
+  assert.match(packager,/href="create\/offline-qa-changes\.css"/,'Preview04 uses docs/ relative QA stylesheet');
+  assert.match(packager,/src="create\/offline-qa-changes\.mjs"/,'Preview04 uses docs/ relative QA module');
+  assert.doesNotMatch(fs.readFileSync(path.join(root,'docs/theme-playground.html'),'utf8'),/offline-qa-changes/,'published Preview04 must not load offline annotations');
   assert.match(packager,/31 张 Preview 02 卡片已经用户人工验收通过/,'offline bundle must reflect Stage4 owner acceptance');
   assert.doesNotMatch(packager,/尚待人工验收/,'do not ship stale pending Stage4 copy after owner acceptance');
   for(const page of ['index.html','preview-01.html','preview-02.html','preview-03.html'])
