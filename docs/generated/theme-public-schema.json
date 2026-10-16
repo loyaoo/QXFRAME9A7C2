@@ -684,25 +684,25 @@
       "name": "--qxframe9a7c2-theme-dialog-padding-x",
       "kind": "length",
       "mode": "root",
-      "defaultRoot": "1.25rem"
+      "defaultRoot": "1rem"
     },
     {
       "name": "--qxframe9a7c2-theme-dialog-padding-y",
       "kind": "length",
       "mode": "root",
-      "defaultRoot": "1rem"
+      "defaultRoot": "0.75rem"
     },
     {
       "name": "--qxframe9a7c2-theme-dialog-body-padding-y",
       "kind": "length",
       "mode": "root",
-      "defaultRoot": "1.25rem"
+      "defaultRoot": "0.75rem"
     },
     {
       "name": "--qxframe9a7c2-theme-dialog-divider-width",
       "kind": "length",
       "mode": "root",
-      "defaultRoot": "1px"
+      "defaultRoot": "0px"
     },
     {
       "name": "--qxframe9a7c2-theme-card-footer-peer-flex",
@@ -1212,7 +1212,7 @@
       "name": "--qxframe9a7c2-theme-shadow-popup",
       "kind": "shadow",
       "mode": "root",
-      "defaultRoot": "0 0.25rem 0.375rem -0.0625rem oklch(0 0 0 / 0.1), 0 0.125rem 0.25rem -0.125rem oklch(0 0 0 / 0.1)"
+      "defaultRoot": "none"
     },
     {
       "name": "--qxframe9a7c2-theme-shadow-dialog",
@@ -1242,7 +1242,7 @@
       "name": "--qxframe9a7c2-theme-dialog-mask-blur",
       "kind": "length",
       "mode": "root",
-      "defaultRoot": "0"
+      "defaultRoot": "0rem"
     },
     {
       "name": "--qxframe9a7c2-theme-focus-width",

@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 GENERATED-DEFAULT-THEME-ALIGNMENT-001 (CI pending)
+- QXFRAME #38866044388 passed canonical public Schema alignment, but `verify:theme-default` rejected stale generated `src/styles/main/theme.css`.
+- Reconciled Nova default compilation values from the new authoritative compiler: dialog padding x=1rem, y=.75rem, body=.75rem, divider-width=0px (Nova sections=muted), shadow-popup=none for surface none, dialog-mask-blur=0rem independent of Menu. Updated the mirrored `theme-public-schema.json` root values for those six entries; no other dimensions or color tokens modified.
+- The **same** exact-match `build-theme.mjs --check` and strict Schema/default Theme equivalence gates remain enabled. Next dual CI; then browser cross-month+overlay profiling, Actions Windows ZIP. PR Draft/main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 PUBLIC-SCHEMA-DIALOG-MIRROR-001 (CI pending)
 - QXFRAME #38865662250 passed Theme default Token check but failed `verify-create-app.mjs` canonical `theme-public-schema.json` mirror: four new registered Dialog geometry tokens absent. Synchronized exactly four existing names/defaults with live `tokens.js` and default `theme.css`; tokenCount 216→220, colorCount/geometryInputs unchanged.
 - Did not loosen schema equal-list/default-value gate or invent a second registry. Prior Calendar visible-month clips, seven-day week endpoints, Dialog section/soft shadow roles, separate Blur, real Chromium performance diagnostic retained.
