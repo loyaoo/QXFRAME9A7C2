@@ -63,6 +63,13 @@ check('Theme controls shared list surface padding; JS inset paths are absent',()
  assert.doesNotMatch(select,/qxframe9a7c2-list-frame is-inset/,'Select does not pin an inset mode');
  assert.doesNotMatch(list,/classList\.toggle\('is-inset'/,'List does not pin an inset mode');
 });
+check('Stage5 gallery lazy mounts defer heavy demo work outside scroll observer frames',()=>{
+ const playground=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ assert.ok(playground.includes('function enqueueMount(rec)'), 'gallery queues visible demo mounts instead of synchronous fanout');
+ assert.ok(playground.includes("requestIdleCallback(run,{timeout:250})"),'Chromium idle scheduling preserves animation frames');
+ assert.ok(playground.includes('if(!record.mounted&&record.card.isConnected)mountRecord(record)'), 'each idle slot mounts one live demo');
+ assert.doesNotMatch(playground,/if\(entry\.isIntersecting\)\{var rec=[^}]+mountRecord\(rec\)/,'no eager synchronous mount inside IntersectionObserver');
+});
 check('Stage5 screenshot defects map to canonical DatePicker, Image and visible theme demos',()=>{
  const dp=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
  const image=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');

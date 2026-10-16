@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 GALLERY-LAZY-MOUNT-PERF-001 (final CI pending)
+- The user's 45-second recording visibly scrolls through the canonical theme playground near Modal/Drawer/Loading. Existing `IntersectionObserver` eagerly mounted all intersecting demo components in one callback, potentially monopolizing the UI thread while overlay transform/opacity transitions run.
+- The one existing playground runtime now queues visible records with requestIdleCallback(timeout 250ms) (rAF fallback), processing one real Demo per callback, with 400px prefetch margin instead of 600px. Empty queues stop; pagehide discards remaining work. No framework new Controller and no duplicate registration.
+- Static gate prevents eager IO fanout regression. Earlier shared Theme Tags variants, root scrollbar stability, overlay compositor motion and Phase E center/origin compatibility fixes retained.
+- The latest exact-HEAD QXFRAME/CSS Schema are required again. No promise of a measured 60fps result; validate against owner device/video and official artifact. PR #267 remains Draft, main not modified.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-THEME-PRIVATE-VARIANT-OWNER-001 (CI pending)
 - QXFRAME #38847141357 failed strict CSS Theme Token ownership: direct declarations of five public `--qxframe9a7c2-tag-input-*` names inside component variant selectors. This is a real schema violation introduced by last batch; **not** a CI mistake.
 - Corrected Tags outlined/solid mapping to private `--_qxframe9a7c2-tags-variant-input-{bg,border,text}` values consumed as fallbacks by the existing input Theme token resolution. Public Theme names remain inputs only and only the Theme layer can declare them.
