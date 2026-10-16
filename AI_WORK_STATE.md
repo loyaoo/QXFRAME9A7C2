@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-INSET-POLICY-001 (pending CI)
+- Corrected ListFrame→Item row radius consumer precedence: private `--_qxframe9a7c2-item-radius` from structural all/block/none must override public item radius only when framed; unframed Item still reads its public fallback.
+- Browser gate now sets a conflicting explicit 1.5rem public radius on the real open popup and demands block/none rows + submenu stay 0px. No extra painter and no relaxed tests. The Screenshot source owner fix remains.
+- Next exact HEAD green QXFRAME and CSS Schema, then Windows official dist+docs ZIP; PR Draft and main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 DROPDOWN-ROW-RADIUS-OWNER-001 (CI pending)
 - Screenshot's gray item hover left/right pill-gaps remained even with `inset:block`; the static `.qxframe9a7c2-item` consumed only a public radius token and missed the existing ListFrame `--_qxframe9a7c2-item-radius:0px`. Fixed only the static Item radius consumption fallback to honor the frame private mode token.
 - Strict real Chromium Dropdown inset all/block/none gate now checks actual ItemCollection row `borderTopLeftRadius`, including nested submenu. No duplicated ListFrame painter or CSS override. Prior Alert/Kbd public demos and explicit Image trajectory test retained.

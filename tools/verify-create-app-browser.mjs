@@ -3223,6 +3223,7 @@ try {
         await Promise.resolve(inst.open('test-inset'));
         await settle();
         const panel=inst.getPopupElement();
+        panel.style.setProperty('--qxframe9a7c2-item-radius','1.5rem'); // explicit user radius must not defeat block/flush geometry
         const block=measure(panel);
         inst.updateOptions({inset:'all'});await settle();const all=measure(panel);
         inst.updateOptions({inset:'none'});await settle();const none=measure(panel);
