@@ -87,6 +87,13 @@ check('Stage5 screenshot defects map to canonical DatePicker, Image and visible 
  for(const label of ['Alert：语义 × 外观 × 阴影','Alert 叠加外观','Kbd 命令键组合','周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'])assert.ok(demo.includes(label),'public canonical demo '+label);
  assert.ok(theme.includes('selectedLatestSpecs(rec,specs)'),'new component variants are visible without expanding all');
 });
+check('Stage5 Tags input and Tag share one radius owner across all Theme shapes',()=>{
+ const tag=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
+ const radius='var(--qxframe9a7c2-tag-radius,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius)))';
+ assert.equal(tag.split('border-radius:'+radius).length-1,4,'Tag surface, Add focus shell, editable input and edit-state input all share Tag/compact/control fallback');
+ assert.doesNotMatch(recipe,/\\.qxframe9a7c2-tag,\\.qxframe9a7c2-badge/,'visual recipe must not override canonical Tag radius owner');
+});
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
   const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];
