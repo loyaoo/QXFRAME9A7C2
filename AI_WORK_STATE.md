@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-EXACT-BYTES-001 (CI pending)
+- Exact-head QXFRAME #38929676186 reached strict new compiled CSS parity gate and caught a single-byte difference (new theme.css lacked the generator's final newline after .dark closing brace). The 220 Theme token values and ordering were already identical. Restored the generated LF terminator in canonical src/styles/main/theme.css; strict byte-for-byte verification and tools/build-theme.mjs --check remain enforced (no gate changed).
+- Next latest-HEAD double-green Actions, exact-tree dist+docs offline Windows ZIP. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 DEFAULT-THEME-EXACT-COMPILER-001 (CI pending)
 - CSS Schema #38928651021 failed in tools/verify-theme-visual-v2.mjs:43 because it hardcoded framework default Nova+Neutral. Owner intentionally changed only embedded framework CSS default. The verifier now constructs the frozen explicit Vega+Mist+Blue embedded config and asserts exact whole :root+.dark output equality, with Create editor Reset still Nova+Neutral. Eight Style compilation checks and original formula/mutation/Chromium gates unchanged.
 - Global CSS Theme changes remain exactly 220 root tokens, no second CSS override. Prior localized offline QA groups cleared; PR #267 Draft, main unchanged. New exact-head QXFRAME/CSS Schema + offline Actions ZIP pending.
