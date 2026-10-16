@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DIALOG-DEFAULT-REGISTRY-SYNC-001 (CI pending)
+- Earlier QXFRAME #38864685900 failed strictly at `verify-theme-tokens`: newly registered and compiled Dialog spacing/divider tokens had zero declarations in default `src/styles/main/theme.css`. This is a default-Theme authority bug, not a CI tolerance issue.
+- Added exactly one default root declaration each for dialog-padding-x/y, dialog-body-padding-y, divider-width, matching the existing default Modal geometry. createApp compiler drives the same four tokens across Styles. Full JS and CSS schema gates remain strict.
+- Branch PR #267 Draft/main unchanged. Next both latest-HEAD CI, fix actual remaining browser/test failures, generate official offline dist/docs ZIP after both green. No performance signoff without a trace.
+
 ## CURRENT — 2026-10-16 Stage5 CROSSMONTH-DIALOG-ACCEPTANCE-001 (CI pending)
 - Baseline last full green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`; current source commits `b34de0c` and `be7a26d` update Calendar/DatePicker and Modal/Drawer/Theme compiler.
 - Added strict static + Chromium regression: July27–Aug2 selected week (seven days with opaque endpoints), Sept–Oct two-panel clipping using visual-only month edge flags; Theme section lines/partition, menu/dialog blur independence, five distinct dialog shadow grades, none = truly none for all roles.
