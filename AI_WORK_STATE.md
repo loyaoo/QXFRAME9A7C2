@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 OVERLAY-COMPOSITOR-001 (latest CI pending)
+- Source-level performance change: Modal now defaults to centered zoom rather than expensive pointer-origin layout remeasurement. Explicit `animation:'zoom-origin'` remains supported; removed the style transition/transform override-read-restore sequence and kept at most one ordinary rect read for explicit origin requests. Both documented default-option sources updated together. Zoom transform shrank from .86 to .94.
+- Modal/Drawer masks retain theme-configured optional blur but eliminate full-screen brightness backdrop processing: overlay background already tints. Active surfaces use transform/opacity compositing; Image Preview center-zoom copy uses composited transform/opacity. Drawer panel motion remains the existing single motion descriptor.
+- Prior Tags Theme border/radius and ScrollLock stable gutter fix committed. Must verify independent Chromium open/leave, scroll geometry, visual close behavior; no fps claim until measured on user's system.
+- Latest HEAD pending QXFRAME/CSS Schema, then successful Actions Windows complete dist+docs artifact and owner visual acceptance; PR Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-TOKEN-SCROLL-GUTTER-001 (CI pending)
 - Verified PR #267 Draft against main at head 7d4c8a0324b6d7d8faa90f784aee4ed54c596cd6; prior head QXFRAME and CSS Schema green; this batch needs its own CI.
 - Replaced hardcoded Tag/Input editor 1px border and editor reset border:1px transparent, radius Control-only and shadow:none. Canonical Theme-derived control border-width, Tag radius and input paint now own edit and idle geometry. Pointer/keyboard focus rules remain.

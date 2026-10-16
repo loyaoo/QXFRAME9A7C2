@@ -56,7 +56,7 @@ function createModalController(instance, options) {
     title:'提示', content:'', closable:true, showMask:true, closeOnMask:true,
     closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true,
     restoreFocus:true, forceRender:false, autoOpen:true, placement:'center',
-    animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false
+    animation:'zoom', maskAnimation:'fade', fullscreen:false, center:false
   }, options || {}));
   var recentPointer = null;
 
@@ -89,24 +89,18 @@ function createModalController(instance, options) {
     }
     return null;
   }
-  function measureSurfaceRect(ctx) {
-    var style = ctx.surface.style;
-    var transform = style.getPropertyValue('transform');
-    var transformPriority = style.getPropertyPriority('transform');
-    var transition = style.getPropertyValue('transition');
-    var transitionPriority = style.getPropertyPriority('transition');
-    style.setProperty('transition', 'none', 'important');
-    style.setProperty('transform', 'none', 'important');
-    var rect = ctx.surface.getBoundingClientRect();
-    if (transform) style.setProperty('transform', transform, transformPriority); else style.removeProperty('transform');
-    if (transition) style.setProperty('transition', transition, transitionPriority); else style.removeProperty('transition');
-    return rect;
-  }
   function applyMotion(ctx, showing, event, reason) {
     if (!showing) return;
+    // Center zoom is compositor-only and never measures a transitioning
+    // dialog. Origin-specific motion remains available by explicit opt-in.
+    if (ctx.options().animation !== 'zoom-origin') {
+      ctx.surface.style.transformOrigin = '50% 50%';
+      return;
+    }
     var point = originPoint(ctx, event, reason);
-    var rect = measureSurfaceRect(ctx);
-    ctx.surface.style.transformOrigin = point && rect.width > 0 && rect.height > 0
+    if (!point) { ctx.surface.style.transformOrigin = '50% 50%'; return; }
+    var rect = ctx.surface.getBoundingClientRect();
+    ctx.surface.style.transformOrigin = rect.width > 0 && rect.height > 0
       ? Math.round(point.x - rect.left) + 'px ' + Math.round(point.y - rect.top) + 'px'
       : '50% 50%';
   }
@@ -117,9 +111,9 @@ function createModalController(instance, options) {
     if (name !== 'zoom-origin' && name !== 'zoom' && name !== 'zoomIn') return MotionPresets.resolve(name);
     return {
       type:'transition',
-      appear:{ from:{style:{transform:'scale(.86)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      enter:{ from:{style:{transform:'scale(.86)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:'scale(.86)',opacity:'0'}} }
+      appear:{ from:{style:{transform:'scale(.94)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      enter:{ from:{style:{transform:'scale(.94)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:'scale(.94)',opacity:'0'}} }
     };
   }
 
@@ -205,7 +199,7 @@ export class Modal extends OverlayComponent {
             motion:'MotionController', overlay:'OverlayController', feedback:'FeedbackController'
         })
     });
-    static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false });
+    static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom', maskAnimation:'fade', fullscreen:false, center:false });
     static semanticElements = Object.freeze(['root','mask','wrapper','dialog','header','title','body','footer','close']);
     static defaultClassSlot = 'dialog';
     static defaultStyleSlot = 'dialog';
