@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-TOGGLE-STATIC-GATE-001 (CI pending)
+- Exact-head QXFRAME #38884717800 reaches createApp static gates; new strict no-collapse check caught a stale unused selector for the removed expand button. Deleted the dead selector rather than loosening the assertion; dynamic Preview04 always mounts all canonical demos.
+- CSS schema color problem previously corrected with palette-black Theme token; no new Theme token or ratchet exception.
+- PR #267 Draft, main unchanged; next exact-head CI/Chromium and dist+docs artifact verification pending.
+
 ## CURRENT — 2026-10-16 Stage5 ALERT-SHADOW-TOKEN-GATE-001 (CI pending)
 - Full QXFRAME Actions #38884370626 rejected a new hardcoded literal in Alert CSS: theme-tokens hardcoded-color components/alert 0→1. This is a genuine authoritative Theme gate failure, not a test false positive.
 - The source now derives Alert shadow ink from the existing registered --qxframe9a7c2-theme-palette-black with color-mix alpha 15%; preserves black/dark ink in either mode without a new Theme color token or gate baseline expansion. Updated strict source gate and browser non-white Alert test accordingly; no assertion removed or gate relaxed.
