@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 TAGS-THEME-PRIVATE-VARIANT-OWNER-001 (CI pending)
+- QXFRAME #38847141357 failed strict CSS Theme Token ownership: direct declarations of five public `--qxframe9a7c2-tag-input-*` names inside component variant selectors. This is a real schema violation introduced by last batch; **not** a CI mistake.
+- Corrected Tags outlined/solid mapping to private `--_qxframe9a7c2-tags-variant-input-{bg,border,text}` values consumed as fallbacks by the existing input Theme token resolution. Public Theme names remain inputs only and only the Theme layer can declare them.
+- Static gate now requires private slot ownership and refuses public Tag appearance declarations in variant selectors. No new public Theme token, controller, or painter. Pending exact-HEAD two Actions and Chromium.
+- PR #267 Draft/main unchanged; owner visual signoff not received.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-THREE-VARIANT-EDITOR-001 (latest CI pending)
 - Standalone Tags input now mirrors filled/outlined/solid Tag appearance: base input consumes public/tag Theme slots; outlined uses transparent bg/semantic border, solid uses semantic text/inverse foreground, default filled stays subtle. Existing Tag renderer/controller unmodified, no duplicate input JS parameter.
 - Static gate added to stop outlined/solid editor regression. Earlier ScrollLock and compositor-overlay motion patches preserved; Chromium Tags edit state still checked, full CI pending at new HEAD.

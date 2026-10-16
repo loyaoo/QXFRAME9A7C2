@@ -2301,8 +2301,9 @@ check('Stage5 static Outline Badge alias and inherited List radius',()=>{
 check('Stage5 Tags variant editor uses the same Theme appearance contract as Tag',()=>{
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
  for(const cls of ['is-variant-outlined','is-variant-solid'])
-   assert.ok(tags.includes('.qxframe9a7c2-tags.'+cls+'{--qxframe9a7c2-tag-input-bg:'),'Tag editor variant '+cls+' must have its Theme-linked field source');
+   assert.ok(tags.includes('.qxframe9a7c2-tags.'+cls+'{--_qxframe9a7c2-tags-variant-input-bg:'),'Tag editor variant '+cls+' must have its private Theme-derived field source');
  assert.ok(tags.includes('--_qxframe9a7c2-tags-input-text:var(--qxframe9a7c2-tag-input-text,'),'editor foreground resolves the appearance token');
+ assert.doesNotMatch(tags,/\.qxframe9a7c2-tags\.is-variant-(?:solid|outlined)\{--qxframe9a7c2-/,'component variants may not redeclare public Theme token names');
 });
 check('Stage5 Tags edit, ScrollLock and Overlay motion share Theme and compositor owners',()=>{
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
