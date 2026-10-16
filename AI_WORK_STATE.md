@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 VISUAL-DEMO-EXPOSURE-001 (final CI pending)
+- Registered live DatePicker single/range week and DateTime separator demos in the same canonical supplement system.
+- Theme Playground previously showed first demo only, hiding registered Alert semantic/appearance matrix and Calendar/Dropdown/Tags/Image/Tabler variants; now exposes selected recent examples by default, retaining "expand all" for less frequently used cases.
+- Basic Dropdown playground menu uses public block inset so hovering an item fills both inline edges; framework's other all/none presets remain available.
+- Existing DatePicker/Tags/Image source fixes are not yet fully verified. Next: new Chromium/static gates, same-HEAD QXFRAME+CSS Schema checks and Windows offline visual QA package. PR #267 stays Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 IMAGE-CENTER-ZOOM-001 (CI pending)
 - User disallowed source-position trajectory due repeat flashing. Image now defaults to independent centered preview DOM (already exists) and a centered scale+fade Transition. Source image stays fully paintable for default preview; legacy trajectory remains explicit opt-in.
 - Navigation arrow was dark because shared button rule set nav background transparent/ink inherit; restored preview dark surface and white foreground directly on nav, no second Theme token. Source handoff executes only if trajectory is explicitly true.
