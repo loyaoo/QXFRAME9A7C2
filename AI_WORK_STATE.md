@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-16 Stage5 DIALOG-THEME-PARTITION-SHADOW-001 (CI pending)
+- Baseline previous commit `b34de0cafd60c0c3b1b80d2f75fd9cbe043dea58` first fixed Calendar cross-month visible clips and week endpoints; no main/PR merge.
+- In createApp compiler the surface shadow tiers now move monotonically: none emits none for all surfaces; Popup tiers xs/sm/md/lg, Dialog has separately tuned low-alpha soft two-layer elevation in four steps instead of medium jumping to xl and heavy to 25% black 2xl.
+- Dialog mask blur is independent of translucent menu: default 0 except gentle 4px style presets for Maia/Luma. Explicit maskBlur / CSS Theme override still possible.
+- Added four registered Theme geometry tokens dialog-padding-x/y, dialog-body-padding-y, dialog-divider-width from existing padding/sections axes; Modal/Drawer consume Card's shared muted-section and border roles. None removes borders, divider uses real 1px, muted shows grouped section background without extra divider. Header/body/footer horizontal text edges align; viewport gap remains separate.
+- Next add strict Chromium test for July27–Aug2 week, Sept–Oct clipped date range, 8 Styles/sections/shadow mapping; CI; official exact HEAD offline ZIP; performance frame trace still required before claiming stutter eliminated. PR #267 Draft and main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 CALENDAR-MONTH-CLIP-001 (CI pending)
 - Resumed exact previous green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`, PR #267 Draft, main unchanged.
 - Corrected DatePicker outside-date projection for `unit:'week'`: maintain full week range across displayed adjacent-month dates; ordinary date range still clips at month panel.

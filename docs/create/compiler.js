@@ -99,15 +99,21 @@ const SHADOWS = {
   md: '0 0.25rem 0.375rem -0.0625rem oklch(0 0 0 / 0.1), 0 0.125rem 0.25rem -0.125rem oklch(0 0 0 / 0.1)',
   lg: '0 0.625rem 0.9375rem -0.1875rem oklch(0 0 0 / 0.1), 0 0.25rem 0.375rem -0.25rem oklch(0 0 0 / 0.1)',
   xl: '0 1.25rem 1.5625rem -0.3125rem oklch(0 0 0 / 0.1), 0 0.5rem 0.625rem -0.375rem oklch(0 0 0 / 0.1)',
-  '2xl': '0 1.5625rem 3.125rem -0.75rem oklch(0 0 0 / 0.25)'
+  '2xl': '0 1.5625rem 3.125rem -0.75rem oklch(0 0 0 / 0.25)',
+  // Dialogs already sit on an overlay; elevation increases by spread first,
+  // not by jumping to a 25% black 2xl halo.
+  'dialog-light': '0 0.25rem 0.875rem -0.375rem oklch(0 0 0 / 0.07), 0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.05)',
+  'dialog-medium': '0 0.5rem 1.25rem -0.5rem oklch(0 0 0 / 0.09), 0 0.125rem 0.375rem -0.125rem oklch(0 0 0 / 0.05)',
+  'dialog-strong': '0 0.75rem 1.75rem -0.625rem oklch(0 0 0 / 0.11), 0 0.1875rem 0.5rem -0.125rem oklch(0 0 0 / 0.06)',
+  'dialog-heavy': '0 1rem 2.5rem -0.75rem oklch(0 0 0 / 0.14), 0 0.25rem 0.75rem -0.1875rem oklch(0 0 0 / 0.07)'
 };
 // Shadow axis: low / mid / high tiers move together (card, popup, dialog).
 const SHADOW_TIERS = {
-  none: ['none', 'md', 'none'],
-  light: ['xs', 'md', 'none'],
-  medium: ['sm', 'lg', 'xl'],
-  strong: ['md', 'lg', 'xl'],
-  heavy: ['lg', 'xl', '2xl']
+  none: ['none', 'none', 'none'],
+  light: ['xs', 'xs', 'dialog-light'],
+  medium: ['sm', 'sm', 'dialog-medium'],
+  strong: ['md', 'md', 'dialog-strong'],
+  heavy: ['lg', 'lg', 'dialog-heavy']
 };
 
 // Density: md height / inline padding / gap / icon (rem).
@@ -281,7 +287,9 @@ export function themeTokens(resolved) {
     target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover;
   }
   root['menu-blur'] = translucent ? '1.5rem' : '0';
-  root['dialog-mask-blur'] = translucent ? '0.375rem' : '0';
+  // Dialog blur is a surface Style preference, never controlled by menu color.
+  // Keep the default cheap; explicit Theme overrides can opt in independently.
+  root['dialog-mask-blur'] = ['maia','luma'].includes(style) ? '0.25rem' : '0rem';
 
   // Surface edge + partition.
   const [edgeLight, edgeDark] = EDGE[ext.edge];
@@ -399,6 +407,12 @@ export function themeTokens(resolved) {
 
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
+  // Container padding and section separators share the Card's Theme axes.
+  // Modal / Drawer map them to separate structural slots, not viewport gap.
+  root['dialog-padding-x'] = rem(PADDING[ext.padding]);
+  root['dialog-padding-y'] = rem(Math.max(0.75, PADDING[ext.padding] - 0.25));
+  root['dialog-body-padding-y'] = rem(Math.max(0.5, PADDING[ext.padding] - (ext.sections === 'none' ? 0.5 : 0.25)));
+  root['dialog-divider-width'] = ext.sections === 'divider' ? '1px' : '0px';
   // Source peer actions: editorial Sera uses CardFooter Buttons with flex:1 1 0% + min-content clamping;
   // other Styles retain each Button's intrinsic size (one shared Theme slot).
   root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto';
