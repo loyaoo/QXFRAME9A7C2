@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 DEFAULT-POINTER-OUTLINE-FOCUS-001 (CI pending)
+- Exact-head QXFRAME CI #38930046158 failed native pointer Focus browser test in tools/verify-final-focus-lifecycle.html. Its previously valid expectation was "pointer mode has no outline", but the owner-provided new CSS default explicitly sets pointerFocus='outline' and pointerFocusColor='theme'. Updated only two visibility assertions to require real >=2px pointer outline, including after typing, with FocusOrigin preserved; keyboard Tab still requires its own >=2px outline. All lifecycle, controlled value, upload, iframe and runtime gates stay untouched.
+- New Actions QXFRAME + CSS Schema and exact-tree full Windows ZIP pending, PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-EXACT-BYTES-001 (CI pending)
 - Exact-head QXFRAME #38929676186 reached strict new compiled CSS parity gate and caught a single-byte difference (new theme.css lacked the generator's final newline after .dark closing brace). The 220 Theme token values and ordering were already identical. Restored the generated LF terminator in canonical src/styles/main/theme.css; strict byte-for-byte verification and tools/build-theme.mjs --check remain enforced (no gate changed).
 - Next latest-HEAD double-green Actions, exact-tree dist+docs offline Windows ZIP. PR #267 Draft, main untouched.
