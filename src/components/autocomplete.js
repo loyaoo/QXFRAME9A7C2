@@ -118,7 +118,7 @@ var selectionRangeScheduler = null;
         if (portalContainer && typeof portalContainer === 'string') portalContainer = DOM.resolveElement(portalContainer, doc);
         if (!portalContainer) portalContainer = doc.body;
         if (!portalContainer || !portalContainer.appendChild) throw new TypeError('[QXFRAME9A7C2] Autocomplete portalContainer must be an Element.');
-        panel.className = 'qxframe9a7c2-autocomplete-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true; optionHost.className = 'qxframe9a7c2-autocomplete-option-host'; panel.appendChild(optionHost); var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
+        panel.className = 'qxframe9a7c2-autocomplete-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; panel.hidden = true; optionHost.className = 'qxframe9a7c2-autocomplete-option-host'; panel.appendChild(optionHost); var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
     
         var initialValue = opts.value !== undefined ? opts.value : opts.defaultValue;
         var valueState = ValueController.create({

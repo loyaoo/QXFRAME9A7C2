@@ -84,7 +84,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         controlElement=controlHost.controlElement; valuesNode=controlHost.valuesNode; input=controlHost.input; clearButton=controlHost.clearButton; arrow=controlHost.toggle;
         prefix=controlHost.prefix; suffix=controlHost.suffix; valueTarget=controlHost.valueTarget;
         if (!headlessMode && !projectionMode && !host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
-        var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
+        var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
         var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });

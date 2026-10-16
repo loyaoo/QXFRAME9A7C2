@@ -13,7 +13,7 @@
 .qxframe9a7c2-menu-root-scroll{width:100%;min-width:0;min-height:0;max-height:100%;flex:1 1 auto}
 .qxframe9a7c2-menu-root-scroll.qxframe9a7c2-scroll{height:auto;max-height:100%}
 .qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level.qxframe9a7c2-scroll-viewport{height:auto;max-height:100%;min-height:0}
-.qxframe9a7c2-menu-level{box-sizing:border-box;display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);margin:0;padding:var(--_qxframe9a7c2-fixed-space-1);list-style:none}
+.qxframe9a7c2-menu-level{box-sizing:border-box;display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);margin:0;padding:var(--_qxframe9a7c2-menu-level-padding,var(--_qxframe9a7c2-fixed-space-1));list-style:none}
 .qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level{flex-direction:row;align-items:center;min-width:0;padding:0;border-bottom:1px solid var(--_qxframe9a7c2-semantic-border);overflow:hidden;white-space:nowrap}
 .qxframe9a7c2-menu-item-wrap{box-sizing:border-box;display:flex;min-width:0;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);margin:0;padding:0;list-style:none}
 .qxframe9a7c2-menu.is-horizontal>.qxframe9a7c2-menu-root-scroll>.qxframe9a7c2-menu-root-level>.qxframe9a7c2-menu-item-wrap{flex:0 0 auto}
@@ -65,7 +65,7 @@
 .qxframe9a7c2-menu-inline-transition-enter-active,.qxframe9a7c2-menu-inline-transition-leave-active{overflow:hidden;transition:height var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 
 /* Popup hierarchy: Trigger remains the one popup interaction/positioning owner. */
-.qxframe9a7c2-menu-submenu-panel{--_qxframe9a7c2-menu-item-height:var(--qxframe9a7c2-menu-item-height,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-menu-item-radius:var(--qxframe9a7c2-menu-item-radius,var(--qxframe9a7c2-theme-radius-item));--_qxframe9a7c2-menu-popup-radius:var(--qxframe9a7c2-menu-popup-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-popup-surface-radius:var(--_qxframe9a7c2-menu-popup-radius);position:absolute;min-width:12rem;max-width:min(calc(16rem + 6rem),calc(100% - 2rem));transform-origin:top left;max-height:min(calc(16rem + 10rem),calc(100% - 2rem));overflow:hidden;overscroll-behavior:contain}
+.qxframe9a7c2-menu-submenu-panel{--_qxframe9a7c2-menu-level-padding:0rem;--_qxframe9a7c2-menu-item-height:var(--qxframe9a7c2-menu-item-height,var(--_qxframe9a7c2-control-height));--_qxframe9a7c2-menu-item-radius:min(var(--qxframe9a7c2-menu-item-radius,var(--qxframe9a7c2-theme-radius-item)),calc(var(--qxframe9a7c2-theme-list-padding-x,0.375rem) * 100));--_qxframe9a7c2-menu-popup-radius:var(--qxframe9a7c2-menu-popup-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-popup-surface-radius:var(--_qxframe9a7c2-menu-popup-radius);position:absolute;min-width:12rem;max-width:min(calc(16rem + 6rem),calc(100% - 2rem));transform-origin:top left;max-height:min(calc(16rem + 10rem),calc(100% - 2rem));overflow:hidden;overscroll-behavior:contain}
 .qxframe9a7c2-menu-submenu-panel[hidden]{display:none}
 .qxframe9a7c2-menu-submenu-scroll.qxframe9a7c2-scroll{height:auto;max-height:min(calc(16rem + 10rem),calc(100% - 2rem))}
 .qxframe9a7c2-menu-submenu-scroll>.qxframe9a7c2-menu-popup-level.qxframe9a7c2-scroll-viewport{height:auto;max-height:min(calc(16rem + 10rem),calc(100% - 2rem))}

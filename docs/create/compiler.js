@@ -392,6 +392,11 @@ export function themeTokens(resolved) {
   root['control-line-height'] = rem(editorial ? Math.min(controlLine, 1) : controlLine);
   root['border-width'] = '1px';
 
+  // One Menu spacing axis; every list-style popup consumes the same x/y pair.
+  // Browser/Component JS never chooses inset. Explicit Style override wins here.
+  root['list-padding-x'] = ext.menuInset === 'block' ? '0rem' : '0.375rem';
+  root['list-padding-y'] = '0.375rem';
+
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
   // Source peer actions: editorial Sera uses CardFooter Buttons with flex:1 1 0% + min-content clamping;

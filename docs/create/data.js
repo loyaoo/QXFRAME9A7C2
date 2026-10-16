@@ -92,6 +92,9 @@ export const EXT_AXES = [
     { value: 'dense', label: '高密 28' }, { value: 'compact', label: '紧凑 32' }, { value: 'standard', label: '标准 36' },
     { value: 'loose', label: '宽松 40' }, { value: 'touch', label: '超宽松 44', qx: true }],
     defaults: S('standard', 'compact', 'standard', 'compact', 'dense', 'standard', 'loose', 'compact') },
+  { key: 'menuInset', param: 'menu-inset', label: '菜单留白方式', group: 'surface', options: [
+    { value: 'all', label: '四周留白' }, { value: 'block', label: '仅上下留白' }],
+    defaults: S('all','block','all','block','block','all','block','block') },
   { key: 'padding', param: 'padding', label: '容器留白', group: 'size', options: [
     { value: 'p12', label: '极紧凑 12', qx: true }, { value: 'p16', label: '紧凑 16' }, { value: 'p20', label: '适中 20' },
     { value: 'p24', label: '标准 24' }, { value: 'p28', label: '舒展 28', qx: true }, { value: 'p32', label: '宽松 32' }],

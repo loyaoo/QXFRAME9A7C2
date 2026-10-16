@@ -128,6 +128,8 @@ export const THEME_TOKENS = [
   L('border-width', 'Control border width'),
 
   // Containers.
+  L('list-padding-x', 'Shared popup/ListFrame horizontal surface padding; zero means full-width rows'),
+  L('list-padding-y', 'Shared popup/ListFrame vertical surface padding'),
   L('card-padding', 'Card padding (container padding axis)'),
   L('card-footer-peer-flex', 'Card Footer opt-in peer action sizing: Sera equal flex basis with min-content clamp / other intrinsic', 'keyword'),
   L('empty-inset', 'Empty density anchor; also derives media/title geometry'),

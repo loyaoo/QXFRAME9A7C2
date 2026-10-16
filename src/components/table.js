@@ -1821,7 +1821,7 @@ function setupTable(instance) {
     filterColumnKey = column.key;
     filterDraftValues = filterValuesFor(column).slice();
     filterPopup = doc.createElement('div');
-    filterPopup.className = 'qxframe9a7c2-table-filter-popup qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';
+    filterPopup.className = 'qxframe9a7c2-table-filter-popup qxframe9a7c2-popup-surface qxframe9a7c2-list-frame';
     filterPopup.hidden = true;
     filterPopupFrame = PopupFrame.create({ panel:filterPopup, document:doc });
     if (opts.keyboardNavigation && interactionController) {
