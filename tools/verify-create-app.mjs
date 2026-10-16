@@ -92,7 +92,7 @@ check('Stage5 Tags input and Tag share one radius owner across all Theme shapes'
  const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
  const radius='var(--qxframe9a7c2-tag-radius,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius)))';
  assert.equal(tag.split('border-radius:'+radius).length-1,4,'Tag surface, Add focus shell, editable input and edit-state input all share Tag/compact/control fallback');
- assert.doesNotMatch(recipe,/\\.qxframe9a7c2-tag,\\.qxframe9a7c2-badge/,'visual recipe must not override canonical Tag radius owner');
+ assert.ok(!recipe.includes('.qxframe9a7c2-tag,.qxframe9a7c2-badge,.qxframe9a7c2-tabs-tab'),'visual recipe must not override canonical Tag radius owner');
 });
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
