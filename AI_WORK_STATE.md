@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-SEARCH-SLUG-OWNER-001 (CI pending)
+- The expanded-gallery QA now exercises actual input search with canonical slugs, including 'date-picker'. The existing gallery search index had name/CN/description/category/features but omitted slug; the new exact-slug enqueue code alone cannot help if filtering first hides slug-matched cards. Real functional search gap established from source.
+- Added meta.slug to the one canonical dataset.search index, preserved normal name/CN/features, added strict source assertion. No new search system or eager mounting. Both CI and Windows artifact need verification on exact new HEAD; PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 CANONICAL-GALLERY-EXPANDED-LOCATOR-QA-001 (CI pending)
 - With Preview04 expanded canonicals, old standalone docs/theme-playground browser gate still did one-off smooth scroll to Alert, DatePicker and Form; other lazy-mounted expanding rows can shift targets offscreen before observer scheduling. This is the same demonstrated race as the Preview04 test.
 - Proactively refactored the **existing strict** canonical gallery browser test to use actual gallery search for each canonical target and instant scroll, preserving all assertions: Alert semantic variants/12 skins, Week DatePickers and Kbd Form group. Exact-name/slug priority is now owned by the gallery's source mount queue. Tests don't bypass mounting and don't relax count thresholds.
