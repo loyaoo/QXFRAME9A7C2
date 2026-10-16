@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 IMAGE-CHROME-MOTIONCORE-ACTIVE-001 (CI pending)
+- After Modal origin test migration commit 32f56de2, inspected shared MotionCore startFresh/onActive: open media enters on the second animation frame, leave media begins on the first leave frame. Previous ImagePreview root chrome was toggled synchronously in openPreview/closePreview, a full scheduler frame before image transition; uniform duration alone was not synchronized.
+- Move ImagePreview is-chrome-visible/is-chrome-leaving toggles to the existing previewMotion Transition onActive context (enter/leave) so image and positional control motion start at the same active frame; preserve no new timers, both presence owners and last-frame handoff safeguards.
+- This extra source change remains a pending follow-up commit and requires new exact-head Actions/visual signoff. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 MODAL-ORIGIN-E3-TEST-MIGRATION-001 (CI pending)
 - Post-source commit 942f3348, QXFRAME Actions #38875646821 failed in real Chromium phase-E Modal/Drawer verification, at the legacy expectation that Modal uses noncentral CSS transform-origin only for zoom-origin and default zoom ignores triggerTarget.
 - The newly requested behavior intentionally uses a stable 50% 50% transform anchor and preserves pointer-relative translate(X,Y) for BOTH zoom-origin and default zoom. Updated the existing strict Chromium regression to assert nonzero trigger translation and identical saved exit translation, including the default trigger path. No CI check removed or disabled.

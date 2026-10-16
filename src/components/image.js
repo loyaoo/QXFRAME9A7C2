@@ -716,10 +716,8 @@ function setupImage(instance) {
     // showing it here creates the two-image ghost visible in the old close animation.
     // Preview chrome leaves on the same lifecycle clock as mask/trajectory. The root remains
     // mounted until both presence owners complete, so title/toolbar/close never disappear early.
-    if (previewRoot) {
-      previewRoot.classList.add('is-chrome-leaving');
-      previewRoot.classList.remove('is-chrome-visible');
-    }
+    // Chrome leaves when the media trajectory begins (onActive), not one
+    // scheduler frame early; both share the same exact transition clock.
     // The public reason is metadata, not teardown authority. Actual destroy owns its
     // own direct presence/overlay teardown below, so closePreview('destroy') must not
     // be able to impersonate an immediate structural destroy.
@@ -912,6 +910,16 @@ function setupImage(instance) {
       element: previewMotion,
       transition: PREVIEW_TRANSITION,
       visible: false,
+      onActive: function (context) {
+        if (!previewRoot) return;
+        if (context.status === 'enter' && previewOpen) {
+          previewRoot.classList.remove('is-chrome-leaving');
+          previewRoot.classList.add('is-chrome-visible');
+        } else if (context.status === 'leave' && !previewOpen) {
+          previewRoot.classList.add('is-chrome-leaving');
+          previewRoot.classList.remove('is-chrome-visible');
+        }
+      },
       appear: false,
       reducedMotion: function () { return Config.resolve('motion', undefined, root) === false ? true : undefined; },
       onAfterEnter: function (context) {
@@ -970,7 +978,8 @@ function setupImage(instance) {
     previewRoot.classList.remove('is-chrome-visible', 'is-chrome-leaving');
     previewRoot.classList.toggle('is-center-zoom',cfg('trajectory',false)!==true);
     void previewRoot.offsetWidth;
-    previewRoot.classList.add('is-chrome-visible');
+    // MotionCore onActive starts chrome with the image; avoid its old
+    // pre-motion early start even when the portal has already been painted.
     preparePreviewTrajectory();
     // Hide the authored source while the physical preview copy owns the trajectory.
     // This prevents the two-image ghosting visible during open/close handoff.

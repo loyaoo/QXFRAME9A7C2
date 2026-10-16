@@ -22,6 +22,7 @@ check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchron
  assert.match(modal,/animation !== 'zoom' && animation !== 'zoom-origin'/,'default zoom must retain trigger origin');
  assert.match(modal,/--_qxframe9a7c2-modal-motion-x/,'Modal keeps the same entry/exit point');
  assert.match(preview,/is-chrome-leaving/,'preview chrome participates in leave lifecycle');
+ assert.match(preview,/onActive: function \(context\)/,'preview chrome must start and leave on the exact image MotionCore active frame');
  assert.match(imageCSS,/--_qxframe9a7c2-image-preview-chrome-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'chrome leave matches image duration');
  assert.match(imageCSS,/mask\.qxframe9a7c2-motion-fade-leave-active\{transition-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'mask leave matches image duration');
  for(const type of ['modal','drawer']){
