@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 TAG-THEME-BADGE-RADIUS-SINGLE-OWNER-001 (new HEAD both CI pending)
+- After Tag/Compact/Control chain change, exact-head CSS Schema #38850708736 still measured Tag/editor `18px` vs `14px` in real Chromium. Full source ownership inspection located the actual late override: `src/styles/main/theme-visual-v2-style-consumers.css` high specificity `.qxframe9a7c2-tag[class]{border-radius:var(--qxframe9a7c2-theme-radius-badge)}`; input did not consume the Badge Theme mapping.
+- Moved the Badge Theme mapping into the ONE Tag/editor/focus radius fallback chain, `--qxframe9a7c2-tag-radius → --qxframe9a7c2-theme-radius-badge → --_qxframe9a7c2-compact-shape-radius → --_qxframe9a7c2-control-radius` and removed the late Tag-only CSS property. Public user override now wins over Theme Badge, and every Tags part receives identical values. No hardcoded px values.
+- Static gates updated to require that chain and refuse both prior duplicate radius owners; **real Chromium strict equality unchanged**. Prior Menu inset x/y, ScrollLock stable gutter and compositor overlay work frozen.
+- Next both new-HEAD QXFRAME and CSS Schema, official same-tree Windows dist+docs ZIP, CRC + localhost 13 resources, owner visual signoff. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-LEGACY-GATE-ALIGNMENT-001 (both CI pending)
 - Found two obsolete static acceptance assertions in `verify-create-app.mjs`: one still demanded editor Control-only Radius after the verified 18px-vs-4px mismatch, another claimed every standalone Add editor remained transparent despite Theme-filled and solid variants.
 - Updated assertions to require the canonical Tag → Compact Shape → Control radius, and restrict transparent editing to the explicit outlined appearance; pointer/keyboard Focus contract unchanged.
