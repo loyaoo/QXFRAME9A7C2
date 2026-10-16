@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 QA-MARKERS-CURRENT-BATCH-001 (CI pending)
+- Latest QXFRAME #38865310442 advanced past theme-tokens and failed static `verify-create-app.mjs` on `support-triage`: current QA ledger correctly cleared previous Tags/Image batch and marks capacity-calendar, release-planner, danger-dialog, account-drawer, but static gate still expected prior four.
+- Updated strict one-to-one QA Card/region map to exactly the four currently changed Cards, with unchanged checks for correct Card existence, no stale highlights, and exact HEAD placeholder count. No component CSS/JS regression gate modified.
+- Next run both exact HEAD CI; inspect runtime browser regressions (week/date visible clips, dialog visual tokens) and repair proven issues; official Windows bundle only after both green. Performance profiling still outstanding, no stutter success claim. PR Draft and main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 TEST-AFTER-MODEL-IMPORT-001 (CI pending)
 - Source commit `f335164d` fixed default Theme Dialog tokens and allowed CSS Schema token checks. QXFRAME #38865069168 failed `verify-create-app.mjs:129` before browser: new cross-month/dialog test executed before `const model = await import(...)` and `const data = await import(...)` were initialized.
 - Moved the **same strict assertions unchanged** below those canonical model/data imports. No code owners or test tolerances weakened. Previous Calendar month-cap, week, dialog Theme padding, shadow/blurring fixes retained.
