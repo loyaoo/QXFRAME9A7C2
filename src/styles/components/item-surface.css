@@ -61,7 +61,7 @@
   padding-block:var(--qxframe9a7c2-item-padding-block,var(--_qxframe9a7c2-static-item-space));
   padding-inline:var(--qxframe9a7c2-item-padding-inline,calc(var(--_qxframe9a7c2-static-item-space) + .125rem));
   border:1px solid transparent;
-  border-radius:var(--qxframe9a7c2-item-radius,min(var(--qxframe9a7c2-theme-radius-button),1.125rem));
+  border-radius:var(--qxframe9a7c2-item-radius,var(--_qxframe9a7c2-item-radius,min(var(--qxframe9a7c2-theme-radius-button),1.125rem)));
   font-size:var(--qxframe9a7c2-theme-text-size);
 }
 .qxframe9a7c2-item.is-muted{background:color-mix(in oklab,var(--qxframe9a7c2-theme-muted) 50%,transparent)}

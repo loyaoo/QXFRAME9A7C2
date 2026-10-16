@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-ROW-RADIUS-OWNER-001 (CI pending)
+- Screenshot's gray item hover left/right pill-gaps remained even with `inset:block`; the static `.qxframe9a7c2-item` consumed only a public radius token and missed the existing ListFrame `--_qxframe9a7c2-item-radius:0px`. Fixed only the static Item radius consumption fallback to honor the frame private mode token.
+- Strict real Chromium Dropdown inset all/block/none gate now checks actual ItemCollection row `borderTopLeftRadius`, including nested submenu. No duplicated ListFrame painter or CSS override. Prior Alert/Kbd public demos and explicit Image trajectory test retained.
+- Next exact-HEAD CI two gates, official Windows artifact and owner visual verification; PR Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 ALERT-PUBLIC-DEMO-001 (pending CI)
 - User requested newly added Alert appearance/semantic demos visibly in theme-playground. Corrected an existing 12-entry demo that had rendered only a title: now creates each canonical Alert wrapper/icon/section/description, covers four semantic intents × muted/outline/shadow and extra shadow+muted/outline combinations.
 - New static Kbd shapes now appear under public Form demo, since Kbd has no independent catalog entry. All use existing `composition.css` source and no new JS/CSS painter or separate Kbd component.

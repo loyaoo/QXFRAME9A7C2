@@ -3216,7 +3216,8 @@ try {
       const measure=panel=>{
         const style=win.getComputedStyle(panel);
         return {connected:panel.isConnected,hidden:panel.hidden,display:style.display,block:panel.classList.contains('is-block-inset'),all:panel.classList.contains('is-inset'),none:panel.classList.contains('is-flush'),
-          inlineStart:style.paddingLeft,inlineEnd:style.paddingRight,top:style.paddingTop,bottom:style.paddingBottom};
+          inlineStart:style.paddingLeft,inlineEnd:style.paddingRight,top:style.paddingTop,bottom:style.paddingBottom,
+          itemRadius:win.getComputedStyle(panel.querySelector('.qxframe9a7c2-item-collection-item')).borderTopLeftRadius};
       };
       try{
         await Promise.resolve(inst.open('test-inset'));
@@ -3245,15 +3246,19 @@ try {
     assert.equal(got.block.block,true,'only vertical outer inset class applied');
     assert.equal(got.block.inlineStart,'0px','block inset leaves left edge flush');
     assert.equal(got.block.inlineEnd,'0px','block inset leaves right edge flush');
+    assert.equal(got.block.itemRadius,'0px','block inset flattens the real ItemCollection row corners');
     assert.ok(parseFloat(got.block.top)>0&&parseFloat(got.block.bottom)>0,'block inset retains vertical gutter');
     assert.equal(got.all.all,true,'all mode applied by updateOptions');
     assert.ok(parseFloat(got.all.inlineStart)>0&&parseFloat(got.all.inlineEnd)>0,'all mode has both horizontal gutters');
+    assert.ok(parseFloat(got.all.itemRadius)>=0,'all mode item corner is resolved');
     assert.equal(got.none.none,true,'none mode applied by updateOptions');
     for(const edge of ['inlineStart','inlineEnd','top','bottom'])assert.equal(got.none[edge],'0px','none mode has zero '+edge);
+    assert.equal(got.none.itemRadius,'0px','none mode removes real row corner rounding');
     assert.ok(got.submenu&&got.submenu.connected&&!got.submenu.hidden,'nested submenu is mounted and visible');
     assert.equal(got.submenu.block,true,'submenu inherits the parent inset mode');
     assert.equal(got.submenu.inlineStart,'0px','nested block mode has zero left inset');
     assert.equal(got.submenu.inlineEnd,'0px','nested block mode has zero right inset');
+    assert.equal(got.submenu.itemRadius,'0px','nested submenu row has no pill corner gaps');
     assert.ok(parseFloat(got.submenu.top)>0&&parseFloat(got.submenu.bottom)>0,'nested block mode retains vertical inset');
     assert.equal(got.rejects,true,'invalid inset enum rejected');
   });
