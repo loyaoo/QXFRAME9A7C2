@@ -4,6 +4,7 @@
 // Added canonical DatePicker header capability contract and shared WheelMetrics
 // five-size mapping (2026-10-15 owner approval); no unrelated JS deviations.
 // Calendar click/hover/key handlers and Tree, TreeSelect and Controller sources stay unchanged.
+// Added explicit Theme-only menu spacing migration owner list (2026-10-16).
 // All unrelated JS sources must still match main exactly.
 // Verify all other JS sources, enforce exact allowlist, and compare two builds
 // of this HEAD byte-for-byte (rather than incorrectly claiming JS == main).
@@ -18,7 +19,7 @@ if(!refArg){console.error('usage: --reference=<main checkout>/dist');process.exi
 const reference=path.resolve(refArg.slice('--reference='.length));
 const mainRoot=path.dirname(reference),dist=path.join(root,'dist');
 const EXCLUDED=new Set(['qxframe9a7c2.css']);
-const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/popconfirm.js','src/components/tabs.js','src/components/date-picker.js','src/components/calendar.js','src/components/period-panel.js','src/components/image.js','src/components/tags.js','src/components/dropdown.js','src/core/componentContracts.js','src/utils/wheelMetrics.js']);
+const AUTHORIZED=new Set(['src/components/input-otp.js','src/components/modal.js','src/components/overlay-frame-runtime.js','src/components/cascader.js','src/components/popconfirm.js','src/components/tabs.js','src/components/date-picker.js','src/components/calendar.js','src/components/period-panel.js','src/components/image.js','src/components/tags.js','src/components/dropdown.js','src/components/autocomplete.js','src/components/list.js','src/components/menu.js','src/components/select.js','src/components/table.js','src/components/tree-select.js','src/core/componentContracts.js','src/utils/wheelMetrics.js']);
 function walk(dir,base=dir){
  if(!fs.existsSync(dir))return[];
  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
@@ -36,7 +37,11 @@ const sourceChanges=[...sourcePaths].filter(x=>{
  const a=bytes(path.join(root,'src',x)),b=bytes(path.join(mainRoot,'src',x));
  return !a||!b||!a.equals(b);
 }).map(x=>'src/'+x).sort();
-// Tree and TreeSelect are identical to main; do not authorize runtime/schema deviations.
+// Stage5 user-approved Theme-only ListFrame spacing migrates JS inset ownership
+// out of exactly six menu/selection consumers. These files are explicitly reviewed;
+// the verifier continues to reject any unrelated source drift and nonrepeatable builds.
+// Tree's independent source remains unchanged; TreeSelect removes only the obsolete
+// forced ListFrame inset class, while its SelectionController and runtime roles stay intact.
 const unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x));
 
 let repeatable=true;
