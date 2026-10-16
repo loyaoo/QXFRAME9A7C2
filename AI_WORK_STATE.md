@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 TAGS-TOKEN-SCROLL-GUTTER-001 (CI pending)
+- Verified PR #267 Draft against main at head 7d4c8a0324b6d7d8faa90f784aee4ed54c596cd6; prior head QXFRAME and CSS Schema green; this batch needs its own CI.
+- Replaced hardcoded Tag/Input editor 1px border and editor reset border:1px transparent, radius Control-only and shadow:none. Canonical Theme-derived control border-width, Tag radius and input paint now own edit and idle geometry. Pointer/keyboard focus rules remain.
+- ScrollLock reserves stable scrollbar gutter while locking document root in capable Chromium with non-overlay scrollbar. No transient padding compensation in this branch, preventing document width shift. Zero-width overlay scrollbars unchanged; unsupported/nonroot fallback preserved.
+- Next: optimize shared overlay motion in separate source batch, add browser gates, both Actions CI, current-HEAD artifact and Windows ZIP. PR Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 SELECT-LISTFRAME-MOUNTED-GEOMETRY-001 (latest CI required)
 - Live GitHub head `44be3f0ccaf57ad610072ab846018bb90eaa7a5f` had CSS Schema #38840566907 fail at real Chromium `select flush x: '' !== '0px'`. This differs from Theme CSS style failure: Select popup exists by getter but was not yet visibly mounted in the fixture. Prior `q.BuildingBlocks.List` test entry correction proceeded to Select as expected.
 - Retained the **strict 0px/6px** geometry gate: explicitly `select.setOpen(true,'theme-padding')`, wait for two animation frames, reject disconnected/hidden/display:none Select popup as a separate failure before querying computed padding. No accepting empty strings, no CSS/Theme/Controller modifications.
