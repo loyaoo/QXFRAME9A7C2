@@ -11,7 +11,7 @@ function mark(){
   if(!preview)return;
   document.body.classList.toggle('qa-annotated',visible);
   for(const [id,name,changes] of groups){
-    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):(['slider','calendar','dropdown','card'].includes(id)?document.getElementById('component-'+id):document.querySelector('[data-card="'+id+'"]'));
+    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):(document.getElementById('component-'+id)||document.querySelector('[data-card="'+id+'"]'));
     if(!card)continue;
     card.classList.add('qa-changed-card');
     card.dataset.qaCardLabel='已改 '+changes.length+' 处';
@@ -39,7 +39,7 @@ function getDoc(){
 function locate(group,change){
   const [id]=group,[selector]=change;
   const jump=()=>{
-    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):(['slider','calendar','dropdown','card'].includes(id)?getDoc()?.getElementById('component-'+id):getDoc()?.querySelector('[data-card="'+id+'"]'));
+    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):(getDoc()?.getElementById('component-'+id)||getDoc()?.querySelector('[data-card="'+id+'"]'));
     const node=card?.querySelector(selector)||card;
     if(!node)return false;
     node.scrollIntoView({behavior:'smooth',block:'center'});

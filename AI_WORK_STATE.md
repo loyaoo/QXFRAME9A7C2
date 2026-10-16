@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 QA-SLUG-LOCATOR-CLEANUP-001 (CI pending)
+- QXFRAME Actions #38929111665 failed new test that old Slider/Calendar/Dropdown/Card marks must be absent: legacy local QA navigation still had a four-id switch-case although groups=[] correctly removed all displayed marks. Removed that unnecessary hardcoded four-id route and implemented generic canonical slug id lookup plus existing Preview data-card fallback, preserving all current/older Card paths. Strict no-stale-mark test remains enforced, no test relaxation.
+- Default Vega Mist Blue compiled CSS and the 220 schema values unchanged. Next current HEAD double-green CI, Actions artifact and Windows QA ZIP. PR #267 remains Draft, main frozen.
+
 ## CURRENT — 2026-10-16 Stage5 DEFAULT-CONTROL-SHADOW-AND-QA-001 (CI pending)
 - Exact-head first QXFRAME CI #38928650187 failed existing Nova-specific source gate at verify-create-app.mjs:392, asserting default shadow-control must be transparent. Owner's generated Vega export explicitly sets controlShadow=on, so source is correct: updated strict gate to require active shadow-control and independently transparent pointer/keyboard focus shadows. Original shared normal shadow and real outline checks retained.
 - The new batch is global default Theme only, no isolated Preview Card fix. Cleared all 4 old QA Card markers by setting local-only change ledger groups=[]; updated strict QA source gate to demand zero stale highlights. Packager already explicitly supports a zero-visual-change/global batch while carrying the full dist+docs bundle.
