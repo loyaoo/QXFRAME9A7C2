@@ -42,7 +42,22 @@ const sourceChanges=[...sourcePaths].filter(x=>{
 // the verifier continues to reject any unrelated source drift and nonrepeatable builds.
 // Tree's independent source remains unchanged; TreeSelect removes only the obsolete
 // forced ListFrame inset class, while its SelectionController and runtime roles stay intact.
-const unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x));
+// Explicit Stage5 ScrollLock root-gutter fix (owner-requested to prevent
+// viewport jumps on Modal/Drawer/Image Preview). This is the sole approved
+// non-component source delta, contingent on its guarded implementation shape:
+// width > 0, root-only stable gutter, compensating fallback, scoped restoration.
+// All other core/controller source drift still fails closed.
+const scrollLockSource=fs.readFileSync(path.join(root,'src/core/scrollLock.js'),'utf8');
+const approvedScrollLock=[
+  "width > 0 && target === doc.documentElement",
+  "win.CSS.supports('scrollbar-gutter', 'stable')",
+  "record.projection.setStyle(target, 'scrollbar-gutter', 'stable'",
+  "if (width > 0 && !stableGutter)",
+  "record.projection.setStyle(target, 'padding-inline-end'",
+  "record.projection.setStyle(target, 'overflow', 'hidden'",
+  "record.projection.destroy()"
+].every(fragment=>scrollLockSource.includes(fragment));
+const unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)&&!(x==='src/core/scrollLock.js'&&approvedScrollLock));
 
 let repeatable=true;
 if(sourceChanges.length){
