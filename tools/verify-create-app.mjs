@@ -307,12 +307,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={
-    "slider":['.qxframe9a7c2-slider'],
-    "calendar":['.qxframe9a7c2-calendar'],
-    "dropdown":['.qxframe9a7c2-play-example'],
-    "card":['.qxframe9a7c2-card']
-  }; // Only this batch's four canonical Preview04 visual areas are highlighted.
+  // The current batch changes the single global CSS default; no individual
+  // Preview Card source is edited. Remove every earlier local QA highlight.
+  const current={};
+  assert.match(ledger,/const groups = \[\];/,'global default Theme batch does not inherit any old Card highlight');
+  for(const old of ['slider','calendar','dropdown','card'])assert.ok(!ledger.includes("['"+old+"'"),'previous batch QA highlight removed: '+old);
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(['slider','calendar','dropdown','card'].includes(id)?fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8').includes("card.id='component-'+meta.slug"):id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or canonical playground '+id);
@@ -327,7 +326,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'only four current Slider/Calendar/Dropdown/Card Preview04 visual regions are highlighted');
+  assert.equal(count,0,'global CSS Theme batch has zero misleading card-specific visual highlights');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
@@ -389,8 +388,10 @@ check('normal Control Shadow is shared and separate from pointer/keyboard focus'
   const native=source('src/styles/components/native-input.css'),form=source('src/styles/components/form-native.css');
   const button=source('src/styles/components/button.css'),theme=source('src/styles/main/theme.css');
   assert.ok(compiler.includes("root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs"));
-  for(const suffix of ['shadow-control','focus-shadow','pointer-shadow'])assert.ok(
-    theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'default transparent shadow is visually off and composition-safe: '+suffix);
+  assert.match(theme,/--qxframe9a7c2-theme-shadow-control: 0 0\.0625rem 0\.125rem 0 color-mix\(/,
+    'owner Vega Theme enables shared normal control elevation without conflating focus');
+  for(const suffix of ['focus-shadow','pointer-shadow'])assert.ok(
+    theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'owner Vega outlines never add a duplicate focus box-shadow: '+suffix);
   assert.ok(native.includes('--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent'),'JS Input never invalidates normal shadow with comma+none');
   assert.ok(form.includes('--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent'),'SelectGroup never invalidates normal shadow with comma+none');
   assert.ok(native.includes('box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-state-focus-shadow)'),'JS Input retains normal-state elevation');

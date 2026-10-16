@@ -1,19 +1,7 @@
-/** STAGE5-MIST-NEUTRAL-SLIDER-20261016: current track/handle, Calendar, Dropdown, Card. */
-/** Previous Calendar/DatePicker and older annotations are cleared. */
-const groups = [
- ['slider','Slider 独立滑轨与手柄形状',[
-  ['.qxframe9a7c2-slider','轨道粗细与胶囊手柄分离','滑轨粗细 t2/t4/t6/t8/t12 不再叫胶囊；手柄形状新增独立胶囊，宽度随形状变化','__QA_BUNDLE_HEAD__']
- ],'04'],
- ['calendar','Calendar 中性色交互',[
-  ['.qxframe9a7c2-calendar','日历 Hover / Active 使用基础色','导航和通用中性悬停混合基础色 Muted 与 MutedForeground，Mist 保留冷蓝色调','__QA_BUNDLE_HEAD__']
- ],'04'],
- ['dropdown','Dropdown 弹层中性色交互',[
-  ['.qxframe9a7c2-play-example','Popup Item Hover / Active 基础色','弹层中性 Hover 使用基础色配方，不再使用近灰色前景叠加；保留反色与半透明菜单行为','__QA_BUNDLE_HEAD__']
- ],'04'],
- ['card','Card 中性色阴影',[
-  ['.qxframe9a7c2-card','Card / Popup / Dialog 阴影追随基础色','阴影根据中性色 Token 的色相与色度生成深色投影；灰色基础色仍为中性，Mist 为冷蓝偏色','__QA_BUNDLE_HEAD__']
- ],'04']
-];
+/** STAGE5-EMBEDDED-DEFAULT-VEGA-MIST-BLUE-20261016: global CSS default Theme only. */
+/** Global Token changes affect the entire framework. No single Preview Card is
+ *  marked; previous localized Slider/Calendar/Dropdown/Card labels are cleared. */
+const groups = [];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
 try{visible=localStorage.getItem(key)!=='0';folded=localStorage.getItem(foldkey)==='1'}catch(_){ }

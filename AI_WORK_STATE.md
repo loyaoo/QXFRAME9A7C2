@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 DEFAULT-CONTROL-SHADOW-AND-QA-001 (CI pending)
+- Exact-head first QXFRAME CI #38928650187 failed existing Nova-specific source gate at verify-create-app.mjs:392, asserting default shadow-control must be transparent. Owner's generated Vega export explicitly sets controlShadow=on, so source is correct: updated strict gate to require active shadow-control and independently transparent pointer/keyboard focus shadows. Original shared normal shadow and real outline checks retained.
+- The new batch is global default Theme only, no isolated Preview Card fix. Cleared all 4 old QA Card markers by setting local-only change ledger groups=[]; updated strict QA source gate to demand zero stale highlights. Packager already explicitly supports a zero-visual-change/global batch while carrying the full dist+docs bundle.
+- Previous CSS Schema CI #38928651021 was still running when changed. New same-head QXFRAME & CSS Schema verification pending, PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-VEGA-MIST-BLUE-001 (CI pending)
 - User supplied a 2026-10-16 15:52:47 Create 2.19.81 CSS export and asked for this as the bundled default framework CSS. Settings: Vega / Mist base / Blue theme+chart / Sans / default radius / block-only menu padding / wide Switch / medium elevation / pointer Focus outline in theme blue / pill Slider handle. The owner text has 220 unique :root Theme slots, plus the sole legal .dark color-scheme keyword override.
 - Latest pre-work HEAD 2f4b23fa9ab304b289d01493b1fd2c60099eb5b9, PR #267 Draft/Open, both QXFRAME #38921190457 and CSS Schema #38921190380 success. Preserves all preceding Stage5 Slider, Mist, Preview04 and Modal fixes.
