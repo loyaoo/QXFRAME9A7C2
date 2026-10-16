@@ -450,7 +450,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function stateForDate(date, info) {
     if (info && info.entry && info.entry.outside === true) return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
     var selectedValue = selectionVisualValue();
-    if (selection === 'single') return { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
+    if (selection === 'single') return unit === 'week' ? {} : { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
     if (selection === 'multiple') return { selected: (selectedValue || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };
 
     // The stable range comes from draft/committed value, but an active range edit owns
@@ -468,8 +468,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (opts.order !== false && visualStart && visualEnd && compareChronological(visualStart, visualEnd) > 0) {
       var visualSwap = visualStart; visualStart = visualEnd; visualEnd = visualSwap;
     }
-    var rangeStart = !!visualStart && DateUnit.same(date, visualStart, unit, opts.weekStartsOn);
-    var rangeEnd = !!visualEnd && DateUnit.same(date, visualEnd, unit, opts.weekStartsOn);
+    // Week values and range drafts are owned here; the Calendar's one painter
+    // receives exact first/last dates of the selected whole-week interval.
+    var weekStart = unit === 'week' && visualStart ? DateUnit.start(visualStart,'week',opts.weekStartsOn,false) : null;
+    var weekEnd = unit === 'week' && visualEnd ? DateUnit.start(visualEnd,'week',opts.weekStartsOn,false) : null;
+    if (weekEnd) weekEnd.setDate(weekEnd.getDate()+6);
+    var rangeStart = !!visualStart && (unit === 'week' ? DateUnit.same(date,weekStart,'date',opts.weekStartsOn) : DateUnit.same(date,visualStart,unit,opts.weekStartsOn));
+    var rangeEnd = !!visualEnd && (unit === 'week' ? DateUnit.same(date,weekEnd,'date',opts.weekStartsOn) : DateUnit.same(date,visualEnd,unit,opts.weekStartsOn));
 
     var rangeValue = previewRange || selectedValue;
     var low = rangeValue && rangeValue[0];
@@ -709,7 +714,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         weekStartsOn: opts.weekStartsOn
       });
       if (anchor) {
-        calendar.setValue(anchor, { silent: true, source: 'sync', reason: 'picker-sync', syncView: controlledView ? false : syncView !== false });
+        calendar.setValue(selection === 'range' && unit === 'week' ? null : anchor, { silent: true, source: 'sync', reason: 'picker-sync', syncView: controlledView ? false : syncView !== false });
         if (syncView === true || controlledView) {
           calendar.setViewValue(viewAnchor, { silent: true, source: 'sync', reason: controlledView ? 'controlled-picker-view' : 'picker-view' });
           syncCalendarPair(viewAnchor, { source: 'sync', reason: controlledView ? 'controlled-picker-view-secondary' : 'picker-view-secondary' });
@@ -1377,7 +1382,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
       : clampPanelValue(pickerPanelValue() || selectionAnchor(draft.draftValue) || opts.defaultPickerValue);
     calendar = Calendar.create({
       container: calendarPrimaryHost,
-      value: selectionAnchor(draft.draftValue),
+      unit:unit,
+      value: selection === 'range' && unit === 'week' ? null : selectionAnchor(draft.draftValue),
       viewValue: initialPrimaryView,
       weekStartsOn: opts.weekStartsOn,
       size: opts.size,
@@ -1400,6 +1406,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (calendarSecondaryHost) {
       calendarSecondary = Calendar.create({
         container: calendarSecondaryHost,
+        unit:unit,
         value: null,
         viewValue: dualSecondaryView(initialPrimaryView),
         weekStartsOn: opts.weekStartsOn,

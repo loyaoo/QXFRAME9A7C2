@@ -64,10 +64,11 @@
 .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input{
   width:var(--_qxframe9a7c2-tags-add-editor-width,auto);min-width:0;
   flex:0 0 var(--_qxframe9a7c2-tags-add-editor-width,auto);
-  background:transparent;
-  border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--_qxframe9a7c2-control-border);
+  background:var(--_qxframe9a7c2-semantic-subtle-hover);
+  color:var(--_qxframe9a7c2-semantic-text-secondary);
+  border:1px solid transparent;
   border-radius:var(--_qxframe9a7c2-control-radius);
-  box-shadow:var(--qxframe9a7c2-theme-shadow-control,none)
+  box-shadow:none
 }
 .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{
   border-style:solid;border-color:var(--qxframe9a7c2-theme-pointer-focus);

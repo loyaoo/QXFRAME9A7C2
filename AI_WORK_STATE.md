@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-CALENDAR-001 (new CI pending)
+- User screenshots: DatePicker week did not forward unit to its Calendar instances and single week range painting diverged; corrected owner wiring and calculated actual week endpoints, leaving Calendar sole renderer and RangePainter.
+- DateTime calendar/time split uses Theme border again. Standalone Tags active editor base fill now matches Tag semantic skin rather than unthemed outlined field.
+- Next: Image Preview center motion, theme-playground expanded new demo cases, strict Chromium; reverify exact final HEAD in CI. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 NONVISUAL-QA-OVERLAY-001 (new exact-HEAD CI pending)
 - This is a non-visual coverage audit follow-up: prior `TAGS-PAINT-OWNER-001` was validated and its old Support Triage +Add yellow highlight must **not** appear in a new docs/tests-only Windows ZIP.
 - Found the canonical offline packager incorrectly required at least one visual annotation; modified `tools/qa/build-offline-demo.py` to allow exactly 0 cards/0 regions only if `const groups = [];` is present, while retaining strict positive-batch distinct-group and exact-HEAD checks.
