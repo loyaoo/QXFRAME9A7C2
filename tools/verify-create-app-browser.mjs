@@ -3248,7 +3248,11 @@ try {
     await click('document.querySelector(\'[data-create-item="04"]\')');
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("theme-playground.html")','Preview04 route',15000);
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert")','Preview04 live gallery',15000);
-    await evaluate("document.querySelector('[data-create-frame]').contentDocument.getElementById('component-alert').scrollIntoView({block:'center'})");
+    // Use the gallery's real search filter: keeping hundreds of expanded
+    // canonical demos above the target otherwise shifts its scroll position
+    // before IntersectionObserver can enqueue it (and leaves heavy idle tasks).
+    await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument;const input=d.querySelector('[data-qxframe9a7c2-search]');input.value='Alert';input.dispatchEvent(new d.defaultView.Event('input',{bubbles:true}));d.getElementById('component-alert').scrollIntoView({behavior:'instant',block:'center'});return true})()");
+    await waitFor('!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert").hidden','Alert is exposed by real gallery filtering',15000);
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")','Preview04 theme bridge',15000);
     await waitFor('document.querySelector("[data-create-frame]").contentDocument.querySelectorAll("#component-alert .qxframe9a7c2-play-example").length>=2','all Alert demos mounted',20000);
     const result=await evaluate(`(() => {

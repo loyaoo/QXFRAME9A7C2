@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-GALLERY-FILTER-QA-001 (CI pending)
+- GitHub HEAD bb950ef79b0afe777ef6cf988cfd794314454a57 QXFRAME CI #38887141367 and CSS Schema #38887141177 both fail the same newly added Chromium condition: Alert card never finished lazy mounting after a one-time smooth-scrolling adjustment. This is NOT a green build.
+- Production gallery retains all examples expanded and per-card viewport/idle lazy mounts. Browser QA now exercises the **real existing gallery search field** to filter the Alert card into the rendered set before asserting actual canonical Alert demos, compiled Create theme, absence of collapse controls, and computed dark semantic shadow. Instant scroll plus search is deterministic even with large expanding card rows. Assertions are preserved (not relaxed).
+- New exact-head CI and full Windows dist+docs ZIP are pending. PR #267 still Draft; main unchanged. Current work focus: eliminate the Preview04 lazy-gallery CI blocker without removing lazy scheduling.
+
 ## CURRENT — 2026-10-16 Stage5 PREVIEW04-LAZY-GALLERY-BROWSER-001 (CI pending)
 - CSS Schema Actions #38885893121 reached real Chromium Preview04 acceptance; waited for all Alert demos without scrolling the iframe to their offscreen card. Canonical Gallery deliberately schedules demo mounts only near its viewport; a hidden/offscreen Alert has no need to load. Fixed strict test to scroll canonical Alert card into view before requiring actual mounted examples, live compiled CSS, no folds and dark-black shadow. Retains real mounting assertion and lazy rendering performance policy; does not weaken gate.
 - Next: run exact-head CSS + QXFRAME CI, obtain complete Action dist+docs artifact, prepare offline QA. PR #267 Draft; main unchanged.
