@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 SOURCE-ESM-LIST-CLOSEOUT-001 (new CI pending)
+- QXFRAME CI `ef4d19e2` passed source/static gates through browser suite but failed an obsolete `verify-source-esm-browser.mjs` List fixture that updated `inset:false` and demanded `getState().inset`. Removed obsolete option expectations, retained `bordered:false` runtime check, and asserted inset is absent from JS state. Actual CSS switching is tested on live Dropdown/Select/List/submenu in `verify-create-app-browser.mjs`.
+- No runtime/theme changes in this commit, PR #267 stays Draft, main untouched. Next exact-HEAD QXFRAME/CSS Schema, inspect any further browser failures and build official Windows acceptance ZIP only from passing artifact.
+
 ## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SCHEMA-001 (CI pending)
 - QXFRAME CI on previous new HEAD failed because `preview-03-coverage.json` referenced retired Dropdown JS inset browser step. Retargeted to current real CSS Theme-run-time geometry step; guard not relaxed.
 - Public docs/generated/theme-public-schema.json now mirrors both new Theme tokens, default Nova values and closed token registry (214 → 216, 21 → 23 geometry roles); canonical Schema gate updated accordingly.
