@@ -1,14 +1,17 @@
-/** STAGE5-PREVIEW04-DIALOG-ALERT-20261016: current Modal, Dialog sections and Alert. */
+/** STAGE5-MIST-NEUTRAL-SLIDER-20261016: current track/handle, Calendar, Dropdown, Card. */
 /** Previous Calendar/DatePicker and older annotations are cleared. */
 const groups = [
- ['danger-dialog','Modal 缩放及分区背景',[
-  ['[data-pv3x-widget="danger-dialog"]','点击位置位移＋缩放','从 0.7 倍放大并移向中心，关闭反向；无分割线 Header/Footer 同背景且 Footer 留按钮间距','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['account-drawer','Drawer 背景与按钮留白',[
-  ['[data-pv3x-widget="account-drawer"]','无分割线同背景＋按钮间距','Header 与 Footer 跟随 Drawer 背景；Header 下内距零，Footer 保留按钮间距','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['alert','Alert 暗色阴影／全部示例',[
-  ['.qxframe9a7c2-alert-root.is-shadow','深色阴影＋全部直接展开','Alert 阴影不依赖前景白色；Preview 04 展开所有 canonical 示例','__QA_BUNDLE_HEAD__']
+ ['slider','Slider 独立滑轨与手柄形状',[
+  ['.qxframe9a7c2-slider','轨道粗细与胶囊手柄分离','滑轨粗细 t2/t4/t6/t8/t12 不再叫胶囊；手柄形状新增独立胶囊，宽度随形状变化','__QA_BUNDLE_HEAD__']
+ ],'04'],
+ ['calendar','Calendar 中性色交互',[
+  ['.qxframe9a7c2-calendar','日历 Hover / Active 使用基础色','导航和通用中性悬停混合基础色 Muted 与 MutedForeground，Mist 保留冷蓝色调','__QA_BUNDLE_HEAD__']
+ ],'04'],
+ ['dropdown','Dropdown 弹层中性色交互',[
+  ['.qxframe9a7c2-play-example','Popup Item Hover / Active 基础色','弹层中性 Hover 使用基础色配方，不再使用近灰色前景叠加；保留反色与半透明菜单行为','__QA_BUNDLE_HEAD__']
+ ],'04'],
+ ['card','Card 中性色阴影',[
+  ['.qxframe9a7c2-card','Card / Popup / Dialog 阴影追随基础色','阴影根据中性色 Token 的色相与色度生成深色投影；灰色基础色仍为中性，Mist 为冷蓝偏色','__QA_BUNDLE_HEAD__']
  ],'04']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
@@ -20,7 +23,7 @@ function mark(){
   if(!preview)return;
   document.body.classList.toggle('qa-annotated',visible);
   for(const [id,name,changes] of groups){
-    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):(id==='alert'?document.getElementById('component-alert'):document.querySelector('[data-card="'+id+'"]'));
+    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):(['slider','calendar','dropdown','card'].includes(id)?document.getElementById('component-'+id):document.querySelector('[data-card="'+id+'"]'));
     if(!card)continue;
     card.classList.add('qa-changed-card');
     card.dataset.qaCardLabel='已改 '+changes.length+' 处';
@@ -48,7 +51,7 @@ function getDoc(){
 function locate(group,change){
   const [id]=group,[selector]=change;
   const jump=()=>{
-    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):(id==='alert'?getDoc()?.getElementById('component-alert'):getDoc()?.querySelector('[data-card="'+id+'"]'));
+    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):(['slider','calendar','dropdown','card'].includes(id)?getDoc()?.getElementById('component-'+id):getDoc()?.querySelector('[data-card="'+id+'"]'));
     const node=card?.querySelector(selector)||card;
     if(!node)return false;
     node.scrollIntoView({behavior:'smooth',block:'center'});
@@ -72,7 +75,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮 Modal / Drawer 与 Preview 04 的 Alert 和全示例展开变化。</p></div>';
+    '<p class="qa-toolbar-caption">仅标注本轮 Slider、Calendar、Dropdown 与 Card 的基础色中性视觉修复。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

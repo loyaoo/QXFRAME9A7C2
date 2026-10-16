@@ -3206,6 +3206,47 @@ try {
     }
   });
 
+  await step('Stage5 Vega Mist neutral Hover and independent Slider capsule handle in real Chromium',async()=>{
+    const got=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,h=d.documentElement;
+      const sheet=d.getElementById('qxframe9a7c2-create-theme'),before=sheet.textContent,oldDark=h.classList.contains('dark');
+      const host=d.createElement('section');host.style.cssText='position:absolute;left:-5000px;top:0;width:24rem';
+      host.innerHTML='<div class="qxframe9a7c2-slider is-md"><div class="qxframe9a7c2-slider-rail"></div><div class="qxframe9a7c2-slider-handle"></div></div>'+
+        '<div class="qxframe9a7c2-card" data-shadow>Card</div>'+
+        '<div class="qxframe9a7c2-popup-surface"><div class="qxframe9a7c2-item-surface is-hover" data-popup-hover>Menu</div></div>'+
+        '<div data-nav-hover style="background:var(--_qxframe9a7c2-semantic-subtle-hover)"></div>'+
+        '<div data-nav-active style="background:var(--_qxframe9a7c2-semantic-subtle-active)"></div>';
+      d.body.appendChild(host);
+      const cfg=api.state.config,css=e=>w.getComputedStyle(host.querySelector(e));
+      function sample(baseColor,sliderLook,shapeThumb,dark){
+        h.classList.toggle('dark',dark);
+        sheet.textContent=api.compileTheme({...cfg,style:'vega',baseColor,theme:baseColor,chartColor:baseColor,
+          ext:{...cfg.ext,shadow:'medium',sliderLook,shapeThumb}},{generatedAt:''}).body;
+        return {
+          rail:parseFloat(css('.qxframe9a7c2-slider-rail').height),
+          width:parseFloat(css('.qxframe9a7c2-slider-handle').width),
+          height:parseFloat(css('.qxframe9a7c2-slider-handle').height),
+          radius:css('.qxframe9a7c2-slider-handle').borderRadius,
+          hover:css('[data-nav-hover]').backgroundColor,active:css('[data-nav-active]').backgroundColor,
+          menu:css('[data-popup-hover]').backgroundColor,shadow:css('[data-shadow]').boxShadow
+        };
+      }
+      try{
+        return {neutral:sample('neutral','t4','circle',false),thin:sample('mist','t4','circle',false),
+          thick:sample('mist','t12','circle',false),pill:sample('mist','t4','pill',false),
+          darkMist:sample('mist','t4','pill',true)};
+      }finally{h.classList.toggle('dark',oldDark);sheet.textContent=before;host.remove()}
+    })()`);
+    assert.ok(got.thick.rail>got.thin.rail,'sliderLook must alter rail thickness');
+    assert.equal(got.thick.width,got.thin.width,'rail thickness must not alter handle width');
+    assert.equal(got.pill.rail,got.thin.rail,'pill handle must not alter rail thickness');
+    assert.ok(got.pill.width>got.pill.height,'pill shape must physically widen the handle');
+    assert.equal(got.pill.radius,got.thin.radius,'circle/pill both preserve full rounded shape');
+    for(const field of ['hover','active','menu','shadow'])
+      assert.notEqual(got.thin[field],got.neutral[field],'Mist base color must affect '+field+': '+JSON.stringify(got));
+    assert.ok(!/rgba\\(255, 255, 255/.test(got.darkMist.shadow),'dark Mist shadow must not be a white glow');
+  });
+
   await step('Stage5 Modal origin and zero-divider Dialog geometry in real Chromium',async()=>{
     const got=await evaluate(`(() => {
       const d=document.querySelector('[data-create-frame]').contentDocument;

@@ -307,13 +307,14 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
   const current={
-    "danger-dialog":['[data-pv3x-widget="danger-dialog"]'],
-    "account-drawer":['[data-pv3x-widget="account-drawer"]'],
-    "alert":['.qxframe9a7c2-alert-root.is-shadow']
-  }; // Only the actual Modal/Drawer/Preview04 Alert visual batch is highlighted.
+    "slider":['.qxframe9a7c2-slider'],
+    "calendar":['.qxframe9a7c2-calendar'],
+    "dropdown":['.qxframe9a7c2-play-example'],
+    "card":['.qxframe9a7c2-card']
+  }; // Only this batch's four canonical Preview04 visual areas are highlighted.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(id==='alert'?fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8').includes("card.id='component-'+meta.slug"):id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or canonical playground '+id);
+    assert.ok(['slider','calendar','dropdown','card'].includes(id)?fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8').includes("card.id='component-'+meta.slug"):id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or canonical playground '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -325,7 +326,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'only three current Modal/Drawer/Preview04 Alert visual regions are highlighted');
+  assert.equal(count,4,'only four current Slider/Calendar/Dropdown/Card Preview04 visual regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');

@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 MIST-CARD-QA-AND-CHROMIUM-001 (CI pending)
+- Added real Chromium acceptance for exact Vega+Mist (with independent thick rail/round/pill handle) versus Neutral. Tests computed slider dimensions, actual muted Hover/Active and popup Menu background, Card shadow for both palettes, and dark shadow non-white. Theme CSS and prior light/dark class restored; no snapshot shortcuts.
+- Offline QA ledger now marks only 4 new Preview04 areas: Slider handle/track, Calendar base-tint, Dropdown popup hover, Card elevation. Old Modal/Drawer/Alert yellow highlights cleared. Source Create HTML is untouched; QA overlays remain local-zip-only.
+- Earlier Shadow Schema failure was corrected in relative-OKLCH batch af0a4fc5. Latest CI and full ZIP still pending; Stage5 not user signed off, PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 SHADOW-RELATIVE-COLOR-SCHEMA-001 (CI pending)
 - QXFRAME CI #38918569196 correctly failed strict vega/default Theme Schema: a Shadow-kind token cannot contain light-dark() even nested in color-mix. No baseline or assertion changes are authorized.
 - Replaced nested light-dark in generated Card/Popup/Dialog/Control/thumb shadows with CSS relative oklch(from Theme muted-foreground 0.12 c h), then mixed to specified shadow alpha. The CSS color inherits each base palette's hue and chroma yet remains optically dark in light AND dark schemes without manual anti-theme selectors; Shadow token contains no forbidden light-dark. Updated static regression check, retained exact original Schema gate. Prior Slider/neutral hover fixes remain.
