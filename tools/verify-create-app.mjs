@@ -2160,7 +2160,8 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
  const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
- assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))"),'JS parity rejects unauthorized including Tree, TreeSelect and component contracts');
+ assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)&&!(x==='src/core/scrollLock.js'&&approvedScrollLock))"),'JS parity permits only guarded Stage5 ScrollLock and rejects Tree, TreeSelect and other core changes');
+ assert.ok(jsParity.includes("approvedScrollLock=[")&&jsParity.includes("record.projection.destroy()"),'the single ScrollLock allowance is conditional on stable gutter and restoration semantics');
  assert.ok(jsParity.includes('src/components/cascader.js'),'JS parity remains strict on unrelated sources');
  assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
  const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
