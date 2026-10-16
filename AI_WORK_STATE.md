@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 PUBLIC-SCHEMA-DIALOG-MIRROR-001 (CI pending)
+- QXFRAME #38865662250 passed Theme default Token check but failed `verify-create-app.mjs` canonical `theme-public-schema.json` mirror: four new registered Dialog geometry tokens absent. Synchronized exactly four existing names/defaults with live `tokens.js` and default `theme.css`; tokenCount 216→220, colorCount/geometryInputs unchanged.
+- Did not loosen schema equal-list/default-value gate or invent a second registry. Prior Calendar visible-month clips, seven-day week endpoints, Dialog section/soft shadow roles, separate Blur, real Chromium performance diagnostic retained.
+- Next exact-head both GitHub workflows, fix actual browser failures, build successful Actions dist+docs Windows ZIP; owner visual and performance still pending. PR Draft/main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 OVERLAY-FRAME-TIMING-001 (CI pending)
 - Added real Chromium diagnostic for Modal/Drawer/Image independent open+leave timing, recording synchronous call cost, time to first requestAnimationFrame, max/mean frame gap and >34ms frame count, printed as `[Stage5 overlay-frame-profile]`. It is a diagnostic, **not a passed FPS gate** and cannot certify owners' perception or real GPU performance on their machine.
 - No MotionCore surgery yet: two-frame boundaries and forced layout reads are proven code paths but their contribution to stutter needs actual runtime evidence.
