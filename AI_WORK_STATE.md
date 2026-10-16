@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-16 Stage5 QA-LEDGER-MAPPING-001 (CI pending)
+- Exact-head QXFRAME CI #38885641939 failed because existing strict offline QA gate still demanded old ImagePreview highlight from the preceding batch. Updated only its expected current-round mapping to Modal/Drawer/Preview04 Alert, and added a real canonical playground card-id authority check. Kept the exactly-three-annotations assertion, stale-highlight exclusion and bundling checks; no gate weakened. PR #267 Draft; main untouched. Next exact-head Actions and offline ZIP.
+
 ## CURRENT — 2026-10-16 Stage5 CHROMIUM-ALERT-TEST-SYNTAX-001 (CI pending)
 - Exact-head QXFRAME #38885225745 failed at Node --check of new browser-only Alert assertion: mistakenly double-escaped regex with an unterminated group. Replaced regex with equivalent string-based non-white computed shadow assertion; did not disable checking and did not change production behavior. Next: rerun strict real Chromium + Schema gates, create verified latest-head ZIP. PR Draft, main unchanged.
 

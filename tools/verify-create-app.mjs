@@ -290,11 +290,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const current={
     "danger-dialog":['[data-pv3x-widget="danger-dialog"]'],
     "account-drawer":['[data-pv3x-widget="account-drawer"]'],
-    "asset-preview":['[data-pv3x-widget="asset-preview"]']
-  }; // Only the actual Modal/Drawer/ImagePreview visual batch is highlighted.
+    "alert":['.qxframe9a7c2-alert-root.is-shadow']
+  }; // Only the actual Modal/Drawer/Preview04 Alert visual batch is highlighted.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
+    assert.ok(id==='alert'?fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8').includes("card.id='component-'+meta.slug"):id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or canonical playground '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -306,7 +306,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,3,'only three current Modal/Drawer/Image visual regions are highlighted');
+  assert.equal(count,3,'only three current Modal/Drawer/Preview04 Alert visual regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
