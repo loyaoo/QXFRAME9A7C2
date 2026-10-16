@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 SHADOW-RELATIVE-COLOR-SCHEMA-001 (CI pending)
+- QXFRAME CI #38918569196 correctly failed strict vega/default Theme Schema: a Shadow-kind token cannot contain light-dark() even nested in color-mix. No baseline or assertion changes are authorized.
+- Replaced nested light-dark in generated Card/Popup/Dialog/Control/thumb shadows with CSS relative oklch(from Theme muted-foreground 0.12 c h), then mixed to specified shadow alpha. The CSS color inherits each base palette's hue and chroma yet remains optically dark in light AND dark schemes without manual anti-theme selectors; Shadow token contains no forbidden light-dark. Updated static regression check, retained exact original Schema gate. Prior Slider/neutral hover fixes remain.
+- Next exact-head CI, real Chromium dynamic visual assertions, new offline QA, owner signoff; PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 MIST-NEUTRAL-SLIDER-001 (CI pending)
 - User supplied Vega+Mist query and screenshots showing Slider “胶囊12” actually changing track thickness and neutral Hover/shadows looking grey. Work baseline `redesign/create-stage5` HEAD `4f414e0b826e0035bd0afec82f0922a72d6449cc`, PR #267 Draft; both QXFRAME #38892010265 and CSS Schema #38892010037 SUCCESS before this batch. Preserve already completed Stage5 overlay/Preview04 fixes.
 - Verified compiler: `sliderLook=t12` maps to 0.75rem rail, not a capsule handle. Relabeled track axis and t12 value and added independent `shapeThumb=pill` (1.5× handle width with Theme thumb radius PILL). Track axis, density and default Style mappings retain their existing semantics.

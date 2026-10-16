@@ -115,7 +115,8 @@ check('Stage5 Mist neutral roles, tinted shadows and independent Slider track/ha
  assert.match(config,/value: 'pill', label: '胶囊形'/,'explicit Slider handle pill shape option');
  assert.match(compiler,/roundShape\('shapeThumb'\) === 'pill' \? SLIDER_THUMB\[style\] \* 1\.5/,'pill changes actual handle width, not rail');
  assert.match(compiler,/root\['slider-track'\] = rem\(SLIDER\[ext\.sliderLook\]\)/,'track keeps distinct thickness axis');
- assert.match(compiler,/light-dark\(var\(--qxframe9a7c2-theme-muted-foreground\),var\(--qxframe9a7c2-theme-background\)\)/,'shadow ink derives from neutral/base for both modes');
+ assert.match(compiler,/oklch\(from var\(--qxframe9a7c2-theme-muted-foreground\) 0\.12 c h\)/,'shadow ink inherits base hue/chroma at dark-safe fixed lightness');
+ assert.doesNotMatch(compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0],/light-dark\(/,'shadow-valued Theme token cannot nest light-dark');
  const shadow=compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0];
  assert.doesNotMatch(shadow,/oklch\(0 0 0 \/ /,'no fixed grayscale elevation in compiler');
  assert.match(consumers,/--_qxframe9a7c2-item-hover: color-mix\(in oklab, var\(--qxframe9a7c2-theme-muted\) 78%, var\(--qxframe9a7c2-theme-muted-foreground\)\)/,'shared hover follows neutral base roles');
