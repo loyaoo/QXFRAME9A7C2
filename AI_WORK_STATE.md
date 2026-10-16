@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 MODAL-ORIGIN-E3-TEST-MIGRATION-001 (CI pending)
+- Post-source commit 942f3348, QXFRAME Actions #38875646821 failed in real Chromium phase-E Modal/Drawer verification, at the legacy expectation that Modal uses noncentral CSS transform-origin only for zoom-origin and default zoom ignores triggerTarget.
+- The newly requested behavior intentionally uses a stable 50% 50% transform anchor and preserves pointer-relative translate(X,Y) for BOTH zoom-origin and default zoom. Updated the existing strict Chromium regression to assert nonzero trigger translation and identical saved exit translation, including the default trigger path. No CI check removed or disabled.
+- Exact-HEAD dual Actions rerun is next; no new performance/visual claim; PR #267 remains Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 DIALOG-ORIGIN-PREVIEW-LIFECYCLE-001 (CI pending)
 - Resumed verified branch redesign/create-stage5 @ 214d24464e9716e4291854b8b9ef2af7297cc71d; PR #267 remains Draft/Open, main untouched.
 - Modal default zoom now measures the opening trigger once, translates from its pointer/focus origin toward center and reverses along the same saved path on leave. Programmatic opens without a trigger keep center zoom. Mask remains fade-only.
