@@ -3665,7 +3665,9 @@ try {
     await s('Page.navigate',{url:origin+'/docs/theme-playground.html'});
     await waitFor("!!window.QXFRAME9A7C2ComponentDemos&&!!document.getElementById('component-alert')",'canonical theme playground mounts',15000);
     for(const [slug,title] of [['alert','Alert：语义 × 外观 × 阴影'],['date-picker','周选择与 Calendar 共用 Range Painter'],['form','Kbd 命令键组合']]){
-      await evaluate("document.getElementById('component-"+slug+"').scrollIntoView({block:'center'})");
+      // All canonical examples are expanded: earlier grid rows grow during
+      // idle mounts, so exercise the real search UI before asserting the target.
+      await evaluate("(() => {const search=document.querySelector('[data-qxframe9a7c2-search]');search.value="+JSON.stringify(slug)+";search.dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('component-"+slug+"').scrollIntoView({behavior:'instant',block:'center'});return true})()");
       const expr="Array.from(document.querySelectorAll('#component-"+slug+" .qxframe9a7c2-play-example-title strong')).some(n=>n.textContent==="+JSON.stringify(title)+")";
       await waitFor(expr,'new '+slug+' demo visible by default',15000);
     }
