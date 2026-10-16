@@ -106,6 +106,21 @@ check('Theme controls shared list surface padding; JS inset paths are absent',()
  assert.doesNotMatch(select,/qxframe9a7c2-list-frame is-inset/,'Select does not pin an inset mode');
  assert.doesNotMatch(list,/classList\.toggle\('is-inset'/,'List does not pin an inset mode');
 });
+check('Stage5 Mist neutral roles, tinted shadows and independent Slider track/handle shape',()=>{
+ const config=fs.readFileSync(path.join(root,'docs/create/data.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.match(config,/key: 'sliderLook', param: 'slider', label: '滑轨粗细'/,'track thickness axis is unambiguously labeled');
+ assert.match(config,/key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状'/,'handle shape is separately labeled');
+ assert.match(config,/value: 'pill', label: '胶囊形'/,'explicit Slider handle pill shape option');
+ assert.match(compiler,/roundShape\('shapeThumb'\) === 'pill' \? SLIDER_THUMB\[style\] \* 1\.5/,'pill changes actual handle width, not rail');
+ assert.match(compiler,/root\['slider-track'\] = rem\(SLIDER\[ext\.sliderLook\]\)/,'track keeps distinct thickness axis');
+ assert.match(compiler,/light-dark\(var\(--qxframe9a7c2-theme-muted-foreground\),var\(--qxframe9a7c2-theme-background\)\)/,'shadow ink derives from neutral/base for both modes');
+ const shadow=compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0];
+ assert.doesNotMatch(shadow,/oklch\(0 0 0 \/ /,'no fixed grayscale elevation in compiler');
+ assert.match(consumers,/--_qxframe9a7c2-item-hover: color-mix\(in oklab, var\(--qxframe9a7c2-theme-muted\) 78%, var\(--qxframe9a7c2-theme-muted-foreground\)\)/,'shared hover follows neutral base roles');
+ assert.match(consumers,/--_qxframe9a7c2-menu-hover-soft: color-mix\(in oklab, color-mix\(in oklab, var\(--qxframe9a7c2-theme-muted\) 78%, var\(--qxframe9a7c2-theme-muted-foreground\)\) 70%, transparent\)/,'popup neutral hover follows the same base-color tint with alpha');
+});
 check('Stage5 gallery lazy mounts defer heavy demo work outside scroll observer frames',()=>{
  const playground=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
  assert.ok(playground.includes('function enqueueMount(rec)'), 'gallery queues visible demo mounts instead of synchronous fanout');

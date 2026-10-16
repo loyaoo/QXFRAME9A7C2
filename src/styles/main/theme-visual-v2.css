@@ -19,9 +19,9 @@
     --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-muted);
-    --_qxframe9a7c2-item-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent);
+    --_qxframe9a7c2-item-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground));
     --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-item-hover);
-    --_qxframe9a7c2-semantic-subtle-active: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-semantic-subtle-active: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 65%, var(--qxframe9a7c2-theme-muted-foreground));
     --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
@@ -429,7 +429,7 @@
     /* One alpha-composited recipe for solid and translucent Popup surfaces.
        Only the popup surface opacity changes between Menu modes; descendant
        Hover, Selected and passive borders remain translucent overlays. */
-    --_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent);
+    --_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%, transparent);
     --_qxframe9a7c2-menu-selected-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-accent) 84%, transparent);
     --_qxframe9a7c2-semantic-surface-muted: var(--_qxframe9a7c2-menu-hover-soft);
     --_qxframe9a7c2-semantic-subtle: var(--_qxframe9a7c2-menu-hover-soft);

@@ -130,9 +130,9 @@ export const EXT_AXES = [
     { value: 'standard', label: '标准 32×18.4' }, { value: 'compact', label: '紧凑 28×16.6' }, { value: 'wide', label: '宽体 44×20' },
     { value: 'tall', label: '加高 32×20' }, { value: 'square', label: '方形 33×18' }],
     defaults: S('standard', 'standard', 'standard', 'standard', 'compact', 'wide', 'square', 'tall') },
-  { key: 'sliderLook', param: 'slider', label: '滑块外观', group: 'parts', options: [
+  { key: 'sliderLook', param: 'slider', label: '滑轨粗细', group: 'parts', options: [
     { value: 't2', label: '细线 2' }, { value: 't4', label: '纤细 4' }, { value: 't6', label: '标准 6' },
-    { value: 't8', label: '粗 8' }, { value: 't12', label: '胶囊 12' }],
+    { value: 't8', label: '粗 8' }, { value: 't12', label: '超粗 12' }],
     defaults: S('t6', 't4', 't12', 't4', 't4', 't8', 't2', 't4') },
   { key: 'sections', param: 'sections', label: '表面分区', group: 'surface', options: [
     { value: 'none', label: '无分区' }, { value: 'divider', label: '仅分隔线' }, { value: 'muted', label: '灰底分区' }],
@@ -191,7 +191,7 @@ export const SHAPE_AXES = [
   { key: 'shapeSwitch', param: 'shape-switch', label: '开关', options: CONTROL_SHAPES, defaults: S('pill', 'pill', 'pill', 'pill', 'pill', 'pill', 'square', 'radius') },
   // shadcn: Rhea radio is rounded-2xl; Maia / Lyra / Mira / Rhea thumbs follow the radius, Sera's is square.
   { key: 'shapeRadio', param: 'shape-radio', label: '单选框', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'radius') },
-  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'radius', 'radius', 'radius', 'circle', 'square', 'radius') },
+  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状', options: [...ROUND_SHAPES, { value: 'pill', label: '胶囊形' }], defaults: S('circle', 'circle', 'radius', 'radius', 'radius', 'circle', 'square', 'radius') },
   { key: 'shapeAvatar', param: 'shape-avatar', label: '头像', options: ROUND_SHAPES, defaults: S(...Array(8).fill('circle')) },
   { key: 'shapeContainer', param: 'shape-container', label: '容器', options: [{ value: 'radius', label: '跟随圆角' }, { value: 'square', label: '直角' }], defaults: S(...Array(8).fill('radius')) }
 ];

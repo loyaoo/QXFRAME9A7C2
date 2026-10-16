@@ -94,18 +94,18 @@ const SLIDER_THUMB = { vega: 1, nova: 0.75, maia: 1, lyra: 0.75, mira: 0.75, lum
 // Tailwind v4 shadow scale (rem; color is the theme's own black tint).
 const SHADOWS = {
   none: 'none',
-  xs: '0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.05)',
-  sm: '0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.1), 0 0.0625rem 0.125rem -0.0625rem oklch(0 0 0 / 0.1)',
-  md: '0 0.25rem 0.375rem -0.0625rem oklch(0 0 0 / 0.1), 0 0.125rem 0.25rem -0.125rem oklch(0 0 0 / 0.1)',
-  lg: '0 0.625rem 0.9375rem -0.1875rem oklch(0 0 0 / 0.1), 0 0.25rem 0.375rem -0.25rem oklch(0 0 0 / 0.1)',
-  xl: '0 1.25rem 1.5625rem -0.3125rem oklch(0 0 0 / 0.1), 0 0.5rem 0.625rem -0.375rem oklch(0 0 0 / 0.1)',
-  '2xl': '0 1.5625rem 3.125rem -0.75rem oklch(0 0 0 / 0.25)',
+  xs: '0 0.0625rem 0.125rem 0 color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 5%,transparent)',
+  sm: '0 0.0625rem 0.1875rem 0 color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent), 0 0.0625rem 0.125rem -0.0625rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent)',
+  md: '0 0.25rem 0.375rem -0.0625rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent), 0 0.125rem 0.25rem -0.125rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent)',
+  lg: '0 0.625rem 0.9375rem -0.1875rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent), 0 0.25rem 0.375rem -0.25rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent)',
+  xl: '0 1.25rem 1.5625rem -0.3125rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent), 0 0.5rem 0.625rem -0.375rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 10%,transparent)',
+  '2xl': '0 1.5625rem 3.125rem -0.75rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 25%,transparent)',
   // Dialogs already sit on an overlay; elevation increases by spread first,
   // not by jumping to a 25% black 2xl halo.
-  'dialog-light': '0 0.25rem 0.875rem -0.375rem oklch(0 0 0 / 0.035), 0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.025)',
-  'dialog-medium': '0 0.5rem 1.25rem -0.5rem oklch(0 0 0 / 0.05), 0 0.125rem 0.375rem -0.125rem oklch(0 0 0 / 0.03)',
-  'dialog-strong': '0 0.75rem 1.75rem -0.625rem oklch(0 0 0 / 0.07), 0 0.1875rem 0.5rem -0.125rem oklch(0 0 0 / 0.04)',
-  'dialog-heavy': '0 1rem 2.5rem -0.75rem oklch(0 0 0 / 0.09), 0 0.25rem 0.75rem -0.1875rem oklch(0 0 0 / 0.05)'
+  'dialog-light': '0 0.25rem 0.875rem -0.375rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 3.5%,transparent), 0 0.0625rem 0.1875rem 0 color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 2.5%,transparent)',
+  'dialog-medium': '0 0.5rem 1.25rem -0.5rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 5%,transparent), 0 0.125rem 0.375rem -0.125rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 3%,transparent)',
+  'dialog-strong': '0 0.75rem 1.75rem -0.625rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 7%,transparent), 0 0.1875rem 0.5rem -0.125rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 4%,transparent)',
+  'dialog-heavy': '0 1rem 2.5rem -0.75rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 9%,transparent), 0 0.25rem 0.75rem -0.1875rem color-mix(in oklab,light-dark(var(--qxframe9a7c2-theme-muted-foreground),var(--qxframe9a7c2-theme-background)) 5%,transparent)'
 };
 // Shadow axis: low / mid / high tiers move together (card, popup, dialog).
 const SHADOW_TIERS = {
@@ -567,7 +567,7 @@ export function themeTokens(resolved) {
   root['radius-radio'] = shapeRadius(roundShape('shapeRadio'), alloc.button, controlShape);
   root['radius-switch'] = shapeRadius(roundShape('shapeSwitch'), alloc.switch, controlShape);
   root['radius-thumb'] = shapeRadius(roundShape('shapeThumb'), alloc.thumb, controlShape);
-  root['radius-track'] = roundShape('shapeThumb') === 'circle' ? PILL : root['radius-thumb'];
+  root['radius-track'] = ['circle','pill'].includes(roundShape('shapeThumb')) ? PILL : root['radius-thumb'];
   root['radius-avatar'] = shapeRadius(roundShape('shapeAvatar'), alloc.button, controlShape);
   const container = ext.shapeContainer === 'square' ? () => '0' : value => value;
   // Source-locked Empty rounded roles per shared radius-allocation recipe.
@@ -595,7 +595,7 @@ export function themeTokens(resolved) {
   root['slider-track'] = rem(SLIDER[ext.sliderLook]);
   root['slider-thumb'] = rem(SLIDER_THUMB[style]);
   // shadcn Luma thumb is h-4 w-6 (a horizontal capsule); other styles are square.
-  root['slider-thumb-width'] = rem(style === 'luma' ? 1.5 : SLIDER_THUMB[style]);
+  root['slider-thumb-width'] = rem(roundShape('shapeThumb') === 'pill' ? SLIDER_THUMB[style] * 1.5 : style === 'luma' ? 1.5 : SLIDER_THUMB[style]);
   root['progress-track'] = resolved.explicit && resolved.explicit.sliderLook ? rem(SLIDER[ext.sliderLook]) : rem(looks.progress);
   root['progress-ring'] = '7.5rem';
   root['choice-size'] = style === 'sera' ? '1.125rem' : '1rem';
