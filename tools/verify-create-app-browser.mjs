@@ -3211,8 +3211,8 @@ try {
       const d=document.querySelector('[data-create-frame]').contentDocument;
       const w=d.defaultView, Q=w.QXFRAME9A7C2, style=d.documentElement.style;
       const key='--qxframe9a7c2-theme-dialog-divider-width';
-      const before=style.getPropertyValue(key), c=n=>w.getComputedStyle(n);
-      style.setProperty(key,'0px');
+      const before=style.getPropertyValue(key),sectionKey='--qxframe9a7c2-theme-card-section',beforeSection=style.getPropertyValue(sectionKey), c=n=>w.getComputedStyle(n);
+      style.setProperty(key,'0px');style.setProperty(sectionKey,'rgb(190 30 30)');
       const m=Q.Components.Modal.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false});
       const dr=Q.Components.Drawer.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false,placement:'right'});
       try {
@@ -3220,8 +3220,8 @@ try {
         m.open('pointer-geometry',event);
         dr.open('drawer-geometry',event);
         const dialog=m.getDialogElement(),drawer=dr.getPanelElement();
-        const read=p=>({header:c(p.querySelector('.qxframe9a7c2-'+(p===dialog?'modal':'drawer')+'-header')).paddingBottom,
-          footer:c(p.querySelector('.qxframe9a7c2-'+(p===dialog?'modal':'drawer')+'-footer')).paddingTop});
+        const read=p=>{const role=p===dialog?'modal':'drawer',h=p.querySelector('.qxframe9a7c2-'+role+'-header'),f=p.querySelector('.qxframe9a7c2-'+role+'-footer');
+          return {header:c(h).paddingBottom,footer:c(f).paddingTop,panelBg:c(p).backgroundColor,headerBg:c(h).backgroundColor,footerBg:c(f).backgroundColor};};
         return {originX:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-x'),
           originY:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-y'),
           scale:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-scale'),
@@ -3229,16 +3229,41 @@ try {
       } finally {
         m.destroy();dr.destroy();
         if(before)style.setProperty(key,before);else style.removeProperty(key);
+        if(beforeSection)style.setProperty(sectionKey,beforeSection);else style.removeProperty(sectionKey);
       }
     })()`);
     assert.notEqual(got.originX,'0px','pointer Modal must start at the actual click x, not its center');
     assert.notEqual(got.originY,'0px','pointer Modal must start at the actual click y, not its center');
-    assert.equal(got.scale,'.8','pointer-origin scales from the trigger');
+    assert.equal(got.scale,'.7','pointer-origin visibly scales from the trigger');
     for(const role of ['modal','drawer']){
       assert.equal(got[role].header,'0px',role+' divider-free header has no bottom padding');
-      assert.equal(got[role].footer,'0px',role+' divider-free footer has no top padding');
+      assert.ok(parseFloat(got[role].footer)>0,role+' divider-free footer keeps button space');
+      assert.equal(got[role].headerBg,got[role].panelBg,role+' divider-free header and panel background match');
+      assert.equal(got[role].footerBg,got[role].panelBg,role+' divider-free footer and panel background match');
     }
     assert.equal(got.placement,'right','Drawer retains real placement owner');
+  });
+
+  await step('Stage5 Preview04 inherits Create live CSS, shows all demos and black shadow in dark mode',async()=>{
+    await click('document.querySelector(\'[data-create-item="04"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("theme-playground.html")','Preview04 route',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert")','Preview04 live gallery',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")','Preview04 theme bridge',15000);
+    await waitFor('document.querySelector("[data-create-frame]").contentDocument.querySelectorAll("#component-alert .qxframe9a7c2-play-example").length>=2','all Alert demos mounted',20000);
+    const result=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,root=d.documentElement;
+      const alert=d.getElementById('component-alert'),theme=d.getElementById('qxframe9a7c2-create-theme'),wasDark=root.classList.contains('dark');
+      root.classList.add('dark');
+      const n=d.createElement('div');n.className='qxframe9a7c2-alert-root is-shadow is-success';d.body.append(n);
+      const shadow=w.getComputedStyle(n).boxShadow;n.remove();root.classList.toggle('dark',wasDark);
+      return {theme:theme.textContent.length,examples:alert.querySelectorAll('.qxframe9a7c2-play-example').length,folds:alert.querySelectorAll('[data-qxframe9a7c2-card-toggle]').length,shadow};
+    })()`);
+    assert.ok(result.theme>100,'live Create compiled theme applied to Preview04');
+    assert.ok(result.examples>=2,'all canonical Alert demos visible');
+    assert.equal(result.folds,0,'no collapsed cards in Preview04');
+    assert.match(result.shadow,/oklch\\(0 0 0|rgba\\(0, 0, 0|color\\(srgb 0 0 0/,'dark Alert shadow remains black: '+result.shadow);
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02',15000);
   });
 
   await step('Stage5 overlay compositor frame timings (diagnostic, not a visual signoff)',async()=>{

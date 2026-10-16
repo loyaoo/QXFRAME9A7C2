@@ -21,6 +21,7 @@ check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchron
  const imageCSS=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
  assert.match(modal,/animation !== 'zoom' && animation !== 'zoom-origin'/,'default zoom must retain trigger origin');
  assert.match(modal,/--_qxframe9a7c2-modal-motion-x/,'Modal keeps the same entry/exit point');
+ assert.match(modal,/translate3d\(var\(--_qxframe9a7c2-modal-motion-x[^\n]+scale\(var\(--_qxframe9a7c2-modal-motion-scale/,'Modal preserves real scale combined with origin travel');
  assert.match(preview,/is-chrome-leaving/,'preview chrome participates in leave lifecycle');
  assert.match(preview,/onActive: function \(context\)/,'preview chrome must start and leave on the exact image MotionCore active frame');
  assert.match(imageCSS,/--_qxframe9a7c2-image-preview-chrome-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'chrome leave matches image duration');
@@ -28,8 +29,21 @@ check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchron
  for(const type of ['modal','drawer']){
   const css=fs.readFileSync(path.join(root,'src/styles/components/'+type+'.css'),'utf8');
   assert.match(css,/padding-block-end:min\(var\(--qxframe9a7c2-theme-dialog-padding-y/,'header bottom padding derives from divider width for '+type);
-  assert.match(css,/padding-block-start:min\(var\(--qxframe9a7c2-theme-dialog-padding-y/,'footer top padding derives from divider width for '+type);
+  assert.match(css,/padding-block-start:var\(--qxframe9a7c2-theme-dialog-padding-y/,'footer retains action spacing without divider for '+type);
+  assert.match(css,/@container qxframe9a7c2-\w+-divider style\(--qxframe9a7c2-theme-dialog-divider-width: 0px\)/,'section background tracks divider token for '+type);
  }
+});
+check('Stage5 Preview04 directly reuses full Theme Playground and dark Alert shadow',()=>{
+ const index=read('index.html'),model=read('model.js'),html=fs.readFileSync(path.join(root,'docs/theme-playground.html'),'utf8');
+ const gallery=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ assert.match(index,/data-create-item="04"/,'fourth preview switch');
+ assert.match(model,/'04': '\.\.\/theme-playground\.html'/,'Preview04 canonical route not a copy');
+ assert.match(html,/src="create\/preview\.js"/,'single Create Theme injection owner');
+ assert.match(html,/data-create-preview="04"/,'offline QA recognizes Preview04');
+ assert.match(gallery,/function selectedLatestSpecs\(_rec,specs\)\{return specs;\}/,'all demos shown on initial mount');
+ assert.doesNotMatch(gallery,/data-qxframe9a7c2-card-toggle/,'no collapsed examples control');
+ assert.match(alert,/is-shadow\{--_qxframe9a7c2-alert-shadow:0 \.25rem \.75rem oklch\(0 0 0 \/ 0\.15\)\}/,'dark Alert shadow stays black');
 });
 check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');

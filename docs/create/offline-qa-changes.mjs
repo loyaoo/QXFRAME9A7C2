@@ -1,15 +1,15 @@
-/** STAGE5-DIALOG-PREVIEW-MOTION-20261016: only current Modal/Drawer/Image fixes. */
+/** STAGE5-PREVIEW04-DIALOG-ALERT-20261016: current Modal, Dialog sections and Alert. */
 /** Previous Calendar/DatePicker and older annotations are cleared. */
 const groups = [
- ['danger-dialog','Modal 点击位置和分区留白',[
-  ['[data-pv3x-widget="danger-dialog"]','点击位置入退场／柔和阴影／无分割线留白','Modal 返回开启动作位置；阴影更淡，无分割线时 Header 下内距/Footer 上内距为零','__QA_BUNDLE_HEAD__']
+ ['danger-dialog','Modal 缩放及分区背景',[
+  ['[data-pv3x-widget="danger-dialog"]','点击位置位移＋缩放','从 0.7 倍放大并移向中心，关闭反向；无分割线 Header/Footer 同背景且 Footer 留按钮间距','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['account-drawer','Drawer 四向滑动和分区留白',[
-  ['[data-pv3x-widget="account-drawer"]','四向滑入滑出／柔和阴影／无分割线留白','指定方向滑动，Mask 渐隐渐显，隐藏 divider 的邻接内距归零','__QA_BUNDLE_HEAD__']
+ ['account-drawer','Drawer 背景与按钮留白',[
+  ['[data-pv3x-widget="account-drawer"]','无分割线同背景＋按钮间距','Header 与 Footer 跟随 Drawer 背景；Header 下内距零，Footer 保留按钮间距','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['asset-preview','ImagePreview 动画同步',[
-  ['[data-pv3x-widget="asset-preview"]','中心缩放与控件定向退场','图片中心缩放，控件上下/左右滑动渐隐，遮罩与图片时长一致','__QA_BUNDLE_HEAD__']
- ],'03']
+ ['alert','Alert 暗色阴影／全部示例',[
+  ['.qxframe9a7c2-alert-root.is-shadow','深色阴影＋全部直接展开','Alert 阴影不依赖前景白色；Preview 04 展开所有 canonical 示例','__QA_BUNDLE_HEAD__']
+ ],'04']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -20,7 +20,7 @@ function mark(){
   if(!preview)return;
   document.body.classList.toggle('qa-annotated',visible);
   for(const [id,name,changes] of groups){
-    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):document.querySelector('[data-card="'+id+'"]');
+    const card=id==='static-recipes'?document.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?document.querySelector('.pv3-overview'):(id==='alert'?document.getElementById('component-alert'):document.querySelector('[data-card="'+id+'"]'));
     if(!card)continue;
     card.classList.add('qa-changed-card');
     card.dataset.qaCardLabel='已改 '+changes.length+' 处';
@@ -48,7 +48,7 @@ function getDoc(){
 function locate(group,change){
   const [id]=group,[selector]=change;
   const jump=()=>{
-    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):getDoc()?.querySelector('[data-card="'+id+'"]');
+    const card=id==='static-recipes'?getDoc()?.querySelector('[data-pv3-static-recipes]'):id==='overview-metrics'?getDoc()?.querySelector('.pv3-overview'):(id==='alert'?getDoc()?.getElementById('component-alert'):getDoc()?.querySelector('[data-card="'+id+'"]'));
     const node=card?.querySelector(selector)||card;
     if(!node)return false;
     node.scrollIntoView({behavior:'smooth',block:'center'});
@@ -56,7 +56,7 @@ function locate(group,change){
     setTimeout(()=>node.classList.remove('qa-jump-flash'),1800);
     return true;
   };
-  if(!preview){document.querySelector('[data-create-item="'+((group[3]==='03'?'03':group[3]==='02'?'02':'01'))+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
+  if(!preview){document.querySelector('[data-create-item="'+((group[3]||'01'))+'"]')?.click();if(!jump())setTimeout(jump,700)}else jump();
 }
 function toggleFold(v){
   folded=!!v;
@@ -72,7 +72,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">只标本轮 Tags、Dropdown、Calendar/DateTime、Image Preview 的可见变化；Alert 等新增外观在 theme-playground 默认可见。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮 Modal / Drawer 与 Preview 04 的 Alert 和全示例展开变化。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){

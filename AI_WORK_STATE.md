@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-16 Stage5 MODAL-ZOOM-DIALOG-SURFACE-PREVIEW04-001 (CI pending)
+- Owner acceptance: Modal zoom visually too small. Updated point scale .8→.7, center fallback .94→.86 while preserving initial click translation and reverse exit.
+- Divider width 0px: Modal/Drawer header padding-bottom=0, footer padding-top remains positive (Theme dialog padding) for button spacing. CSS named style queries inherit panel background for header/footer when divider 0, preserving distinct Section background if divider visible.
+- Alert shadow is black oklch regardless of foreground (dark mode formerly white). Create Preview04 routes to canonical docs/theme-playground.html; reuses Create preview.js live compiled theme injection. All canonical component examples visible with existing idle/viewport lazy mounting, no per-card collapse buttons.
+- Regression: static gates and real Chromium tests extended for above; local QA only marks current Modal, Drawer, Preview04 Alert regions. Stage5 owner video/visual acceptance not yet signed off. PR #267 stays Draft, main untouched. Next: run exact-head Actions/Chromium, fix any regression, package verified full Windows offline dist+docs ZIP.
+
 ## CURRENT — 2026-10-16 Stage5 DRAWER-FOOTER-CASCADE-001 (CI pending)
 - Exact HEAD 93437e79 Chromium QXFRAME Actions #38876758290 failed at newly added *real computed-style* check: drawer divider-free footer top padding remained nonzero.
 - Root cause verified in CSS source: Drawer footer's existing full `padding:` shorthand followed our early `padding-block-start` override; CSS cascade silently replaced it. Moved the exact same Theme-derived header/footer logical edge-padding rules AFTER all Drawer footer shorthand declarations. No assertion removed or loosened; browser still asserts actual 0px for Modal and Drawer.
