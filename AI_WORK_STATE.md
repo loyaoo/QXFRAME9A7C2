@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 TAGS-LEGACY-GATE-ALIGNMENT-001 (both CI pending)
+- Found two obsolete static acceptance assertions in `verify-create-app.mjs`: one still demanded editor Control-only Radius after the verified 18px-vs-4px mismatch, another claimed every standalone Add editor remained transparent despite Theme-filled and solid variants.
+- Updated assertions to require the canonical Tag → Compact Shape → Control radius, and restrict transparent editing to the explicit outlined appearance; pointer/keyboard Focus contract unchanged.
+- No new CSS/JS runtime change or browser threshold relaxation. Re-run exact-HEAD QXFRAME and CSS Schema, package only verified Actions output; PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-COMPACT-SHAPE-RADIUS-001 (latest HEAD needs both CI)
 - After fixing the public Modal facade test at `ad24bd587c9dc19189dd8f021c6afe949036af67`, QXFRAME CI #38849440972 reached the real Chromium Style geometry check and exposed `Tag editor radius: '4px' !== '18px'`. This is a production CSS responsibility defect, not a false browser assertion.
 - Root cause: `src/styles/components/visual-recipe.css` overrides ordinary Tag border-radius with compact-shape radius, while `src/styles/components/tags.css` editor consumed Control radius. Consolidated the canonical chain `--qxframe9a7c2-tag-radius → --_qxframe9a7c2-compact-shape-radius → --_qxframe9a7c2-control-radius` for Tag, standalone editor and keyboard focus shell, and removed the recipe's redundant Tag border-radius owner. No fixed 18px workaround.

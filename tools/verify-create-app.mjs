@@ -2034,7 +2034,7 @@ check('Stage5 Steps connector not over title, Item media fixed, Tags add inherit
  assert.ok(addStyle.includes('height:var(--_qxframe9a7c2-tag-height)'),'Add Tag shares canonical Tag height');
  assert.doesNotMatch(addStyle,/--_qxframe9a7c2-tag-(bg|border|text)|border-style/,'Add must never replace the canonical Tag surface painter');
  assert.doesNotMatch(tags,/\.qxframe9a7c2-tags-add:hover:not\(:disabled\)/,'Add hover must use the canonical Tag hover painter');
- assert.ok(tags.includes('background:transparent;')&&tags.includes('.qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{'),'standalone Add editor stays transparent, solid and follows Control focus');
+ assert.ok(tags.includes('.qxframe9a7c2-tags.is-variant-outlined{--_qxframe9a7c2-tags-variant-input-bg:transparent;')&&tags.includes('.qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{'),'only outlined Tags editor is intentionally transparent; standalone Add editor follows canonical Theme focus');
  assert.ok(tags.includes('html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus-visible{'),'Tag editor keyboard outline comes from Theme keyboard focus');
  assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add consumes the canonical Tag painter');
  assert.ok(read('preview-03.js').includes("checkable:true,closable:false,editable:true"),'Support Triage exposes the actual Add Tag in the offline owner QA sample');
@@ -2327,7 +2327,7 @@ check('Stage5 Tags edit, ScrollLock and Overlay motion share Theme and composito
  const drawerCss=fs.readFileSync(path.join(root,'src/styles/components/drawer.css'),'utf8');
  const imageCss=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
  assert.ok(tags.includes('border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--_qxframe9a7c2-tags-input-border)'),'Tags editor border consumes the Theme control width');
- assert.ok(tags.includes('border-radius:var(--qxframe9a7c2-tag-radius,var(--_qxframe9a7c2-control-radius))'),'Tags editor uses the same Tag radius consumer');
+ assert.ok(tags.includes('border-radius:var(--qxframe9a7c2-tag-radius,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius)))'),'Tags editor consumes the same canonical Tag/Compact Shape/Control radius');
  assert.doesNotMatch(tags,/is-adding \.qxframe9a7c2-tags-input\{[^}]*border:1px solid transparent/,'standalone editor may not hardcode a transparent border');
  assert.ok(lock.includes("win.CSS.supports('scrollbar-gutter', 'stable')"),'root scrollbar-gutter stability is feature checked');
  assert.ok(modal.includes("animation:'zoom'")&&!modal.includes('measureSurfaceRect(ctx)'),'Modal center zoom has no forced preanimation measure');
