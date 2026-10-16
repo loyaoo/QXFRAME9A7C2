@@ -15,6 +15,21 @@ const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
 
+check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchronized leave',()=>{
+ const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+ const preview=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ const imageCSS=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ assert.match(modal,/animation !== 'zoom' && animation !== 'zoom-origin'/,'default zoom must retain trigger origin');
+ assert.match(modal,/--_qxframe9a7c2-modal-motion-x/,'Modal keeps the same entry/exit point');
+ assert.match(preview,/is-chrome-leaving/,'preview chrome participates in leave lifecycle');
+ assert.match(imageCSS,/--_qxframe9a7c2-image-preview-chrome-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'chrome leave matches image duration');
+ assert.match(imageCSS,/mask\.qxframe9a7c2-motion-fade-leave-active\{transition-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'mask leave matches image duration');
+ for(const type of ['modal','drawer']){
+  const css=fs.readFileSync(path.join(root,'src/styles/components/'+type+'.css'),'utf8');
+  assert.match(css,/padding-block-end:min\(var\(--qxframe9a7c2-theme-dialog-padding-y/,'header bottom padding derives from divider width for '+type);
+  assert.match(css,/padding-block-start:min\(var\(--qxframe9a7c2-theme-dialog-padding-y/,'footer top padding derives from divider width for '+type);
+ }
+});
 check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
  const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
@@ -258,11 +273,10 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
   const current={
-    "capacity-calendar":['[data-pv3x-widget="capacity-calendar"]'],
-    "release-planner":['[data-pv3x-widget="release-planner"]'],
     "danger-dialog":['[data-pv3x-widget="danger-dialog"]'],
-    "account-drawer":['[data-pv3x-widget="account-drawer"]']
-  }; // Only this cross-month Calendar and Dialog Theme batch is highlighted.
+    "account-drawer":['[data-pv3x-widget="account-drawer"]'],
+    "asset-preview":['[data-pv3x-widget="asset-preview"]']
+  }; // Only the actual Modal/Drawer/ImagePreview visual batch is highlighted.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -273,11 +287,11 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['platform-tree','quick-action-menu','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+  for(const previous of ['capacity-calendar','release-planner','platform-tree','quick-action-menu','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,4,'only four current Calendar/Dialog Theme visual regions are highlighted');
+  assert.equal(count,3,'only three current Modal/Drawer/Image visual regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');

@@ -683,6 +683,7 @@ function setupImage(instance) {
     // Releasing width/height/transform while the surface is still paintable lets the
     // copy snap back to its centered resting geometry for one frame at the end of leave.
     surface.hide(detail);
+    if (previewRoot) previewRoot.classList.remove('is-chrome-leaving');
     // Once hidden, it is safe to reset transformed media and unlock geometry.
     // Do not reveal the source until BOTH content and mask have left.
     if (imagePreviewActive()) resetTransform('preview-close-complete');
@@ -715,7 +716,10 @@ function setupImage(instance) {
     // showing it here creates the two-image ghost visible in the old close animation.
     // Preview chrome leaves on the same lifecycle clock as mask/trajectory. The root remains
     // mounted until both presence owners complete, so title/toolbar/close never disappear early.
-    if (previewRoot) previewRoot.classList.remove('is-chrome-visible');
+    if (previewRoot) {
+      previewRoot.classList.add('is-chrome-leaving');
+      previewRoot.classList.remove('is-chrome-visible');
+    }
     // The public reason is metadata, not teardown authority. Actual destroy owns its
     // own direct presence/overlay teardown below, so closePreview('destroy') must not
     // be able to impersonate an immediate structural destroy.
@@ -929,7 +933,8 @@ function setupImage(instance) {
         }
         // Flush the now-opaque source while handoff disables the fade, before
         // final mask teardown can remove the temporary handoff class.
-        void image.offsetWidth;
+        // Default center zoom has no source-handoff read dependency.
+        if (cfg('trajectory',false) === true) void image.offsetWidth;
         leaveContentDone = true;
         tracePreviewLeave('image-trajectory-done');
         finalizePreviewLeave(context);
@@ -962,7 +967,7 @@ function setupImage(instance) {
     // boundary Chromium can coalesce the mask/chrome `from` and `to` values into the first
     // painted frame, making the fade visually disappear even though Transition runs.
     root.classList.remove('is-preview-source-handoff');
-    previewRoot.classList.remove('is-chrome-visible');
+    previewRoot.classList.remove('is-chrome-visible', 'is-chrome-leaving');
     previewRoot.classList.toggle('is-center-zoom',cfg('trajectory',false)!==true);
     void previewRoot.offsetWidth;
     previewRoot.classList.add('is-chrome-visible');

@@ -3206,6 +3206,41 @@ try {
     }
   });
 
+  await step('Stage5 Modal origin and zero-divider Dialog geometry in real Chromium',async()=>{
+    const got=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const w=d.defaultView, Q=w.QXFRAME9A7C2, style=d.documentElement.style;
+      const key='--qxframe9a7c2-theme-dialog-divider-width';
+      const before=style.getPropertyValue(key), c=n=>w.getComputedStyle(n);
+      style.setProperty(key,'0px');
+      const m=Q.Components.Modal.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false});
+      const dr=Q.Components.Drawer.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false,placement:'right'});
+      try {
+        const event=new w.MouseEvent('click',{bubbles:true,clientX:40,clientY:80});
+        m.open('pointer-geometry',event);
+        dr.open('drawer-geometry',event);
+        const dialog=m.getDialogElement(),drawer=dr.getPanelElement();
+        const read=p=>({header:c(p.querySelector('.qxframe9a7c2-'+(p===dialog?'modal':'drawer')+'-header')).paddingBottom,
+          footer:c(p.querySelector('.qxframe9a7c2-'+(p===dialog?'modal':'drawer')+'-footer')).paddingTop});
+        return {originX:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-x'),
+          originY:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-y'),
+          scale:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-scale'),
+          modal:read(dialog),drawer:read(drawer),placement:drawer.dataset.placement};
+      } finally {
+        m.destroy();dr.destroy();
+        if(before)style.setProperty(key,before);else style.removeProperty(key);
+      }
+    })()`);
+    assert.notEqual(got.originX,'0px','pointer Modal must start at the actual click x, not its center');
+    assert.notEqual(got.originY,'0px','pointer Modal must start at the actual click y, not its center');
+    assert.equal(got.scale,'.8','pointer-origin scales from the trigger');
+    for(const role of ['modal','drawer']){
+      assert.equal(got[role].header,'0px',role+' divider-free header has no bottom padding');
+      assert.equal(got[role].footer,'0px',role+' divider-free footer has no top padding');
+    }
+    assert.equal(got.placement,'right','Drawer retains real placement owner');
+  });
+
   await step('Stage5 overlay compositor frame timings (diagnostic, not a visual signoff)',async()=>{
     const timings=await evaluate("(async()=>{\n const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,q=w.QXFRAME9A7C2;\n const host=d.createElement('section');host.style.cssText='position:absolute;left:-2500px;top:0';d.body.append(host);\n const canvas=d.createElement('canvas');canvas.width=160;canvas.height=90;canvas.getContext('2d').fillRect(0,0,160,90);\n const source=canvas.toDataURL('image/png'),imgHost=d.createElement('div');host.append(imgHost);\n const modal=q.Components.Modal.create({document:d,portalContainer:d.body,title:'Motion sample',content:'Compositor profile',autoOpen:false,lockScroll:true,focusTrap:false});\n const drawer=q.Components.Drawer.create({document:d,portalContainer:d.body,title:'Drawer sample',content:'Compositor profile',autoOpen:false,lockScroll:true,focusTrap:false});\n const img=q.Components.Image.create({container:imgHost,src:source,alt:'Performance sampling source',preview:true,width:160,height:90});\n const sample=async act=>{\n  const start=w.performance.now();act();const syncMs=w.performance.now()-start;\n  let first=0,prev=0,maxGap=0,longFrames=0,deltaTotal=0;const gaps=[];\n  for(let i=0;i<28;i++){\n   const t=await new Promise(done=>w.requestAnimationFrame(done));\n   if(!first)first=t-start;\n   if(prev){const gap=t-prev;gaps.push(gap);deltaTotal+=gap;maxGap=Math.max(maxGap,gap);if(gap>34)longFrames++}\n   prev=t;\n  }\n  return {syncMs:+syncMs.toFixed(2),firstFrameMs:+first.toFixed(2),maxGapMs:+maxGap.toFixed(2),longFrames,meanGapMs:+(deltaTotal/Math.max(1,gaps.length)).toFixed(2)};\n };\n try{\n  const result={};\n  result.modalEnter=await sample(()=>modal.open('motion-profile'));\n  result.modalLeave=await sample(()=>modal.close('motion-profile'));\n  result.drawerEnter=await sample(()=>drawer.open('motion-profile'));\n  result.drawerLeave=await sample(()=>drawer.close('motion-profile'));\n  result.imageEnter=await sample(()=>img.openPreview());\n  result.imageLeave=await sample(()=>img.closePreview('motion-profile'));\n  return result;\n }finally{img.destroy();modal.destroy();drawer.destroy();host.remove()}\n})()");
     for(const name of ['modalEnter','modalLeave','drawerEnter','drawerLeave','imageEnter','imageLeave']){

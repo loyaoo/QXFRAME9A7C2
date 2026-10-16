@@ -90,30 +90,36 @@ function createModalController(instance, options) {
     return null;
   }
   function applyMotion(ctx, showing, event, reason) {
+    // Closing returns to the ORIGINAL trigger point, not the close button.
     if (!showing) return;
-    // Center zoom is compositor-only and never measures a transitioning
-    // dialog. Origin-specific motion remains available by explicit opt-in.
-    if (ctx.options().animation !== 'zoom-origin') {
-      ctx.surface.style.transformOrigin = '50% 50%';
-      return;
-    }
+    var animation = ctx.options().animation;
+    if (animation !== 'zoom' && animation !== 'zoom-origin' && animation !== 'zoomIn') return;
     var point = originPoint(ctx, event, reason);
-    if (!point) { ctx.surface.style.transformOrigin = '50% 50%'; return; }
-    var rect = ctx.surface.getBoundingClientRect();
-    ctx.surface.style.transformOrigin = rect.width > 0 && rect.height > 0
-      ? Math.round(point.x - rect.left) + 'px ' + Math.round(point.y - rect.top) + 'px'
-      : '50% 50%';
+    var x = 0, y = 0;
+    if (point) {
+      // Single read before presence; subsequent animation is compositor-only.
+      var rect = ctx.surface.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        x = Math.round(point.x - rect.left - rect.width / 2);
+        y = Math.round(point.y - rect.top - rect.height / 2);
+      } else point = null;
+    }
+    ctx.surface.style.transformOrigin = '50% 50%';
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-x', x + 'px');
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-y', y + 'px');
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-scale', point ? '.8' : '.94');
   }
   function dialogMotion(ctx) {
     var opts = ctx.options();
     if (opts.animation === false) return { type:'transition', appear:{from:null,active:null,to:null}, enter:{from:null,active:null,to:null}, leave:{from:null,active:null,to:null} };
     var name = opts.animation || 'zoom-origin';
     if (name !== 'zoom-origin' && name !== 'zoom' && name !== 'zoomIn') return MotionPresets.resolve(name);
+    var from = 'translate3d(var(--_qxframe9a7c2-modal-motion-x,0px),var(--_qxframe9a7c2-modal-motion-y,0px),0) scale(var(--_qxframe9a7c2-modal-motion-scale,.94))';
     return {
       type:'transition',
-      appear:{ from:{style:{transform:'scale(.94)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      enter:{ from:{style:{transform:'scale(.94)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:'scale(.94)',opacity:'0'}} }
+      appear:{ from:{style:{transform:from,opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      enter:{ from:{style:{transform:from,opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:from,opacity:'0'}} }
     };
   }
 

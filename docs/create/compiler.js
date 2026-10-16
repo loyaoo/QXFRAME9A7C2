@@ -102,10 +102,10 @@ const SHADOWS = {
   '2xl': '0 1.5625rem 3.125rem -0.75rem oklch(0 0 0 / 0.25)',
   // Dialogs already sit on an overlay; elevation increases by spread first,
   // not by jumping to a 25% black 2xl halo.
-  'dialog-light': '0 0.25rem 0.875rem -0.375rem oklch(0 0 0 / 0.07), 0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.05)',
-  'dialog-medium': '0 0.5rem 1.25rem -0.5rem oklch(0 0 0 / 0.09), 0 0.125rem 0.375rem -0.125rem oklch(0 0 0 / 0.05)',
-  'dialog-strong': '0 0.75rem 1.75rem -0.625rem oklch(0 0 0 / 0.11), 0 0.1875rem 0.5rem -0.125rem oklch(0 0 0 / 0.06)',
-  'dialog-heavy': '0 1rem 2.5rem -0.75rem oklch(0 0 0 / 0.14), 0 0.25rem 0.75rem -0.1875rem oklch(0 0 0 / 0.07)'
+  'dialog-light': '0 0.25rem 0.875rem -0.375rem oklch(0 0 0 / 0.035), 0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.025)',
+  'dialog-medium': '0 0.5rem 1.25rem -0.5rem oklch(0 0 0 / 0.05), 0 0.125rem 0.375rem -0.125rem oklch(0 0 0 / 0.03)',
+  'dialog-strong': '0 0.75rem 1.75rem -0.625rem oklch(0 0 0 / 0.07), 0 0.1875rem 0.5rem -0.125rem oklch(0 0 0 / 0.04)',
+  'dialog-heavy': '0 1rem 2.5rem -0.75rem oklch(0 0 0 / 0.09), 0 0.25rem 0.75rem -0.1875rem oklch(0 0 0 / 0.05)'
 };
 // Shadow axis: low / mid / high tiers move together (card, popup, dialog).
 const SHADOW_TIERS = {

@@ -1,3 +1,12 @@
+## CURRENT — 2026-10-16 Stage5 DIALOG-ORIGIN-PREVIEW-LIFECYCLE-001 (CI pending)
+- Resumed verified branch redesign/create-stage5 @ 214d24464e9716e4291854b8b9ef2af7297cc71d; PR #267 remains Draft/Open, main untouched.
+- Modal default zoom now measures the opening trigger once, translates from its pointer/focus origin toward center and reverses along the same saved path on leave. Programmatic opens without a trigger keep center zoom. Mask remains fade-only.
+- Drawer existing 4-side slide and mask fade ownership retained. Modal/Drawer use the existing Theme divider width to give header lower padding and footer upper padding exactly 0 when divider is hidden.
+- Reduced only the four shared Dialog shadow grades; none/card/popup remain separate and unchanged.
+- ImagePreview source maintains one mask/media leave lifecycle. Media center-scales; title, close, toolbar and navigation directionally slide without extra scaling, with the same Theme transition enter/leave duration as the mask/media. Forced layout read on exit is limited to actual thumbnail-handoff mode.
+- Three current-only offline QA markers: danger-dialog, account-drawer, asset-preview. Strict source assertions updated to this exact batch.
+- PRE-CI only: exact-HEAD two Actions, Chromium before/after trace, owner video signoff and successful official dist+docs ZIP still pending. Stage 5 NOT complete or signed off. Next: run both CI, remedy actual regressions, verify official artifact, keep Draft.
+
 ## CURRENT — 2026-10-16 Stage5 GENERATED-DEFAULT-THEME-ALIGNMENT-001 (CI pending)
 - QXFRAME #38866044388 passed canonical public Schema alignment, but `verify:theme-default` rejected stale generated `src/styles/main/theme.css`.
 - Reconciled Nova default compilation values from the new authoritative compiler: dialog padding x=1rem, y=.75rem, body=.75rem, divider-width=0px (Nova sections=muted), shadow-popup=none for surface none, dialog-mask-blur=0rem independent of Menu. Updated the mirrored `theme-public-schema.json` root values for those six entries; no other dimensions or color tokens modified.

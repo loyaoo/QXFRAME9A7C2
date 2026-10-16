@@ -1,17 +1,14 @@
-/** TAGS-SCROLL-MOTION-20261016: this batch changes actual popup ListFrame geometry. */
-/** Previous annotations cleared; only Tags/Modal/Drawer/Image current changes remain. */
+/** STAGE5-DIALOG-PREVIEW-MOTION-20261016: only current Modal/Drawer/Image fixes. */
+/** Previous Calendar/DatePicker and older annotations are cleared. */
 const groups = [
- ['capacity-calendar','Calendar 跨月范围圆角',[
-  ['[data-pv3x-widget="capacity-calendar"]','跨月色带视觉收口','可见月界的色带端点跟随 Theme 圆角，不再假装实际选中','__QA_BUNDLE_HEAD__']
+ ['danger-dialog','Modal 点击位置和分区留白',[
+  ['[data-pv3x-widget="danger-dialog"]','点击位置入退场／柔和阴影／无分割线留白','Modal 返回开启动作位置；阴影更淡，无分割线时 Header 下内距/Footer 上内距为零','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['release-planner','DatePicker 跨月和跨周',[
-  ['[data-pv3x-widget="release-planner"]','周选择跨月不透底','2026-07-27 至 08-02 整周端点实色，9–10 月可见范围切口有主题圆角','__QA_BUNDLE_HEAD__']
+ ['account-drawer','Drawer 四向滑动和分区留白',[
+  ['[data-pv3x-widget="account-drawer"]','四向滑入滑出／柔和阴影／无分割线留白','指定方向滑动，Mask 渐隐渐显，隐藏 divider 的邻接内距归零','__QA_BUNDLE_HEAD__']
  ],'03'],
- ['danger-dialog','Modal 主题分区阴影',[
-  ['[data-pv3x-widget="danger-dialog"]','Theme 留白/分区/柔和阴影','标题/内容/底部随容器留白、无分割线/灰底/分隔线 Theme 策略联动','__QA_BUNDLE_HEAD__']
- ],'03'],
- ['account-drawer','Drawer 主题分区阴影',[
-  ['[data-pv3x-widget="account-drawer"]','Theme 留白/分区/柔和阴影','Drawer 内部分区接入同一 Theme 而不影响贴边 viewport gap','__QA_BUNDLE_HEAD__']
+ ['asset-preview','ImagePreview 动画同步',[
+  ['[data-pv3x-widget="asset-preview"]','中心缩放与控件定向退场','图片中心缩放，控件上下/左右滑动渐隐，遮罩与图片时长一致','__QA_BUNDLE_HEAD__']
  ],'03']
 ];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
