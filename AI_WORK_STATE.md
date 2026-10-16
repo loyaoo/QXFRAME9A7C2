@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 MIST-EXACT-FORMULA-SCHEMA-001 (CI pending)
+- Previous CI on af0a4fc5 failed strict old source-lock assertions in verify-create-app.mjs for prior Menu-foreground 12% hover. Original frozen shadcn fixture unchanged. Updated three exact literal expectations to new QX base-neutral Popup Hover formula.
+- CSS Schema #38918569246 also rejected the new neutral-muted/muted-foreground mixes as not in the closed source formula set. Added exactly three fully spelled out allowable shared formulas (hover/active/translucent popup) to tools/theme-v2-contract.mjs. Kept source-lock detector, mutation test, no style selectors, and no scope relaxation. This is an explicit source-derived palette state adaptation, not bypass.
+- Slider track thickness and handle pill remain separate. Card/Popup/Dialog shadow now uses relative OKLCH base-muted-foreground hue/chroma with low lightness without nested light-dark. Next exact-head QXFRAME/Schema/Chromium and Windows official offline bundle. PR #267 Draft; main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 MIST-BROWSER-SYNTAX-CLEANUP-001 (CI pending)
 - New Chromium Mist test had a double-escaped slash in its nonwhite-shadow assertion; replaced with strict equivalent literal string check. Production source and all other tests unchanged. This is a syntax repair, not test removal.
 - Current batch visual QA has only four Preview04 marks. Need next HEAD double-green CI and exact-build Windows ZIP. PR Draft; main unchanged.

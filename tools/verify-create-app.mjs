@@ -2190,7 +2190,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
    '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-date-panel-cell.is-selected',
    '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
-   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'])
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%'])
    assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
  assert.ok(picker.includes('width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem)'), 'Cascader popup follows rendered column count');
 });
@@ -2203,9 +2203,9 @@ check('Stage5 popup state color pairs are explicit source consumers',()=>{
    'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
    '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
    '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
-   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%',
    '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
-   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%'
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%'
  ])assert.ok(css.includes(marker),'popup role '+marker);
 });
 

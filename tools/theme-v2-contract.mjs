@@ -34,6 +34,13 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   // Shared Menu state overlays are alpha-composited on whichever Popup
   // surface the generator emits (opaque or translucent); no mode-specific skins.
   alpha(p+'menu-foreground',[12,26]);alpha(p+'menu-accent',[84]);
+  // QX base-neutral hover: the user's neutral base (Mist/Olive/Mauve/etc.),
+  // not saturated Theme Primary, supplies shared Calendar/Item/Menu tint.
+  // Register exactly these three neutral formulas, not arbitrary CSS mixes.
+  const baseHover='color-mix(inoklab,var('+p+'muted)78%,var('+p+'muted-foreground))';
+  allowed.add(baseHover);
+  allowed.add('color-mix(inoklab,var('+p+'muted)65%,var('+p+'muted-foreground))');
+  allowed.add('color-mix(inoklab,'+baseHover+'70%,transparent)');
   const fill='var('+p+'radio-fill)';
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',transparent)');
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',var('+p+'foreground))');
