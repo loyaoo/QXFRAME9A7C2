@@ -187,7 +187,21 @@ function datePickerMore(ctx){var DatePicker=C(ctx,'DatePicker');
  ex(ctx,'日期时间 Theme 分隔线','Calendar/TimePanel 使用同一个弹层，Theme field-border 分隔。',"DatePicker.create({time:true,value:'2026-08-15 09:30:00'})",function(h){track(ctx,DatePicker.create({container:h,value:'2026-08-15 09:30:00',time:true,needConfirm:true}),'date time divider');});
 }
 function alertMore(ctx){
- ex(ctx,'Alert：语义 × 外观 × 阴影','success/error/warning/info 与 muted/outline/shadow 组合；所有状态使用同一个 Theme 派生源。','class="qxframe9a7c2-alert-root is-success is-muted"',function(h){var stack=document.createElement('div');stack.className='qxframe9a7c2-stack';for(var intent of ['success','error','warning','info'])for(var skin of ['muted','outline','shadow']){var node=document.createElement('div');node.className='qxframe9a7c2-alert-root is-'+intent+' is-'+skin;var title=document.createElement('strong');title.className='qxframe9a7c2-alert-title';title.textContent=intent+' / '+skin;node.append(title);stack.append(node);}h.append(stack);},true);
+ ex(ctx,'Alert：语义 × 外观 × 阴影','success/error/warning/info 与 muted/outline/shadow，全部用 Alert 正式 wrapper/icon/section DOM；is-shadow 也可组合 muted/outline。','class="qxframe9a7c2-alert-root is-success is-muted"',function(h){
+  var stack=document.createElement('div');stack.className='qxframe9a7c2-stack';
+  var icons={success:'check-circle',error:'error-octagon',warning:'alert-triangle',info:'info'};
+  for(var intent of ['success','error','warning','info'])for(var skin of ['muted','outline','shadow']){
+   var node=document.createElement('section');node.className='qxframe9a7c2-alert-root is-'+intent+' is-'+skin;
+   var wrap=document.createElement('div');wrap.className='qxframe9a7c2-alert-wrapper';
+   var symbol=document.createElement('span');symbol.className='qxframe9a7c2-alert-icon';symbol.appendChild(cssIcon(icons[intent],{size:'lg'}));
+   var contents=document.createElement('div');contents.className='qxframe9a7c2-alert-section';
+   var title=document.createElement('strong');title.className='qxframe9a7c2-alert-title';title.textContent=intent+' / '+skin;
+   var detail=document.createElement('div');detail.className='qxframe9a7c2-alert-description';detail.textContent='Theme '+intent+' · '+skin;
+   contents.appendChild(title);contents.appendChild(detail);wrap.appendChild(symbol);wrap.appendChild(contents);node.appendChild(wrap);stack.appendChild(node);
+  }
+  h.appendChild(stack);
+ },true);
+ ex(ctx,'Alert 叠加外观','is-shadow 可叠加在 is-muted/is-outline 上，阴影不覆盖语义边框和背景。','is-success is-muted is-shadow',function(h){var rowHost=document.createElement('div');rowHost.className='qxframe9a7c2-stack';for(var look of ['muted','outline']){var n=document.createElement('section');n.className='qxframe9a7c2-alert-root is-success is-'+look+' is-shadow';var w=document.createElement('div');w.className='qxframe9a7c2-alert-wrapper';var icon=document.createElement('span');icon.className='qxframe9a7c2-alert-icon';icon.appendChild(cssIcon('check-circle',{size:'lg'}));var sec=document.createElement('div');sec.className='qxframe9a7c2-alert-section';sec.textContent='success / '+look+' / shadow';w.appendChild(icon);w.appendChild(sec);n.appendChild(w);rowHost.appendChild(n);}h.appendChild(rowHost);},true);
 }
 function imageMore(ctx){var Image=C(ctx,'Image');
  ex(ctx,'图片预览退场 / 控制条同色','打开预览后关闭，检查 source-copy 返回轨迹、遮罩和工具条；若仍卡顿，控制台启用 window.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG=true。',"Image.create({container,preview:true,src:base64Image})",function(h){var svg='<svg xmlns="http://www.w3.org/2000/svg" width="360" height="210"><rect width="360" height="210" rx="12" fill="#1677ff"/><text x="180" y="112" text-anchor="middle" font-size="25" font-family="sans-serif" fill="#fff">QX Preview</text></svg>';track(ctx,Image.create({container:h,src:'data:image/svg+xml;base64,'+btoa(svg),alt:'Preview source',preview:true,width:180,height:105}),'image-preview');});
@@ -206,6 +220,7 @@ function staticAppearanceMore(ctx){
  }else if(name==='Kbd'){
   ex(ctx,'Keycap / Group / Primary','扩展原 composition.css 内唯一 Kbd owner，不创建第二套组件 CSS。','qxframe9a7c2-kbd / qxframe9a7c2-kbd-group',function(h){var line=row();var g=document.createElement('span');g.className='qxframe9a7c2-kbd-group';for(var key of ['Ctrl','Shift','K']){var k=document.createElement('kbd');k.className='qxframe9a7c2-kbd is-primary';k.textContent=key;g.append(k);}line.append(g);h.append(line);});
  }else if(name==='Form'){
+  ex(ctx,'Kbd 命令键组合','原 composition.css 唯一 Kbd owner：普通键、Primary、分组键帽，无 JS 管理器。','qxframe9a7c2-kbd / qxframe9a7c2-kbd-group',function(h){var rowHost=row(),group=document.createElement('span');group.className='qxframe9a7c2-kbd-group';for(var name of ['Ctrl','Shift','K']){var k=document.createElement('kbd');k.className='qxframe9a7c2-kbd'+(name==='K'?' is-primary':'');k.textContent=name;group.appendChild(k);}rowHost.appendChild(group);var solo=document.createElement('kbd');solo.className='qxframe9a7c2-kbd is-outline';solo.textContent='Esc';rowHost.appendChild(solo);h.appendChild(rowHost);});
   ex(ctx,'Field help / valid / invalid','原生输入控件和 Field 状态同步，不单独维护第二套输入框样式。','qxframe9a7c2-field is-valid / is-invalid',function(h){var stack=document.createElement('div');stack.className='qxframe9a7c2-stack';for(var mode of ['valid','invalid']){var field=document.createElement('label');field.className='qxframe9a7c2-field is-'+mode;field.textContent='Field '+mode;var input=document.createElement('input');input.className='qxframe9a7c2-form-input';input.value='Theme '+mode;field.append(input);stack.append(field);}h.append(stack);});
  }
 }

@@ -64,7 +64,7 @@ function mountRecord(rec){if(!global.QXFRAME9A7C2ComponentDemos||typeof global.Q
 function selectedLatestSpecs(rec,specs){
   if(rec.expanded)return specs;
   var recent={
-    Alert:['Alert：语义 × 外观 × 阴影'],
+    Alert:['Alert：语义 × 外观 × 阴影','Alert 叠加外观'],
     Calendar:['周 hover / 连续高亮 / 跨月圆角'],
     DatePicker:['周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'],
     Dropdown:['Tabler 菜单内距 all / block / none'],
@@ -72,7 +72,7 @@ function selectedLatestSpecs(rec,specs){
     Image:['图片预览退场 / 控制条同色'],
     Card:['Stacked / Stamp / Deck'],Badge:['Soft / Subtle / Status'],
     Avatar:['Outline / Muted / Primary + Status'],Progress:['Striped / Warning / Error'],
-    Form:['Field help / valid / invalid'],Kbd:['Keycap / Group / Primary']
+    Form:['Kbd 命令键组合','Field help / valid / invalid'],Kbd:['Keycap / Group / Primary']
   };
   var titles=recent[rec.meta.name]||[];
   return specs.filter(function(spec,i){return i===0||titles.indexOf(spec.title)>=0;});

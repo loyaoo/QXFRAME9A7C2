@@ -57,7 +57,7 @@ check('Stage5 screenshot defects map to canonical DatePicker, Image and visible 
  assert.ok(image.includes("if (cfg('trajectory',false) === true) root.classList.add('is-preview-source-hidden')"),'source opacity handoff is opt-in only');
  assert.ok(imageCss.includes('image-preview-nav .qxframe9a7c2-icon{color:inherit}'),'navigation inherits preview white foreground');
  assert.ok(picker.includes('date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid'),'DateTime boundary uses Theme border');
- for(const label of ['Alert：语义 × 外观 × 阴影','周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'])assert.ok(demo.includes(label),'public canonical demo '+label);
+ for(const label of ['Alert：语义 × 外观 × 阴影','Alert 叠加外观','Kbd 命令键组合','周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'])assert.ok(demo.includes(label),'public canonical demo '+label);
  assert.ok(theme.includes('selectedLatestSpecs(rec,specs)'),'new component variants are visible without expanding all');
 });
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{

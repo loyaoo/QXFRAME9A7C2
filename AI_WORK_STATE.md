@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 ALERT-PUBLIC-DEMO-001 (pending CI)
+- User requested newly added Alert appearance/semantic demos visibly in theme-playground. Corrected an existing 12-entry demo that had rendered only a title: now creates each canonical Alert wrapper/icon/section/description, covers four semantic intents × muted/outline/shadow and extra shadow+muted/outline combinations.
+- New static Kbd shapes now appear under public Form demo, since Kbd has no independent catalog entry. All use existing `composition.css` source and no new JS/CSS painter or separate Kbd component.
+- Both examples auto-display in theme playground through the same canonical example registry. Current Image preview center zoom and Calendar unit fix are pending latest CI. PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 IMAGE-TRAJECTORY-EXPLICIT-REGRESSION-001
 - On screenshot-source HEAD `f4b988886b7909787043f6952c3bdd8a31383d76`, QXFRAME CI #38831110093 advanced past CSS gate but old `verify-final-audit-regressions.mjs` fixture demanded source-position trajectory on `preview:true`, which now correctly means center zoom by owner request. Kept strict trajectory test by making its fixture explicitly `preview:{trajectory:true}`; did not relax geometry or source-handoff assertions. Default center path separately tested by `verify-create-app-browser.mjs`.
 - Next run exact-HEAD QXFRAME and CSS Schema; investigate additional red tests by root cause. Draft PR #267; main untouched.
