@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 MODAL-CENTER-DEFAULT-REGRESSION-001 (latest CI pending)
+- Earlier QXFRAME CI #38846412043 correctly flagged obsolete Phase E fixture: first-trigger Modal was implicitly exercising default origin zoom, but the user requested a center zoom default without costly force-layout. Kept exact trigger origin assertion by explicitly selecting `animation:'zoom-origin'`, then added separate strict default center zoom assertion with triggerTarget set.
+- Chromium createApp Stage5 ScrollLock fixture now supplies exact iframe `document` and `portalContainer` to Modal, matching the canonical constructor (not top-level global document). Real center/gutter validation preserved.
+- Latest new HEAD both CI still pending, full Windows artifact not delivered; PR #267 remains Draft, main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 TAGS-SCROLL-OVERLAY-BROWSER-001 (latest CI pending)
 - Added strict source gate for editable Tag border width/radius, shared root ScrollLock stable gutter, Modal center zoom without forced layout, Modal/Drawer mask compositor and Image Preview compositing.
 - Added real Chromium active Tags editing and Modal lock/center geometry test, asserting Theme-consistent tag radius, scrolling disabled while overlay active, fixed center position unchanged, and stable native scrollbar gutter when width>0. No empty-computed-style allowance.
