@@ -43,7 +43,7 @@ check('Stage5 Preview04 directly reuses full Theme Playground and dark Alert sha
  assert.match(html,/data-create-preview="04"/,'offline QA recognizes Preview04');
  assert.match(gallery,/function selectedLatestSpecs\(_rec,specs\)\{return specs;\}/,'all demos shown on initial mount');
  assert.doesNotMatch(gallery,/data-qxframe9a7c2-card-toggle/,'no collapsed examples control');
- assert.match(alert,/is-shadow\{--_qxframe9a7c2-alert-shadow:0 \.25rem \.75rem oklch\(0 0 0 \/ 0\.15\)\}/,'dark Alert shadow stays black');
+ assert.match(alert,/is-shadow\{--_qxframe9a7c2-alert-shadow:0 \.25rem \.75rem color-mix\(in oklab,var\(--qxframe9a7c2-theme-palette-black\) 15%,transparent\)\}/,'dark Alert shadow uses the existing palette-black Theme role');
 });
 check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');

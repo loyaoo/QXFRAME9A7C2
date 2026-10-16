@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 ALERT-SHADOW-TOKEN-GATE-001 (CI pending)
+- Full QXFRAME Actions #38884370626 rejected a new hardcoded literal in Alert CSS: theme-tokens hardcoded-color components/alert 0→1. This is a genuine authoritative Theme gate failure, not a test false positive.
+- The source now derives Alert shadow ink from the existing registered --qxframe9a7c2-theme-palette-black with color-mix alpha 15%; preserves black/dark ink in either mode without a new Theme color token or gate baseline expansion. Updated strict source gate and browser non-white Alert test accordingly; no assertion removed or gate relaxed.
+- Next: validate exact-head CI and Windows full dist+docs artifact. PR #267 Draft, main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 MODAL-ZOOM-DIALOG-SURFACE-PREVIEW04-001 (CI pending)
 - Owner acceptance: Modal zoom visually too small. Updated point scale .8→.7, center fallback .94→.86 while preserving initial click translation and reverse exit.
 - Divider width 0px: Modal/Drawer header padding-bottom=0, footer padding-top remains positive (Theme dialog padding) for button spacing. CSS named style queries inherit panel background for header/footer when divider 0, preserving distinct Section background if divider visible.
