@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 DEFAULT-THEME-EXACT-COMPILER-001 (CI pending)
+- CSS Schema #38928651021 failed in tools/verify-theme-visual-v2.mjs:43 because it hardcoded framework default Nova+Neutral. Owner intentionally changed only embedded framework CSS default. The verifier now constructs the frozen explicit Vega+Mist+Blue embedded config and asserts exact whole :root+.dark output equality, with Create editor Reset still Nova+Neutral. Eight Style compilation checks and original formula/mutation/Chromium gates unchanged.
+- Global CSS Theme changes remain exactly 220 root tokens, no second CSS override. Prior localized offline QA groups cleared; PR #267 Draft, main unchanged. New exact-head QXFRAME/CSS Schema + offline Actions ZIP pending.
+
 ## CURRENT — 2026-10-16 Stage5 QA-SLUG-LOCATOR-CLEANUP-001 (CI pending)
 - QXFRAME Actions #38929111665 failed new test that old Slider/Calendar/Dropdown/Card marks must be absent: legacy local QA navigation still had a four-id switch-case although groups=[] correctly removed all displayed marks. Removed that unnecessary hardcoded four-id route and implemented generic canonical slug id lookup plus existing Preview data-card fallback, preserving all current/older Card paths. Strict no-stale-mark test remains enforced, no test relaxation.
 - Default Vega Mist Blue compiled CSS and the 220 schema values unchanged. Next current HEAD double-green CI, Actions artifact and Windows QA ZIP. PR #267 remains Draft, main frozen.
