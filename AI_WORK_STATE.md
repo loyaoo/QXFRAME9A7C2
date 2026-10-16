@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-16 Stage5 TEST-AFTER-MODEL-IMPORT-001 (CI pending)
+- Source commit `f335164d` fixed default Theme Dialog tokens and allowed CSS Schema token checks. QXFRAME #38865069168 failed `verify-create-app.mjs:129` before browser: new cross-month/dialog test executed before `const model = await import(...)` and `const data = await import(...)` were initialized.
+- Moved the **same strict assertions unchanged** below those canonical model/data imports. No code owners or test tolerances weakened. Previous Calendar month-cap, week, dialog Theme padding, shadow/blurring fixes retained.
+- Next: latest-head dual CI, diagnose real runtime failures, official exact-HEAD offline dist/docs ZIP. Image/Modal/Drawer performance timings still not profiled, so no frame-rate completion claim. PR Draft; main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 DIALOG-DEFAULT-REGISTRY-SYNC-001 (CI pending)
 - Earlier QXFRAME #38864685900 failed strictly at `verify-theme-tokens`: newly registered and compiled Dialog spacing/divider tokens had zero declarations in default `src/styles/main/theme.css`. This is a default-Theme authority bug, not a CI tolerance issue.
 - Added exactly one default root declaration each for dialog-padding-x/y, dialog-body-padding-y, divider-width, matching the existing default Modal geometry. createApp compiler drives the same four tokens across Styles. Full JS and CSS schema gates remain strict.
