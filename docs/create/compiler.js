@@ -595,7 +595,7 @@ export function themeTokens(resolved) {
   root['slider-track'] = rem(SLIDER[ext.sliderLook]);
   root['slider-thumb'] = rem(SLIDER_THUMB[style]);
   // shadcn Luma thumb is h-4 w-6 (a horizontal capsule); other styles are square.
-  root['slider-thumb-width'] = rem(roundShape('shapeThumb') === 'pill' ? SLIDER_THUMB[style] * 1.5 : style === 'luma' ? 1.5 : SLIDER_THUMB[style]);
+  root['slider-thumb-width'] = rem(roundShape('shapeThumb') === 'pill' ? SLIDER_THUMB[style] * 1.5 : SLIDER_THUMB[style]);
   root['progress-track'] = resolved.explicit && resolved.explicit.sliderLook ? rem(SLIDER[ext.sliderLook]) : rem(looks.progress);
   root['progress-ring'] = '7.5rem';
   root['choice-size'] = style === 'sera' ? '1.125rem' : '1rem';

@@ -114,6 +114,7 @@ check('Stage5 Mist neutral roles, tinted shadows and independent Slider track/ha
  assert.match(config,/key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状'/,'handle shape is separately labeled');
  assert.match(config,/value: 'pill', label: '胶囊形'/,'explicit Slider handle pill shape option');
  assert.match(compiler,/roundShape\('shapeThumb'\) === 'pill' \? SLIDER_THUMB\[style\] \* 1\.5/,'pill changes actual handle width, not rail');
+ assert.match(config,/defaults: S\('circle', 'circle', 'radius', 'radius', 'radius', 'pill', 'square', 'radius'\)/,'Luma default pill retains source-sized 24×16 handle; explicit circle is square-sized');
  assert.match(compiler,/root\['slider-track'\] = rem\(SLIDER\[ext\.sliderLook\]\)/,'track keeps distinct thickness axis');
  assert.match(compiler,/oklch\(from var\(--qxframe9a7c2-theme-muted-foreground\) 0\.12 c h\)/,'shadow ink inherits base hue/chroma at dark-safe fixed lightness');
  assert.doesNotMatch(compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0],/light-dark\(/,'shadow-valued Theme token cannot nest light-dark');

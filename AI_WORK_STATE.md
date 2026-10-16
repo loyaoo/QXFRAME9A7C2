@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 SLIDER-LUMA-SHAPE-OWNER-001 (CI pending)
+- Cross-Style audit caught a subtle remaining ambiguity: Luma source default had a 1.5rem-wide thumb while its config falsely labeled it shapeThumb=circle. Set Luma's style-following default to shapeThumb=pill; result stays 24×16px (no visual regression). All explicit circle selections become width=height; explicit pill widens it 1.5× across ALL eight Styles. Removing the Luma hardcoded width branch makes Shape Policy sole owner. No new knob token or shadow exception. Updated source test for preserved Luma default semantics.
+- Revised exact-HEAD GitHub Actions pending; previous ad7d3dde checks no longer latest after this commit. Owner Mist/Slider signoff and ZIP pending. PR Draft; main untouched.
+
 ## CURRENT — 2026-10-16 Stage5 MIST-EXACT-FORMULA-SCHEMA-001 (CI pending)
 - Previous CI on af0a4fc5 failed strict old source-lock assertions in verify-create-app.mjs for prior Menu-foreground 12% hover. Original frozen shadcn fixture unchanged. Updated three exact literal expectations to new QX base-neutral Popup Hover formula.
 - CSS Schema #38918569246 also rejected the new neutral-muted/muted-foreground mixes as not in the closed source formula set. Added exactly three fully spelled out allowable shared formulas (hover/active/translucent popup) to tools/theme-v2-contract.mjs. Kept source-lock detector, mutation test, no style selectors, and no scope relaxation. This is an explicit source-derived palette state adaptation, not bypass.
