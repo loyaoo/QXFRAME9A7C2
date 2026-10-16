@@ -1,3 +1,7 @@
+## CURRENT — 2026-10-16 Stage5 MIST-BROWSER-SYNTAX-CLEANUP-001 (CI pending)
+- New Chromium Mist test had a double-escaped slash in its nonwhite-shadow assertion; replaced with strict equivalent literal string check. Production source and all other tests unchanged. This is a syntax repair, not test removal.
+- Current batch visual QA has only four Preview04 marks. Need next HEAD double-green CI and exact-build Windows ZIP. PR Draft; main unchanged.
+
 ## CURRENT — 2026-10-16 Stage5 MIST-CARD-QA-AND-CHROMIUM-001 (CI pending)
 - Added real Chromium acceptance for exact Vega+Mist (with independent thick rail/round/pill handle) versus Neutral. Tests computed slider dimensions, actual muted Hover/Active and popup Menu background, Card shadow for both palettes, and dark shadow non-white. Theme CSS and prior light/dark class restored; no snapshot shortcuts.
 - Offline QA ledger now marks only 4 new Preview04 areas: Slider handle/track, Calendar base-tint, Dropdown popup hover, Card elevation. Old Modal/Drawer/Alert yellow highlights cleared. Source Create HTML is untouched; QA overlays remain local-zip-only.

@@ -3244,7 +3244,7 @@ try {
     assert.equal(got.pill.radius,got.thin.radius,'circle/pill both preserve full rounded shape');
     for(const field of ['hover','active','menu','shadow'])
       assert.notEqual(got.thin[field],got.neutral[field],'Mist base color must affect '+field+': '+JSON.stringify(got));
-    assert.ok(!/rgba\\(255, 255, 255/.test(got.darkMist.shadow),'dark Mist shadow must not be a white glow');
+    assert.ok(!got.darkMist.shadow.includes('rgba(255, 255, 255'),'dark Mist shadow must not be a white glow');
   });
 
   await step('Stage5 Modal origin and zero-divider Dialog geometry in real Chromium',async()=>{
