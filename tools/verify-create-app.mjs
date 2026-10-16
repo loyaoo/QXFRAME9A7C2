@@ -43,6 +43,23 @@ check('Stage5 acceptance inventory covers every component export without false v
  assert.ok(fs.readFileSync(path.join(root,'docs/create/STAGE5-COMPONENT-ACCEPTANCE-2026-10-16.md'),'utf8').includes('66 张卡片覆盖 65 种'),'final status document explains gallery-vs-export distinction');
 });
 
+check('Stage5 screenshot defects map to canonical DatePicker, Image and visible theme demos',()=>{
+ const dp=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ const imageCss=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const demo=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
+ const theme=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ assert.ok(dp.includes('container: calendarPrimaryHost,\\n      unit:unit,')===false,'no string-escaped fake source');
+ assert.ok(dp.includes('container: calendarPrimaryHost,\n      unit:unit,'),'primary Calendar receives week unit');
+ assert.ok(dp.includes('container: calendarSecondaryHost,\n        unit:unit,'),'secondary Calendar receives week unit');
+ assert.ok(image.includes('download: false, trajectory:false'),'default Image preview independently scales from center');
+ assert.ok(image.includes("if (cfg('trajectory',false) === true) root.classList.add('is-preview-source-hidden')"),'source opacity handoff is opt-in only');
+ assert.ok(imageCss.includes('image-preview-nav .qxframe9a7c2-icon{color:inherit}'),'navigation inherits preview white foreground');
+ assert.ok(picker.includes('date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid'),'DateTime boundary uses Theme border');
+ for(const label of ['Alert：语义 × 外观 × 阴影','周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'])assert.ok(demo.includes(label),'public canonical demo '+label);
+ assert.ok(theme.includes('selectedLatestSpecs(rec,specs)'),'new component variants are visible without expanding all');
+});
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
   const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
   const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];
@@ -194,7 +211,13 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={}; // Coverage audit/test update only: no visual changes and no leftover annotations.
+  const current={
+    "support-triage":['.qxframe9a7c2-tags-input'],
+    "quick-action-menu":['[data-pv3x-widget="quick-action-menu"]'],
+    "capacity-calendar":['[data-pv3x-widget="capacity-calendar"]'],
+    "release-planner":['[data-pv3x-widget="release-planner"]'],
+    "asset-preview":['[data-pv3x-widget="asset-preview"]']
+  }; // Five screenshot-driven visual regions in this batch only.
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
     assert.ok(id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or static sample '+id);
@@ -209,9 +232,7 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
     'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
     if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,0,'a non-visual audit must not highlight any old Preview Card');
-  assert.match(ledger,/const groups = \[\];/,'no-visual-change batch must publish an explicitly empty QA ledger');
-  assert.doesNotMatch(ledger,/\['support-triage'/,'previous Tags Add highlight is removed');
+  assert.equal(count,5,'only five screenshot-driven changed regions are highlighted');
   const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
   assert.ok(feature,'feature-flags Card content must be present');
   assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');

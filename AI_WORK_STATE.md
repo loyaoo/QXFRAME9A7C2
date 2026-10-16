@@ -1,3 +1,10 @@
+## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-ACCEPTANCE-001 (CI pending)
+- User screenshots revealed unresolved Tags edit state, Dropdown inline hover gap, DatePicker week mismatch/range caps, DateTime separator, Image Preview return flash and dark nav, plus missing visible theme playground variants.
+- Source commits preceding this checkpoint repaired unit week propagation to actual Calendar; Calendar remains sole date/week painter; DateTime field border; Tags input skin; separate Image Preview center-scale/fade with source kept visible; high contrast preview nav.
+- Theme playground now reveals existing Alert/Calendar/Dropdown/Tags/Image/Tabler additions by default and adds DatePicker week/range and DateTime examples. Basic Dropdown docs uses public block inset.
+- Static and real Chromium acceptance added: DatePicker primary/secondary week unit, seven day week paint, date/time border, Image source stays visible; 5 current visual QA cards marked (old batch highlights removed).
+- Next: verify exact-HEAD QXFRAME CI, CSS Schema and Chromium; if red diagnose actual source/test root, then Windows dist+docs official Actions QA ZIP. PR #267 Draft, main untouched; no Stage/global completion claim.
+
 ## CURRENT — 2026-10-16 Stage5 VISUAL-DEMO-EXPOSURE-001 (final CI pending)
 - Registered live DatePicker single/range week and DateTime separator demos in the same canonical supplement system.
 - Theme Playground previously showed first demo only, hiding registered Alert semantic/appearance matrix and Calendar/Dropdown/Tags/Image/Tabler variants; now exposes selected recent examples by default, retaining "expand all" for less frequently used cases.

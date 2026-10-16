@@ -3346,12 +3346,21 @@ try {
     assert.equal(result.chrome.closeBorder,result.chrome.toolbarBorder,'Image close and toolbar share border');
     assert.equal(result.chrome.titleColor,result.chrome.toolbarColor,'Image title and toolbar share white foreground');
     assert.equal(result.chrome.closeColor,result.chrome.toolbarColor,'Image close and toolbar share white foreground');
-    assert.equal(result.during.sourceHidden,true,'authored image stays hidden throughout leave');
-    assert.ok(result.paintFrames.some(frame=>frame.copyHidden),'Chromium observed the landed preview copy become hidden');
+    assert.equal(result.during.sourceHidden,false,'independent center-zoom preview does not hide original image during leave');
+    assert.ok(result.paintFrames.some(frame=>frame.copyHidden),'Chromium observed the independent preview copy become hidden at leave completion');
     assert.ok(result.paintFrames.filter(frame=>frame.copyHidden).every(frame=>frame.originalOpacity>=.98&&!frame.sourceHidden),
-      'The source must be fully opaque on every rendered frame after preview copy relinquishes paint ownership: '+JSON.stringify(result.paintFrames));
+      'The source remains fully opaque across center-zoom leave: '+JSON.stringify(result.paintFrames));
     assert.equal(result.finished.sourceHidden,false,'authored image recovers after completed leave');
     assert.equal(result.finished.previewOpen,false,'preview public state closed');
+  });
+
+  await step('Stage5 DatePicker delegates week rendering to Calendar, DateTime separator is visible',async()=>{
+    const got=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,q=d.defaultView.QXFRAME9A7C2;\n const host=d.createElement('section');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);\n const single=q.Components.DatePicker.create({container:host,unit:'week',value:'2026-W33',weekStartsOn:1,open:true});\n const range=q.Components.DatePicker.create({container:host,unit:'week',selection:'range',value:['2026-W33','2026-W35'],weekStartsOn:1,open:true});\n const dt=q.Components.DatePicker.create({container:host,time:true,value:'2026-08-15 09:30:00',open:true});\n try{\n  const cal=single.getCalendar(),rc=range.getCalendar(),cs=d.defaultView.getComputedStyle;\n  const separator=dt.getPanelOriginElement().querySelector('.qxframe9a7c2-date-picker-time-panel');\n  return {singleUnit:cal.getState().unit,rangeUnit:rc.getState().unit,\n   selected:cal.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-cell.is-week-selected').length,\n   rangeCount:rc.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-cell.is-in-range').length,\n   border:separator&&cs(separator).borderLeftWidth};\n }finally{single.destroy();range.destroy();dt.destroy();host.remove()}\n})()");
+    assert.equal(got.singleUnit,'week','DatePicker passes week to canonical Calendar');
+    assert.equal(got.rangeUnit,'week','range DatePicker passes week to the same Calendar');
+    assert.equal(got.selected,7,'a selected week paints seven cells');
+    assert.ok(got.rangeCount>=7,'a week range uses the same continuous Range painter');
+    assert.equal(got.border,'1px','DateTime retains Theme boundary between Calendar and TimePanel');
   });
 
   await step('CALENDAR-WHEEL-GEOMETRY-001 browser shared 36px, seven rows, dual and drill',async()=>{

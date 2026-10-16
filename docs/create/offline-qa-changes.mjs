@@ -1,6 +1,22 @@
 /** STAGE5-COMPONENT-MATRIX-20261016: documentation and verification only; no visual change. */
 /** Every previous visual QA group is cleared; 0 current changed regions. */
-const groups = [];
+const groups = [
+ ['support-triage','Tags 编辑态',[
+  ['.qxframe9a7c2-tags-input','Tags 输入外观','Standalone Tags 输入态与 Tag 弱着色背景协调','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['quick-action-menu','Dropdown 两侧间距',[
+  ['[data-pv3x-widget="quick-action-menu"]','Dropdown block inset','选项悬停填满菜单左右边缘；all/none 仍是显式选项','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['capacity-calendar','Calendar 周选择复用',[
+  ['[data-pv3x-widget="capacity-calendar"]','周范围统一','DatePicker unit=week 转交 Calendar，共用七日 RangePainter','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['release-planner','日期时间分隔线',[
+  ['[data-pv3x-widget="release-planner"]','Calendar / TimePanel','日期与时间区域恢复 Theme 边框分割线','__QA_BUNDLE_HEAD__']
+ ],'03'],
+ ['asset-preview','预览从中心缩放',[
+  ['[data-pv3x-widget="asset-preview"]','Image Preview 中心缩放','新预览图独立淡入/缩放，原始图片不隐藏；导航深色白字','__QA_BUNDLE_HEAD__']
+ ],'03']
+];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
 try{visible=localStorage.getItem(key)!=='0';folded=localStorage.getItem(foldkey)==='1'}catch(_){ }
@@ -62,7 +78,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">本轮仅更新组件覆盖及 CI 验收记录，没有修改卡片视觉；所有旧批黄色高亮均已清除。</p></div>';
+    '<p class="qa-toolbar-caption">只标本轮 Tags、Dropdown、Calendar/DateTime、Image Preview 的可见变化；Alert 等新增外观在 theme-playground 默认可见。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
