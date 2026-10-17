@@ -42,3 +42,7 @@ Core component-painter owner consolidation: eight B0 late scoped duplicate visua
 
 ## Five real component-owner closures (pending exact-head triple CI)
 Original B0 ids #55 disabled Item, #66 Slider handle, #86/#87 Carousel and #194 Switch checked geometry are incorporated in their existing canonical component CSS. Main core scope 39→34; 153 plain rules remain, 4 scope blocks remain. Chromium preflight 505 Light / 948 Dark synthetic + 125 actual Card doc per mode, full CSSOM & geometry 0 differences. Native owner coverage appended to comparator fixture. Detailed evidence: OWNER-CLOSURE-5.md.
+
+
+## Four owner closures: Card Grid/title, Switch Thumb, Input placeholder/prefix/suffix
+Real scoped rules 34→30 via edits in existing Card/Switch/native-input component source, no new style layers or version aliases. B0 CSSOM fixture and local static DOM 0 differences; rejected Button Filled move remains scoped. Exact-head CI must still pass. Detailed evidence: tools/qa/css-refactor/OWNER-CLOSURE-4.md.

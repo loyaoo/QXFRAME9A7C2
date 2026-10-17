@@ -144,10 +144,6 @@
   .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-success); }
   /* Shared translucent neutral scrollbar, no opaque theme-border override. */
   .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-color); --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-color); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
-
-  /* Source decoration distribution; inline feedback has no popup shadow. */
-  .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
-  .qxframe9a7c2-switch-thumb { box-shadow: var(--qxframe9a7c2-theme-shadow-switch-thumb); }
   /* Image Preview owns its one chrome background/border/foreground and hover in
      components/image.css. Do not repaint toolbar or tools from the page Theme. */
   .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
@@ -197,7 +193,6 @@
     border-color: var(--_qxframe9a7c2-control-border);
     color: var(--qxframe9a7c2-theme-foreground);
   }
-  .qxframe9a7c2-input-control::placeholder, .qxframe9a7c2-input-prefix, .qxframe9a7c2-input-suffix { color: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* surface: retain Card composition and opt-in divider geometry. */
   .qxframe9a7c2-card {
@@ -207,7 +202,6 @@
     --_qxframe9a7c2-card-muted-bg: var(--qxframe9a7c2-theme-muted);
     color: var(--qxframe9a7c2-theme-card-foreground);
   }
-  .qxframe9a7c2-card-title { color: inherit; }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
     --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
     --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
