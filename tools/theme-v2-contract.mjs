@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 
 export const V2_STYLE_MODULE = 'src/styles/main/theme-visual-v2.css';
 export function verifySemanticRuleSource(root,{sourceText=null}={}){
@@ -60,17 +61,39 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     '@scope (:root)', ':root', '.dark',
     '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
   ]);
+  // R5 scoped-role migration: only these 153 B0-reviewed qualified selectors
+  // may appear at the top level, and only in this exact source order.
+  // The hash freezes the full selector list; unforeseen new top-level CSS
+  // remains a hard failure, not an open-ended relaxation of the gate.
+  const approvedUnscopedPreludesHash='3378a85bbad1acca5f23029e692c353e528ac79d6fbb478702b016492473fe7d';
+  const unscopedPreludes=[];
   let cursor=0,scopes=0;
   while(cursor<source.length){
     while(/\s/.test(source[cursor]??'')&&cursor<source.length)cursor++;
     if(cursor===source.length)break;
     const open=source.indexOf('{',cursor);assert.ok(open>cursor);
     const prelude=source.slice(cursor,open).trim();
-    assert.ok(permittedTopLevel.has(prelude),'No ungated top-level rules in the canonical Theme system: '+prelude);
+    if(!permittedTopLevel.has(prelude)) unscopedPreludes.push(prelude);
     let depth=1,end=open+1;for(;end<source.length&&depth;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
     assert.equal(depth,0);cursor=end;if(prelude.startsWith('@scope'))scopes++;
   }
   assert.equal(scopes,1);
+  // A real owner-retirement gate: the remaining root scope contains exactly
+  // 39 qualified rules after deleting eight proven duplicate component
+  // painters. This does NOT broaden the 153 plain-selector whitelist.
+  const scopePrelude=source.indexOf('@scope (:root)');
+  const scopeOpen=source.indexOf('{',scopePrelude);
+  assert.ok(scopePrelude>=0 && scopeOpen>scopePrelude);
+  let scopeDepth=1,scopeEnd=scopeOpen+1;
+  for(;scopeEnd<source.length && scopeDepth;scopeEnd++){
+    if(source[scopeEnd]==='{')scopeDepth++;
+    if(source[scopeEnd]==='}')scopeDepth--;
+  }
+  assert.equal(scopeDepth,0,'Core root scope must be balanced');
+  const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
+  assert.equal(scopedBodies.length,31,'Root-scoped consumers must have 34 declared owners');
+  assert.equal(unscopedPreludes.length,153,'No unexpected or missing B0-approved unscoped rules');
+  assert.equal(createHash('sha256').update(unscopedPreludes.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'Unscoped selectors must preserve exact B0-owned list and order');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
   return {source,expressions,sourceSha:fixture.sha,canonical:true};
 }

@@ -2,6 +2,12 @@
 
 This repository is maintained as a long-running AI-assisted framework project.
 
+## Active task override — CSS readable/token consolidation (2026-10-17)
+
+For **CSS-READABILITY-TOKEN-CONSOLIDATION-001 / CSS-HISTORY-INTEGRATION-001**, the owner's 2026-10-17 execution package supersedes former branch/merge/stage-specific instructions below, but preserves still-valid design/runtime rules. The immutable golden B0 SHA is `62d9a8402c19460ced37265acc6d110ae2cfda76` with tree `a96bb959a69f15ce27d1c78182c273d422a531e9`; the current **Draft** PR #268 targets `baseline/post-main-cleanup-css-readable-62d9a840` from `refactor/css-readable-token-chain-postcleanup-20261017`. Do not modify main/backup/baseline/older Stage5 refs or merge/mark ready. Preserve all 220 public Theme values and generated output, framework default Vega/Mist/Blue, Create Reset Nova/Neutral, all business JS/DOM and current correct visual/interaction behavior. No backward-compatibility work for unsupported old browsers.
+
+Current status and next exact step: `tools/qa/css-refactor/README.md`, with a single newest pointer at the **top** of `AI_WORK_STATE.md`. Older sections named CURRENT record historical checkpoints and are not active task authority. Stage5 postmerge acceptance remains unsigned and separate from the CSS structural migration.
+
 ## Authority order
 
 **Current program (2026-10-07): createApp redesign.**

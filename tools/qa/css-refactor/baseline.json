@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "task": "CSS-READABILITY-TOKEN-CONSOLIDATION-001",
+  "captured_at": "2026-10-17",
+  "source": {
+    "repository": "loyaoo/QXFRAME9A7C2",
+    "commit_sha": "62d9a8402c19460ced37265acc6d110ae2cfda76",
+    "tree_sha": "a96bb959a69f15ce27d1c78182c273d422a531e9",
+    "immutable_branch": "baseline/post-main-cleanup-css-readable-62d9a840",
+    "main_ci": {
+      "run_id": 39004174949,
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "62d9a8402c19460ced37265acc6d110ae2cfda76"
+    }
+  },
+  "official_artifact": {
+    "artifact_id": 12091345100,
+    "workflow_run_id": 39004174949,
+    "name": "qxframe9a7c2-dist-docs-demo-62d9a8402c19460ced37265acc6d110ae2cfda76",
+    "outer_zip_sha256": "93caa4566ab88134400c589414b670bc8438a0b3cf602c636e2799d656bb8ec7",
+    "inner_zip_sha256": "ca05f2459ec6517238551f8c9a2e5783dc06820d826f188a84fcefba1b496870",
+    "outer_zip_crc_valid": true,
+    "inner_zip_crc_valid": true,
+    "files_inside_inner_zip": 765,
+    "content_sha256": {
+      "dist/qxframe9a7c2.css": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "dist/qxframe9a7c2.js": "410ae9818f2ccb1300479c5c09123f75babc2264aa8ef8423635423fa3a53c70",
+      "docs/create/index.html": "932f7cad807d603eaf08f72eee34501c2ad28cef3e0eaaa7fd0bbd5db1d261d0",
+      "docs/create/preview-01.html": "15e3f7f4f0c3464a3d478d718595c7137b34a1b1dac4c7caea700206be1e1da8",
+      "docs/create/preview-02.html": "0eb893f98bf25cecdc13abb21cdc2ecd959249ed1cbbc91c1b0118ab0ce7272a",
+      "docs/create/preview-03.html": "b5a865c0e26821f365f17b97d9545500c9fc7c2d7a454f7267093f2dd3ad1846",
+      "docs/theme-playground.html": "ccfff64dc387bb973e13996313a2e92c9443fd48603fa9289f1d7d1fb0df3b52",
+      "docs/create/model.js": "c2a994c986ebd3981e522b60ce6fd3588135737d0869c32e6d2bd8aa4e960282",
+      "docs/create/compiler.js": "92d99d60001286cc64a16cb71431f23b7687221616ef1a8771581cd1715ea2bc"
+    }
+  },
+  "environment": {
+    "source_git_tree_freeze": true,
+    "source_review_42_blob_index": "owner-supplied execution ZIP/source-review-index.json",
+    "test_runtime": "container Chromium at /usr/bin/chromium, Python playwright installed; navigations to localhost/data/file are blocked by managed administrator policy",
+    "browser_self_self": "blocked-in-container; must use supported GitHub Actions/alternative browser with access",
+    "browser_fault_injection": "pending; do not infer from ZIP checks",
+    "viewport": null,
+    "dpr": null,
+    "os": null,
+    "browser_version": null,
+    "font_hash": null
+  },
+  "warnings": [
+    "Same-tree official B0 artifact verified, not evidence of a second CI workflow success.",
+    "Never replace B0 with a locally rebuilt artifact.",
+    "Full source freeze is by Git tree; per-file hashes only record selected critical outputs, not the entire repository.",
+    "Chromium browser tests have not run in this container; no claimed visual or interaction equivalence."
+  ],
+  "status": "artifact-frozen; browser-baseline-pending"
+}

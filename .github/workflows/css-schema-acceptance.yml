@@ -2,7 +2,7 @@ name: CSS Schema Acceptance
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, baseline/post-main-cleanup-css-readable-62d9a840]
   workflow_dispatch:
 
 permissions:

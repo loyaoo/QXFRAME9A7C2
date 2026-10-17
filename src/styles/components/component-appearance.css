@@ -1,4 +1,6 @@
-/* Theme bridge: non-color theme inputs -> actual paint/geometry owners (no style selectors). */
+/* Component appearance projection: typography, shape, control paint and
+ * validation precedence. Kept in its original late source-order position.
+ * Root scope is intentional until the competing owners are de-duplicated. */
 @scope (:root) {
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-input[class],.qxframe9a7c2-text-field[class],
@@ -56,7 +58,18 @@
     background-color:var(--_qxframe9a7c2-control-bg);
   }
 
-  /* Field status wins over keyboard/pointer focus in the one V2 border owner.
+  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
+  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
+  .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
+  .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
+}
+/* Unscoped component appearance roles: preserved declarations and original
+ * selector specificity. Shared choice radii remain scoped above because
+ * ordinary global context already has eight competing radius owners. */
+
+
+  /* Field status wins over keyboard/pointer focus in the one Control border owner.
    * The Field parent owns warning/error, not native Control focus. */
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -76,7 +89,7 @@
   }
 
 
-  /* Field feedback remains higher priority than shared V2 Hover, for all
+  /* Field feedback remains higher priority than shared shared Hover, for all
    * native inputs with valid focus, pointer, or neutral state. */
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -95,7 +108,7 @@
     --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
-  /* Field validity applies to JS Input's shared V2 physical border slot, too.
+  /* Field validity applies to JS Input's shared shared physical border slot, too.
    * Explicit child feedback remains authoritative, independent of FocusOrigin. */
   /* A focused valid Field must defeat the high-specificity FocusOrigin color
    * projection without introducing a second physical border painter. */
@@ -134,12 +147,6 @@
     --_qxframe9a7c2-slider-handle-radius:var(--qxframe9a7c2-slider-handle-radius,var(--qxframe9a7c2-theme-radius-thumb));
   }
 
-  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
-  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
-  .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
-  .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
-
   /* Badge and Tag each consume the one Theme radius-badge role in their component
      CSS; tabs own only tabs tokens here. Do not combine unlike categories. */
   .qxframe9a7c2-tabs[class]{
@@ -149,7 +156,3 @@
   .qxframe9a7c2-tabs-tab[class]{border-radius:var(--_qxframe9a7c2-tabs-item-radius)}
   .qxframe9a7c2-modal-container[class]{border-radius:var(--qxframe9a7c2-modal-radius,var(--qxframe9a7c2-theme-radius-dialog))}
   .qxframe9a7c2-form-select[class],.qxframe9a7c2-input.qxframe9a7c2-select[class]{border-radius:round(nearest,calc(var(--qxframe9a7c2-theme-radius-select) * var(--_qxframe9a7c2-size-ratio,1)),.125rem)}
-
-  /* Surface partition (theme input): footer band background and divider. */
-  /* Card footer partition paint is owned by components/card.css. */
-}

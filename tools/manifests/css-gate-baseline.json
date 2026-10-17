@@ -16,7 +16,7 @@
       "components/motion": 10,
       "main/fixed-values": 292,
       "main/foundation": 12,
-      "main/theme-visual-v2-style": 26
+      "main/semantic-inputs": 26
     },
     "hardcoded-color": {
       "components/badge": 1,
@@ -47,7 +47,7 @@
       "components/visual-recipe": 12,
       "main/fixed-values": 26,
       "main/theme-visual-v2": 34,
-      "main/theme-visual-v2-style-consumers": 15
+      "components/component-appearance": 12
     },
     "unregistered-theme-token": {}
   },

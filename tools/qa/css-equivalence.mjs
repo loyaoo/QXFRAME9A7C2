@@ -1,9 +1,10 @@
 // Stage-0 visual equivalence: render every canonical docs page twice — once with a baseline
 // CSS file and once with a candidate CSS file — and compare full-page screenshots pixel by pixel
-// plus the computed style / geometry of every element. Runs in the dev session (Playwright);
+// plus the computed style / raw geometry of every element and same-origin iframe. Runs in the dev session (Playwright);
 // the summary report is committed under tools/qa/reports/.
 //
-//   node tools/qa/css-equivalence.mjs --baseline=<old.css> --candidate=<new.css> --out=<dir>
+//   node tools/qa/css-equivalence.mjs --baseline=<old.css> --candidate=<new.css> --out=<dir> --comparison=structural
+// Default strict-order mode still enforces old CSSOM rule ordering for format-only changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
@@ -17,6 +18,9 @@ const baselineCss = fs.readFileSync(path.resolve(arg('baseline')));
 const candidateCss = fs.readFileSync(path.resolve(arg('candidate') || 'dist/qxframe9a7c2.css'));
 const outDir = path.resolve(arg('out') || 'tools/qa/reports/stage-0');
 const only = arg('only');
+const comparison = arg('comparison') || 'strict-order';
+if (!['strict-order', 'structural'].includes(comparison)) throw new Error('Unknown comparison mode: ' + comparison);
+
 fs.mkdirSync(outDir, { recursive: true });
 
 function loadPlaywright() {
@@ -29,7 +33,7 @@ function loadPlaywright() {
 const { chromium } = loadPlaywright();
 
 function pages() {
-  const list = ['docs/index.html', 'docs/admin-dashboard-static.html', 'docs/admin-form-static.html', 'docs/admin-list-static.html',
+  const list = ['docs/index.html', 'docs/create/index.html', 'docs/create/preview-01.html', 'docs/create/preview-02.html', 'docs/create/preview-03.html', 'docs/admin-dashboard-static.html', 'docs/admin-form-static.html', 'docs/admin-list-static.html',
     'docs/all-components-static.html', 'docs/theme-playground.html', 'docs/tokens.html', 'docs/admin/index.html', 'docs/admin/login.html'];
   for (const dir of ['docs/components', 'docs/admin/views']) {
     for (const f of fs.readdirSync(path.join(root, dir)).sort()) if (f.endsWith('.html')) list.push(`${dir}/${f}`);
@@ -53,16 +57,42 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 const STYLE_PROBE = () => {
   // Per element: tag/class key, rounded geometry and a hash of every non-custom computed property.
   const out = [];
-  const first = getComputedStyle(document.body);
-  const names = [];
-  for (let i = 0; i < first.length; i++) if (!first[i].startsWith('--')) names.push(first[i]);
-  for (const el of document.querySelectorAll('body *')) {
-    const s = getComputedStyle(el); const r = el.getBoundingClientRect();
-    let h = 2166136261;
-    for (const p of names) { const v = s.getPropertyValue(p); for (let i = 0; i < v.length; i++) h = Math.imul(h ^ v.charCodeAt(i), 16777619); h = Math.imul(h ^ 59, 16777619); }
-    out.push([el.tagName + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/).join('.') : ''),
-      [r.x, r.y, r.width, r.height].map(v => Math.round(v * 100) / 100).join(','), (h >>> 0).toString(16)]);
-  }
+  // Every document is sampled with raw geometry and a stable DOM path. Same-origin
+  // iframe documents receive an explicit frame prefix instead of being silently omitted.
+  const interesting = ['color', 'background-color', 'border-top-color', 'border-top-width',
+    'outline-color', 'outline-width', 'outline-offset', 'box-shadow', 'font-family',
+    'font-size', 'line-height', 'padding-left', 'padding-right', 'height', 'width',
+    'opacity', 'transform', 'color-scheme'];
+  const visit = (doc, prefix) => {
+    const first = getComputedStyle(doc.body || doc.documentElement);
+    const names = [];
+    for (let i = 0; i < first.length; i++) if (!first[i].startsWith('--')) names.push(first[i]);
+    const elements = [doc.documentElement, doc.body, ...doc.querySelectorAll('body *')].filter(Boolean);
+    const key = el => {
+      const parts = [];
+      while (el && el.nodeType === 1) {
+        let n = 1, sib = el.previousElementSibling;
+        while (sib) { if (sib.tagName === el.tagName) n++; sib = sib.previousElementSibling; }
+        parts.unshift(el.tagName.toLowerCase() + ':nth-of-type(' + n + ')');
+        el = el.parentElement;
+      }
+      return prefix + parts.join('>');
+    };
+    for (const el of elements) {
+      const s = getComputedStyle(el), r = el.getBoundingClientRect();
+      let h = 2166136261;
+      for (const p of names) { const v = s.getPropertyValue(p); for (let i = 0; i < v.length; i++) h = Math.imul(h ^ v.charCodeAt(i), 16777619); h = Math.imul(h ^ 59, 16777619); }
+      out.push([key(el), [r.x, r.y, r.width, r.height], (h >>> 0).toString(16),
+        Object.fromEntries(interesting.map(p => [p, s.getPropertyValue(p)]))]);
+    }
+    let index = 0;
+    for (const iframe of doc.querySelectorAll('iframe')) {
+      const frameKey = prefix + 'iframe[' + index++ + ']/';
+      try { if (iframe.contentDocument && iframe.contentDocument.body) visit(iframe.contentDocument, frameKey); }
+      catch { out.push([frameKey + '#inaccessible', [], 'unavailable', {}]); }
+    }
+  };
+  visit(document, '');
   return out;
 };
 
@@ -83,8 +113,10 @@ async function render(rel, mode, css) {
   const ctx = await newContext();
   const page = await ctx.newPage();
   await page.clock.setFixedTime(new Date('2026-01-15T10:00:00Z'));
-  const errors = [];
+  const errors = [], resourceErrors = [];
   page.on('pageerror', e => errors.push(String(e)));
+  page.on('response', r => { if (r.url().startsWith(origin) && r.status() >= 400) resourceErrors.push(r.status() + ' ' + r.url()); });
+  page.on('requestfailed', r => { if (r.url().startsWith(origin)) resourceErrors.push(r.url() + ' ' + (r.failure()?.errorText || 'failed')); });
   await page.goto(`${origin}/${rel}`, { waitUntil: 'load' });
   if (mode === 'dark') await page.evaluate(() => { document.documentElement.setAttribute('data-qxframe9a7c2-theme', 'dark'); document.documentElement.classList.add('dark'); });
   await page.waitForTimeout(800);
@@ -92,7 +124,7 @@ async function render(rel, mode, css) {
   const shot = await page.screenshot({ fullPage: true, animations: 'disabled', caret: 'hide' });
   const styles = await page.evaluate(STYLE_PROBE);
   await ctx.close();
-  return { shot, styles, errors };
+  return { shot, styles, errors, resourceErrors };
 }
 
 async function pixelDiff(a, b) {
@@ -141,6 +173,7 @@ for (const rel of pages()) {
     // Up to three attempts: a page with live timers/caret can repaint a few pixels between two
     // renders of the same CSS; a real difference reproduces on every attempt.
     let base, cand, identicalPng, diff, styleDiffs, samples, attempts = 0;
+    const attemptHistory = [];
     do {
       attempts++;
       base = await render(rel, mode, baselineCss);
@@ -151,10 +184,16 @@ for (const rel of pages()) {
       const n = Math.max(base.styles.length, cand.styles.length);
       for (let i = 0; i < n; i++) {
         const x = base.styles[i], y = cand.styles[i];
-        if (!x || !y || x[0] !== y[0] || x[1] !== y[1] || x[2] !== y[2]) { styleDiffs++; if (samples.length < 3) samples.push(x?.[0] || y?.[0]); }
+        if (!x || !y || x[0] !== y[0] || JSON.stringify(x[1]) !== JSON.stringify(y[1]) || x[2] !== y[2]) {
+          styleDiffs++;
+          if (samples.length < 3) samples.push({ key: x?.[0] || y?.[0], baseline: x?.[3] || null, candidate: y?.[3] || null, baselineGeometry: x?.[1], candidateGeometry: y?.[1] });
+        }
       }
+      attemptHistory.push({ pixels: diff.pixels, styleDiffs, baselineErrors: base.errors, candidateErrors: cand.errors, baselineResourceErrors: base.resourceErrors, candidateResourceErrors: cand.resourceErrors });
     } while ((diff.pixels !== 0 || styleDiffs !== 0) && attempts < 3);
-    const entry = { page: rel, mode, attempts, elements: base.styles.length, identicalPng, diffPixels: diff.pixels, sizeMismatch: diff.sizeMismatch || null, styleDiffs, samples, errors: cand.errors.length };
+    const unstable = attemptHistory.some(a => a.pixels !== 0 || a.styleDiffs !== 0);
+    const pageErrors = [...base.errors, ...cand.errors, ...base.resourceErrors, ...cand.resourceErrors];
+    const entry = { page: rel, mode, attempts, attemptHistory, unstable, elements: base.styles.length, identicalPng, diffPixels: diff.pixels, sizeMismatch: diff.sizeMismatch || null, styleDiffs, samples, errors: pageErrors, errorCount: pageErrors.length };
     if (!identicalPng) {
       const slug = rel.replace(/[\/.]/g, '_') + '-' + mode;
       fs.writeFileSync(path.join(outDir, slug + '-baseline.png'), base.shot);
@@ -172,11 +211,12 @@ const summary = {
   baselineBytes: baselineCss.length,
   candidateBytes: candidateCss.length,
   cssom,
+  comparison,
   renders: results.length,
   pixelIdentical: results.filter(r => r.diffPixels === 0).length,
   computedStyleIdentical: results.filter(r => r.styleDiffs === 0).length,
   elementsCompared: results.reduce((s, r) => s + r.elements, 0),
-  failures: [...(cssom.unequal.length || cssom.baselineRules !== cssom.candidateRules ? ['cssom'] : []), ...results.filter(r => r.diffPixels !== 0 || r.styleDiffs !== 0).map(r => `${r.page} (${r.mode})`)],
+  failures: [...(comparison === 'strict-order' && (cssom.unequal.length || cssom.baselineRules !== cssom.candidateRules) ? ['cssom-order'] : []), ...results.filter(r => r.unstable || r.errorCount > 0).map(r => `${r.page} (${r.mode})`)],
   results
 };
 fs.writeFileSync(path.join(outDir, 'css-equivalence.json'), JSON.stringify(summary, null, 1) + '\n');

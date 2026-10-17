@@ -1,0 +1,95 @@
+{
+  "baseline": "62d9a8402c19460ced37265acc6d110ae2cfda76",
+  "source": "Merged Stage5 PR #267 and owner-supplied handoff. CSS-READABILITY task does not alter Stage5 behavior.",
+  "ownerAccepted": false,
+  "tests": {
+    "QXFRAME_B0_success": 39004174949,
+    "currentTreeQX": 39008100852,
+    "currentTreeSchema": 39008100884
+  },
+  "status": "baseline evidence index only; visual signoff pending",
+  "cases": [
+    {
+      "id": "S5-A01",
+      "description": "Vega Mist Slider, Calendar hover, Popup hover, Card/Table shadow",
+      "status": "technical-merged-owner-pending",
+      "surfaces": [
+        "docs/create/preview-01.html",
+        "docs/create/preview-03.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    },
+    {
+      "id": "S5-A02",
+      "description": "7 Base by 8 Style neutral roles and states",
+      "status": "needs-config-matrix",
+      "surfaces": [
+        "docs/theme-playground.html",
+        "docs/create/index.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    },
+    {
+      "id": "S5-A03",
+      "description": "Pointer/keyboard Focus saturation, outline and halo",
+      "status": "technical-merged-owner-pending",
+      "surfaces": [
+        "docs/create/preview-02.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    },
+    {
+      "id": "S5-A04",
+      "description": "Modal/Drawer motion and header/footer separators",
+      "status": "technical-merged-owner-pending",
+      "surfaces": [
+        "docs/create/preview-03.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    },
+    {
+      "id": "S5-A05",
+      "description": "Image Preview final closing frame",
+      "status": "needs-repeat-video-human-signoff",
+      "surfaces": [
+        "docs/create/preview-03.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    },
+    {
+      "id": "S5-A06",
+      "description": "Preview04 lazy mount and unfold",
+      "status": "technical-merged-owner-pending",
+      "surfaces": [
+        "docs/theme-playground.html"
+      ],
+      "B0_css_sha256": "93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e",
+      "B0_artifact_id": 12091345100,
+      "latest_video": null,
+      "current_screenshot": null,
+      "user_signed_at": null
+    }
+  ],
+  "separate_backlog": "S5-A07 is unconfirmed history, not a CSS refactor regression.",
+  "note": "Real baseline screenshots available for Card only after current batch CI; no per-S5 A01–A06 screenshot verified yet. Do not claim R0-05 closed."
+}

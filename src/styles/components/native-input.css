@@ -60,7 +60,11 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input.is-disabled{--_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-control-bg-disabled);--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-disabled);--_qxframe9a7c2-state-text:var(--_qxframe9a7c2-control-text-disabled);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:none;--_qxframe9a7c2-state-cursor:not-allowed;--_qxframe9a7c2-state-z:0}
 .qxframe9a7c2-input.is-focus-outline-disabled{--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:none}
 
-.qxframe9a7c2-input-prefix,.qxframe9a7c2-input-suffix,.qxframe9a7c2-input-toggle,.qxframe9a7c2-input-loading,.qxframe9a7c2-input-count{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--_qxframe9a7c2-control-text-secondary)}
+.qxframe9a7c2-input-prefix,.qxframe9a7c2-input-suffix,.qxframe9a7c2-input-toggle,.qxframe9a7c2-input-loading,.qxframe9a7c2-input-count{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+/* Prefix/suffix use the shared Theme muted text; actual action/count
+ * controls keep the independent Control secondary text role. */
+.qxframe9a7c2-input-prefix,.qxframe9a7c2-input-suffix{color:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-input-toggle,.qxframe9a7c2-input-loading,.qxframe9a7c2-input-count{color:var(--_qxframe9a7c2-control-text-secondary)}
 .qxframe9a7c2-input-prefix:empty,.qxframe9a7c2-input-suffix:empty,.qxframe9a7c2-input-toggle[hidden],.qxframe9a7c2-input-toggle.is-hidden,.qxframe9a7c2-input-loading[hidden],.qxframe9a7c2-input-loading.is-hidden,.qxframe9a7c2-input-count[hidden],.qxframe9a7c2-input-count.is-hidden,.qxframe9a7c2-input-clear[hidden],.qxframe9a7c2-input-clear.is-hidden{display:none}
 .qxframe9a7c2-input-suffix{gap:var(--_qxframe9a7c2-control-gap);min-width:0}
 /* Authored suffix children stay at order:0. Only framework-owned roles move around them. */
@@ -77,7 +81,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input.is-value>.qxframe9a7c2-input-values{display:flex;flex:1 1 auto;min-width:0;overflow:hidden}.qxframe9a7c2-input.is-value>.qxframe9a7c2-input-control{display:none}
 .qxframe9a7c2-input-value-placeholder{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--_qxframe9a7c2-semantic-text-placeholder)}
 .qxframe9a7c2-input-control{box-sizing:border-box;flex:1 1 3rem;min-width:1.5rem;height:calc(var(--_qxframe9a7c2-control-local-height) - 0.375rem);padding:0;border:0;outline:0;resize:none;background:transparent;color:inherit;font:inherit}
-.qxframe9a7c2-input-control::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
+.qxframe9a7c2-input-control::placeholder{color:var(--qxframe9a7c2-theme-muted-foreground)}
 .qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-control,.qxframe9a7c2-input.is-draft-value>.qxframe9a7c2-input-segments{color:color-mix(in srgb, var(--qxframe9a7c2-theme-foreground) 58%, transparent)}
 .qxframe9a7c2-input:not(.is-clear-visible)>.qxframe9a7c2-input-suffix>.qxframe9a7c2-input-clear{display:none}
 .qxframe9a7c2-text-field>.qxframe9a7c2-input-control{box-sizing:border-box;min-width:1.5rem;flex:1 1 3rem;height:calc(var(--_qxframe9a7c2-control-local-height) - 0.375rem);margin:0;padding:0;border:0;border-radius:0;outline:0;background:transparent;box-shadow:none;color:inherit;font:inherit}

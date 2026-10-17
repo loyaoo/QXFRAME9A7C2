@@ -1,8 +1,7 @@
-/* Theme adapters: non-color theme inputs -> existing component-facing private slots.
- * Declared at every theme boundary (:root, .dark) so a dark subtree re-resolves them.
- * Private implementation glue, not a second public theme layer. */
-@scope (:root) {
-  :scope,.dark {
+/* Shared semantic input allocations for typography, shape, motion and elevation.
+ * Values resolve at :root and local .dark boundaries; component owners consume
+ * these existing private roles. No additional public Theme variables. */
+:root,.dark {
     --_qxframe9a7c2-fixed-font-family:var(--qxframe9a7c2-theme-font-sans);
     --_qxframe9a7c2-fixed-font-family-heading:var(--qxframe9a7c2-theme-font-heading);
     --_qxframe9a7c2-fixed-font-family-mono:var(--qxframe9a7c2-theme-font-mono);
@@ -30,4 +29,3 @@
     --_qxframe9a7c2-compact-shape-radius:var(--qxframe9a7c2-theme-radius-item);
     --_qxframe9a7c2-identity-shape-radius:var(--qxframe9a7c2-theme-radius-avatar);
   }
-}

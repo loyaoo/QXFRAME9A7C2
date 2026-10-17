@@ -65,7 +65,7 @@ check('Stage5 Preview04 directly reuses full Theme Playground and dark Alert sha
 check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
  const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
- const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
  assert.match(badge,/border-radius:var\(--qxframe9a7c2-badge-radius,var\(--qxframe9a7c2-theme-radius-badge\)\)/,'Badge consumes Theme radius-badge');
  assert.doesNotMatch(recipe,/\.qxframe9a7c2-badge,\.qxframe9a7c2-tabs-tab/,'compact shape visual recipe must not replace Badge Theme radius');
@@ -167,7 +167,7 @@ check('Stage5 Tags input and Tag share one radius owner across all Theme shapes'
  const radius='var(--qxframe9a7c2-tag-radius,var(--qxframe9a7c2-theme-radius-badge,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius))))';
  assert.equal(tag.split('border-radius:'+radius).length-1,4,'Tag surface, Add focus shell, editable input and edit-state input all share Tag/compact/control fallback');
  assert.ok(!recipe.includes('.qxframe9a7c2-tag,.qxframe9a7c2-badge,.qxframe9a7c2-tabs-tab'),'visual recipe must not override canonical Tag radius owner');
- const styleConsumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const styleConsumers=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.ok(!styleConsumers.includes('.qxframe9a7c2-tag[class]{border-radius:'),'late Theme Style consumer may not reintroduce an independent Tag-only radius owner');
 });
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
@@ -276,7 +276,7 @@ check('Chromium acceptance module must parse before any heavy browser workflow',
 check('font-mono and Alert radius consume registered Theme mapping',()=>{
  const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
  const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
- const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style.css'),'utf8');
+ const v2=fs.readFileSync(path.join(root,'src/styles/main/semantic-inputs.css'),'utf8');
  assert.ok(json.includes('font-family:var(--qxframe9a7c2-font-mono,var(--_qxframe9a7c2-fixed-font-family-mono,'),'JSON must preserve public font-mono override then shared theme-mono mapping');
  assert.match(v2,/--_qxframe9a7c2-fixed-font-family-mono:\s*var\(--qxframe9a7c2-theme-font-mono\)/,'Theme V2 maps registered mono font to consumers');
  assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
@@ -466,7 +466,7 @@ check('Maia and Rhea Tabs radius allocation follows source while Shape override 
   assert.ok(compiler.includes("ext.radiusAlloc === 'rounded' ? px(basePx * 1.6)"),'Maia rounded Tabs list alloc');
   assert.ok(compiler.includes("ext.radiusAlloc === 'smooth' ? px(basePx * 2)"),'Rhea smooth Tabs list alloc');
   assert.ok(compiler.includes("shapeRadius(ext.shapeTabs, tabsListRadius, controlShape)"),'Tabs Shape override retained');
-  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  const css=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
   assert.ok(css.includes("calc(var(--_qxframe9a7c2-tabs-radius) - .125rem)"),'shared trigger radius inset remains 2px');
 });
 
@@ -487,9 +487,9 @@ check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>
 });
 
 check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Field success stays distinct',()=>{
- const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
+ const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
- const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const style=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
@@ -501,8 +501,8 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
 });
 
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
-  const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
-  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
+  const style=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
   const structure=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
     assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
@@ -911,7 +911,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
   assert.match(source('src/styles/components/button.css'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-button:focus[^\{]*\{[^}]*theme-pointer-shadow/,'Button pointer focus projects Theme shadow independently of :active');
   assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
-  assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
+  assert.match(source('src/styles/components/control-interaction.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
   assert.match(source('src/styles/components/composition.css'),/input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
 
   const groupCss=source('src/styles/components/composition.css');
@@ -1815,10 +1815,17 @@ check('multi-line Textarea does not inherit single-line Theme min-height', () =>
   const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   const shared=theme.slice(theme.indexOf('/* Controls and multi-line Textarea share typography'),theme.indexOf('  .qxframe9a7c2-input > .qxframe9a7c2-input-control',theme.indexOf('/* Controls and multi-line Textarea share typography')));
   assert.match(shared,/\.qxframe9a7c2-form-textarea\[class\]/);
-  const groups=[...shared.matchAll(/\{([^{}]+)\}/g)].map(x=>x[1]);
-  assert.ok(groups.length>=2,'separate multiline typography and singleline height rules');
-  assert.doesNotMatch(groups[0],/min-height/,'Textareas must never be clamped by Control min-height');
-  assert.match(groups[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
+  const typography=shared.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\],\s*\.qxframe9a7c2-form-textarea\[class\]\s*\{([^{}]+)\}/);
+  assert.ok(typography,'Textarea and single-line controls must keep a shared typography owner');
+  assert.doesNotMatch(typography[1],/min-height/,'Textareas must never be clamped by Control min-height');
+  // The size/height owner is allowed to precede the typography owner now
+  // that scoped core rules are sorted into their actual cascade contexts.
+  // Locate it by the COMPLETE single-line selector group and enforce that
+  // Textarea is excluded rather than relying on adjacent source blocks.
+  const singleLine=theme.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{([^{}]+)\}/);
+  assert.ok(singleLine,'single-line controls require a unique theme-height owner');
+  assert.match(singleLine[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
+  assert.doesNotMatch(singleLine[0],/\.qxframe9a7c2-form-textarea/,'Textarea must not inherit the single-line height owner');
   const forms=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
   assert.match(forms,/\.qxframe9a7c2-form-textarea,\.qxframe9a7c2-native-form textarea\{min-height:5rem/);
 });
@@ -2230,7 +2237,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,'),'Gecko native range thumb must consume Slider thumb size');
  assert.doesNotMatch(css,/\.qxframe9a7c2-color-panel-input\[class\]/,'Theme V2 must not duplicate ColorPanel leaf field skin');
  assert.ok(css.includes('.qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {'),'Slider and ColorPanel must share Theme-derived rail/thumb density roles');
- const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const appearance=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.ok(appearance.includes('.qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{'),'Slider and ColorPanel must share Style-derived rail/thumb Shape Policy');
  assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
  for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected)',

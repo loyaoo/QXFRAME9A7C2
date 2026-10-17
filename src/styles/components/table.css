@@ -83,8 +83,7 @@
 .qxframe9a7c2-table .is-fixed-start.is-last::after,.qxframe9a7c2-table .is-fixed-end.is-first::before{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);top:0;bottom:0;width:0.625rem;opacity:0;pointer-events:none;transition:opacity var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-table .is-fixed-start.is-last::after{inset-inline-end:calc(0.625rem * -1);box-shadow:inset 0.5rem 0 0.5rem calc(0.5rem * -1) rgb(0 0 0 / .24)}
 .qxframe9a7c2-table .is-fixed-end.is-first::before{inset-inline-start:calc(0.625rem * -1);box-shadow:inset calc(0.5rem * -1) 0 0.5rem calc(0.5rem * -1) rgb(0 0 0 / .24)}
-.qxframe9a7c2-table-wrap.can-scroll-start .qxframe9a7c2-table .is-fixed-start.is-last::after{opacity:1}
-.qxframe9a7c2-table-wrap.can-scroll-end .qxframe9a7c2-table .is-fixed-end.is-first::before{opacity:1}
+.qxframe9a7c2-table-wrap.can-scroll-start .qxframe9a7c2-table .is-fixed-start.is-last::after,.qxframe9a7c2-table-wrap.can-scroll-end .qxframe9a7c2-table .is-fixed-end.is-first::before{opacity:1}
 .qxframe9a7c2-table .qxframe9a7c2-table-cell-check{width:1%;white-space:nowrap;text-align:center!important}
 .qxframe9a7c2-table .qxframe9a7c2-table-selection-choice{display:inline-flex;margin:0;vertical-align:middle}
 .qxframe9a7c2-table .qxframe9a7c2-table-cell-actions{width:1%;white-space:nowrap;text-align:end!important}
