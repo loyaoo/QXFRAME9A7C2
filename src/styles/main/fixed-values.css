@@ -15,10 +15,6 @@
   --_qxframe9a7c2-fixed-switch-padding-md: var(--_qxframe9a7c2-switch-padding-md);
   --_qxframe9a7c2-fixed-switch-padding-lg: var(--_qxframe9a7c2-switch-padding-lg);
   
-  --_qxframe9a7c2-fixed-motion-duration-1: var(--_qxframe9a7c2-motion-duration-1);
-  --_qxframe9a7c2-fixed-motion-duration-2: var(--_qxframe9a7c2-motion-duration-2);
-  --_qxframe9a7c2-fixed-motion-duration-3: var(--_qxframe9a7c2-motion-duration-3);
-  --_qxframe9a7c2-fixed-motion-duration-5: var(--_qxframe9a7c2-motion-duration-5);
 
 --_qxframe9a7c2-fixed-radius-xs: var(--_qxframe9a7c2-radius-xs);
 
@@ -109,8 +105,6 @@
 
 --_qxframe9a7c2-fixed-tabs-indicator-size: var(--_qxframe9a7c2-size-1);
 
---_qxframe9a7c2-fixed-card-title-delta: var(--_qxframe9a7c2-size-1);
-  --_qxframe9a7c2-fixed-card-meta-gap: 0.25rem;
   
   --_qxframe9a7c2-fixed-card-grid-min-width: calc(9rem + 0.375rem);
 

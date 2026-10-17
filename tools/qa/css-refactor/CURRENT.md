@@ -10,3 +10,5 @@
 
 
 R5/R6 incremental closure candidate: `main/theme-visual-v2-style.css` → `main/semantic-inputs.css` (26 Theme-derived private roles, one `@scope` replaced with explicit `:root,.dark` at unchanged canonical module order). Historic file deleted; all active references updated. Do not report as accepted until exact-head triple CI and visual QA. The 26 root roles are transferred in the CSS gate ledger, total unchanged; no ratchet relaxation.
+
+Removed six duplicate early private roles from fixed-values.css, preserving the same inputs under the late semantic-inputs.css owner. Exact new SHA full gates required.

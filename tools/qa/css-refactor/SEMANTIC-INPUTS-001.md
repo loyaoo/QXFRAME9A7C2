@@ -20,3 +20,6 @@
 - Exact-head QXFRAME CI, CSS Schema Acceptance and CSS Refactor Fast Evidence (B0 self + negative controls + Card docs computed/layout and full-page screenshot).
 - Any fail must be investigated without broadening Theme or CSS gates. No Draft PR merge.
 - Partial scope work, **not** completion of R5-05/R6-01, because 4 scoped blocks and 3 historical `theme-visual-v2*` modules remain.
+
+## Correction after QXFRAME owner gate
+QXFRAME #39021602826 correctly rejected 12 records corresponding to six root/dark duplicated private variables. Retire the six earlier fixed-values declarations so the late semantic-inputs.css rule is the sole owner. No test baseline increase and no fallbacks introduced. Exact private names: --_qxframe9a7c2-fixed-card-meta-gap, --_qxframe9a7c2-fixed-card-title-delta, --_qxframe9a7c2-fixed-motion-duration-1, --_qxframe9a7c2-fixed-motion-duration-2, --_qxframe9a7c2-fixed-motion-duration-3, --_qxframe9a7c2-fixed-motion-duration-5. Chromium B0 self/candidate local synthetic: 448 light nodes, 890 dark nodes, zero computed/geometry differences after a 1000ms stabilization. CI acceptance remains pending.
