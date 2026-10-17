@@ -36,3 +36,6 @@ The one active core `@scope (:root)` retains 45/200 original rules. A previously
 
 ## Exact-HEAD correction to 153 qualified rules
 The proposed 155-rule migration did not pass the real Card docs gate: #39030981911 detected 249 per-mode computed+geometry differences, primarily `.qxframe9a7c2-button.is-sm` 32px→28px. Local real Card doc CSSOM and binary rule isolation proved original B0 rules **#177 and #183** are the interacting cascade owners; returned both to the scoped set. The narrowed additional migration is 104 (153 total plain, 47 scoped), with zero full CSSOM/rect differences in both real Card light/dark and synthetic 447/890 probes; no new duplicate selector/property owners. Current exact-HEAD triple CI pending; the prior failure is not marked accepted.
+
+
+Core component-painter owner consolidation: eight B0 late scoped duplicate visual rules removed from src/styles/main/theme-visual-v2.css; 153 original plain rules retained unchanged, scoped core 47→39, all existing component owner CSS remains as before. Exact-head triple CI acceptance pending. Evidence and rule mapping in tools/qa/css-refactor/CORE-SCOPE-39.md.
