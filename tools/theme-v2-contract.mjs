@@ -61,11 +61,11 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     '@scope (:root)', ':root', '.dark',
     '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
   ]);
-  // R5 scoped-role migration: only these 49 B0-approved qualified selectors
+  // R5 scoped-role migration: only these 155 B0-reviewed qualified selectors
   // may appear at the top level, and only in this exact source order.
   // The hash freezes the full selector list; unforeseen new top-level CSS
   // remains a hard failure, not an open-ended relaxation of the gate.
-  const approvedUnscopedPreludesHash='e1d019419dd302cde69a866182b55da29cd7bfb34a3dbe702864677a692e6c8c';
+  const approvedUnscopedPreludesHash='a07758b80e49246cff7c1475880691891db666c4a6c8b9d6a17b5049bccb9dfe';
   const unscopedPreludes=[];
   let cursor=0,scopes=0;
   while(cursor<source.length){
@@ -78,7 +78,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     assert.equal(depth,0);cursor=end;if(prelude.startsWith('@scope'))scopes++;
   }
   assert.equal(scopes,1);
-  assert.equal(unscopedPreludes.length,49,'No unexpected or missing B0-approved unscoped rules');
+  assert.equal(unscopedPreludes.length,155,'No unexpected or missing B0-approved unscoped rules');
   assert.equal(createHash('sha256').update(unscopedPreludes.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'Unscoped selectors must preserve exact B0-owned list and order');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
   return {source,expressions,sourceSha:fixture.sha,canonical:true};

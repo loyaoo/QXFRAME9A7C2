@@ -28,3 +28,7 @@ Component appearance owner batch: historical last-stage 21-rule file moved in-pl
 
 ## 49-rule scoped-core migration (pending exact-head CI)
 Core theme-v2 main file: scoped rules 200 → 151; 49 plain component state/geometry rules moved to the tail of the same file with selector/declaration multiset preserved. New duplicates: 0; local accepted-head Chromium geometry: 0 differences (448 Light, 890 Dark); source contract B0-approved selector hash pinned. R5/R6 overall remain pending; no new component file or historical alias introduced.
+
+
+## Second core owner closure: extra 106 (pending exact-head CI)
+The one active core `@scope (:root)` retains 45/200 original rules. A previously accepted batch moved 49; this batch migrates 106 more root-inheritance-safe, globally non-colliding rules to plain component selectors in the original core stylesheet tail, making 155 plain. B0 original rule IDs 1 and 3 (universal semantic roles and generic type mapping) stay scoped, alongside 43 additional conflicting rules. Local B0 and last-green CSSOM: 448 Light/890 Dark selected elements, all computed properties and geometry, zero differences. Actual browser/CI/portal must revalidate. Selector exact-list SHA256 `a07758b80e49246cff7c1475880691891db666c4a6c8b9d6a17b5049bccb9dfe` pins 155 rules. Source changes grouped in a single commit; no main/B0 mutation or PR merge.

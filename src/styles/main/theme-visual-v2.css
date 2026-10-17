@@ -118,29 +118,6 @@
     --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
     --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
   }
-  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-type: inherit; --_qxframe9a7c2-type-foreground: inherit; }
-  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
-  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
-  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
-  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
-  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-secondary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground); }
-  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
-
-  [class*="qxframe9a7c2-"].is-primary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground); }
-  [class*="qxframe9a7c2-"].is-grey, [class*="qxframe9a7c2-"].is-gray { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-grey); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-cyan { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-cyan); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-teal { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-teal); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-green { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-green); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-lime { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-lime); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-yellow { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-yellow); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-orange { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-orange); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-red { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-red); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-pink { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-pink); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-purple { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-purple); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-blue { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-blue); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-azure { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-azure); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
   /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
   .qxframe9a7c2-tag {
     background-color: var(--qxframe9a7c2-theme-secondary);
@@ -217,6 +194,159 @@
     --_qxframe9a7c2-button-active-shadow: var(--_qxframe9a7c2-action-shadow);
     --_qxframe9a7c2-button-disabled-shadow: none;
   }
+  .qxframe9a7c2-button.is-filled {
+    --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
+  }
+
+  /* control: same owner for native Input and all existing Picker Controls. */
+  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-field-border);
+    background-color: var(--_qxframe9a7c2-control-bg);
+    border-color: var(--_qxframe9a7c2-control-border);
+    color: var(--qxframe9a7c2-theme-foreground);
+  }
+  .qxframe9a7c2-input-control::placeholder, .qxframe9a7c2-input-prefix, .qxframe9a7c2-input-suffix { color: var(--qxframe9a7c2-theme-muted-foreground); }
+
+  /* surface: retain Card composition and opt-in divider geometry. */
+  .qxframe9a7c2-card {
+    --_qxframe9a7c2-card-bg: var(--qxframe9a7c2-theme-card);
+    --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, var(--qxframe9a7c2-theme-card-edge));
+    --_qxframe9a7c2-card-divider: var(--qxframe9a7c2-card-divider-color, var(--qxframe9a7c2-theme-border));
+    --_qxframe9a7c2-card-muted-bg: var(--qxframe9a7c2-theme-muted);
+    color: var(--qxframe9a7c2-theme-card-foreground);
+  }
+  .qxframe9a7c2-card-title { color: inherit; }
+  .qxframe9a7c2-card-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
+    --_qxframe9a7c2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
+    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
+  }
+  .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
+    background-color: var(--qxframe9a7c2-theme-popover);
+    color: var(--qxframe9a7c2-theme-popover-foreground);
+    border: 1px solid var(--_qxframe9a7c2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
+  }
+
+  /* navigation: shadcn item highlighting uses accent, not primary. */
+  .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
+  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
+  /* Shared native/projected choice; state source and QX focus protocol unchanged. */
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
+  .qxframe9a7c2-form-check-input[type="checkbox"] { border-radius: var(--_qxframe9a7c2-choice-radius); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+
+  /* Tree Choice is global: Popup Menu never changes checkbox painting. */
+
+  /* Radio fill (theme input): 100% = filled type color, 0% = outlined foreground ring + dot (Sera). */
+  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,
+  .qxframe9a7c2-native-form input[type="radio"]:checked:disabled, .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled {
+    background-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), transparent);
+    border-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+    color: color-mix(in oklab, var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+  }
+  .qxframe9a7c2-input.is-textarea { padding: 0; }
+  .qxframe9a7c2-button.is-square, .qxframe9a7c2-button.is-circle { padding-inline: 0; width: var(--_qxframe9a7c2-control-height); height: var(--_qxframe9a7c2-control-height); }
+  .qxframe9a7c2-button.is-circle { border-radius: 50%; }
+  .qxframe9a7c2-switch .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track,
+  .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
+}
+
+
+/* Root-scope-independent component consumers: 155 rules, exact owner-map gate. */
+
+  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-type: inherit; --_qxframe9a7c2-type-foreground: inherit; }
+  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
+  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
+  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-secondary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground); }
+  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+
+  [class*="qxframe9a7c2-"].is-primary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground); }
+  [class*="qxframe9a7c2-"].is-grey, [class*="qxframe9a7c2-"].is-gray { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-grey); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-cyan { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-cyan); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-teal { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-teal); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-green { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-green); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-lime { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-lime); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-yellow { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-yellow); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-orange { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-orange); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-red { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-red); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-pink { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-pink); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-purple { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-purple); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-blue { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-blue); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-azure { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-azure); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  /* Default Badge is a neutral status label; explicit is-* colors still win. */
+  .qxframe9a7c2-badge { --_qxframe9a7c2-default-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-default-foreground: var(--qxframe9a7c2-theme-background); }
+  .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
+  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-soft); color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  /* Outline Badge is a static label: a visible border, never a hoverable action. */
+  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--_qxframe9a7c2-badge-text); border:1px solid var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent); }
+  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-solid-hover); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-tag.is-disabled, .qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-disabled { background-color: var(--qxframe9a7c2-theme-secondary); color: var(--qxframe9a7c2-theme-secondary-foreground); opacity: .5; }
+
+  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+
+  /* Alert owns its Appearance/semantic paint in components/alert.css.
+     This layer only maps Notification; no later Alert background override. */
+  .qxframe9a7c2-notification {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
+    border-color: var(--qxframe9a7c2-theme-border);
+  }
+  .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
+  .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
+  .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row):hover, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-hover { --_qxframe9a7c2-table-row-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent); }
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-selected, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-transfer-selected { --_qxframe9a7c2-table-row-bg: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-table th { background-color: var(--qxframe9a7c2-theme-background); }
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-disabled { opacity: .5; }
+  /* Transfer's public/local panel roles win over generic surface Theme paint.
+     In particular, disabled foreground must inherit from its Transfer owner. */
+  .qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }
+  .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }
+  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-thumb); border-color: var(--qxframe9a7c2-theme-thumb-border); }
+  .qxframe9a7c2-selectgroup-indicator.is-overlay { box-shadow: none; }
+  /* Alert keeps source-owned configurable elevation. */
+  /* Remaining QX consumers enter existing source responsibilities. Geometry,
+     value ownership, native events, focus and popup mounting remain unchanged. */
+  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  /* ColorPanel source paints input, format and eye as one field family. */
+  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
+  .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
+  .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-carousel-dot-bar[class] { background-color: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
+  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-button {
     --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary);
     --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground);
@@ -271,40 +401,16 @@
     --_qxframe9a7c2-action-border: transparent;
     --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
-  .qxframe9a7c2-button.is-filled {
-    --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
-  }
   /* Native, forced, loading and disabled states are resolved by button.css. */
   .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled { opacity: .5; }
-
-  /* control: same owner for native Input and all existing Picker Controls. */
-  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
-    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field);
-    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-field-border);
-    background-color: var(--_qxframe9a7c2-control-bg);
-    border-color: var(--_qxframe9a7c2-control-border);
-    color: var(--qxframe9a7c2-theme-foreground);
-  }
   .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-warning); }
   .qxframe9a7c2-input.is-disabled { opacity: .5; }
   .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field-disabled); }
-  .qxframe9a7c2-input-control::placeholder, .qxframe9a7c2-input-prefix, .qxframe9a7c2-input-suffix { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-input.is-draft-value > .qxframe9a7c2-input-control { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-muted); }
   .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-control-border: transparent; --_qxframe9a7c2-control-bg: transparent; }
-
-  /* surface: retain Card composition and opt-in divider geometry. */
-  .qxframe9a7c2-card {
-    --_qxframe9a7c2-card-bg: var(--qxframe9a7c2-theme-card);
-    --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, var(--qxframe9a7c2-theme-card-edge));
-    --_qxframe9a7c2-card-divider: var(--qxframe9a7c2-card-divider-color, var(--qxframe9a7c2-theme-border));
-    --_qxframe9a7c2-card-muted-bg: var(--qxframe9a7c2-theme-muted);
-    color: var(--qxframe9a7c2-theme-card-foreground);
-  }
-  .qxframe9a7c2-card-title { color: inherit; }
-  .qxframe9a7c2-card-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* popup: public Popup, popover, submenu and Dialog consume one local role chain.
      The real border uses the source ring color; QX geometry stays QX-owned. */
@@ -317,17 +423,6 @@
     --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-menu);
     --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
     backdrop-filter: blur(var(--qxframe9a7c2-theme-menu-blur));
-  }
-  .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
-    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
-    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
-    --_qxframe9a7c2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
-    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-popup-bg);
-    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-popup-border);
-    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
-    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-popup-bg);
-    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-popup-border);
-    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
   }
   /* Popup ItemCollection and ItemSurface otherwise force the page foreground
      onto floating Select options, breaking inverted menu readability.
@@ -553,16 +648,6 @@
     border-color: var(--_qxframe9a7c2-popup-border);
     box-shadow: var(--_qxframe9a7c2-popup-shadow);
   }
-  .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
-    background-color: var(--qxframe9a7c2-theme-popover);
-    color: var(--qxframe9a7c2-theme-popover-foreground);
-    border: 1px solid var(--_qxframe9a7c2-popup-border);
-    box-shadow: var(--_qxframe9a7c2-dialog-shadow);
-    filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
-  }
-
-  /* navigation: shadcn item highlighting uses accent, not primary. */
-  .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
   .qxframe9a7c2-menu .qxframe9a7c2-menu-item {
     --_qxframe9a7c2-menu-item-bg: transparent;
     --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground));
@@ -593,24 +678,8 @@
   }
   .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
   .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-menu-item-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
-  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
-  /* Shared native/projected choice; state source and QX focus protocol unchanged. */
-  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
   .qxframe9a7c2-native-form input[type="radio"]:checked::before, .qxframe9a7c2-form-check-input[type="radio"]:checked::before, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio::before { background-color: currentColor; }
-  .qxframe9a7c2-form-check-input[type="checkbox"] { border-radius: var(--_qxframe9a7c2-choice-radius); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
-
-  /* Tree Choice is global: Popup Menu never changes checkbox painting. */
-
-  /* Radio fill (theme input): 100% = filled type color, 0% = outlined foreground ring + dot (Sera). */
-  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,
-  .qxframe9a7c2-native-form input[type="radio"]:checked:disabled, .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled {
-    background-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), transparent);
-    border-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
-    color: color-mix(in oklab, var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
-  }
   .qxframe9a7c2-switch-track { background-color: var(--qxframe9a7c2-theme-switch-track); border-color: var(--qxframe9a7c2-theme-switch-track-border); }
   .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-type); border-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--qxframe9a7c2-theme-foreground)); }
@@ -675,10 +744,7 @@
     font-size:var(--qxframe9a7c2-theme-control-font-size,var(--_qxframe9a7c2-control-font-size));
   }
   .qxframe9a7c2-input > .qxframe9a7c2-input-control, .qxframe9a7c2-text-field > .qxframe9a7c2-input-control { height: auto; min-height: var(--_qxframe9a7c2-control-line-height); }
-  .qxframe9a7c2-input.is-textarea { padding: 0; }
   .qxframe9a7c2-input.is-textarea > .qxframe9a7c2-input-control { min-height: calc(var(--_qxframe9a7c2-control-height) - 2px); }
-  .qxframe9a7c2-button.is-square, .qxframe9a7c2-button.is-circle { padding-inline: 0; width: var(--_qxframe9a7c2-control-height); height: var(--_qxframe9a7c2-control-height); }
-  .qxframe9a7c2-button.is-circle { border-radius: 50%; }
   /* is-square is geometric (width = height), not a hard-corner shape. */
   .qxframe9a7c2-card[class] {
     --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-surface-padding));
@@ -694,72 +760,6 @@
   }
   /* Track is a border box. Offsets are measured from its inner border edge. */
   .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
-  .qxframe9a7c2-switch .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track,
-  .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
-}
-
-
-/* Scope-independent component state and geometry consumers (B0-equivalent). */
-
-  /* Default Badge is a neutral status label; explicit is-* colors still win. */
-  .qxframe9a7c2-badge { --_qxframe9a7c2-default-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-default-foreground: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
-  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-soft); color: var(--_qxframe9a7c2-type); }
-  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
-  /* Outline Badge is a static label: a visible border, never a hoverable action. */
-  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--_qxframe9a7c2-badge-text); border:1px solid var(--qxframe9a7c2-theme-border); }
-  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent); }
-  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-solid-hover); }
-  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-tag.is-disabled, .qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-disabled { background-color: var(--qxframe9a7c2-theme-secondary); color: var(--qxframe9a7c2-theme-secondary-foreground); opacity: .5; }
-
-  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
-
-  /* Alert owns its Appearance/semantic paint in components/alert.css.
-     This layer only maps Notification; no later Alert background override. */
-  .qxframe9a7c2-notification {
-    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
-    border-color: var(--qxframe9a7c2-theme-border);
-  }
-  .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
-  .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
-  .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
-  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row):hover, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-hover { --_qxframe9a7c2-table-row-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent); }
-  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-selected, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-transfer-selected { --_qxframe9a7c2-table-row-bg: var(--qxframe9a7c2-theme-muted); }
-  .qxframe9a7c2-table th { background-color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-disabled { opacity: .5; }
-  /* Transfer's public/local panel roles win over generic surface Theme paint.
-     In particular, disabled foreground must inherit from its Transfer owner. */
-  .qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }
-  .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }
-  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-type); }
-  .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-thumb); border-color: var(--qxframe9a7c2-theme-thumb-border); }
-  .qxframe9a7c2-selectgroup-indicator.is-overlay { box-shadow: none; }
-  /* Alert keeps source-owned configurable elevation. */
-  /* Remaining QX consumers enter existing source responsibilities. Geometry,
-     value ownership, native events, focus and popup mounting remain unchanged. */
-  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  /* ColorPanel source paints input, format and eye as one field family. */
-  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
-  .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
-  .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
-  .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
-  .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-type); }
-  .qxframe9a7c2-carousel-dot-bar[class] { background-color: var(--qxframe9a7c2-theme-muted); }
-  .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-type); }
-  .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
-  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
   /* Shared Slider geometry applies to the real Slider and ColorPanel native
      hue/alpha controls; neither owns a separate Style/density mapping. */
   .qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {
