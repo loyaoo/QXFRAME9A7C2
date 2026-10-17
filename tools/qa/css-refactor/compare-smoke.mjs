@@ -7,6 +7,10 @@ import path from 'node:path';
 import os from 'node:os';
 import http from 'node:http';
 import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
+const MIME={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.woff':'font/woff'};
+let activeVariant='baseline';
 import { spawn } from 'node:child_process';
 import { getWebSocketConstructor } from '../../websocket-client.mjs';
 
@@ -53,7 +57,19 @@ const server = http.createServer((req, res) => {
     if (!css[which] || !['light','dark'].includes(mode)) { res.writeHead(400); return res.end(); }
     res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store' }); return res.end(fixture(which,mode));
   }
-  res.writeHead(404); res.end();
+  // Real canonical docs/Card route: serve unchanged JS/DOM from this exact tree,
+  // swapping ONLY the dist CSS source. Prevent directory traversal and missing-file silence.
+  const pathname=decodeURIComponent(u.pathname);
+  const file=path.resolve(projectRoot,'.'+pathname);
+  if (!file.startsWith(projectRoot+path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+    res.writeHead(404); return res.end();
+  }
+  if (pathname==='/dist/qxframe9a7c2.css') {
+    res.writeHead(200,{'Content-Type':'text/css','Cache-Control':'no-store'});
+    return res.end(css[activeVariant]);
+  }
+  res.writeHead(200,{'Content-Type':MIME[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
+  res.end(fs.readFileSync(file));
 });
 await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
 const origin = 'http://127.0.0.1:' + server.address().port;
@@ -83,16 +99,36 @@ async function waitFor(expression,label) {
   }
   throw new Error('Timed out: '+label);
 }
-async function sample(which,mode) {
+async function sample(which,mode,route='synthetic') {
   const errorsStart=runtimeErrors.length, networkStart=httpErrors.length;
-  await s('Page.navigate',{url:origin+'/fixture?which='+which+'&mode='+mode});
-  await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
+  activeVariant=which;
+  const actualDoc=route==='card-doc';
+  await s('Page.navigate',{url: actualDoc ? origin+'/docs/components/card.html' : origin+'/fixture?which='+which+'&mode='+mode});
+  if (actualDoc) {
+    await waitFor('document.readyState==="complete" && document.body.dataset.qxframe9a7c2Component==="Card" && document.querySelectorAll(".qxframe9a7c2-card").length>=1','real Card docs mount');
+    // Both sides get the identical modifier after product JS has initialized.
+    await evalJs("document.documentElement.classList.toggle('dark',"+JSON.stringify(mode==='dark')+");true");
+    await sleep(350);
+  } else {
+    await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
+  }
   await evalJs('document.fonts.ready.then(()=>true)');
   const snapshot = await evalJs(`(() => {
     const rows=[];
-    const all=[document.documentElement,document.body,...document.querySelectorAll('body *')];
+    const realDoc=!!document.body.dataset.qxframe9a7c2Component;
+    const all=realDoc ?
+      [document.documentElement,document.body,...[...document.querySelectorAll('.qxframe9a7c2-card,.qxframe9a7c2-card *')].slice(0,250)] :
+      [document.documentElement,document.body,...document.querySelectorAll('body *')];
+    const domPath=el=>{
+      const out=[];
+      while(el && el.nodeType===1){
+        let n=1; for(let x=el.previousElementSibling;x;x=x.previousElementSibling)if(x.tagName===el.tagName)n++;
+        out.unshift(el.tagName.toLowerCase()+':nth-of-type('+n+')'); el=el.parentElement;
+      }
+      return out.join('>');
+    };
     for (const el of all) {
-      const name=el.id || (el===document.documentElement?'html':el===document.body?'body':el.tagName);
+      const name=domPath(el);
       const box=el.getBoundingClientRect();
       const geom=[box.x,box.y,box.width,box.height,el.scrollWidth,el.scrollHeight,el.clientWidth,el.clientHeight];
       const values={};
@@ -105,9 +141,12 @@ async function sample(which,mode) {
     }
     return {rows,styleSheets:document.styleSheets.length,scopeRuleCounts:[...document.styleSheets].map(sheet=>{try{return sheet.cssRules.length}catch{return -1}})};
   })()`);
-  if (snapshot.styleSheets === 0 || snapshot.rows.length<10) throw new Error('Incomplete fixture: '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
+  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 10))
+    throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
+  const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
   const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
-  return {snapshot,errors,http};
+  return {snapshot,errors,http,image};
+
 }
 function compare(a,b,label) {
   const out=[];
@@ -125,7 +164,7 @@ function compare(a,b,label) {
   if (a.snapshot.rows.length!==b.snapshot.rows.length) out.push({label,reason:'element-count',baseline:a.snapshot.rows.length,candidate:b.snapshot.rows.length});
   return out;
 }
-const report={baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Synthetic fixture smoke only; does not replace full docs screenshots, interaction or nested Portal acceptance']};
+const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Card docs screenshot/DOM baseline is an L1 sentinel, not a full 112-config, interaction, overlay or portal acceptance.']};
 try {
   if (!bin) throw new Error('Chromium is required; set CHROMIUM_BIN');
   child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
@@ -154,10 +193,34 @@ try {
     const errs=[...a.errors,...b.errors,...bad.errors,...fresh.errors,...a.http,...b.http,...bad.http,...fresh.http];
     report.cases.push({mode,styleElementCount:a.snapshot.rows.length,selfDiffCount:selfDiff.length,negativeDiffCount:negativeDiff.length,candidateDiffCount:candidateDiff.length,negativeSamples:negativeDiff.slice(0,3),candidateSamples:candidateDiff.slice(0,20),errors:errs});
   }
+  // Real source Card docs: repeat self, poison, and candidate in the same Chromium.
+  // A large CSS difference must fail on both actual DOM/computed values and pixels.
+  report.realDocs=[];
+  const artifactDir=arg('out') ? path.join(path.dirname(path.resolve(arg('out'))),'css-refactor-card-screenshots') : null;
+  if(artifactDir)fs.mkdirSync(artifactDir,{recursive:true});
+  for(const mode of ['light','dark']) {
+    const base=await sample('baseline',mode,'card-doc');
+    const again=await sample('baseline',mode,'card-doc');
+    const mutant=await sample('mutant',mode,'card-doc');
+    const head=await sample('candidate',mode,'card-doc');
+    const self=compare(base,again,mode+'-docs-self'),neg=compare(base,mutant,mode+'-docs-poison'),cand=compare(base,head,mode+'-docs-candidate');
+    const pngHash = img => crypto.createHash('sha256').update(img).digest('hex');
+    const imageHashes={baseline:pngHash(base.image),self:pngHash(again.image),negative:pngHash(mutant.image),candidate:pngHash(head.image)};
+    const errors=[...base.errors,...again.errors,...mutant.errors,...head.errors,...base.http,...again.http,...mutant.http,...head.http];
+    const record={mode,elements:base.snapshot.rows.length,cssSheets:base.snapshot.styleSheets,
+      selfDiffs:self.length,negativeDiffs:neg.length,candidateDiffs:cand.length,
+      imageHashes,selfPixelsEqual:imageHashes.baseline===imageHashes.self,
+      negativePixelsDetected:imageHashes.baseline!==imageHashes.negative,
+      candidatePixelsEqual:imageHashes.baseline===imageHashes.candidate,
+      errors,negativeSamples:neg.slice(0,3),candidateSamples:cand.slice(0,8)};
+    if(artifactDir){for(const [key,object] of Object.entries({baseline:base,negative:mutant,candidate:head}))fs.writeFileSync(path.join(artifactDir,'card-'+mode+'-'+key+'.png'),object.image);}
+    report.realDocs.push(record);
+  }
   report.selfPassed=report.cases.every(x=>x.selfDiffCount===0 && x.errors.length===0);
   report.negativePassed=report.cases.every(x=>x.negativeDiffCount>0);
   report.realCandidatePassed=report.cases.every(x=>x.candidateDiffCount===0);
-  report.ok=report.selfPassed&&report.negativePassed&&report.realCandidatePassed;
+  report.realDocsPassed=report.realDocs.every(r=>r.elements>=25 && r.errors.length===0 && r.selfDiffs===0 && r.negativeDiffs>0 && r.candidateDiffs===0 && r.selfPixelsEqual && r.negativePixelsDetected && r.candidatePixelsEqual);
+  report.ok=report.selfPassed&&report.negativePassed&&report.realCandidatePassed&&report.realDocsPassed;
 }catch(e){report.ok=false;report.errors.push(String(e.stack||e));}
 finally{
   if(socket)socket.close();
