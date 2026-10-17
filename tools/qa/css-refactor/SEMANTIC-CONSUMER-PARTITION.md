@@ -15,3 +15,6 @@
 - This is **actual component-family source partition**, not a claim that the final 31 scoped rules are resolved or the entire 1MB framework cleaned. A later R3/R6 must reconcile component-specific ownership and remove @scope after full B0 CSSOM, CreateApp style matrix, Portal, focus, and user override coverage.
 - No published Theme/Token interface, Theme CSS generator/compiler, runtime JS/DOM or main/B0 modified. PR #268 stays Draft; no merge.
 - **Acceptance pending** current-HEAD Fast Chromium B0 self/mutant/real Card DOM+pixel check, QXFRAME CI and CSS Schema. Any failure must be analyzed without loosening gates. The source-file partition is unaccepted until all three pass.
+
+## Source-segment exception ledger transfer
+QXFRAME run #39080265507 found 2 pre-existing `non-rem-length` exceptions in the migrated geometry group: one shared component height-size mapping and a Textarea inset subtraction of 2px. Neither value changed. In `css-gate-baseline.json` section6 non-rem-length, move **exactly two** existing allowances from `main/theme-visual-v2` to `components/component-sizing`; total unchanged, and no new exception is approved. Fast Chromium #39080265503 succeeded (Light/Dark docs each 152 elements, 0 computed/geometry diffs, whole-page screenshot identical). The baseline is not loosened to tolerate any increase.

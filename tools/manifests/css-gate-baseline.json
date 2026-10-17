@@ -81,7 +81,7 @@
       "components/tree": 2,
       "components/upload": 4,
       "main/fixed-values": 1,
-      "main/theme-visual-v2": 2
+      "components/component-sizing": 2
     },
     "important": {
       "components/carousel": 2,
