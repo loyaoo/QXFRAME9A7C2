@@ -308,7 +308,7 @@ finally{
   if(socket)socket.close();
   if(child){child.kill('SIGTERM');await sleep(100);if(child.exitCode===null)child.kill('SIGKILL');}
   server.close();
-  fs.rmSync(profile,{recursive:true,force:true});
+  fs.rmSync(profile,{recursive:true,force:true,maxRetries:15,retryDelay:200});
 }
 if(arg('out')){fs.mkdirSync(path.dirname(path.resolve(arg('out'))),{recursive:true});fs.writeFileSync(path.resolve(arg('out')),JSON.stringify(report,null,2)+'\n');}
 console.log(JSON.stringify({...report,cases:report.cases.map(x=>({...x,candidateSamples:x.candidateSamples.slice(0,3)}))}));

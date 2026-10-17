@@ -22,3 +22,6 @@ Correction: the extracted feedback-focus rules retain original @scope(:root), be
 
 
 Component appearance owner batch: historical last-stage 21-rule file moved in-place to components/component-appearance.css. Initial private-variable deletions were REJECTED by full CSSOM comparator and completely reverted; 14 names/21 definitions remain unchanged. 4 @scope wrappers remain; only the one core 81KB version-named file remains. Exact-head triple CI pending.
+
+## Partial @scope retirement at component-appearance owner
+14/21 qualified rules lifted to plain CSS; 7 priority-sensitive rules remain in the same original root scope. No additional scope blocks; no duplicate-owner ratchet increase. Exact-head three CIs required. CDP fs.rmSync now retries ENOTEMPTY during cleanup instead of terminating successful comparisons. Detailed proof: tools/qa/css-refactor/APPEARANCE-SCOPE-14.md.
