@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, baseline/post-main-cleanup-css-readable-62d9a840]
   workflow_dispatch:
 
 permissions:
@@ -68,22 +68,33 @@ jobs:
       - name: createApp interactions (browser)
         run: npm run verify:create-app-browser
 
-      - name: Checkout main for qxframe.js comparison
+      - name: Checkout immutable B0 for qxframe.js comparison
         if: github.event_name == 'pull_request'
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: main
-          path: .qxframe-main
+          ref: 62d9a8402c19460ced37265acc6d110ae2cfda76
+          path: .qxframe-baseline
           persist-credentials: false
 
-      - name: JS build integrity (main parity or approved component source changes)
+      - name: Verify immutable B0 application JS and embedded Theme
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          (cd .qxframe-main && npm ci --ignore-scripts && node tools/build-release.mjs)
-          node tools/verify-js-build-matches-main.mjs --reference=.qxframe-main/dist
-          rm -rf .qxframe-main
+          cmp .qxframe-baseline/src/styles/main/theme.css src/styles/main/theme.css
+          diff -u <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort) <(find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+          while IFS= read -r p; do
+            cmp ".qxframe-baseline/$p" "$p" || { echo "Frozen application JS changed: $p" >&2; exit 1; }
+          done < <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+
+      - name: JS build integrity (frozen B0 parity)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd .qxframe-baseline && npm ci --ignore-scripts && node tools/build-release.mjs)
+          node tools/verify-js-build-matches-main.mjs --reference=.qxframe-baseline/dist
+          rm -rf .qxframe-baseline
 
       - name: Upload QA reports
         if: always()
