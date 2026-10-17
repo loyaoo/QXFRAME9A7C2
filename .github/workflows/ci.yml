@@ -94,6 +94,10 @@ jobs:
           set -euo pipefail
           (cd .qxframe-baseline && npm ci --ignore-scripts && node tools/build-release.mjs)
           node tools/verify-js-build-matches-main.mjs --reference=.qxframe-baseline/dist
+          node --check tools/qa/css-refactor/compare-smoke.mjs
+          node --check tools/qa/css-equivalence.mjs
+          mkdir -p artifacts
+          node tools/qa/css-refactor/compare-smoke.mjs --baseline=.qxframe-baseline/dist/qxframe9a7c2.css --candidate=dist/qxframe9a7c2.css --out=artifacts/css-refactor-smoke.json
           rm -rf .qxframe-baseline
 
       - name: Upload QA reports
