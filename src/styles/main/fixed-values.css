@@ -587,119 +587,14 @@
  * Legacy public color aliases are output-only adapters; canonical CSS never consumes them.
  */
 :root {
-  color-scheme: light;
-
-  
-  
-  
-  
-
   --qxframe9a7c2-color-text: var(--_qxframe9a7c2-semantic-text);
   --qxframe9a7c2-color-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
-  
-  
-
   --qxframe9a7c2-color-bg: var(--_qxframe9a7c2-semantic-bg);
-  
   --qxframe9a7c2-color-surface-raised: var(--_qxframe9a7c2-semantic-surface-raised);
-  
-  
-
   --qxframe9a7c2-color-border: var(--_qxframe9a7c2-semantic-border);
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  --_qxframe9a7c2-token-scroll-track: rgba(82, 82, 82, .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(82, 82, 82, .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(82, 82, 82, .68);
-  --qxframe9a7c2-shadow-popup: 0 0.75rem 2rem rgba(38, 38, 38, .18);
-}
-
-.dark {
-  color-scheme: dark;
-
-  
-  
-  
-  
-
-  --qxframe9a7c2-color-text: var(--_qxframe9a7c2-semantic-text);
-  --qxframe9a7c2-color-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
-  
-  
-
-  --qxframe9a7c2-color-bg: var(--_qxframe9a7c2-semantic-bg);
-  
-  --qxframe9a7c2-color-surface-raised: var(--_qxframe9a7c2-semantic-surface-raised);
-  
-  
-
-  --qxframe9a7c2-color-border: var(--_qxframe9a7c2-semantic-border);
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  --_qxframe9a7c2-token-scroll-track: rgba(229, 229, 229, .14);
-  --_qxframe9a7c2-token-scroll-thumb: rgba(229, 229, 229, .46);
-  --_qxframe9a7c2-token-scroll-thumb-hover: rgba(229, 229, 229, .68);
-  --qxframe9a7c2-shadow-popup: 0 0.875rem 2.625rem rgba(0, 0, 0, .46);
+  --_qxframe9a7c2-token-scroll-track: light-dark(rgba(82, 82, 82, .14), rgba(229, 229, 229, .14));
+  --_qxframe9a7c2-token-scroll-thumb: light-dark(rgba(82, 82, 82, .46), rgba(229, 229, 229, .46));
+  --_qxframe9a7c2-token-scroll-thumb-hover: light-dark(rgba(82, 82, 82, .68), rgba(229, 229, 229, .68));
 }
 
 @supports (color: contrast-color(red)) {
@@ -757,9 +652,9 @@
   
 
   /* Color-dependent global utility tokens from Original UIKit. */
-  --qxframe9a7c2-scroll-track-color: var(--_qxframe9a7c2-token-scroll-track);
-  --qxframe9a7c2-scroll-thumb-color: var(--_qxframe9a7c2-token-scroll-thumb);
-  --qxframe9a7c2-scroll-thumb-hover-color: var(--_qxframe9a7c2-token-scroll-thumb-hover);
+  --qxframe9a7c2-scroll-track-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 14%,transparent);
+  --qxframe9a7c2-scroll-thumb-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 42%,transparent);
+  --qxframe9a7c2-scroll-thumb-hover-color: color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 62%,transparent);
   --qxframe9a7c2-scroll-track-size: 0.5rem;
   --qxframe9a7c2-scroll-track-inset: var(--_qxframe9a7c2-size-1);
   --qxframe9a7c2-scroll-track-radius: 100rem;
@@ -928,59 +823,26 @@
    * transparent in sRGB. Neutral base inputs are stored as paired Light/Dark slots so a
    * global mode switch never leaks one mode's public semantic values into a nested boundary. */
   :root {
-    color-scheme: light;
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-bg: var(--_qxframe9a7c2-fixed-light-bg, var(--_qxframe9a7c2-standard-light-bg, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface: var(--_qxframe9a7c2-fixed-light-surface, var(--_qxframe9a7c2-standard-light-surface, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface-raised: var(--_qxframe9a7c2-fixed-light-surface-raised, var(--_qxframe9a7c2-standard-light-surface-raised, var(--_qxframe9a7c2-neutral-13)));
-    --_qxframe9a7c2-mode-surface-muted: var(--_qxframe9a7c2-fixed-light-surface-muted, var(--_qxframe9a7c2-neutral-12));
-    --_qxframe9a7c2-mode-text: var(--_qxframe9a7c2-fixed-light-text, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-text-secondary: var(--_qxframe9a7c2-fixed-light-text-secondary, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-text-muted: var(--_qxframe9a7c2-fixed-light-text-muted, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-text-placeholder: var(--_qxframe9a7c2-fixed-light-text-placeholder, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-border: var(--_qxframe9a7c2-fixed-light-border, var(--_qxframe9a7c2-neutral-10));
-    --_qxframe9a7c2-mode-border-subtle: var(--_qxframe9a7c2-fixed-light-border-subtle, var(--_qxframe9a7c2-neutral-12));
-    --_qxframe9a7c2-mode-border-strong: var(--_qxframe9a7c2-fixed-light-border-strong, var(--_qxframe9a7c2-neutral-8));
-    --_qxframe9a7c2-mode-input-border: var(--_qxframe9a7c2-fixed-light-input-border, var(--_qxframe9a7c2-neutral-10));
-    --_qxframe9a7c2-mode-default-solid: var(--_qxframe9a7c2-fixed-light-default-solid, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-default-solid-hover: var(--_qxframe9a7c2-fixed-light-default-solid-hover, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-default-solid-focus: var(--_qxframe9a7c2-fixed-light-default-solid-focus, var(--_qxframe9a7c2-neutral-2));
-    --_qxframe9a7c2-mode-default-solid-active: var(--_qxframe9a7c2-fixed-light-default-solid-active, var(--_qxframe9a7c2-neutral-1));
-    --_qxframe9a7c2-mode-default-solid-text: var(--_qxframe9a7c2-fixed-light-default-solid-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--_qxframe9a7c2-fixed-light-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    --_qxframe9a7c2-mode-bg: light-dark(var(--_qxframe9a7c2-fixed-light-bg, var(--_qxframe9a7c2-standard-light-bg, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-bg, var(--_qxframe9a7c2-standard-dark-bg, var(--_qxframe9a7c2-neutral-1))));
+    --_qxframe9a7c2-mode-surface: light-dark(var(--_qxframe9a7c2-fixed-light-surface, var(--_qxframe9a7c2-standard-light-surface, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-surface, var(--_qxframe9a7c2-standard-dark-surface, var(--_qxframe9a7c2-mode-bg))));
+    --_qxframe9a7c2-mode-surface-raised: light-dark(var(--_qxframe9a7c2-fixed-light-surface-raised, var(--_qxframe9a7c2-standard-light-surface-raised, var(--_qxframe9a7c2-neutral-13))), var(--_qxframe9a7c2-fixed-dark-surface-raised, var(--_qxframe9a7c2-standard-dark-surface-raised, var(--_qxframe9a7c2-neutral-2))));
+    --_qxframe9a7c2-mode-surface-muted: light-dark(var(--_qxframe9a7c2-fixed-light-surface-muted, var(--_qxframe9a7c2-neutral-12)), var(--_qxframe9a7c2-fixed-dark-surface-muted, var(--_qxframe9a7c2-neutral-3)));
+    --_qxframe9a7c2-mode-text: light-dark(var(--_qxframe9a7c2-fixed-light-text, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-text, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-text-secondary: light-dark(var(--_qxframe9a7c2-fixed-light-text-secondary, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-text-secondary, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-text-muted: light-dark(var(--_qxframe9a7c2-fixed-light-text-muted, var(--_qxframe9a7c2-neutral-6)), var(--_qxframe9a7c2-fixed-dark-text-muted, var(--_qxframe9a7c2-neutral-7)));
+    --_qxframe9a7c2-mode-text-placeholder: light-dark(var(--_qxframe9a7c2-fixed-light-text-placeholder, var(--_qxframe9a7c2-neutral-6)), var(--_qxframe9a7c2-fixed-dark-text-placeholder, var(--_qxframe9a7c2-neutral-7)));
+    --_qxframe9a7c2-mode-border: light-dark(var(--_qxframe9a7c2-fixed-light-border, var(--_qxframe9a7c2-neutral-10)), var(--_qxframe9a7c2-fixed-dark-border, rgba(255, 255, 255, .10)));
+    --_qxframe9a7c2-mode-border-subtle: light-dark(var(--_qxframe9a7c2-fixed-light-border-subtle, var(--_qxframe9a7c2-neutral-12)), var(--_qxframe9a7c2-fixed-dark-border-subtle, rgba(255, 255, 255, .08)));
+    --_qxframe9a7c2-mode-border-strong: light-dark(var(--_qxframe9a7c2-fixed-light-border-strong, var(--_qxframe9a7c2-neutral-8)), var(--_qxframe9a7c2-fixed-dark-border-strong, rgba(255, 255, 255, .15)));
+    --_qxframe9a7c2-mode-input-border: light-dark(var(--_qxframe9a7c2-fixed-light-input-border, var(--_qxframe9a7c2-neutral-10)), var(--_qxframe9a7c2-fixed-dark-input-border, rgba(255, 255, 255, .15)));
+    --_qxframe9a7c2-mode-default-solid: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-default-solid, var(--_qxframe9a7c2-neutral-5)));
+    --_qxframe9a7c2-mode-default-solid-hover: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-hover, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-default-solid-hover, var(--_qxframe9a7c2-neutral-6)));
+    --_qxframe9a7c2-mode-default-solid-focus: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-focus, var(--_qxframe9a7c2-neutral-2)), var(--_qxframe9a7c2-fixed-dark-default-solid-focus, var(--_qxframe9a7c2-neutral-5)));
+    --_qxframe9a7c2-mode-default-solid-active: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-active, var(--_qxframe9a7c2-neutral-1)), var(--_qxframe9a7c2-fixed-dark-default-solid-active, var(--_qxframe9a7c2-neutral-4)));
+    --_qxframe9a7c2-mode-default-solid-text: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-text, var(--_qxframe9a7c2-neutral-13)), var(--_qxframe9a7c2-fixed-dark-default-solid-text, var(--_qxframe9a7c2-neutral-13)));
+    --_qxframe9a7c2-mode-default-solid-disabled-text: light-dark(var(--_qxframe9a7c2-fixed-light-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8)), var(--_qxframe9a7c2-fixed-dark-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8)));
     --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
-    --_qxframe9a7c2-on-grey: rgb(255, 255, 255);
-    
+    --_qxframe9a7c2-on-grey: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));
     --_qxframe9a7c2-on-cyan: rgb(255, 255, 255);
     --_qxframe9a7c2-on-teal: rgb(255, 255, 255);
     --_qxframe9a7c2-on-green: rgb(255, 255, 255);
@@ -998,125 +860,15 @@
     --_qxframe9a7c2-on-warning: rgb(255, 255, 255);
     --_qxframe9a7c2-on-error: rgb(255, 255, 255);
     --_qxframe9a7c2-on-info: rgb(255, 255, 255);
-    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-11);
-    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-7);
-    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-12);
-    --_qxframe9a7c2-mode-border-disabled: var(--_qxframe9a7c2-neutral-10);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-focus-visible: rgb(0, 0, 0);
-    
-    
-    
-    --_qxframe9a7c2-ripple-default-inside: rgba(0, 0, 0, .22);
-    --_qxframe9a7c2-ripple-default-outside: rgba(0, 0, 0, .38);
-    --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
-    --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
-    --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);
-    --qxframe9a7c2-ripple-outside-opacity: 1;
-  }
-
-  .dark {
-    color-scheme: dark;
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-bg: var(--_qxframe9a7c2-fixed-dark-bg, var(--_qxframe9a7c2-standard-dark-bg, var(--_qxframe9a7c2-neutral-1)));
-    --_qxframe9a7c2-mode-surface: var(--_qxframe9a7c2-fixed-dark-surface, var(--_qxframe9a7c2-standard-dark-surface, var(--_qxframe9a7c2-mode-bg)));
-    --_qxframe9a7c2-mode-surface-raised: var(--_qxframe9a7c2-fixed-dark-surface-raised, var(--_qxframe9a7c2-standard-dark-surface-raised, var(--_qxframe9a7c2-neutral-2)));
-    --_qxframe9a7c2-mode-surface-muted: var(--_qxframe9a7c2-fixed-dark-surface-muted, var(--_qxframe9a7c2-neutral-3));
-    --_qxframe9a7c2-mode-text: var(--_qxframe9a7c2-fixed-dark-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-text-secondary: var(--_qxframe9a7c2-fixed-dark-text-secondary, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-text-muted: var(--_qxframe9a7c2-fixed-dark-text-muted, var(--_qxframe9a7c2-neutral-7));
-    --_qxframe9a7c2-mode-text-placeholder: var(--_qxframe9a7c2-fixed-dark-text-placeholder, var(--_qxframe9a7c2-neutral-7));
-    --_qxframe9a7c2-mode-border: var(--_qxframe9a7c2-fixed-dark-border, rgba(255, 255, 255, .10));
-    --_qxframe9a7c2-mode-border-subtle: var(--_qxframe9a7c2-fixed-dark-border-subtle, rgba(255, 255, 255, .08));
-    --_qxframe9a7c2-mode-border-strong: var(--_qxframe9a7c2-fixed-dark-border-strong, rgba(255, 255, 255, .15));
-    --_qxframe9a7c2-mode-input-border: var(--_qxframe9a7c2-fixed-dark-input-border, rgba(255, 255, 255, .15));
-    --_qxframe9a7c2-mode-default-solid: var(--_qxframe9a7c2-fixed-dark-default-solid, var(--_qxframe9a7c2-neutral-5));
-    --_qxframe9a7c2-mode-default-solid-hover: var(--_qxframe9a7c2-fixed-dark-default-solid-hover, var(--_qxframe9a7c2-neutral-6));
-    --_qxframe9a7c2-mode-default-solid-focus: var(--_qxframe9a7c2-fixed-dark-default-solid-focus, var(--_qxframe9a7c2-neutral-5));
-    --_qxframe9a7c2-mode-default-solid-active: var(--_qxframe9a7c2-fixed-dark-default-solid-active, var(--_qxframe9a7c2-neutral-4));
-    --_qxframe9a7c2-mode-default-solid-text: var(--_qxframe9a7c2-fixed-dark-default-solid-text, var(--_qxframe9a7c2-neutral-13));
-    --_qxframe9a7c2-mode-default-solid-disabled-text: var(--_qxframe9a7c2-fixed-dark-default-solid-disabled-text, var(--_qxframe9a7c2-neutral-8));
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-on-accent: var(--_qxframe9a7c2-primary-foreground);
-    --_qxframe9a7c2-on-grey: rgb(0, 0, 0);
-    
-    --_qxframe9a7c2-on-cyan: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-teal: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-green: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-lime: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-yellow: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-orange: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-red: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-pink: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-purple: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-blue: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-azure: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-white: rgb(0, 0, 0);
-    --_qxframe9a7c2-on-black: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-success: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-warning: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-error: rgb(255, 255, 255);
-    --_qxframe9a7c2-on-info: rgb(255, 255, 255);
-    --_qxframe9a7c2-mode-subtle: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-subtle-hover: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-subtle-active: var(--_qxframe9a7c2-neutral-4);
-    --_qxframe9a7c2-mode-text-disabled: var(--_qxframe9a7c2-neutral-6);
-    --_qxframe9a7c2-mode-bg-disabled: var(--_qxframe9a7c2-neutral-3);
-    --_qxframe9a7c2-mode-border-disabled: rgba(255, 255, 255, .08);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    --_qxframe9a7c2-mode-focus-visible: rgb(255, 255, 255);
-    
-    
-    
-    --_qxframe9a7c2-ripple-default-inside: rgba(255, 255, 255, .22);
-    --_qxframe9a7c2-ripple-default-outside: rgba(255, 255, 255, .38);
+    --_qxframe9a7c2-mode-subtle: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-subtle-hover: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-subtle-active: light-dark(var(--_qxframe9a7c2-neutral-11), var(--_qxframe9a7c2-neutral-4));
+    --_qxframe9a7c2-mode-text-disabled: light-dark(var(--_qxframe9a7c2-neutral-7), var(--_qxframe9a7c2-neutral-6));
+    --_qxframe9a7c2-mode-bg-disabled: light-dark(var(--_qxframe9a7c2-neutral-12), var(--_qxframe9a7c2-neutral-3));
+    --_qxframe9a7c2-mode-border-disabled: light-dark(var(--_qxframe9a7c2-neutral-10), rgba(255, 255, 255, .08));
+    --_qxframe9a7c2-mode-focus-visible: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+    --_qxframe9a7c2-ripple-default-inside: light-dark(rgba(0, 0, 0, .22), rgba(255, 255, 255, .22));
+    --_qxframe9a7c2-ripple-default-outside: light-dark(rgba(0, 0, 0, .38), rgba(255, 255, 255, .38));
     --qxframe9a7c2-ripple-color: var(--_qxframe9a7c2-ripple-default-inside);
     --qxframe9a7c2-ripple-inside-color: var(--_qxframe9a7c2-ripple-default-inside);
     --qxframe9a7c2-ripple-outside-color: var(--_qxframe9a7c2-ripple-default-outside);
@@ -5500,11 +5252,11 @@
     --_qxframe9a7c2-data-border: var(--_qxframe9a7c2-family-data-border, var(--_qxframe9a7c2-semantic-border-subtle));
     --_qxframe9a7c2-data-header-bg: var(--_qxframe9a7c2-family-data-header-bg, var(--_qxframe9a7c2-semantic-surface-muted));
     
-    --_qxframe9a7c2-data-radius: var(--_qxframe9a7c2-family-data-radius, var(--_qxframe9a7c2-control-radius));
+    --_qxframe9a7c2-data-radius: var(--_qxframe9a7c2-family-data-radius, var(--qxframe9a7c2-theme-radius-item));
 
     --_qxframe9a7c2-navigation-bg: var(--_qxframe9a7c2-family-navigation-bg, var(--_qxframe9a7c2-semantic-surface));
     --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-family-navigation-hover-bg, var(--_qxframe9a7c2-semantic-surface-hover));
-    --_qxframe9a7c2-navigation-radius: var(--_qxframe9a7c2-family-navigation-radius, var(--_qxframe9a7c2-control-radius));
+    --_qxframe9a7c2-navigation-radius: var(--_qxframe9a7c2-family-navigation-radius, var(--qxframe9a7c2-theme-radius-item));
 
     
     
@@ -5750,7 +5502,7 @@
 .is-white{--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-white,var(--_qxframe9a7c2-semantic-on-accent))}
 .is-black{--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-black,var(--_qxframe9a7c2-semantic-on-accent))}
 
-.is-grey,.is-gray,.is-cyan,.is-teal,.is-green,.is-lime,.is-yellow,.is-orange,.is-red,.is-pink,.is-purple,.is-blue,.is-azure,.is-white,.is-black{--_qxframe9a7c2-accent:var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-hover:color-mix(in oklab, var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)) 80%, transparent);--_qxframe9a7c2-accent-active:var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-soft:color-mix(in oklab, var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)) 10%, transparent);--_qxframe9a7c2-accent-soft-hover:color-mix(in oklab, var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)) 20%, transparent);--_qxframe9a7c2-accent-border:var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-focus-shadow:0 0 0 var(--_qxframe9a7c2-focus-shadow-size) color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);--_qxframe9a7c2-accent-ripple-inside:var(--_qxframe9a7c2-accent-hover);--_qxframe9a7c2-accent-ripple-outside:var(--_qxframe9a7c2-accent)}
+.is-grey,.is-gray,.is-cyan,.is-teal,.is-green,.is-lime,.is-yellow,.is-orange,.is-red,.is-pink,.is-purple,.is-blue,.is-azure,.is-white,.is-black{--_qxframe9a7c2-accent:var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-hover:color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) 80%, transparent);--_qxframe9a7c2-accent-active:var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-soft:color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) 10%, transparent);--_qxframe9a7c2-accent-soft-hover:color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) 20%, transparent);--_qxframe9a7c2-accent-border:var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-accent-focus-shadow:0 0 0 var(--_qxframe9a7c2-focus-shadow-size) color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);--_qxframe9a7c2-accent-ripple-inside:var(--_qxframe9a7c2-accent-hover);--_qxframe9a7c2-accent-ripple-outside:var(--_qxframe9a7c2-accent)}
 
 .is-primary{--_qxframe9a7c2-accent:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-accent-hover:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);--_qxframe9a7c2-accent-active:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-accent-soft:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);--_qxframe9a7c2-accent-soft-hover:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent);--_qxframe9a7c2-accent-border:var(--_qxframe9a7c2-semantic-accent-border);--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-semantic-on-accent);--_qxframe9a7c2-accent-focus-shadow:0 0 0 var(--_qxframe9a7c2-focus-shadow-size) color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);--_qxframe9a7c2-accent-ripple-inside:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);--_qxframe9a7c2-accent-ripple-outside:var(--qxframe9a7c2-theme-primary)}
 .is-success{--_qxframe9a7c2-accent-on:var(--_qxframe9a7c2-on-success,var(--_qxframe9a7c2-semantic-on-status));--_qxframe9a7c2-accent:var(--qxframe9a7c2-theme-success);--_qxframe9a7c2-accent-hover:color-mix(in oklab, var(--qxframe9a7c2-theme-success) 80%, transparent);--_qxframe9a7c2-accent-active:var(--qxframe9a7c2-theme-success);--_qxframe9a7c2-accent-soft:color-mix(in oklab, var(--qxframe9a7c2-theme-success) 10%, transparent);--_qxframe9a7c2-accent-ripple-inside:color-mix(in oklab, var(--qxframe9a7c2-theme-success) 80%, transparent);--_qxframe9a7c2-accent-ripple-outside:var(--qxframe9a7c2-theme-success)}
@@ -5780,13 +5532,20 @@
   background:var(--_qxframe9a7c2-popup-surface-bg);color:var(--_qxframe9a7c2-popup-surface-text);box-shadow:var(--_qxframe9a7c2-popup-surface-shadow)
 }
 
-/* Shared inset/flush frame for list-like surfaces. The frame owns gutter + item corner geometry;
- * Item/ItemCollection remain the row-state owner. Flush mode removes row corners because there is no inner gutter. */
-.qxframe9a7c2-list-frame{--_qxframe9a7c2-list-frame-gutter:var(--qxframe9a7c2-list-frame-gutter,0.375rem);box-sizing:border-box}
-.qxframe9a7c2-list-frame.is-inset{padding:var(--_qxframe9a7c2-list-frame-gutter);--_qxframe9a7c2-item-radius:var(--_qxframe9a7c2-navigation-radius)}
-.qxframe9a7c2-list-frame.is-flush{padding:0;--_qxframe9a7c2-item-radius:0px}
+/* Every list-like popup (Dropdown, Select, TreeSelect, Autocomplete, Cascader,
+ * Menu submenu, Table filter and standalone List) uses ONE CSS-owned frame.
+ * No runtime inset option, no separate mode classes. The Theme's x/y values
+ * choose all-sides or vertical-only spacing. With zero x the row reaches both
+ * sides without leaving rounded hover slivers. */
+.qxframe9a7c2-list-frame{
+  --_qxframe9a7c2-list-frame-padding-x:var(--qxframe9a7c2-theme-list-padding-x,0.375rem);
+  --_qxframe9a7c2-list-frame-padding-y:var(--qxframe9a7c2-theme-list-padding-y,0.375rem);
+  --_qxframe9a7c2-item-radius:min(var(--_qxframe9a7c2-navigation-radius),calc(var(--_qxframe9a7c2-list-frame-padding-x) * 100));
+  box-sizing:border-box;
+  padding:var(--_qxframe9a7c2-list-frame-padding-y) var(--_qxframe9a7c2-list-frame-padding-x);
+}
 
-/* Calendar and PeriodPanel keep independent unit/navigation behavior but share one visual panel shell. */
+/* Calendar date/week/month/quarter/year units share one panel owner. */
 .qxframe9a7c2-date-panel{--_qxframe9a7c2-date-panel-width:var(--qxframe9a7c2-date-panel-width,calc(16rem + 2.5rem));--_qxframe9a7c2-date-panel-min-width:var(--qxframe9a7c2-date-panel-min-width,calc(16rem + 1.5rem));--_qxframe9a7c2-date-panel-bg:var(--qxframe9a7c2-date-panel-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-date-panel-border:var(--qxframe9a7c2-date-panel-border,var(--_qxframe9a7c2-semantic-border));--_qxframe9a7c2-date-panel-text:var(--qxframe9a7c2-date-panel-text,var(--_qxframe9a7c2-semantic-text));--_qxframe9a7c2-date-panel-radius:var(--qxframe9a7c2-date-panel-radius,var(--_qxframe9a7c2-popup-radius));box-sizing:border-box;display:flex;flex-direction:column;width:var(--_qxframe9a7c2-date-panel-width);min-width:min(100%,var(--_qxframe9a7c2-date-panel-min-width));max-width:100%;padding:0.375rem;border:1px solid var(--_qxframe9a7c2-date-panel-border);border-radius:var(--_qxframe9a7c2-date-panel-radius);background:var(--_qxframe9a7c2-date-panel-bg);color:var(--_qxframe9a7c2-date-panel-text);outline:none}
 .qxframe9a7c2-date-panel:focus,.qxframe9a7c2-date-panel:focus-visible{outline:none}
 .qxframe9a7c2-date-panel-header{display:flex;align-items:center;gap:0.25rem;margin-bottom:0.25rem}
@@ -5798,11 +5557,12 @@
 .qxframe9a7c2-date-panel-title-action:focus-visible:not(:disabled),.qxframe9a7c2-date-panel-nav:focus-visible:not(:disabled){--_qxframe9a7c2-date-panel-action-focus-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-date-panel-title-action:disabled,.qxframe9a7c2-date-panel-nav:disabled,.qxframe9a7c2-date-panel.is-disabled .qxframe9a7c2-date-panel-title-action,.qxframe9a7c2-date-panel.is-disabled .qxframe9a7c2-date-panel-nav{--_qxframe9a7c2-date-panel-action-bg:transparent;--_qxframe9a7c2-date-panel-action-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-date-panel-action-focus-shadow:none;--_qxframe9a7c2-date-panel-action-cursor:not-allowed;--_qxframe9a7c2-date-panel-action-opacity:.72}
 
-/* Calendar / PeriodPanel canonical cell state: one active/selected/range/focus visual language. */
+/* Calendar unit-neutral cell state: active/selected/range/focus. */
 .qxframe9a7c2-date-panel-cell{--_qxframe9a7c2-date-panel-cell-bg:transparent;--_qxframe9a7c2-date-panel-cell-text:inherit;--_qxframe9a7c2-date-panel-cell-border:transparent;--_qxframe9a7c2-date-panel-cell-radius:var(--_qxframe9a7c2-action-radius);--_qxframe9a7c2-date-panel-cell-cursor:pointer;--_qxframe9a7c2-date-panel-cell-decoration:none;box-sizing:border-box;border:1px solid var(--_qxframe9a7c2-date-panel-cell-border);border-radius:var(--_qxframe9a7c2-date-panel-cell-radius);background:var(--_qxframe9a7c2-date-panel-cell-bg);color:var(--_qxframe9a7c2-date-panel-cell-text);font:inherit;cursor:var(--_qxframe9a7c2-date-panel-cell-cursor);text-decoration:var(--_qxframe9a7c2-date-panel-cell-decoration);outline:none}
 .qxframe9a7c2-date-panel-cell:hover:not(:disabled):not(.is-selected),.qxframe9a7c2-date-panel-cell.is-hover:not(:disabled):not(.is-selected),.qxframe9a7c2-date-panel-cell.is-active:not(.is-selected){--_qxframe9a7c2-date-panel-cell-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-date-panel-cell.is-keyboard-focus:not(:disabled){outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
-.qxframe9a7c2-date-panel-cell.is-today:not(.is-selected),.qxframe9a7c2-date-panel-cell.is-current:not(.is-selected){--_qxframe9a7c2-date-panel-cell-border:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-date-panel-cell-text:var(--qxframe9a7c2-theme-primary);font-weight:700}
+.qxframe9a7c2-date-panel-cell.is-today:not(.is-selected):not(:disabled),.qxframe9a7c2-date-panel-cell.is-current:not(.is-selected):not(:disabled){--_qxframe9a7c2-date-panel-cell-border:transparent;--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text);position:relative}
+.qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today:not(.is-selected):not(:disabled)::after,.qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-current:not(.is-selected):not(:disabled)::after{content:"";position:absolute;inset-inline-start:50%;bottom:0.1875rem;width:0.25rem;height:0.25rem;border-radius:100rem;transform:translateX(-50%);background:var(--qxframe9a7c2-theme-primary);pointer-events:none}
 .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected){--_qxframe9a7c2-date-panel-cell-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
 .qxframe9a7c2-date-panel-cell.is-in-range:hover:not(:disabled):not(.is-selected),.qxframe9a7c2-date-panel-cell.is-in-range.is-hover:not(:disabled):not(.is-selected){--_qxframe9a7c2-date-panel-cell-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent)}
 .qxframe9a7c2-date-panel-cell.is-selected{--_qxframe9a7c2-date-panel-cell-bg:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-date-panel-cell-border:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-on-accent)}

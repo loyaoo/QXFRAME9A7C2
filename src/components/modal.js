@@ -56,7 +56,7 @@ function createModalController(instance, options) {
     title:'提示', content:'', closable:true, showMask:true, closeOnMask:true,
     closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true,
     restoreFocus:true, forceRender:false, autoOpen:true, placement:'center',
-    animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false
+    animation:'zoom', maskAnimation:'fade', fullscreen:false, center:false
   }, options || {}));
   var recentPointer = null;
 
@@ -66,49 +66,60 @@ function createModalController(instance, options) {
     if (event.clientX === 0 && event.clientY === 0 && event.detail === 0) return null;
     return { x:event.clientX, y:event.clientY };
   }
-  function originPoint(ctx, event) {
+  function originPoint(ctx, event, reason) {
     var direct = eventPoint(event);
     if (direct) return direct;
     var opts = ctx.options();
     var origin = typeof opts.origin === 'function' ? opts.origin(ctx.api) : opts.origin;
+    // triggerTarget remains stable before the first mount/measurement.
+    if (!origin) origin = typeof opts.triggerTarget === 'function' ? opts.triggerTarget(ctx.api) : opts.triggerTarget;
+    if (typeof origin === 'string' && origin.trim()) origin = ctx.document.querySelector(origin);
     if (origin && origin.nodeType === 1 && origin.getBoundingClientRect) {
       var rect = origin.getBoundingClientRect();
       return { x:rect.left + rect.width / 2, y:rect.top + rect.height / 2 };
     }
-    if (recentPointer && Date.now() - recentPointer.time <= 200) return { x:recentPointer.x, y:recentPointer.y };
+    if (reason === 'autoOpen') return null;
+    if (recentPointer && Date.now() - recentPointer.time <= 2500 && (!recentPointer.target || recentPointer.target.isConnected)) {
+      return { x:recentPointer.x, y:recentPointer.y };
+    }
+    var focused = ctx.document.activeElement;
+    if (focused && focused !== ctx.document.body && focused !== ctx.document.documentElement && focused !== ctx.surface && !ctx.root.contains(focused) && focused.getBoundingClientRect) {
+      var focusedRect = focused.getBoundingClientRect();
+      if (focusedRect.width > 0 && focusedRect.height > 0) return { x:focusedRect.left + focusedRect.width / 2, y:focusedRect.top + focusedRect.height / 2 };
+    }
     return null;
   }
-  function measureSurfaceRect(ctx) {
-    var style = ctx.surface.style;
-    var transform = style.getPropertyValue('transform');
-    var transformPriority = style.getPropertyPriority('transform');
-    var transition = style.getPropertyValue('transition');
-    var transitionPriority = style.getPropertyPriority('transition');
-    style.setProperty('transition', 'none', 'important');
-    style.setProperty('transform', 'none', 'important');
-    var rect = ctx.surface.getBoundingClientRect();
-    if (transform) style.setProperty('transform', transform, transformPriority); else style.removeProperty('transform');
-    if (transition) style.setProperty('transition', transition, transitionPriority); else style.removeProperty('transition');
-    return rect;
-  }
-  function applyMotion(ctx, showing, event) {
+  function applyMotion(ctx, showing, event, reason) {
+    // Closing returns to the ORIGINAL trigger point, not the close button.
     if (!showing) return;
-    var point = originPoint(ctx, event);
-    var rect = measureSurfaceRect(ctx);
-    ctx.surface.style.transformOrigin = point && rect.width > 0 && rect.height > 0
-      ? Math.round(point.x - rect.left) + 'px ' + Math.round(point.y - rect.top) + 'px'
-      : '50% 50%';
+    var animation = ctx.options().animation;
+    if (animation !== 'zoom' && animation !== 'zoom-origin' && animation !== 'zoomIn') return;
+    var point = originPoint(ctx, event, reason);
+    var x = 0, y = 0;
+    if (point) {
+      // Single read before presence; subsequent animation is compositor-only.
+      var rect = ctx.surface.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        x = Math.round(point.x - rect.left - rect.width / 2);
+        y = Math.round(point.y - rect.top - rect.height / 2);
+      } else point = null;
+    }
+    ctx.surface.style.transformOrigin = '50% 50%';
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-x', x + 'px');
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-y', y + 'px');
+    ctx.surface.style.setProperty('--_qxframe9a7c2-modal-motion-scale', point ? '.7' : '.86');
   }
   function dialogMotion(ctx) {
     var opts = ctx.options();
     if (opts.animation === false) return { type:'transition', appear:{from:null,active:null,to:null}, enter:{from:null,active:null,to:null}, leave:{from:null,active:null,to:null} };
     var name = opts.animation || 'zoom-origin';
     if (name !== 'zoom-origin' && name !== 'zoom' && name !== 'zoomIn') return MotionPresets.resolve(name);
+    var from = 'translate3d(var(--_qxframe9a7c2-modal-motion-x,0px),var(--_qxframe9a7c2-modal-motion-y,0px),0) scale(var(--_qxframe9a7c2-modal-motion-scale,.94))';
     return {
       type:'transition',
-      appear:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      enter:{ from:{style:{transform:'scale(.2)',opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
-      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:'scale(.2)',opacity:'0'}} }
+      appear:{ from:{style:{transform:from,opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      enter:{ from:{style:{transform:from,opacity:'0'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-enter-duration) var(--qxframe9a7c2-motion-modal-dialog-enter-easing)'}}, to:{style:{transform:'scale(1)',opacity:'1'}} },
+      leave:{ from:{style:{transform:'scale(1)',opacity:'1'}}, active:{style:{transition:'transform var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing), opacity var(--qxframe9a7c2-motion-modal-dialog-leave-duration) var(--qxframe9a7c2-motion-modal-dialog-leave-easing)'}}, to:{style:{transform:from,opacity:'0'}} }
     };
   }
 
@@ -148,7 +159,7 @@ function createModalController(instance, options) {
       if (own(opts, 'maskColor')) ctx.mask.style.background = opts.maskColor || '';
       if (own(opts, 'maskBlur')) ctx.mask.style.backdropFilter = opts.maskBlur ? 'blur(' + px(opts.maskBlur) + ')' : '';
     },
-    beforePresence(ctx, showing, _reason, event) { applyMotion(ctx, showing, event); },
+    beforePresence(ctx, showing, reason, event) { applyMotion(ctx, showing, event, reason); },
     maskTransition(ctx) {
       return {
         transition:function () { var opts=ctx.options(); return opts.maskAnimation === false ? 'fade' : (opts.maskAnimation || 'fade'); },
@@ -174,7 +185,7 @@ function createModalController(instance, options) {
     setup(ctx) {
       ctx.scope.add(DOM.listen(ctx.document, 'pointerdown', function (event) {
         var point = eventPoint(event);
-        if (point) recentPointer = { x:point.x, y:point.y, time:Date.now() };
+        if (point) recentPointer = { x:point.x, y:point.y, time:Date.now(), target:event.target && event.target.nodeType === 1 ? event.target : null };
       }, true));
     }
   });
@@ -194,7 +205,7 @@ export class Modal extends OverlayComponent {
             motion:'MotionController', overlay:'OverlayController', feedback:'FeedbackController'
         })
     });
-    static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom-origin', maskAnimation:'fade', fullscreen:false, center:false });
+    static options = Object.freeze({ title:'提示', content:'', closable:true, showMask:true, closeOnMask:true, closeOnEscape:true, destroyOnHidden:false, lockScroll:true, focusTrap:true, restoreFocus:true, forceRender:false, autoOpen:true, placement:'center', animation:'zoom', maskAnimation:'fade', fullscreen:false, center:false });
     static semanticElements = Object.freeze(['root','mask','wrapper','dialog','header','title','body','footer','close']);
     static defaultClassSlot = 'dialog';
     static defaultStyleSlot = 'dialog';

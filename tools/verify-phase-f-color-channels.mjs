@@ -32,7 +32,8 @@ const unexpectedHard=hard.filter(({text})=>!/^\.qxframe9a7c2-color-panel(?:-|\b)
 assert.deepEqual(unexpectedHard,[],'Hard-coded component colors must be limited to intrinsic color-model/contrast data.');
 
 for(const role of ['--_qxframe9a7c2-semantic-overlay-base','--_qxframe9a7c2-semantic-overlay-text','--_qxframe9a7c2-semantic-focus'])assert.ok(theme.includes(role+':'),'Canonical Theme must own shared semantic paint role '+role);
-assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-hue{')),'ColorPanel intrinsic hue spectrum classification is missing.');
+for(const engine of ['::-webkit-slider-runnable-track','::-moz-range-track'])
+  assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-hue'+engine) && text.includes('{background:linear-gradient')),'ColorPanel intrinsic hue spectrum must remain on native range track '+engine);
 assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-panel-saturation{')),'ColorPanel intrinsic saturation surface classification is missing.');
 assert.ok(hard.some(({text})=>text.startsWith('.qxframe9a7c2-color-picker-gradient-stop{')),'ColorPicker gradient-stop contrast affordance classification is missing.');
 

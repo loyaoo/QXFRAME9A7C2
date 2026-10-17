@@ -114,26 +114,216 @@ try {
   await waitFor(`${frameAttr('data-create-style')} === 'nova'`, 'preview ready');
   await evaluate('localStorage.clear()');
 
+  await step('Card skeleton retains shimmer while shared Skeleton animation none disables both families',async()=>{
+    const sample=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const h=d.documentElement,slot=d.createElement('section');\n slot.innerHTML='<div class=\"qxframe9a7c2-skeleton\" style=\"width:5rem;height:1rem\"></div><div class=\"qxframe9a7c2-card-skeleton\"><span class=\"qxframe9a7c2-card-skeleton-line is-title\"></span></div>';\n slot.style.cssText='position:absolute;left:-9999px;top:0';\n d.body.append(slot);\n const primitive=slot.querySelector('.qxframe9a7c2-skeleton'),card=slot.querySelector('.qxframe9a7c2-card-skeleton-line');\n const old=h.style.getPropertyValue('--qxframe9a7c2-theme-skeleton-animation');\n const initial={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n h.style.setProperty('--qxframe9a7c2-theme-skeleton-animation','none');\n const off={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n if(old)h.style.setProperty('--qxframe9a7c2-theme-skeleton-animation',old);else h.style.removeProperty('--qxframe9a7c2-theme-skeleton-animation');\n const restored={primitive:getComputedStyle(primitive).animationName,card:getComputedStyle(card).animationName};\n slot.remove();\n return {initial,off,restored};\n})()");
+    assert.equal(sample.initial.primitive,'qxframe9a7c2-skeleton-pulse','base Skeleton retains pulse');
+    assert.equal(sample.initial.card,'qxframe9a7c2-card-skeleton','Card retains shimmer, not pulse');
+    assert.equal(sample.off.primitive,'none','global Skeleton none must stop base Skeleton');
+    assert.equal(sample.off.card,'none','global Skeleton none must also stop Card shimmer');
+    assert.deepEqual(sample.restored,sample.initial,'restoring the common Token restores both animation types');
+  });
+
+  await step('Input skin variants, symmetric Tag padding and Open/Checkbox Cascader columns: 8 Styles x light/dark',async()=>{
+    const cases=await evaluate("(() => {\nconst api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,orig=api.state.config,wasDark=h.classList.contains('dark');\nconst host=d.createElement('section'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:26rem';\nhost.innerHTML='<div class=\"qxframe9a7c2-input is-tags\" data-compound><div class=\"qxframe9a7c2-tags is-hosted\"><div class=\"qxframe9a7c2-tags-surface\"><span class=\"qxframe9a7c2-tag\">Tag</span></div></div></div><div class=\"qxframe9a7c2-input qxframe9a7c2-select is-multiple\" data-multi><span class=\"qxframe9a7c2-tag\">Tag</span></div>'+\n'<div class=\"qxframe9a7c2-popup-surface\" data-popup><div class=\"qxframe9a7c2-item-surface is-hover\" data-hover>Hover</div><div class=\"qxframe9a7c2-item-surface is-open is-descendant-selected\" data-open>Open<span class=\"qxframe9a7c2-item-selection-indicator is-checkbox is-checked\" data-checkbox></span></div></div>'+\n'<div class=\"qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface\" style=\"position:relative;width:100%;--qxframe9a7c2-cascader-column-count:3\" data-cascader><div class=\"qxframe9a7c2-cascader-popup-content\"><div class=\"qxframe9a7c2-cascader-columns\">'+\n[0,1,2].map(i=>'<div class=\"qxframe9a7c2-cascader-column\"><div class=\"qxframe9a7c2-item-collection\">Level '+i+'</div></div>').join('')+'</div></div></div>';\nhost.insertAdjacentHTML('beforeend','<div class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-item-surface qxframe9a7c2-tree-item is-open\" data-tree-open>Tree Open<span class=\"qxframe9a7c2-tree-check-indicator\" data-tree-check></span></div></div>');\nhost.insertAdjacentHTML('beforeend','<div class=\"qxframe9a7c2-menu\"><div class=\"qxframe9a7c2-menu-item is-hover\" data-menu-hover>Menu Hover</div><div class=\"qxframe9a7c2-menu-item is-open\" data-menu-open>Menu Open</div><div class=\"qxframe9a7c2-menu-item is-selected\" data-menu-selected>Menu Selected</div><div class=\"qxframe9a7c2-menu-item is-active\" data-menu-active>Menu Active</div></div>');\nhost.insertAdjacentHTML('beforeend','<div class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-item-surface qxframe9a7c2-tree-item is-selected\" data-tree-selected>Selected</div><div class=\"qxframe9a7c2-item-surface qxframe9a7c2-tree-item is-descendant-selected\" data-tree-parent>Ancestor</div><span data-primary-ink style=\"color:var(--qxframe9a7c2-theme-primary)\">P</span></div>');\nd.head.append(sheet);d.body.append(host);\n// These computed-style probes must measure resolved paint, not an in-flight\n// transition from the preceding configuration (native Input and MenuItem\n// transition their painted backgrounds during Theme switches).\nhost.querySelectorAll('.qxframe9a7c2-input,.qxframe9a7c2-item-surface,.qxframe9a7c2-item-selection-indicator,.qxframe9a7c2-tree-check-indicator,.qxframe9a7c2-menu-item').forEach(x=>x.style.setProperty('transition','none','important'));\nconst css=s=>d.defaultView.getComputedStyle(host.querySelector(s));const cases=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n h.classList.toggle('dark',dark);\n for(const look of ['outline','subtle','tinted','soft']){\n  sheet.textContent=api.compileTheme({...orig,style,ext:{...orig.ext,inputLook:look},menuAccent:'bold',menuColor:'inverted'},{generatedAt:''}).body;\n  const compound=css('[data-compound]'),multi=css('[data-multi]');\n  cases.push({style,dark,look,field:css('[data-compound]').backgroundColor,padX:compound.paddingInlineStart,padY:compound.paddingBlockStart,multiX:multi.paddingInlineStart,multiY:multi.paddingBlockStart});\n }\n for(const accent of ['subtle','bold']){\n  sheet.textContent=api.compileTheme({...orig,style,menuAccent:accent,menuColor:'inverted'},{generatedAt:''}).body;\n  const hover=css('[data-hover]'),open=css('[data-open]'),check=css('[data-checkbox]'),menu=css('[data-popup]');\n  const col=host.querySelector('.qxframe9a7c2-cascader-columns'),sizes=[...col.children].map(x=>x.getBoundingClientRect());\n  cases.push({style,dark,accent,hoverBg:hover.backgroundColor,openBg:open.backgroundColor,menuAccent:getComputedStyle(host.querySelector('[data-open]')).getPropertyValue('--qxframe9a7c2-theme-menu-accent'),openInk:open.color,checkBg:check.backgroundColor,checkInk:check.color,treeBg:css('[data-tree-open]').backgroundColor,treeInk:css('[data-tree-open]').color,treeLocalAccent:css('[data-tree-open]').getPropertyValue('--qxframe9a7c2-theme-menu-accent').trim(),treeLocalAccentFg:css('[data-tree-open]').getPropertyValue('--qxframe9a7c2-theme-menu-accent-foreground').trim(),treeCheckBg:css('[data-tree-check]').backgroundColor,menuOpenBg:css('[data-menu-open]').backgroundColor,menuOpenInk:css('[data-menu-open]').color,menuHoverBg:css('[data-menu-hover]').backgroundColor,menuSelectedInk:css('[data-menu-selected]').color,menuActiveInk:css('[data-menu-active]').color,menuHoverInk:css('[data-menu-hover]').color,navInk:css('.qxframe9a7c2-menu').color,treeSelectedBg:css('[data-tree-selected]').backgroundColor,treeSelectedInk:css('[data-tree-selected]').color,treeParentBg:css('[data-tree-parent]').backgroundColor,treeParentInk:css('[data-tree-parent]').color,treeNormalInk:css('[data-tree-open]').color,treePrimaryInk:css('[data-primary-ink]').color,menuLocalAccent:css('[data-menu-open]').getPropertyValue('--qxframe9a7c2-theme-menu-accent').trim(),menuLocalAccentFg:css('[data-menu-open]').getPropertyValue('--qxframe9a7c2-theme-menu-accent-foreground').trim(),hoverInk:hover.color,menuInk:menu.color,gapA:sizes[1].left-sizes[0].right,gapB:sizes[2].left-sizes[1].right,overflow:col.scrollWidth-col.clientWidth});\n }\n}\nh.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;\n})()");
+    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){
+      const group=cases.filter(x=>x.style===style&&x.dark===dark),id=style+'/'+dark;
+      const fill=Object.fromEntries(group.filter(x=>x.look).map(x=>[x.look,x]));
+      assert.equal(fill.outline.field,'rgba(0, 0, 0, 0)',id+' outlined Input must be transparent, including dark');
+      assert.notEqual(fill.subtle.field,fill.tinted.field,id+' subtle and tinted backgrounds differ');
+      assert.notEqual(fill.tinted.field,fill.soft.field,id+' tinted differs from soft fill');
+      for(const skin of Object.values(fill)){
+        assert.equal(skin.padX,skin.padY,id+' '+skin.look+' TagInput symmetric outer inset');
+        assert.equal(skin.multiX,skin.multiY,id+' '+skin.look+' Multiple Select symmetric outer inset');
+      }
+      for(const x of group.filter(x=>x.accent)){
+        assert.notEqual(x.openBg,x.hoverBg,id+'/'+x.accent+' Open differs from Hover');
+        assert.equal(x.checkBg,x.openInk,id+'/'+x.accent+' Checkbox fill follows Open ink');
+        assert.notEqual(x.treeBg,x.menuLocalAccent,id+'/'+x.accent+' official Tree Open uses shared Item paint, not Menu accent');
+        if(x.accent==='bold')assert.notEqual(x.treeBg,x.treeLocalAccent,id+' Tree Open is independent of saturated accent');
+        assert.notEqual(x.menuOpenBg,x.menuLocalAccent,id+'/'+x.accent+' standalone Navigation must not consume inverted Popup accent');
+        for(const key of ['menuOpenInk','menuSelectedInk','menuActiveInk','menuHoverInk'])
+          assert.equal(x[key],x.navInk,id+'/'+x.accent+' '+key+' follows Sidebar, not inverse Popup Menu ink');
+        assert.notEqual(x.menuOpenBg,x.menuHoverBg,id+'/'+x.accent+' standalone Navigation Open differs from neutral Hover');
+        assert.equal(x.treeSelectedBg,x.treeBg,id+'/'+x.accent+' selected Tree is not filled');
+        assert.equal(x.treeParentBg,x.treeBg,id+'/'+x.accent+' ancestor Tree state is not filled');
+        assert.equal(x.treeSelectedInk,x.treePrimaryInk,id+'/'+x.accent+' selected Tree keeps only Primary ink');
+        assert.equal(x.treeParentInk,x.treeNormalInk,id+'/'+x.accent+' ancestor Tree text stays neutral');
+        assert.notEqual(x.checkInk,x.checkBg,id+'/'+x.accent+' Checkbox mark ink contrasts with its foreground-colored fill');
+        assert.ok(Math.abs(x.gapA)<=1&&Math.abs(x.gapB)<=1,id+' Cascader columns must be contiguous');
+        assert.ok(x.overflow<=1,id+' Cascader must not horizontally overflow');
+      }
+    }
+  });
+
+
+  await step('Stage5 P1 real Message/Notification Radius and subtle ink in both modes',async()=>{
+    const out=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;
+      const q=d.defaultView.QXFRAME9A7C2,orig=api.state.config,root=d.documentElement,wasDark=root.classList.contains('dark');
+      if(!q?.Components?.Message?.create || !q?.Components?.Notification?.create)return {error:'Missing real Notice exports'};
+      const theme=d.createElement('style'),override=d.createElement('style');
+      d.head.append(theme,override);
+      const message=q.Components.Message.create({content:'Radius QA Message',duration:0,closable:true,document:d});
+      const notice=q.Components.Notification.create({title:'Radius QA',content:'Notification',duration:0,closable:true,document:d});
+      const samples=[];
+      const selectors=['.qxframe9a7c2-message-root','.qxframe9a7c2-notification-root','.qxframe9a7c2-message-stack .qxframe9a7c2-notice-slot','.qxframe9a7c2-notification-stack .qxframe9a7c2-notice-slot','.qxframe9a7c2-message-close','.qxframe9a7c2-notification-close'];
+      for(const dark of [false,true]){
+        root.classList.toggle('dark',dark);
+        theme.textContent=api.compileTheme({...orig,style:'vega',menuAccent:'subtle'},{generatedAt:''}).body;
+        for(const radius of ['0rem','0.875rem']){
+          override.textContent=':root,.dark{--qxframe9a7c2-theme-radius-card:'+radius+' !important;--qxframe9a7c2-theme-radius-button:'+radius+' !important}';
+          const values=selectors.map(selector=>{const el=d.querySelector(selector);return el?d.defaultView.getComputedStyle(el).borderTopLeftRadius:null});
+          const probe=d.createElement('i');probe.style.cssText='color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)';
+          d.body.append(probe);
+          const ink=d.defaultView.getComputedStyle(probe).color;
+          probe.style.color='var(--qxframe9a7c2-theme-popover-foreground)';
+          const expectedInk=d.defaultView.getComputedStyle(probe).color;probe.remove();
+          samples.push({dark,radius,values,ink,expectedInk});
+        }
+      }
+      try{q.Components.Message.closeAll();q.Components.Notification.closeAll()}catch(_){}
+      root.classList.toggle('dark',wasDark);theme.remove();override.remove();
+      return {samples};
+    })()`);
+    assert.ok(!out.error,out.error);
+    assert.equal(out.samples.length,4,'both modes x zero/nonzero radius');
+    for(const sample of out.samples){
+      assert.equal(sample.values.length,6,'card, slot and close selectors');
+      sample.values.forEach((radius,i)=>assert.equal(radius,sample.radius==='0rem'?'0px':'14px','Notice real shape '+i+'/'+JSON.stringify(sample)));
+      assert.equal(sample.ink,sample.expectedInk,'subtle ink resolves to Popover foreground in actual CSS Color 4 syntax');
+    }
+  });
+
+  await step('Menu inverse Picker descendants use readable local semantic roles (8 Styles x 2 modes x 4 Menu variants)',async()=>{
+    const result=await evaluate("(() => {"+
+      "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;"+
+      "const orig=api.state.config,wasDark=h.classList.contains('dark');"+
+      "const host=d.createElement('div'),sheet=d.createElement('style');"+
+      "host.style.cssText='position:absolute;left:-10000px;top:0;width:18rem';"+
+      "host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+"+
+      "'<div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-group\">Group</div><input class=\"qxframe9a7c2-item-collection-search-input\" placeholder=\"Search\"><div class=\"qxframe9a7c2-item-surface is-hover\">Hover</div><div class=\"qxframe9a7c2-item-surface qxframe9a7c2-cascader-item is-open is-descendant-selected\">Open ancestor</div><div class=\"qxframe9a7c2-item-surface is-selected\">Selected</div></div>'+"+
+      "'<div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-cell is-plain\">Normal</button><button class=\"qxframe9a7c2-date-panel-cell is-hover\">Hover</button><button class=\"qxframe9a7c2-date-panel-cell is-today\">Today</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">Chosen</button><button class=\"qxframe9a7c2-date-panel-nav\">Next</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-period-panel\"><button class=\"qxframe9a7c2-date-panel-cell qxframe9a7c2-period-panel-cell is-selected\">Q4</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item\">09</div><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">10</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div>'+"+
+      "'<button class=\"qxframe9a7c2-date-picker-preset\">Today</button>'+"+
+      "'<div class=\"qxframe9a7c2-color-panel\"><i data-hue-rail-probe style=\"display:block;height:var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem))\"></i><i data-hue-thumb-probe style=\"display:block;width:var(--_qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-width-md,1rem))))\"></i><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"><button class=\"qxframe9a7c2-color-panel-format\">HEX</button><button class=\"qxframe9a7c2-color-panel-eye\">Eye</button><button class=\"qxframe9a7c2-color-panel-preset is-hover\">Hover</button><button class=\"qxframe9a7c2-color-panel-preset is-active\">Active</button><input type=\"range\" class=\"qxframe9a7c2-color-panel-hue\" min=\"0\" max=\"360\" value=\"180\"></div><div class=\"qxframe9a7c2-slider\"><div class=\"qxframe9a7c2-slider-rail\"></div><button class=\"qxframe9a7c2-slider-handle\"></button></div><i data-menu-soft style=\"background:var(--_qxframe9a7c2-menu-hover-soft);border:1px solid var(--qxframe9a7c2-theme-field-border)\"></i></div>'+"+
+      "'<div data-standalone-color class=\"qxframe9a7c2-color-panel\"><input class=\"qxframe9a7c2-color-panel-input\" value=\"#ffffff\"><button class=\"qxframe9a7c2-color-panel-format\">HEX</button><button class=\"qxframe9a7c2-color-panel-eye\">Eye</button></div>'+"+
+      "'<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\"><span class=\"qxframe9a7c2-item-collection\">Popover</span></div>'+"+
+      "'<i class=\"qxframe9a7c2-popup-surface\" data-menu-accent-soft style=\"background:var(--_qxframe9a7c2-menu-selected-soft)\"></i><i data-menu-solid style=\"color:oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)\"></i><i data-menu-focus style=\"color:var(--qxframe9a7c2-theme-pointer-focus)\"></i><i data-menu-fg style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-menu-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-popover-fg style=\"color:var(--qxframe9a7c2-theme-popover-foreground)\"></i>';"+
+      "d.head.append(sheet);d.body.append(host);"+
+      "const panel=host.querySelector('.qxframe9a7c2-picker-field-panel');['accent-soft','solid','fg','accent'].forEach(name=>panel.append(host.querySelector('[data-menu-'+name+']')));"+
+      "const css=(x,pseudo)=>d.defaultView.getComputedStyle(x,pseudo);const query=x=>host.querySelector(x);"+
+      "const cases=[];for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){"+
+      "h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;"+
+      "const menuFg=css(query('[data-menu-fg]')).color,accent=css(query('[data-menu-accent]')),popup=css(query('.qxframe9a7c2-picker-field-panel'));"+
+      "cases.push({style,dark,menuColor,menuFg,rows:css(query('.qxframe9a7c2-item-collection')).color,collectionBg:css(query('.qxframe9a7c2-item-collection')).backgroundColor,group:css(query('.qxframe9a7c2-item-collection-group')).color,"+
+      "search:css(query('.qxframe9a7c2-item-collection-search-input')).color,hover:css(query('.qxframe9a7c2-item-surface.is-hover')).color,hoverBg:css(query('.qxframe9a7c2-item-surface.is-hover')).backgroundColor,openBg:css(query('.qxframe9a7c2-cascader-item.is-open')).backgroundColor,openFg:css(query('.qxframe9a7c2-cascader-item.is-open')).color,softSelectedBg:css(query('[data-menu-accent-soft]')).backgroundColor,softBg:css(query('[data-menu-soft]')).backgroundColor,neutralBorder:css(query('[data-menu-soft]')).borderTopColor,selected:css(query('.qxframe9a7c2-item-surface.is-selected')).color,selectedBg:css(query('.qxframe9a7c2-item-surface.is-selected')).backgroundColor,"+
+      "accentFg:accent.color,accentBg:accent.backgroundColor,menuSolid:css(query('[data-menu-solid]')).color,normal:css(query('.qxframe9a7c2-date-panel-cell.is-plain')).color,today:css(query('.qxframe9a7c2-date-panel-cell.is-today')).color,todayDot:css(query('.qxframe9a7c2-date-panel-cell.is-today'),'::after').backgroundColor,"+
+      "dateHoverBg:css(query('.qxframe9a7c2-date-panel-cell.is-hover')).backgroundColor,dateSelected:css(query('.qxframe9a7c2-date-panel-cell.is-selected')).color,periodSelected:css(query('.qxframe9a7c2-period-panel-cell.is-selected')).color,"+
+      "wheel:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).color,wheelBg:css(query('.qxframe9a7c2-wheel-panel-item.is-selected')).backgroundColor,wheelNormal:css(query('.qxframe9a7c2-wheel-panel-item:not(.is-selected)')).color,wheelRowsZ:css(query('.qxframe9a7c2-wheel-panel-columns')).zIndex,wheelGuideZ:css(query('.qxframe9a7c2-wheel-panel-center-guide')).zIndex,preset:css(query('.qxframe9a7c2-date-picker-preset')).color,"+
+      "colorInput:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input')).color,colorInputBorder:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input')).borderTopColor,colorInputFocused:query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-input').matches(':focus'),focusBorder:css(query('[data-menu-focus]')).color,colorFormatBorder:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-format')).borderTopColor,colorEyeBorder:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-eye')).borderTopColor,presetHoverBorder:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover')).borderTopColor,presetActiveBorder:css(query('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-active')).borderTopColor,standaloneInputBorder:css(query('[data-standalone-color] .qxframe9a7c2-color-panel-input')).borderTopColor,standaloneInputFocused:query('[data-standalone-color] .qxframe9a7c2-color-panel-input').matches(':focus'),standaloneFormatBorder:css(query('[data-standalone-color] .qxframe9a7c2-color-panel-format')).borderTopColor,standaloneEyeBorder:css(query('[data-standalone-color] .qxframe9a7c2-color-panel-eye')).borderTopColor,wheelGuideBorder:css(query('.qxframe9a7c2-wheel-panel-center-guide')).borderTopColor,wheelGuideBg:css(query('.qxframe9a7c2-wheel-panel-center-guide')).backgroundColor,hueRail:css(query('[data-hue-rail-probe]')).height,sliderRail:css(query('.qxframe9a7c2-slider-rail')).height,hueThumb:css(query('[data-hue-thumb-probe]')).width,sliderThumb:css(query('.qxframe9a7c2-slider-handle')).width,popover:css(query('.qxframe9a7c2-popover-container .qxframe9a7c2-item-collection')).color,popoverFg:css(query('[data-popover-fg]')).color});"+
+      "}h.classList.toggle('dark',wasDark);host.remove();sheet.remove();return cases;})()");
+    assert.equal(result.length,64,'8 Styles x 2 modes x 4 Menu modes');
+    for(const r of result){
+      const id=r.style+'/'+r.dark+'/'+r.menuColor;
+      for(const field of ['rows','search','normal','today','wheelNormal','preset','colorInput'])
+        assert.equal(r[field],r.menuFg,id+' '+field+' uses Menu foreground');
+      assert.ok(Number(r.wheelRowsZ)>Number(r.wheelGuideZ),id+' wheel text layer must paint above selection guide');
+      assert.equal(r.wheel,r.accentFg,id+' selected Wheel text pairs with Menu accent, not idle foreground');
+      assert.equal(r.wheelBg,'rgba(0, 0, 0, 0)',id+' TimePicker leaves selected wheel background to TimePanel guide');
+      assert.equal(r.collectionBg,'rgba(0, 0, 0, 0)',id+' nested collection is transparent; only Popup owns Menu backdrop opacity');
+      assert.equal(r.hover,r.menuFg,id+' hover Item keeps Menu foreground');
+      assert.equal(r.hoverBg,r.softBg,id+' hover Item uses neutral Menu mix, not selected paint');
+      assert.equal(r.dateHoverBg,r.softBg,id+' Calendar hover uses the same neutral Menu mix');
+      assert.equal(r.openFg,r.accentFg,id+' Cascader open ancestor uses Menu accent foreground');
+      assert.equal(r.openBg,r.accentBg,id+' Cascader open ancestor uses theme-tinted or vivid Menu accent, never Hover');
+      assert.equal(r.colorInputBorder,r.colorInputFocused?r.menuSolid:r.colorFormatBorder,id+' ColorPanel input focused border uses Menu Primary, idle shared border');
+      assert.equal(r.colorEyeBorder,r.colorFormatBorder,id+' embedded ColorPanel eye and format must share the passive border owner');
+      assert.equal(r.standaloneInputBorder,r.standaloneInputFocused?r.focusBorder:r.standaloneFormatBorder,id+' standalone ColorPanel input uses focus role only when focused; otherwise shared border (focus='+r.standaloneInputFocused+')');
+      assert.equal(r.standaloneEyeBorder,r.standaloneFormatBorder,id+' standalone ColorPanel eye and format must share their border owner');
+      if(!r.colorInputFocused)assert.notEqual(r.colorInputBorder,r.accentBg,id+' passive ColorPanel border never becomes Menu accent');
+      assert.notEqual(r.presetHoverBorder,r.presetActiveBorder,id+' native ColorPanel preset hover border differs from selected');
+      assert.equal(r.presetHoverBorder,r.neutralBorder,id+' ColorPanel preset hover uses neutral border');
+      assert.equal(r.presetActiveBorder,r.menuSolid,id+' ColorPanel active preset border uses visible Menu Primary');
+      assert.equal(r.wheelGuideBorder,r.accentBg,id+' WheelPanel guide border retains Menu accent');
+      assert.equal(r.wheelGuideBg,r.accentBg,id+' guide fill uses one Menu accent: solid bold, tinted subtle');
+      assert.equal(r.todayDot,r.menuSolid,id+' Today dot uses solid dark/inverted Menu Primary');
+      // Chromium's computed pseudo-range height mirrors the host input, not its native track.
+      // Probe the computed shared recipe; the source gate enforces pseudo-track consumption.
+      assert.equal(r.hueRail,r.sliderRail,id+' ColorPanel native hue track recipe matches Slider rail');
+      assert.equal(r.hueThumb,r.sliderThumb,id+' ColorPanel native hue thumb matches Slider handle');
+      assert.equal(r.selected,r.accentFg,id+' selected Item uses Menu accent foreground');
+      assert.equal(r.selectedBg,r.softSelectedBg,id+' selected Item uses shared alpha Menu accent overlay');
+      assert.notEqual(r.selectedBg,r.accentBg,id+' selected Item cannot turn translucent Popup opaque');
+      assert.equal(r.dateSelected,r.accentFg,id+' selected Date uses Menu accent foreground');
+      assert.equal(r.periodSelected,r.accentFg,id+' selected Period uses Menu accent foreground');
+      assert.equal(r.popover,r.popoverFg,id+' Popover is independent of Menu color');
+      assert.notEqual(r.group,'rgba(0, 0, 0, 0)',id+' group label has paint');
+    }
+  });
+
+
+  await step('TagInput and Multiple Select match Input single-row geometry; Cascader wraps without horizontal overflow',async()=>{
+    const samples=await evaluate("(() => {\nconst api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,orig=api.state.config,wasDark=h.classList.contains('dark');\nconst host=d.createElement('div'),sheet=d.createElement('style');\nhost.style.cssText='position:absolute;left:-10000px;top:0;width:22rem';\nd.head.append(sheet);d.body.append(host);\nconst samples=[];\nfor(const size of ['sm','md','lg']){\nconst container=d.createElement('section');container.dataset.size=size;\nconst c='qxframe9a7c2-input is-'+size;\ncontainer.innerHTML='<div data-geo=\"input\" class=\"'+c+'\"><input class=\"qxframe9a7c2-input-control\" /></div>'+\n'<div data-geo=\"tagempty\" class=\"'+c+' qxframe9a7c2-tag-input is-tags\"><div class=\"qxframe9a7c2-tags is-hosted\"><div class=\"qxframe9a7c2-tags-surface\"><input class=\"qxframe9a7c2-tags-input\" /></div></div></div>'+\n'<div data-geo=\"tagfilled\" class=\"'+c+' qxframe9a7c2-tag-input is-tags has-value\"><div class=\"qxframe9a7c2-tags is-hosted\"><div class=\"qxframe9a7c2-tags-surface\"><span class=\"qxframe9a7c2-tag\">Alpha</span><input class=\"qxframe9a7c2-tags-input\" /></div></div></div>'+\n'<div data-geo=\"selectempty\" class=\"'+c+' qxframe9a7c2-select is-multiple\"><div class=\"qxframe9a7c2-select-values qxframe9a7c2-input-values\"></div><input class=\"qxframe9a7c2-input-control\" /></div>'+\n'<div data-geo=\"selectfilled\" class=\"'+c+' qxframe9a7c2-select is-multiple\"><div class=\"qxframe9a7c2-select-values qxframe9a7c2-input-values\"><span class=\"qxframe9a7c2-tag\">Alpha</span></div><input class=\"qxframe9a7c2-input-control\" /></div>';\nhost.append(container);\n}\nconst cas=d.createElement('div');cas.style.cssText='position:relative;width:18rem';\ncas.innerHTML='<div class=\"qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface\" style=\"position:relative\"><div class=\"qxframe9a7c2-cascader-popup-content qxframe9a7c2-scroll\"><div class=\"qxframe9a7c2-cascader-columns qxframe9a7c2-scroll-viewport\">'+\nArray.from({length:3},(_,i)=>'<div class=\"qxframe9a7c2-cascader-column\"><div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-surface\">Extended Cascader option '+i+'</div></div></div>').join('')+\n'</div></div></div>';host.append(cas);\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\nh.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor:'inverted-translucent'},{generatedAt:''}).body;\nconst measurements={};\nfor(const size of ['sm','md','lg']){\nconst section=host.querySelector('[data-size=\"'+size+'\"]');measurements[size]={};\nfor(const el of section.querySelectorAll('[data-geo]')){const cs=d.defaultView.getComputedStyle(el);measurements[size][el.dataset.geo]={height:el.getBoundingClientRect().height,paddingX:cs.paddingInlineStart,paddingY:cs.paddingBlockStart};}\nconst tagChip=d.defaultView.getComputedStyle(section.querySelector('[data-geo=tagfilled] .qxframe9a7c2-tag'));\nconst selectChip=d.defaultView.getComputedStyle(section.querySelector('[data-geo=selectfilled] .qxframe9a7c2-tag'));\nmeasurements[size].tagChipPaddingX=tagChip.paddingInlineStart;\nmeasurements[size].tagChipPaddingEnd=tagChip.paddingInlineEnd;\nmeasurements[size].selectChipPaddingX=selectChip.paddingInlineStart;\n}\nconst columns=cas.querySelector('.qxframe9a7c2-cascader-columns'),panel=cas.querySelector('.qxframe9a7c2-cascader-panel');\nsamples.push({style,dark,measurements,overflow:columns.scrollWidth-columns.clientWidth,panelWidth:panel.getBoundingClientRect().width,hostWidth:cas.getBoundingClientRect().width,smallestColumn:Math.min(...[...columns.children].map(x=>x.getBoundingClientRect().width))});\n}\nh.classList.toggle('dark',wasDark);host.remove();sheet.remove();return samples;\n})()");
+    assert.equal(samples.length,16,'8 Styles x 2 mode compound-input and Cascader matrix');
+    for(const r of samples){
+      const id=r.style+'/'+r.dark;
+      for(const [size,rows] of Object.entries(r.measurements)){
+        for(const kind of ['tagempty','tagfilled','selectempty','selectfilled']){
+          assert.ok(Math.abs(rows[kind].height-rows.input.height)<=.5,id+'/'+size+'/'+kind+' single-row height matches Input: '+rows[kind].height+' vs '+rows.input.height);
+          assert.equal(rows[kind].paddingX,rows[kind].paddingY,id+'/'+size+'/'+kind+' equal outer inline/block compound insets');
+          assert.equal(rows[kind].paddingY,rows.input.paddingY,id+'/'+size+'/'+kind+' vertical padding matches Input');
+        }
+        assert.ok(parseFloat(rows.tagChipPaddingX)>=2,id+'/'+size+' hosted Tag has visible left chip inset');
+        assert.equal(rows.tagChipPaddingX,rows.tagChipPaddingEnd,id+'/'+size+' hosted Tag has symmetric chip insets');
+        assert.equal(rows.tagChipPaddingX,rows.selectChipPaddingX,id+'/'+size+' hosted Tag padding matches Select multiple chip');
+      }
+      assert.ok(r.overflow<=1,id+' Cascader columns never exceed viewport width');
+      assert.ok(r.panelWidth<=r.hostWidth,id+' Cascader Popup width fits local host');
+      assert.ok(r.smallestColumn>=50,id+' Cascader columns shrink without clipping or horizontal scroll');
+    }
+  });
+
+
+  await step('Tooltip and Popconfirm share arrow geometry, surface alpha and all placements: 8 Styles x 2 modes x 4 sides',async()=>{
+    const rows=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,orig=api.state.config,old=h.classList.contains('dark');\n const holder=d.createElement('div'),sheet=d.createElement('style');\n holder.style.cssText='position:absolute;left:-10000px;top:0;width:24rem;height:24rem';\n holder.innerHTML='<div class=\"qxframe9a7c2-popover-root\" data-popover-root style=\"width:10rem;height:4rem;--qxframe9a7c2-popover-bg:rgba(12,44,88,.64)\"><span class=\"qxframe9a7c2-popover-arrow\"></span><div class=\"qxframe9a7c2-popover-container qxframe9a7c2-popup-surface\">Popover</div></div>'+\n '<div class=\"qxframe9a7c2-tooltip-root\" data-tooltip-root style=\"width:10rem;height:4rem;--qxframe9a7c2-tooltip-bg:rgba(12,44,88,.64)\"><span class=\"qxframe9a7c2-tooltip-arrow\"></span><div class=\"qxframe9a7c2-tooltip-container qxframe9a7c2-popup-surface\">Tooltip</div></div>';\n d.head.append(sheet);d.body.append(holder);const rows=[];\n const get=(s)=>d.defaultView.getComputedStyle(holder.querySelector(s));\n try{\n  for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){\n   sheet.textContent=api.compileTheme({...orig,style},{generatedAt:''}).body;h.classList.toggle('dark',dark);\n   for(const place of ['top','bottom','left','right']){\n    holder.querySelector('[data-popover-root]').dataset.placement=place;holder.querySelector('[data-tooltip-root]').dataset.placement=place;\n    const p=get('.qxframe9a7c2-popover-arrow'),t=get('.qxframe9a7c2-tooltip-arrow'),body=get('.qxframe9a7c2-tooltip-container');\n    const geom=x=>({width:x.width,height:x.height,transform:x.transform,top:x.top,bottom:x.bottom,left:x.left,right:x.right,marginLeft:x.marginLeft,marginTop:x.marginTop,borderTop:x.borderTopWidth,borderRight:x.borderRightWidth,borderBottom:x.borderBottomWidth,borderLeft:x.borderLeftWidth});\n    rows.push({style,dark,place,p:geom(p),t:geom(t),arrowBg:t.backgroundColor,bodyBg:body.backgroundColor,arrowOpacity:t.opacity,clip:t.clipPath});\n   }\n  }\n }finally{h.classList.toggle('dark',old);sheet.remove();holder.remove()}\n return rows;\n})()");
+    assert.equal(rows.length,64,'exact 64 arrow equivalence cases');
+    for(const r of rows){
+      const key=r.style+'/'+r.dark+'/'+r.place;
+      assert.equal(r.t.width,r.p.width,key+' identical arrow width');
+      assert.equal(r.t.height,r.p.height,key+' identical arrow height');
+      assert.equal(r.t.transform,r.p.transform,key+' same 45-degree square');
+      for(const side of ['top','bottom','left','right','marginLeft','marginTop','borderTop','borderRight','borderBottom','borderLeft'])
+        assert.equal(r.t[side],r.p[side],key+' placement and outer border match: '+side);
+      assert.equal(r.clip,'none',key+' no Tooltip-only clip polygon');
+      assert.equal(r.arrowBg,r.bodyBg,key+' Tooltip arrow matches surface background with identical alpha');
+      assert.equal(r.arrowOpacity,'1',key+' no additional Arrow opacity loss');
+    }
+  });
+
   await step('Native CSS base-select picker dark and inverted Theme roles: 8 Styles x light/dark x four Menu colors',async()=>{
-    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const prevDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:20rem';\n host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-qa-native=\"authored\"><option value=\"a\" selected>m@shadcn.com</option><option value=\"b\">m@gmail.com</option><option value=\"c\" disabled>disabled</option></select><div class=\"qxframe9a7c2-native-form\"><select data-qa-native=\"scoped\"><option selected>Scoped</option><option>Two</option></select></div><select data-qa-native=\"bare\"><option selected>Bare</option><option>Two</option></select><select class=\"qxframe9a7c2-form-select\" size=\"3\" data-qa-native=\"multirow\"><option>One</option><option>Two</option><option>Three</option></select><i data-qa-color=\"fg\" style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-qa-color=\"accent\" style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-qa-color=\"bg\" style=\"background:var(--qxframe9a7c2-theme-menu)\"></i>';\n d.head.append(sheet);d.body.append(host);\n const css=s=>getComputedStyle(s),cases=[];\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\n   const theme={fg:css(host.querySelector('[data-qa-color=fg]')).color,bg:css(host.querySelector('[data-qa-color=bg]')).backgroundColor,\n    accentFg:css(host.querySelector('[data-qa-color=accent]')).color,accentBg:css(host.querySelector('[data-qa-color=accent]')).backgroundColor};\n   const samples={};\n   for(const kind of ['authored','scoped','bare']){\n     const el=host.querySelector('[data-qa-native=\"'+kind+'\"]'),pick=getComputedStyle(el,'::picker(select)'),selected=css(el.options[0]),unselected=css(el.options[1]),disabled=kind==='authored'?css(el.options[2]):null;\n     samples[kind]={appearance:css(el).appearance,pickerAppearance:pick.appearance,colorScheme:css(el).colorScheme,pickerBg:pick.backgroundColor,pickerFg:pick.color,pickerBorderRadius:pick.borderTopLeftRadius,\n       selectedFg:selected.color,selectedBg:selected.backgroundColor,optionFg:unselected.color,optionBg:unselected.backgroundColor,\n       disabledFg:disabled?.color,disabledOpacity:disabled?.opacity,iconDisplay:getComputedStyle(el,'::picker-icon').display};\n   }\n   const multirow=host.querySelector('[data-qa-native=multirow]');\n   cases.push({style,dark,menuColor,theme,samples,multirow:css(multirow).appearance});\n }\n h.classList.toggle('dark',prevDark);host.remove();sheet.remove();\n return {supported:CSS.supports('appearance','base-select'),cases};\n})()");
+    const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const prevDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('div'),sheet=d.createElement('style');host.style.cssText='position:absolute;left:-10000px;top:0;width:20rem';\n host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-qa-native=\"authored\"><option value=\"a\" selected>m@shadcn.com</option><option value=\"b\">m@gmail.com</option><option value=\"c\" disabled>disabled</option></select><div class=\"qxframe9a7c2-native-form\"><select data-qa-native=\"scoped\"><option selected>Scoped</option><option>Two</option></select></div><select data-qa-native=\"bare\"><option selected>Bare</option><option>Two</option></select><select class=\"qxframe9a7c2-form-select\" size=\"3\" data-qa-native=\"multirow\"><option>One</option><option>Two</option><option>Three</option></select><i data-qa-color=\"fg\" style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-qa-color=\"accent\" style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-qa-color=\"bg\" style=\"background:var(--qxframe9a7c2-theme-menu)\"></i>';\n d.head.append(sheet);d.body.append(host);\n const css=s=>getComputedStyle(s),cases=[];\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\n   // The expected Menu palette is resolved in a separate CSS-only scheme probe.\n   // No color declaration on the native picker/option is ever changed.\n   const expectedScheme=menuColor.startsWith('inverted')?(dark?'light':'dark'):(dark?'dark':'light');\n   host.querySelectorAll('[data-qa-color]').forEach(el=>{el.style.colorScheme=expectedScheme;});\n   const theme={fg:css(host.querySelector('[data-qa-color=fg]')).color,bg:css(host.querySelector('[data-qa-color=bg]')).backgroundColor,\n    accentFg:css(host.querySelector('[data-qa-color=accent]')).color,accentBg:css(host.querySelector('[data-qa-color=accent]')).backgroundColor};\n   const samples={};\n   for(const kind of ['authored','scoped','bare']){\n     const el=host.querySelector('[data-qa-native=\"'+kind+'\"]'),pick=getComputedStyle(el,'::picker(select)'),selected=css(el.options[0]),unselected=css(el.options[1]),disabled=kind==='authored'?css(el.options[2]):null;\n     samples[kind]={appearance:css(el).appearance,pickerAppearance:pick.appearance,colorScheme:css(el).colorScheme,pickerBg:pick.backgroundColor,pickerFg:pick.color,pickerScheme:pick.colorScheme,pickerBorderRadius:pick.borderTopLeftRadius,\n       selectedFg:selected.color,selectedBg:selected.backgroundColor,optionFg:unselected.color,optionBg:unselected.backgroundColor,\n       disabledFg:disabled?.color,disabledOpacity:disabled?.opacity,iconDisplay:getComputedStyle(el,'::picker-icon').display};\n   }\n   const multirow=host.querySelector('[data-qa-native=multirow]');\n   cases.push({style,dark,menuColor,theme,samples,multirow:css(multirow).appearance});\n }\n h.classList.toggle('dark',prevDark);host.remove();sheet.remove();\n return {supported:CSS.supports('appearance','base-select'),cases};\n})()");
     assert.equal(r.supported,true,'Chromium must support native customizable select');
     assert.equal(r.cases.length,64,'8 Styles x 2 modes x 4 Menu colors');
     for(const c of r.cases){
       const id=c.style+'/'+c.dark+'/'+c.menuColor;
+      const inverse=c.menuColor.startsWith('inverted'),expectedScheme=inverse?(c.dark?'light':'dark'):(c.dark?'dark':'light');
       for(const [type,select] of Object.entries(c.samples)){
         const label=id+'/'+type;
         assert.equal(select.appearance,'base-select',label+' control enabled');
         assert.equal(select.pickerAppearance,'base-select',label+' picker enabled');
-        assert.equal(select.colorScheme,c.dark?'dark':'light',label+' fallback OS color-scheme');
-        assert.equal(select.pickerBg,c.theme.bg,label+' popup background follows Menu color');
-        assert.equal(select.pickerFg,c.theme.fg,label+' popup text follows Menu foreground');
-        assert.equal(select.optionFg,c.theme.fg,label+' idle options visible on dark menu');
-        assert.equal(select.selectedFg,c.theme.accentFg,label+' selected option readable');
-        assert.equal(select.selectedBg,c.theme.accentBg,label+' selected option has menu accent');
+        assert.equal(select.colorScheme,c.dark?'dark':'light',label+' CLOSED Select stays page scheme');
+        assert.equal(select.pickerScheme,expectedScheme,label+' top-layer picker inverts via color-scheme ONLY');
+        if(inverse)assert.notEqual(select.pickerScheme,select.colorScheme,label+' picker is inverted while closed control is unchanged');
+        assert.equal(select.pickerBg,c.theme.bg,label+' normal picker background follows Menu color');
+        assert.equal(select.pickerFg,c.theme.fg,label+' normal picker foreground follows Menu color');
+        assert.equal(select.optionFg,c.theme.fg,label+' normal idle options follow Menu foreground');
+        assert.equal(select.selectedFg,c.theme.accentFg,label+' normal selected option readable');
+        assert.equal(select.selectedBg,c.theme.accentBg,label+' normal selected option has menu accent');
         assert.ok(select.pickerBorderRadius !== undefined,label+' picker radius computed');
         assert.equal(select.iconDisplay,'none',label+' no duplicated chevron');
         if(type==='authored'){
-          assert.equal(select.disabledFg,c.theme.fg,label+' disabled option still uses menu foreground');
+          assert.equal(select.disabledFg,c.theme.fg,label+' normal disabled option still uses menu foreground');
           assert.equal(select.disabledOpacity,'0.45',label+' disabled option faded');
         }
       }
@@ -305,6 +495,279 @@ try {
     assert.match((await state()).search, /item=02/);
   });
 
+  await step('Stage5 Preview03 original QX business Cards: 18 live composites, actions and 16 visual modes',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-03.html")','Preview03 route',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','Preview03 runtime',15000);
+    const result=await evaluate("(() => {\n"+
+      "const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,state=w.QXFRAME9A7C2_PREVIEW3;\n"+
+      "const cards=[...d.querySelectorAll('[data-card]')],initial=state.componentCount,mountErrors=state.mountErrors.slice();\n"+
+      "d.querySelector('[data-pv3-action=onboarding-next]').click();const progressed=d.querySelector('[data-card=onboarding-flow] [data-pv3-status]').textContent;\n"+
+      "d.querySelector('[data-pv3-action=finance-submit]').click();const finance=d.querySelector('[data-card=finance-approval] [data-pv3-status]').textContent;\n"+
+      "d.querySelector('[data-pv3-action=automation-test]').click();const automation=d.querySelector('[data-card=rules-automation] [data-pv3-status]').textContent;\n"+
+      "const html=d.documentElement,existing=d.getElementById('qxframe9a7c2-create-theme'),oldCss=existing.textContent,oldDark=html.classList.contains('dark'),oldStyle=html.getAttribute('data-create-style');const samples=[];\n"+
+      "for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){html.classList.toggle('dark',dark);html.setAttribute('data-create-style',style);existing.textContent=api.compileTheme({...api.state.config,style,ext:{...api.state.config.ext,motion:'standard'}},{generatedAt:''}).body;\n"+
+      "const r=cards.map(c=>c.getBoundingClientRect()),bg=w.getComputedStyle(cards[0]).backgroundColor;\n"+
+      "const ref=d.createElement('span');ref.style.fontFamily='var(--qxframe9a7c2-theme-font-heading)';d.body.append(ref);const expectedFont=w.getComputedStyle(ref).fontFamily;ref.remove();\n"+
+      "const heroFont=w.getComputedStyle(d.querySelector('.pv3-hero h1')).fontFamily,sectionFont=w.getComputedStyle(d.querySelector('.pv3x-section-heading h2')).fontFamily;\n"+
+      "const event=d.querySelector('[data-card=stream-animation] .pv3x-event-list>div'),process=d.querySelector('[data-card=state-transitions] .pv3x-process-chip');\n"+
+      "const durations=[w.getComputedStyle(event).transitionDuration,w.getComputedStyle(process).transitionDuration];\n"+
+      "existing.textContent=api.compileTheme({...api.state.config,style,ext:{...api.state.config.ext,motion:'none'}},{generatedAt:''}).body;\n"+
+      "const noneDurations=[w.getComputedStyle(event).transitionDuration,w.getComputedStyle(process).transitionDuration];\n"+
+      "samples.push({style,dark,visible:r.filter(x=>x.width>0&&x.height>0).length,bg,expectedFont,heroFont,sectionFont,durations,noneDurations});}\n"+
+      "existing.textContent=oldCss;html.classList.toggle('dark',oldDark);html.setAttribute('data-create-style',oldStyle);\n"+
+      "const flag=d.querySelector('[data-card=feature-flags]'),switchInputs=[...flag.querySelectorAll('.qxframe9a7c2-switch-input')],switchTracks=[...flag.querySelectorAll('.qxframe9a7c2-switch-track')];\n"+
+      "const switchWidths=switchTracks.map(n=>w.getComputedStyle(n).width);const firstSwitchBefore=switchInputs[0].checked;switchInputs[0].click();const firstSwitchAfter=switchInputs[0].checked;switchInputs[0].click();\n"+
+      "return {cardCount:cards.length,componentCount:initial,mountErrors,progressed,finance,automation,samples,switchCount:switchInputs.length,switchWidths,firstSwitchBefore,firstSwitchAfter};\n"+
+      "})()");
+    assert.equal(result.cardCount,66,'Preview03 contains all 66 commercial Cards');
+    assert.equal(result.switchCount,3,'Feature flags render three framework Switch inputs');
+    assert.ok(result.switchWidths.every(w=>parseFloat(w)>=20),'Feature flag controls render real switch tracks');
+    assert.equal(result.firstSwitchBefore,true,'Audit logging starts checked');
+    assert.equal(result.firstSwitchAfter,false,'Feature flag switch remains interactive');
+    assert.ok(result.componentCount>=45,'Preview03 must mount at least 45 real QX component instances');
+    assert.deepEqual(result.mountErrors,[],'No QX component may silently fail mounting');
+    assert.match(result.progressed,/stage 3 of 4/,'Step controller advances live demo');
+    assert.match(result.finance,/local budget limit/,'Finance draft checks without remote approval');
+    assert.match(result.automation,/Dry test/,'Automation runs local dry test');
+    assert.equal(result.samples.length,16,'8 Styles × light/dark');
+    for(const sample of result.samples) {
+      assert.equal(sample.visible,66,sample.style+'/'+sample.dark+' all Cards render');
+      assert.ok(sample.bg&&sample.bg!=='rgba(0, 0, 0, 0)',sample.style+'/'+sample.dark+' Theme Card background');
+      assert.equal(sample.heroFont,sample.expectedFont,sample.style+'/'+sample.dark+' hero font');
+      assert.equal(sample.sectionFont,sample.expectedFont,sample.style+'/'+sample.dark+' section font');
+      for(const duration of sample.durations)assert.ok(duration.split(',').some(s=>parseFloat(s)>0),sample.style+'/'+sample.dark+' standard motion');
+      for(const duration of sample.noneDurations)assert.ok(duration.split(',').every(s=>parseFloat(s)===0),sample.style+'/'+sample.dark+' no motion');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore existing Preview02',15000);
+  });
+
+
+  await step('Stage5 Preview03 expanded 48 Cards: real QX mounts, local actions and native choice across 16 modes',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3?.expanded','Preview03 expanded runtime',15000);
+    const actual=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const w=d.defaultView, api=window.QXFRAME9A7C2_CREATE, root=d.documentElement;
+      const state=w.QXFRAME9A7C2_PREVIEW3,expanded=state.expanded;
+      const card=id=>d.querySelector('[data-card="'+id+'"]');
+      const note=id=>card(id)?.querySelector('[data-pv3x-status]');
+      const demo=[...d.querySelectorAll('[data-pv3x-demo]')];
+      const result={newCards:expanded?.newCards,mounted:expanded?.mounted,
+        mountErrors:state.mountErrors?.slice(),expandedErrors:expanded?.errors?.slice(),
+        demoCount:demo.length};
+      const url=d.location.href;
+      result.demo=demo.map(button=>{
+        button.click();
+        const status=button.closest('[data-card]')?.querySelector('[data-pv3x-status]');
+        return {label:button.textContent.trim(),visible:status&&!status.hidden, text:status?.textContent||''};
+      });
+      const checkbox=card('audit-checklist').querySelector('input[type="checkbox"]');
+      const checkboxBefore=checkbox.checked;checkbox.click();
+      result.checkbox={before:checkboxBefore,after:checkbox.checked,message:note('audit-checklist')?.textContent};
+      checkbox.click();
+      const radio=[...card('fraud-decision').querySelectorAll('input[type="radio"]')];
+      const beforeRadio=radio.map(x=>x.checked);radio[0].click();
+      result.radio={count:radio.length,before:beforeRadio,after:radio.map(x=>x.checked),message:note('fraud-decision')?.textContent};
+      radio[1].click();
+      const flags=[...card('feature-flags').querySelectorAll('input[type="checkbox"]')];
+      const oldFlag=flags[1].checked;flags[1].click();
+      result.switch={before:oldFlag,after:flags[1].checked,message:note('feature-flags')?.textContent};
+      flags[1].click();
+      const form=card('vendor-intake')?.querySelector('[data-pv3x-form]');
+      if(form){form.requestSubmit();result.form={valid:form.checkValidity(),message:note('vendor-intake')?.textContent};
+        const mail=form.querySelector('[type=email]'),old=mail.value;
+        mail.value='not-a-valid-email';result.form.invalidRejected=!form.checkValidity();mail.value=old;
+      }
+      const events=d.querySelector('[data-pv3x-events]'),oldEvents=events?.children.length;
+      d.querySelector('[data-pv3x-add-event]')?.click();
+      result.events={before:oldEvents,after:events?.children.length,message:note('stream-animation')?.textContent};
+      const transition=card('state-transitions'),active=()=>[...transition.querySelectorAll('.pv3x-process-chip')].findIndex(x=>x.classList.contains('is-current'));
+      const first=active();transition.querySelector('[data-pv3x-transition]')?.click();
+      result.transition={before:first,after:active(),message:note('state-transitions')?.textContent};
+      result.sameUrl=d.location.href===url;
+      const sheet=d.getElementById('qxframe9a7c2-create-theme'),oldCss=sheet.textContent;
+      const oldDark=root.classList.contains('dark'),oldStyle=root.getAttribute('data-create-style');
+      result.states=[];
+      try{
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
+        for(const dark of [false,true]){
+          root.classList.toggle('dark',dark);root.setAttribute('data-create-style',style);
+          sheet.textContent=api.compileTheme({...api.state.config,style},{generatedAt:''}).body;
+          const checked=radio[1],off=radio[0],checkedBox=checkbox;
+          const trackOn=flags[0].nextElementSibling,trackOff=flags[1].nextElementSibling;
+          const cs=node=>w.getComputedStyle(node);
+          result.states.push({style,dark,radioChecked:checked.checked,radioUnselected:off.checked,
+            radioSize:checked.getBoundingClientRect().width,radioOpacity:parseFloat(cs(checked).opacity),
+            checkChecked:checkedBox.checked,checkSize:checkedBox.getBoundingClientRect().width,
+            switchOn:flags[0].checked,switchOff:flags[1].checked,
+            switchOnBackground:cs(trackOn).backgroundColor,switchOffBackground:cs(trackOff).backgroundColor,
+            switchWidth:trackOn.getBoundingClientRect().width,
+            switchThumbHeight:trackOn.querySelector('.qxframe9a7c2-switch-thumb')?.getBoundingClientRect().height});
+        }
+      }finally{
+        sheet.textContent=oldCss;root.classList.toggle('dark',oldDark);
+        if(oldStyle===null)root.removeAttribute('data-create-style');else root.setAttribute('data-create-style',oldStyle);
+      }
+      return result;
+    })()`);
+    assert.equal(actual.newCards,48,'48 added Preview03 Cards');
+    assert.ok(actual.mounted>=20,'real QX component mounts in added Cards');
+    assert.deepEqual(actual.mountErrors,[],'neither Preview03 baseline nor expanded runtime reports a mount failure');
+    assert.deepEqual(actual.expandedErrors,[],'added runtime has no silent mount/empty-slot errors');
+    assert.equal(actual.demoCount,6,'all six authored local actions exist');
+    assert.ok(actual.demo.every(x=>x.visible&&x.text.includes(x.label)),'six local actions expose their own visible results: '+JSON.stringify(actual.demo));
+    assert.equal(actual.checkbox.before,true,'audit checkbox initially checked');
+    assert.equal(actual.checkbox.after,false,'checkbox pointer action changes native checked value');
+    assert.match(actual.checkbox.message,/Selection updated locally/,'checkbox change feedback visible');
+    assert.equal(actual.radio.count,3,'three native radio choices');
+    assert.deepEqual(actual.radio.before,[false,true,false],'original radio choice');
+    assert.deepEqual(actual.radio.after,[true,false,false],'radio activation keeps native exclusivity');
+    assert.match(actual.radio.message,/Selection updated locally/,'radio change feedback visible');
+    assert.equal(actual.switch.before,false,'switch starts unchecked');
+    assert.equal(actual.switch.after,true,'native Switch input toggle updates checked');
+    assert.match(actual.switch.message,/Selection updated locally/,'Switch status visible');
+    assert.ok(actual.form.valid&&actual.form.invalidRejected,'vendor form retains actual browser validation');
+    assert.match(actual.form.message,/validated locally/,'valid supplier form returns local result');
+    assert.equal(actual.events.after,actual.events.before+1,'transition-group adds a real DOM event');
+    assert.match(actual.events.message,/Event added/,'event stream reports local action');
+    assert.notEqual(actual.transition.before,actual.transition.after,'transition changes actual active chip');
+    assert.match(actual.transition.message,/Moved to next local workflow state/,'transition status feedback visible');
+    assert.ok(actual.sameUrl,'all actions remain local without navigating or sending users elsewhere');
+    assert.equal(actual.states.length,16,'8 Styles x Light/Dark native choice modes');
+    for(const s of actual.states){
+      const label=s.style+'/'+(s.dark?'dark':'light');
+      assert.ok(s.radioChecked&&!s.radioUnselected&&s.checkChecked&&s.switchOn&&!s.switchOff,label+' true native checked state');
+      assert.ok(s.radioSize>=12&&s.checkSize>=12&&s.radioOpacity>.5,label+' native Radio/Checkbox have usable visible dimensions');
+      assert.ok(s.switchWidth>=20&&s.switchThumbHeight>=10,label+' Switch track and thumb remain physically visible');
+      assert.notEqual(s.switchOnBackground,s.switchOffBackground,label+' checked Switch paints differently from unchecked Switch');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','return from expanded-card state regression',15000);
+  });
+
+  await step('Stage5 Tabler static families / Kbd + Calendar year navigation in 8 Styles and light/dark',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','Preview03 static family fixture',15000);
+    const result=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,app=window.QXFRAME9A7C2_CREATE;
+      const wrap=d.createElement('div'),theme=d.getElementById('qxframe9a7c2-create-theme'),original=theme.textContent;
+      const oldDark=d.documentElement.classList.contains('dark'),oldStyle=d.documentElement.getAttribute('data-create-style');
+      wrap.style.cssText='position:absolute;left:-7000px;top:0;width:65rem;display:flex;flex-wrap:wrap;gap:1rem';
+      wrap.innerHTML='<div class="qxframe9a7c2-card is-stacked"><div class="qxframe9a7c2-card-stamp">S</div><div class="qxframe9a7c2-card-body">Card</div></div>'+
+        '<span class="qxframe9a7c2-badge is-success is-soft">Healthy</span>'+
+        '<span class="qxframe9a7c2-avatar is-primary">AB</span>'+
+        '<div class="qxframe9a7c2-progress is-striped is-warning"><div class="qxframe9a7c2-progress-line"><div class="qxframe9a7c2-progress-outer"><div class="qxframe9a7c2-progress-inner"><div class="qxframe9a7c2-progress-primary" style="width:65%"></div></div></div></div></div>'+
+        '<div class="qxframe9a7c2-tabs is-pills"><button class="qxframe9a7c2-tabs-tab is-active">Selected</button></div>'+
+        '<span class="qxframe9a7c2-tag is-muted">Label</span><kbd class="qxframe9a7c2-kbd">Ctrl</kbd>'+
+        '<div class="qxframe9a7c2-form-hint">Shortcut hint</div>';
+      d.body.append(wrap);const calendarHost=d.createElement('div');wrap.append(calendarHost);
+      const Calendar=w.QXFRAME9A7C2?.BuildingBlocks?.Calendar,cal=Calendar?.create({container:calendarHost,value:'2026-10-15',size:'md'});
+      const rows=[],cs=sel=>w.getComputedStyle(wrap.querySelector(sel)),rect=sel=>wrap.querySelector(sel)?.getBoundingClientRect();
+      const refs=cal?.getRefs?.(),prev=refs?.prevYear,next=refs?.nextYear;
+      let years=null;
+      try{
+        if(prev&&next){
+          const before=cal.getState().viewValue.getFullYear();prev.click();
+          const previous=cal.getState().viewValue.getFullYear();next.click();
+          const back=cal.getState().viewValue.getFullYear();years={before,previous,back};
+        }
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])
+        for(const dark of [false,true]){
+          d.documentElement.classList.toggle('dark',dark);
+          d.documentElement.setAttribute('data-create-style',style);
+          theme.textContent=app.compileTheme({...app.state.config,style},{generatedAt:''}).body;
+          rows.push({style,dark,kbd:rect('.qxframe9a7c2-kbd')?.height,stamp:rect('.qxframe9a7c2-card-stamp')?.width,
+            badge:rect('.qxframe9a7c2-badge')?.height,avatar:rect('.qxframe9a7c2-avatar')?.height,
+            progressBackground:cs('.qxframe9a7c2-progress-primary').backgroundImage,
+            progressColor:cs('.qxframe9a7c2-progress-primary').backgroundColor,
+            pillBackground:cs('.qxframe9a7c2-tabs-tab.is-active').backgroundColor,
+            cardBackground:cs('.qxframe9a7c2-card').backgroundColor,
+            mutedTagBackground:cs('.qxframe9a7c2-tag.is-muted').backgroundColor,
+            hintFont:parseFloat(cs('.qxframe9a7c2-form-hint').fontSize)});
+        }
+        return {years,rows,navCount:cal?.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-year-nav').length};
+      }finally{
+        cal?.destroy();wrap.remove();theme.textContent=original;
+        d.documentElement.classList.toggle('dark',oldDark);
+        if(oldStyle===null)d.documentElement.removeAttribute('data-create-style');
+        else d.documentElement.setAttribute('data-create-style',oldStyle);
+      }
+    })()`);
+    assert.deepEqual(result.years,{before:2026,previous:2025,back:2026},'Calendar delegated +/-12 month year nav');
+    assert.equal(result.navCount,2,'Calendar has both year controls');
+    assert.equal(result.rows.length,16,'8 Styles x light/dark');
+    for(const s of result.rows){
+      const label=s.style+'/'+(s.dark?'dark':'light');
+      assert.ok(s.kbd>=20&&s.stamp>=60&&s.badge>=12&&s.avatar>=20,label+' real static variant dimensions '+JSON.stringify(s));
+      assert.match(s.progressBackground,/repeating-linear-gradient/,label+' striped Progress gradient');
+      assert.notEqual(s.pillBackground,s.cardBackground,label+' active Pill Tab distinct from Card background');
+      assert.ok(s.mutedTagBackground&&s.hintFont<=14,label+' Tag and Form Theme text projection');
+    }
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02 from static family QA',15000);
+  });
+
+  await step('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2_PREVIEW3','real Cascader Preview03 runtime',15000);
+    const probe=await evaluate(`(async()=>{
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const instance=d.defaultView.QXFRAME9A7C2_PREVIEW3.instances['routing-cascader'];
+      const fail=reason=>({ok:false,reason});
+      if(!instance||typeof instance.open!=='function')return fail('missing public QX Cascader runtime');
+      instance.open('qa-actual-popup');
+      await new Promise(resolve=>setTimeout(resolve,60));
+      const panel=instance.getPopupElement();
+      if(!panel||panel.hidden)return fail('real PopupFrame not visible after public open');
+      for(const [index,label] of [[0,'United States'],[1,'East']]){
+        const column=panel.querySelectorAll('.qxframe9a7c2-cascader-column')[index];
+        if(!column)return fail('missing actual interactive Cascader column '+index);
+        const item=[...column.querySelectorAll('.qxframe9a7c2-cascader-item,.qxframe9a7c2-cascader-option')]
+          .find(node=>node.textContent.trim().startsWith(label));
+        if(!item)return fail('missing real Cascader option '+label);
+        item.click();
+        await new Promise(resolve=>setTimeout(resolve,60));
+      }
+      const host=panel.querySelector('.qxframe9a7c2-cascader-columns');
+      if(!host)return fail('missing public Cascader columns');
+      const cols=[...host.querySelectorAll('.qxframe9a7c2-cascader-column')];
+      const rects=cols.map(node=>node.getBoundingClientRect());
+      const result={ok:true,open:instance.getState().open,pathKeys:instance.getState().activePathKeys,
+        columnCount:cols.length,columnCountToken:panel.style.getPropertyValue('--qxframe9a7c2-cascader-column-count'),
+        gaps:rects.slice(1).map((r,i)=>r.left-rects[i].right),widths:rects.map(r=>r.width),
+        overflow:host.scrollWidth-host.clientWidth,display:getComputedStyle(host).display,
+        flexWrap:getComputedStyle(host).flexWrap,overflowX:getComputedStyle(host).overflowX};
+      instance.close('qa-actual-popup-finished');
+      return result;
+    })()`);
+    assert.equal(probe.ok,true,'real Cascader interaction must be available: '+JSON.stringify(probe));
+    assert.equal(probe.open,true,'real PopupFrame remains open while parent columns expand');
+    assert.deepEqual(probe.pathKeys,['us','east'],'pointer activation expands genuine US > East cascade');
+    assert.equal(probe.columnCount,3,'real Cascader shows exactly three levels');
+    assert.equal(probe.columnCountToken,'3','runtime column count controls actual popup width');
+    assert.equal(probe.display,'flex','actual columns use Flex layout');
+    assert.equal(probe.flexWrap,'nowrap','real multicolumn Cascader never wraps');
+    assert.ok(probe.gaps.every(gap=>Math.abs(gap)<=1),'real Popup columns have no gaps/cropping: '+JSON.stringify(probe));
+    assert.ok(probe.widths.every(width=>width>=50),'real Popup columns remain legible: '+JSON.stringify(probe));
+    assert.ok(probe.overflow<=1,'real Popup columns have no horizontal scrollbar: '+JSON.stringify(probe));
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02 after real Cascader',15000);
+  });
+
+  await step('Stage5 shape parity: 8 styles × two modes × zero/default radius × 24 Theme-owned parts (official Tree exempt)',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-03.html")','shape Preview03');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.querySelector("[data-card=stakeholder-roster] .qxframe9a7c2-avatar")','shape avatars');
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")','Preview03 theme CSS injection',15000);
+    const result=await evaluate("(() => {\nconst api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,h=d.documentElement,sty=d.getElementById('qxframe9a7c2-create-theme');\nconst oldCss=sty.textContent,oldDark=h.classList.contains('dark'),oldStyle=h.getAttribute('data-create-style');\nconst host=d.createElement('div');host.style.cssText='position:absolute;left:-9000px;top:0;visibility:hidden';\nhost.innerHTML='<div class=\"qxframe9a7c2-menu\"><button class=\"qxframe9a7c2-menu-item\">M</button></div>'+\n'<div class=\"qxframe9a7c2-list\"><div class=\"qxframe9a7c2-list-group\">G</div></div>'+\n'<div class=\"qxframe9a7c2-steps\"><span class=\"qxframe9a7c2-steps-icon\">1</span><span class=\"qxframe9a7c2-steps-dot\"></span></div>'+\n'<div class=\"qxframe9a7c2-tree\"><button class=\"qxframe9a7c2-tree-toggle\">X</button></div>'+\n'<div class=\"qxframe9a7c2-carousel\"><button class=\"qxframe9a7c2-carousel-arrow\">X</button><span class=\"qxframe9a7c2-carousel-dot-bar\"></span></div>'+\n'<div class=\"qxframe9a7c2-progress\"><span class=\"qxframe9a7c2-progress-step\"></span></div>'+\n'<div class=\"qxframe9a7c2-image-preview\"><span class=\"qxframe9a7c2-image-preview-title\">X</span><span class=\"qxframe9a7c2-image-preview-counter\">2</span><div class=\"qxframe9a7c2-image-preview-toolbar\"><button class=\"qxframe9a7c2-image-preview-tool\">X</button></div></div>'+\n'<span class=\"qxframe9a7c2-card-skeleton-line\"></span><span class=\"qxframe9a7c2-badge\">A</span><div class=\"qxframe9a7c2-slider\"><span class=\"qxframe9a7c2-slider-dot\"></span></div>';\nhost.innerHTML+='<div class=\"qxframe9a7c2-tabs\"><span class=\"qxframe9a7c2-tabs-indicator\"></span><span class=\"qxframe9a7c2-tabs-badge\">2</span><button class=\"qxframe9a7c2-tabs-close\">X</button></div><div class=\"qxframe9a7c2-color-panel\"><input type=\"range\" class=\"qxframe9a7c2-color-panel-hue\"/><input type=\"range\" class=\"qxframe9a7c2-color-panel-alpha\"/></div><div class=\"qxframe9a7c2-color-picker-gradient\"><div class=\"qxframe9a7c2-color-picker-gradient-track\"></div></div>';\nd.body.append(host);\nfor(const [name,role]of [['shared-navigation','navigation'],['shared-data','data']]){const probe=d.createElement('span');probe.className='qxframe9a7c2-'+name;probe.style.borderTopLeftRadius='var(--_qxframe9a7c2-'+role+'-radius)';host.append(probe)}\nconst cases=[['shared-navigation','.qxframe9a7c2-shared-navigation','item'],['shared-data','.qxframe9a7c2-shared-data','item'],['menu','.qxframe9a7c2-menu-item','item'],['list','.qxframe9a7c2-list','item'],['list-group','.qxframe9a7c2-list-group','item'],['steps','.qxframe9a7c2-steps-icon','item'],['steps-dot','.qxframe9a7c2-steps-dot','item'],['carousel-arrow','.qxframe9a7c2-carousel-arrow','button'],['carousel-bar','.qxframe9a7c2-carousel-dot-bar','track'],['progress','.qxframe9a7c2-progress-step','track'],['image-title','.qxframe9a7c2-image-preview-title','popup'],['image-counter','.qxframe9a7c2-image-preview-counter','popup'],['image-toolbar','.qxframe9a7c2-image-preview-toolbar','popup'],['image-button','.qxframe9a7c2-image-preview-tool','button'],['skeleton','.qxframe9a7c2-card-skeleton-line','item'],['badge','.qxframe9a7c2-badge','badge'],['slider-dot','.qxframe9a7c2-slider-dot','thumb'],['avatar','[data-card=\"stakeholder-roster\"] .qxframe9a7c2-avatar','avatar'],['tabs-indicator','.qxframe9a7c2-tabs-indicator','track'],['tabs-badge','.qxframe9a7c2-tabs-badge','badge'],['tabs-close','.qxframe9a7c2-tabs-close','button'],['color-hue','.qxframe9a7c2-color-panel-hue','track'],['color-alpha','.qxframe9a7c2-color-panel-alpha','track'],['color-gradient','.qxframe9a7c2-color-picker-gradient-track','track']];\nconst probes={};for(const type of [...new Set(cases.map(x=>x[2]))]){const node=d.createElement('i');node.style.borderTopLeftRadius='var(--qxframe9a7c2-theme-radius-'+type+')';host.append(node);probes[type]=node}\nconst rows=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const radius of ['none','default']){\nh.classList.toggle('dark',dark);h.setAttribute('data-create-style',style);sty.textContent=api.compileTheme({...api.state.config,style,radius},{generatedAt:''}).body;\nfor(const [label,selector,role]of cases){\nconst node=label==='avatar'?d.querySelector(selector):host.querySelector(selector);\nrows.push({style,dark,radius,label,actual:node&&w.getComputedStyle(node).borderTopLeftRadius,expected:w.getComputedStyle(probes[role]).borderTopLeftRadius});\n}}\nsty.textContent=oldCss;h.classList.toggle('dark',oldDark);h.setAttribute('data-create-style',oldStyle);host.remove();return rows;\n})()");
+    assert.equal(result.length,768,'8 Styles × 2 modes × 2 radius settings × 24 Theme-owned parts');
+    for(const row of result){const id=row.style+'/'+row.dark+'/'+row.radius+'/'+row.label;assert.ok(row.actual,id+' missing component');const a=parseFloat(row.actual),e=parseFloat(row.expected);assert.ok(Number.isFinite(a)&&Number.isFinite(e)&&Math.abs(a-e)<=0.6,id+' actual Theme radius mismatch: '+JSON.stringify(row));}
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02 after visual check');
+  });
+
   await step('Stage4 real Preview02 Codespaces nested QX Tabs and Appointment multiselect',async()=>{
     await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.querySelector("[data-card=codespaces-card] .qxframe9a7c2-tabs-tab")','Codespaces mounted QX Tabs');
     const actual=await evaluate("(function(){\n      const doc=document.querySelector('[data-create-frame]').contentDocument;\n      const codespaces=doc.querySelector('[data-card=\"codespaces-card\"]');\n      const appointment=doc.querySelector('[data-card=\"book-appointment\"]');\n      const panel=(name)=>codespaces.querySelector('[data-pv-tab-panel=\"'+name+'\"]');\n      const shown=name=>Boolean(panel(name)&&!panel(name).hidden);\n      const tab=(group,name)=>{\n        const host=codespaces.querySelector('[data-pv-tab-group=\"'+group+'\"]');\n        const button=[...host.querySelectorAll('.qxframe9a7c2-tabs-tab-action')].find(x=>x.textContent.trim()===name);\n        if(!button)throw new Error('Missing QX Tabs '+group+'/'+name);\n        button.click();\n      };\n      const first=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const local=[shown('codespaces'),shown('local'),shown('https'),shown('ssh'),shown('cli'),panel('https').querySelector('input').value];\n      tab('codespaces-local','SSH');\n      const ssh=[shown('https'),shown('ssh'),shown('cli'),panel('ssh').querySelector('input').value];\n      tab('codespaces-local','GitHub CLI');\n      const cli=[shown('https'),shown('ssh'),shown('cli'),panel('cli').querySelector('input').value];\n      tab('codespaces','Codespaces');\n      const back=[shown('codespaces'),shown('local')];\n      tab('codespaces','Local');\n      const reopen=[shown('local'),shown('cli')];\n      tab('codespaces','Codespaces');\n      const slots=[...appointment.querySelectorAll('[data-pv-multi-toggle=\"appointment\"] button')];\n      const snapshot=()=>slots.map(b=>({active:b.classList.contains('is-active'),pressed:b.getAttribute('aria-pressed')}));\n      const start=snapshot();\n      slots[1].click();const add=snapshot();\n      slots[0].click();const single=snapshot();\n      slots[1].click();const none=snapshot();\n      slots[2].click();slots[3].click();const multiple=snapshot();\n      return {first,local,ssh,cli,back,reopen,start,add,single,none,multiple,count:slots.length};\n    })()");
@@ -441,7 +904,7 @@ try {
 
 
   await step('Stage4 ten-card batch: local PDF, environment draft, agent state, query modal, charts and 404 search',async()=>{
-    const actual=await evaluate("(async function(){\nconst doc=document.querySelector('[data-create-frame]').contentDocument;\nconst card=id=>doc.querySelector('[data-card=\"'+id+'\"]');\nconst action=name=>doc.querySelector('[data-pv-action=\"'+name+'\"]');\nconst required=['invoice-pdf','invoice-pay','env-edit','env-deploy','agent-cancel','agent-enable','obs-query','anomaly-upgrade','traffic-report','sleep-detail','fitness-detail','analytics-detail','notfound-home'];\nconst hooks=required.map(name=>!!action(name));\nlet actualPdf='';\nconst win=doc.defaultView, originalCreate=win.URL.createObjectURL;\nwin.URL.createObjectURL=function(blob){blob.text().then(x=>actualPdf=x);return originalCreate.call(this,blob)};\ntry{action('invoice-pdf').click()}finally{win.URL.createObjectURL=originalCreate}\nawait new Promise(r=>setTimeout(r,80));\nconst invoice=card('invoice').querySelector('[data-pv-action-status]')?.textContent;\naction('env-edit').click();\nconst envInput=card('environment-variables').querySelector('[data-pv-env-api] input');\nconst editing=!!envInput;envInput.value='bad-url';action('env-edit').click();\nconst invalid=card('environment-variables').querySelector('[data-pv-action-status]').textContent;\nenvInput.value='https://api.qa.local';action('env-edit').click();\nconst saved=card('environment-variables').querySelector('[data-pv-env-api]').textContent;\naction('agent-cancel').click();const agent=card('activate-agent-dialog').querySelector('[data-pv-action-status]').textContent;\naction('obs-query').click();const query=!!doc.querySelector('#pv-obs-query-text');\nconst close=[...doc.querySelectorAll('.qxframe9a7c2-modal-root button')].find(x=>x.textContent.trim()==='Close');\nif(close)close.click();\nawait new Promise(r=>setTimeout(r,280));\naction('anomaly-upgrade').click();const focus=doc.activeElement===action('obs-query');\nconst search=card('not-found').querySelector('[data-pv-local-search]');\nsearch.value='sleep';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst found=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nsearch.value='unlikely-xyz-card';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst missing=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nreturn {hooks,actualPdf,invoice,editing,invalid,saved,agent,query,focus,found,missing};\n})()");
+    const actual=await evaluate("(async function(){\nconst doc=document.querySelector('[data-create-frame]').contentDocument;\nconst card=id=>doc.querySelector('[data-card=\"'+id+'\"]');\nconst action=name=>doc.querySelector('[data-pv-action=\"'+name+'\"]');\nconst required=['invoice-pdf','invoice-pay','env-edit','env-deploy','agent-cancel','agent-enable','obs-query','anomaly-upgrade','traffic-report','sleep-detail','fitness-detail','analytics-detail','notfound-home'];\nconst hooks=required.map(name=>!!action(name));\nlet actualPdf='';\nconst win=doc.defaultView, originalCreate=win.URL.createObjectURL;\nwin.URL.createObjectURL=function(blob){blob.text().then(x=>actualPdf=x);return originalCreate.call(this,blob)};\ntry{action('invoice-pdf').click()}finally{win.URL.createObjectURL=originalCreate}\nawait new Promise(r=>setTimeout(r,80));\nconst invoice=card('invoice').querySelector('[data-pv-action-status]')?.textContent;\naction('env-edit').click();\nconst envInput=card('environment-variables').querySelector('[data-pv-env-api] input');\nconst editing=!!envInput;envInput.value='bad-url';action('env-edit').click();\nconst invalid=card('environment-variables').querySelector('[data-pv-action-status]').textContent;\nenvInput.value='https://api.qa.local';action('env-edit').click();\nconst saved=card('environment-variables').querySelector('[data-pv-env-api]').textContent;\naction('agent-cancel').click();const agent=card('activate-agent-dialog').querySelector('[data-pv-action-status]').textContent;\naction('obs-query').click();const query=!!doc.querySelector('#pv-obs-query-text');\nconst close=[...doc.querySelectorAll('.qxframe9a7c2-modal-root button')].find(x=>x.textContent.trim()==='Close');\nif(close)close.click();\nawait new Promise(resolve=>{const deadline=Date.now()+2500;function settled(){if(!doc.querySelector('.qxframe9a7c2-modal-root:not([hidden])')||Date.now()>deadline)return resolve();setTimeout(settled,20)}settled()});\naction('anomaly-upgrade').click();const focus=doc.activeElement===action('obs-query');\nconst search=card('not-found').querySelector('[data-pv-local-search]');\nsearch.value='sleep';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst found=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nsearch.value='unlikely-xyz-card';search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));\nconst missing=card('not-found').querySelector('[data-pv-action-status]')?.textContent;\nreturn {hooks,actualPdf,invoice,editing,invalid,saved,agent,query,focus,found,missing};\n})()");
     assert.ok(actual.hooks.every(Boolean),'all 13 actions are wired');
     assert.ok(actual.actualPdf.startsWith('%PDF-1.4'),'PDF bytes produced locally');
     assert.match(actual.invoice,/PDF generated locally/);
@@ -1053,16 +1516,17 @@ try {
         const cover=doc.querySelector('[data-card="cover-art"]'),item=cover.querySelector('.qxframe9a7c2-item.is-artwork');
         const svg=item.querySelector('.qxframe9a7c2-item-artwork-label svg'),footer=cover.querySelector('.qxframe9a7c2-card-footer');
         return {badgeHeight:badge.getBoundingClientRect().height,badgeFont:px(computed(badge).fontSize),
-          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),
+          badgeLine:px(computed(badge).lineHeight),badgeInset:px(computed(badge).paddingLeft),badgeBorder:px(computed(badge).borderLeftWidth),
           separatorDisplay:computed(stock).display,
           coverAspect:item.getBoundingClientRect().width/item.getBoundingClientRect().height,
           iconWidth:svg.getBoundingClientRect().width,footerGap:px(computed(footer).rowGap),
           footerColumn:computed(footer).flexDirection};
       })()`);
-      const sourceHeight=style==='sera'?100/7:20;
+      const sourceHeight=style==='sera'?100/7+2:20;
       assert.ok(Math.abs(info.badgeHeight-sourceHeight)<=.5,style+' Badge intrinsic source height');
       assert.equal(info.badgeFont,style==='vega'?12:10,style+' Badge source typography');
-      assert.ok(Math.abs(info.badgeInset-(style==='sera'?0:8))<=.5,style+' Badge source inline inset');
+      assert.ok(Math.abs(info.badgeInset-(style==='sera'?4:8))<=.5,style+' Badge corrected inline inset');
+      assert.ok(Math.abs(info.badgeBorder-1)<=.5,style+' outlined Badge has a visible static 1px border');
       assert.equal(info.separatorDisplay,style==='sera'?'none':'block',style+' optional Stock separator visibility');
       assert.ok(Math.abs(info.coverAspect-1)<=.01,style+' Cover Art Item is square');
       assert.ok(Math.abs(info.iconWidth-40)<=.5,style+' Cover Art source placeholder icon');
@@ -2277,6 +2741,43 @@ try {
     assert.equal(result.length,10);
   });
 
+  await step('Focus saturation deep/light is opaque and the two halo modes use blurred 20-percent alpha',async()=>{
+    const samples=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView;
+      const conf=api.state.config,root=d.documentElement,wasDark=root.classList.contains('dark');
+      const sheet=d.createElement('style'),sample=d.createElement('span');sample.style.cssText='position:absolute;left:-5000px;top:0';
+      d.head.append(sheet);d.body.append(sample);
+      const cases=[];
+      try{
+        for(const dark of [false,true])for(const intensity of ['light','normal','deep']){
+          root.classList.toggle('dark',dark);
+          const options={...conf,baseColor:'mist',theme:'blue',ext:{...conf.ext,pointerFocus:'ring',keyboardFocus:'ring',pointerFocusColor:'theme',keyboardFocusColor:'theme',pointerFocusSaturation:intensity,keyboardFocusSaturation:intensity}};
+          sheet.textContent=api.compileTheme(options,{generatedAt:''}).body;
+          const colors={};
+          for(const name of ['pointer-focus','focus']){
+            sample.style.color='var(--qxframe9a7c2-theme-'+name+')';
+            colors[name]=w.getComputedStyle(sample).color;
+          }
+          cases.push({dark,intensity,colors,pointerShadow:w.getComputedStyle(root).getPropertyValue('--qxframe9a7c2-theme-pointer-shadow').trim(),keyboardShadow:w.getComputedStyle(root).getPropertyValue('--qxframe9a7c2-theme-focus-shadow').trim()});
+        }
+      }finally{root.classList.toggle('dark',wasDark);sheet.remove();sample.remove();}
+      return cases;
+    })()`);
+    assert.equal(samples.length,6,'three opaque tonal options in both modes');
+    for(const dark of [false,true]){
+      const roles=samples.filter(x=>x.dark===dark);
+      for(const name of ['focus','pointer-focus']){
+        assert.notEqual(roles[0].colors[name],roles[1].colors[name],name+' lighter tonal option visibly changes the opaque color');
+        assert.notEqual(roles[2].colors[name],roles[1].colors[name],name+' deeper tonal option changes chroma/lightness');
+        for(const v of roles)assert.doesNotMatch(v.colors[name],/\/(?:\s*0\.|\s*0\)|\s*0%)/,name+' color may not be translucent');
+      }
+      for(const v of roles){
+        assert.ok(v.pointerShadow.includes('0 0 0.25rem 0.125rem')&&v.pointerShadow.includes(' 20%,transparent)'), 'pointer halo uses blurred spread with 20% shadow ink');
+        assert.ok(v.keyboardShadow.includes('0 0 0.25rem 0.125rem')&&v.keyboardShadow.includes(' 20%,transparent)'), 'keyboard halo uses same blurred spread');
+      }
+    }
+  });
+
   await step('Seven independent Hover/Focus axes: compiled themes and Chromium Focus Background paint',async()=>{
     const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;\n const conf={...api.state.config,ext:{...api.state.config.ext,hoverStyle:'both',hoverColor:'theme',keyboardFocus:'ring',keyboardFocusColor:'theme',pointerFocus:'outline',pointerFocusColor:'black-white',focusBackground:'parent-surface'}};\n const style=d.createElement('style');style.textContent=api.compileTheme(conf,{generatedAt:''}).body;d.head.append(style);\n const input=d.createElement('input');input.type='text';input.className='qxframe9a7c2-form-input';input.style.transition='none';d.body.append(input);\n const h=getComputedStyle(d.documentElement),keys=['hover-border-strength','hover-background-strength','focus-background-strength','hover-color','focus','pointer-focus'];\n const values=Object.fromEntries(keys.map(k=>[k,h.getPropertyValue('--qxframe9a7c2-theme-'+k).trim()]));\n const idle=getComputedStyle(input).backgroundImage;input.focus();\n const focused=getComputedStyle(input).backgroundImage;\n const layer=getComputedStyle(input).getPropertyValue('--_qxframe9a7c2-focused-parent-layer').trim();\n input.remove();style.remove();return {values,idle,focused,layer};\n})()");
     assert.equal(r.values['hover-border-strength'],'30%');
@@ -2476,8 +2977,24 @@ try {
     }
   });
 
+
+  await step('Card Grid Hover and Table elevation honor Surface Theme in Chromium: 8 Styles x light/dark',async()=>{
+    const position=await evaluate("(() => {\nconst frame=document.querySelector('[data-create-frame]'),d=frame.contentDocument,api=window.QXFRAME9A7C2_CREATE;\nconst h=d.documentElement,oldDark=h.classList.contains('dark'),original=api.state.config;\nconst host=d.createElement('div'),sheet=d.createElement('style');\nhost.style.cssText='position:fixed;left:36px;top:36px;z-index:2147483000;width:220px;padding:0;background:var(--qxframe9a7c2-theme-card)';\nhost.innerHTML='<div class=\"qxframe9a7c2-card\"><div class=\"qxframe9a7c2-card-grid\"><div class=\"qxframe9a7c2-card-grid-item\" data-shadow-grid>Card Grid</div></div></div><div class=\"qxframe9a7c2-table-wrap is-shadow\" data-shadow-table>Table Shadow</div>';\nd.head.append(sheet);d.body.append(host);\nwindow.__qxSurfaceShadow={host,sheet,oldDark,original};\nconst rect=host.querySelector('[data-shadow-grid]').getBoundingClientRect(),outer=frame.getBoundingClientRect();\nreturn {x:outer.left+rect.left+rect.width/2,y:outer.top+rect.top+rect.height/2};\n})()");
+    assert.ok(position.x>0&&position.x<1440&&position.y>0&&position.y<900,'Grid fixture must be visible for real pointer Hover: '+JSON.stringify(position));
+    await mouse('mouseMoved',position.x,position.y);
+    const rows=await evaluate("(() => {\nconst {host,sheet,original}=window.__qxSurfaceShadow,d=host.ownerDocument,h=d.documentElement,api=window.QXFRAME9A7C2_CREATE;\nconst grid=host.querySelector('[data-shadow-grid]'),table=host.querySelector('[data-shadow-table]'),rows=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])\n  for(const dark of [false,true])for(const strength of ['none','heavy']){\n    h.classList.toggle('dark',dark);\n    sheet.textContent=api.compileTheme({...original,style,baseColor:'mist',ext:{...original.ext,shadow:strength}},{generatedAt:''}).body+\n      '[data-shadow-grid],[data-shadow-table]{transition:none!important;animation:none!important}';\n    rows.push({style,dark,strength,hover:grid.matches(':hover'),grid:getComputedStyle(grid).boxShadow,table:getComputedStyle(table).boxShadow});\n  }\nh.classList.toggle('dark',window.__qxSurfaceShadow.oldDark);\nhost.remove();sheet.remove();delete window.__qxSurfaceShadow;\nreturn rows;\n})()");
+    assert.equal(rows.length,32,'8 Styles x 2 schemes x 2 surface shadow strengths');
+    for(const row of rows){
+      const ctx=row.style+'/'+(row.dark?'dark':'light')+'/'+row.strength;
+      assert.equal(row.hover,true,ctx+' pointer must genuinely hover the Card Grid');
+      assert.equal(row.grid==='none',row.strength==='none',ctx+' Card Grid uses selected elevation');
+      assert.equal(row.table==='none',row.strength==='none',ctx+' Table uses selected elevation');
+    }
+    await mouse('mouseMoved',2,2);
+  });
+
   await step('Inverted Select ItemCollection idle/selected/hover/disabled colors: 8 Styles x light/dark x 4 menu modes',async()=>{
-    const rows=await evaluate("(() => {\nconst d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement,initialDark=h.classList.contains('dark'),orig=api.state.config;\nconst sheet=d.createElement('style'),host=d.createElement('section');host.style.cssText='position:absolute;left:-10000px;top:0;width:320px';\nhost.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-select-panel\" style=\"position:relative\"><div class=\"qxframe9a7c2-select-option-host\"><div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-body\"><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface\" data-menu-state=\"idle\">EUR — Euro</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-selected\" data-menu-state=\"selected\">USD — United States Dollar</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-hover\" data-menu-state=\"hover\">GBP — British Pound</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-disabled\" data-menu-state=\"disabled\">JPY — Japanese Yen</div></div></div></div><i data-probe-menu style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-probe-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i>';\nd.head.append(sheet);d.body.append(host);const css=sel=>getComputedStyle(host.querySelector(sel)),rows=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\nh.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\nconst probe=css('[data-probe-menu]'),accent=css('[data-probe-accent]');\nrows.push({style,dark,menuColor,expected:probe.color,collection:css('.qxframe9a7c2-item-collection').color,\nidle:css('[data-menu-state=idle]').color,selected:css('[data-menu-state=selected]').color,hover:css('[data-menu-state=hover]').color,disabled:css('[data-menu-state=disabled]').color,accentFg:accent.color,\nselectedBg:css('[data-menu-state=selected]').backgroundColor,hoverBg:css('[data-menu-state=hover]').backgroundColor,accentBg:accent.backgroundColor});\n}\nh.classList.toggle('dark',initialDark);sheet.remove();host.remove();return rows;\n})()");
+    const rows=await evaluate("(() => {\nconst d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement,initialDark=h.classList.contains('dark'),orig=api.state.config;\nconst sheet=d.createElement('style'),host=d.createElement('section');host.style.cssText='position:absolute;left:-10000px;top:0;width:320px';\nhost.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-select-panel\" style=\"position:relative\"><div class=\"qxframe9a7c2-select-option-host\"><div class=\"qxframe9a7c2-item-collection\"><div class=\"qxframe9a7c2-item-collection-body\"><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface\" data-menu-state=\"idle\">EUR — Euro</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-selected\" data-menu-state=\"selected\">USD — United States Dollar</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-hover\" data-menu-state=\"hover\">GBP — British Pound</div><div class=\"qxframe9a7c2-item-collection-item qxframe9a7c2-item-surface is-disabled\" data-menu-state=\"disabled\">JPY — Japanese Yen</div></div></div></div><i data-probe-menu style=\"color:var(--qxframe9a7c2-theme-menu-foreground)\"></i><i data-probe-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i data-probe-soft style=\"background:var(--_qxframe9a7c2-menu-hover-soft)\"></i><i class=\"qxframe9a7c2-popup-surface\" data-probe-selected-soft style=\"background:var(--_qxframe9a7c2-menu-selected-soft)\"></i>';\nd.head.append(sheet);d.body.append(host);const css=sel=>getComputedStyle(host.querySelector(sel)),rows=[];\nfor(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\nh.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\nconst probe=css('[data-probe-menu]'),accent=css('[data-probe-accent]');\nrows.push({style,dark,menuColor,expected:probe.color,collection:css('.qxframe9a7c2-item-collection').color,\nidle:css('[data-menu-state=idle]').color,selected:css('[data-menu-state=selected]').color,hover:css('[data-menu-state=hover]').color,disabled:css('[data-menu-state=disabled]').color,accentFg:accent.color,\nselectedBg:css('[data-menu-state=selected]').backgroundColor,hoverBg:css('[data-menu-state=hover]').backgroundColor,softBg:css('[data-probe-soft]').backgroundColor,selectedSoftBg:css('[data-probe-selected-soft]').backgroundColor,accentBg:accent.backgroundColor});\n}\nh.classList.toggle('dark',initialDark);sheet.remove();host.remove();return rows;\n})()");
     assert.equal(rows.length,64,'8 Styles x 2 modes x 4 menu colors');
     for(const r of rows){
       const msg=r.style+'/'+r.dark+'/'+r.menuColor;
@@ -2485,9 +3002,9 @@ try {
       assert.equal(r.idle,r.expected,msg+' idle dropdown foreground');
       assert.equal(r.disabled,r.expected,msg+' disabled dropdown foreground before opacity');
       assert.equal(r.selected,r.accentFg,msg+' selected foreground accent');
-      assert.equal(r.hover,r.accentFg,msg+' hover foreground accent');
-      assert.equal(r.selectedBg,r.accentBg,msg+' selected background accent');
-      assert.equal(r.hoverBg,r.accentBg,msg+' hover background accent');
+      assert.equal(r.hover,r.expected,msg+' hover retains readable Menu foreground, not selected accent');
+      assert.equal(r.selectedBg,r.selectedSoftBg,msg+' selected background uses alpha Menu accent overlay');
+      assert.equal(r.hoverBg,r.softBg,msg+' hover uses shared neutral Menu mix, not selected accent');
     }
   });
 
@@ -2518,11 +3035,11 @@ try {
     assert.ok(r.viewportHeight+.5>=r.tabHeight,'Tabs horizontal viewport cannot clip TabItem: '+JSON.stringify(r));
     assert.equal(r.appearance,'base-select','modern native Select opts into customizable picker');
     assert.equal(r.pickerAppearance,'base-select','native dropdown is the browser top-layer customizable picker');
-    assert.equal(r.pickerIcon,'none','native Select has only the framework SVG chevron, no duplicate picker icon');
-    assert.ok(r.arrow.includes('svg+xml'),'native Select displays a single SVG chevron');
+    assert.equal(r.pickerIcon,'none','native Select has only the framework CSS chevron, no duplicate picker icon');
+    assert.ok(r.arrow.includes('linear-gradient(45deg')&&r.arrow.includes('linear-gradient(135deg')&&!r.arrow.includes('url('),'native Select uses two theme-aware gradient strokes, not a fixed SVG URL');
   });
 
-  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and SVG chevron',async()=>{
+  await step('Owner follow-up: pointer focus tokens, 4px segmented Tabs viewport and scheme-aware chevron',async()=>{
     const r=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,group=d.querySelector('[data-card=savings-targets] .qxframe9a7c2-input-group'),input=group.querySelector('.qxframe9a7c2-form-input'),tabs=d.querySelector('[data-card=faq] .qxframe9a7c2-tabs'),scroll=tabs.querySelector('.qxframe9a7c2-tabs-scroll'),viewport=scroll.querySelector('.qxframe9a7c2-scroll-viewport'),item=tabs.querySelector('.qxframe9a7c2-tabs-tab');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');h.style.setProperty('--qxframe9a7c2-theme-pointer-width','3px');h.style.setProperty('--qxframe9a7c2-theme-pointer-offset','2px');h.style.setProperty('--qxframe9a7c2-theme-pointer-opacity','100%');input.focus();let pointer=getComputedStyle(group),w=getComputedStyle(viewport),g=viewport.getBoundingClientRect(),t=item.getBoundingClientRect(),sr=scroll.getBoundingClientRect(),card=d.querySelector('[data-card=faq]').getBoundingClientRect();let out={pointerWidth:pointer.outlineWidth,pointerOffset:pointer.outlineOffset,paddingTop:parseFloat(w.paddingTop),paddingBottom:parseFloat(w.paddingBottom),withinTop:t.top>=g.top+parseFloat(w.paddingTop)-.6,withinBottom:t.bottom<=g.bottom-parseFloat(w.paddingBottom)+.6,tabHeight:t.height,railHeight:sr.height,cardHeight:card.height};h.classList.add('qxframe9a7c2-keyboard-focus-origin');const keyboard=getComputedStyle(group);out.keyboardWidth=keyboard.outlineWidth;out.keyboardOffset=keyboard.outlineOffset;h.style.removeProperty('--qxframe9a7c2-theme-pointer-width');h.style.removeProperty('--qxframe9a7c2-theme-pointer-offset');h.style.removeProperty('--qxframe9a7c2-theme-pointer-opacity');return out})()");
     assert.equal(r.pointerWidth,'3px','InputGroup visual owner respects mouse focus Theme width');
     assert.equal(r.pointerOffset,'2px','InputGroup visual owner respects mouse focus Theme offset');
@@ -2541,7 +3058,7 @@ try {
     assert.ok(r.nativeKeyboard.includes('0, 200, 0'),'standalone native keyboard halo visible: '+JSON.stringify(r));
     assert.ok(r.nativePointer.includes('255, 0, 0'),'standalone native pointer halo visible: '+JSON.stringify(r));
     assert.equal(r.child,'none','grouped input does not paint duplicate halo');
-    const button=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,b=d.querySelector('[data-card=social-links] .qxframe9a7c2-card-footer .qxframe9a7c2-button');if(!b)return{error:'missing native Button'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');b.focus();h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const g=getComputedStyle(b);const pointer=g.boxShadow;const info={focused:d.activeElement===b,focusSelector:b.matches(':focus'),focusVisible:b.matches(':focus-visible'),origin:h.className,shadowToken:g.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow').trim(),baseShadow:g.getPropertyValue('--_qxframe9a7c2-state-shadow').trim(),styleScope:g.getPropertyValue('--_qxframe9a7c2-v2-action-shadow').trim(),ruleSelector:b.matches('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading)'),isDisabled:b.disabled,classes:b.className};return{pointer,info}})()");
+    const button=await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement,b=d.querySelector('[data-card=social-links] .qxframe9a7c2-card-footer .qxframe9a7c2-button');if(!b)return{error:'missing native Button'};h.style.setProperty('--qxframe9a7c2-theme-pointer-shadow','0 0 0 3px rgb(255, 0, 0)');h.classList.remove('qxframe9a7c2-keyboard-focus-origin');b.focus();h.classList.remove('qxframe9a7c2-keyboard-focus-origin');const g=getComputedStyle(b);const pointer=g.boxShadow;const info={focused:d.activeElement===b,focusSelector:b.matches(':focus'),focusVisible:b.matches(':focus-visible'),origin:h.className,shadowToken:g.getPropertyValue('--qxframe9a7c2-theme-pointer-shadow').trim(),baseShadow:g.getPropertyValue('--_qxframe9a7c2-state-shadow').trim(),styleScope:g.getPropertyValue('--_qxframe9a7c2-action-shadow').trim(),ruleSelector:b.matches('html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-button:focus:not(:disabled):not(.is-disabled):not(.is-loading)'),isDisabled:b.disabled,classes:b.className};return{pointer,info}})()");
     assert.ok(!button.error,JSON.stringify(button));
     assert.ok(button.info.focused&&button.info.ruleSelector&&button.info.shadowToken.includes('255, 0, 0'),'Button pointer selector and token must be active before transition: '+JSON.stringify(button));
     // The Button transitions box-shadow; sampling immediately after focus()
@@ -2568,6 +3085,692 @@ try {
       assert.equal(c.keyboard.childOutline,'none',kind+' hosted JS Input has no second keyboard outline');
       assert.equal(c.invalidBorder,result.destructive,kind+' invalid border stays destructive');
     }
+  });
+
+
+  await step('Stage5 Table Filter / Transfer / JSON 8 Style x 2 mode Theme consumer matrix',async()=>{
+    await click('document.querySelector(\'[data-create-item="03"]\')');
+    await waitFor('!!document.querySelector(\'[data-create-frame]\').contentDocument?.querySelector(\'[data-card="plan-governance"]\')','Preview03 Table visual consumer');
+    const rows=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement,old=h.classList.contains('dark'),config=api.state.config;
+      const box=d.createElement('section'),sheet=d.createElement('style');box.style.cssText='position:absolute;left:-9000px;top:0;width:480px';
+      box.innerHTML='<div class="qxframe9a7c2-table-filter-popup" data-s5-popup><div class="qxframe9a7c2-table-filter-search"><input class="qxframe9a7c2-input-control" placeholder="Filter"></div><label class="qxframe9a7c2-table-filter-option is-selected" data-s5-selected><input class="qxframe9a7c2-form-check-input" type="checkbox" checked><span>Chosen</span></label><label class="qxframe9a7c2-table-filter-option is-disabled" data-s5-disabled><input class="qxframe9a7c2-form-check-input" type="checkbox" disabled><span>Disabled</span></label></div><div class="qxframe9a7c2-transfer is-disabled" data-s5-transfer style="--qxframe9a7c2-transfer-panel-border:rgb(19,33,55)"><div class="qxframe9a7c2-transfer-panel"><header class="qxframe9a7c2-transfer-header"><span class="qxframe9a7c2-transfer-title">Disabled</span></header><footer class="qxframe9a7c2-transfer-footer">0 items</footer></div></div><div class="qxframe9a7c2-json-root" data-s5-json><span class="qxframe9a7c2-json-string">code</span><input class="qxframe9a7c2-json-editor qxframe9a7c2-json-string" value="code"></div><span data-s5-font style="font-size:var(--_qxframe9a7c2-control-font-size)">Text</span><span data-s5-muted style="color:var(--qxframe9a7c2-theme-muted-foreground)">Muted</span>';
+      d.head.append(sheet);d.body.append(box);const c=s=>getComputedStyle(box.querySelector(s)),result=[];
+      for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true]){
+        h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...config,style},{generatedAt:''}).body;
+        const popup=c('[data-s5-popup]'),input=c('[data-s5-popup] input'),disabled=c('[data-s5-disabled]'),panel=c('.qxframe9a7c2-transfer-panel'),header=c('.qxframe9a7c2-transfer-header'),footer=c('.qxframe9a7c2-transfer-footer'),j=c('[data-s5-json]'),editor=c('.qxframe9a7c2-json-editor');
+        result.push({style,dark,popupText:popup.color,inputText:input.color,popupBg:popup.backgroundColor,inputBg:input.backgroundColor,selectedBg:c('[data-s5-selected]').backgroundColor,disabledText:disabled.color,disabledCursor:disabled.cursor,muted:c('[data-s5-muted]').color,panelBorder:panel.borderTopColor,headerBorder:header.borderBottomColor,footerBorder:footer.borderTopColor,title:c('.qxframe9a7c2-transfer-title').color,jsonFont:j.fontSize,controlFont:c('[data-s5-font]').fontSize,jsonInk:c('.qxframe9a7c2-json-string').color,editorInk:editor.color,caret:editor.caretColor});
+      }h.classList.toggle('dark',old);sheet.remove();box.remove();return result;
+    })()`);
+    assert.equal(rows.length,16);
+    for(const r of rows){
+      const note=r.style+'/'+r.dark;
+      assert.equal(r.popupText,r.inputText,note+' popup search foreground');
+      assert.equal(r.popupBg,r.inputBg,note+' popup search background');
+      assert.notEqual(r.selectedBg,'rgba(0, 0, 0, 0)',note+' selected filter row');
+      assert.equal(r.disabledCursor,'not-allowed',note+' disabled filter cursor');
+      assert.equal(r.disabledText,r.muted,note+' disabled filter text');
+      for(const prop of ['panelBorder','headerBorder','footerBorder'])assert.equal(r[prop],'rgb(19, 33, 55)',note+' Transfer border '+prop);
+      assert.equal(r.title,r.muted,note+' Transfer disabled title');
+      assert.equal(r.jsonFont,r.controlFont,note+' JSON consumes Theme Control size');
+      assert.equal(r.editorInk,r.jsonInk,note+' JSON editor retains syntax color');
+      assert.equal(r.caret,r.editorInk,note+' JSON caret follows ink');
+    }
+  });
+
+
+  await step('Inverse Menu uses only existing popup classes, no DOM theme attribute or JS changes',async()=>{
+    const samples=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,api=window.QXFRAME9A7C2_CREATE,h=d.documentElement;\n const wasDark=h.classList.contains('dark'),holder=d.createElement('div'),styleEl=d.createElement('style');\n holder.innerHTML='<div class=\"qxframe9a7c2-popup-surface\" data-popup></div><div class=\"qxframe9a7c2-menu-submenu-panel\" data-submenu></div><div class=\"qxframe9a7c2-menu-overflow-panel\" data-overflow></div><div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\" data-popover></div><div class=\"qxframe9a7c2-tooltip-root\" data-tip-root><div class=\"qxframe9a7c2-tooltip-container qxframe9a7c2-popup-surface\" data-tooltip>Tip</div><i class=\"qxframe9a7c2-tooltip-arrow\" data-tip-arrow></i></div>';\n d.body.append(holder);d.head.append(styleEl);\n const read=e=>{const c=d.defaultView.getComputedStyle(e),probe=d.createElement('span');probe.style.cssText='color:var(--qxframe9a7c2-theme-primary);background:var(--qxframe9a7c2-theme-background)';e.append(probe);const x=d.defaultView.getComputedStyle(probe);const resolved=[x.color,x.backgroundColor];probe.remove();return [c.getPropertyValue('--qxframe9a7c2-theme-background').trim(),c.getPropertyValue('--qxframe9a7c2-theme-foreground').trim(),c.getPropertyValue('--qxframe9a7c2-theme-primary').trim(),c.colorScheme,...resolved];};\n const results=[];\n try{\n  for(const style of ['nova','rhea','sera'])for(const mode of ['default','inverted']){\n   styleEl.textContent=api.compileTheme({...api.state.config,style,menuColor:mode},{generatedAt:''}).body;\n   h.classList.remove('dark');\n   const light={root:read(h),popup:read(holder.querySelector('[data-popup]')),submenu:read(holder.querySelector('[data-submenu]')),overflow:read(holder.querySelector('[data-overflow]')),popover:read(holder.querySelector('[data-popover]')),tooltip:read(holder.querySelector('[data-tooltip]')),tipFill:d.defaultView.getComputedStyle(holder.querySelector('[data-tooltip]')).backgroundColor,tipArrow:d.defaultView.getComputedStyle(holder.querySelector('[data-tip-arrow]')).backgroundColor};\n   h.classList.add('dark');\n   const dark={root:read(h),popup:read(holder.querySelector('[data-popup]')),submenu:read(holder.querySelector('[data-submenu]')),overflow:read(holder.querySelector('[data-overflow]')),popover:read(holder.querySelector('[data-popover]')),tooltip:read(holder.querySelector('[data-tooltip]')),tipFill:d.defaultView.getComputedStyle(holder.querySelector('[data-tooltip]')).backgroundColor,tipArrow:d.defaultView.getComputedStyle(holder.querySelector('[data-tip-arrow]')).backgroundColor};\n   results.push({style,mode,light,dark});\n  }\n }finally{h.classList.toggle('dark',wasDark);styleEl.remove();holder.remove();}\n return results;\n})()");
+    assert.equal(samples.length,6);
+    for(const s of samples){
+      const inv=s.mode==='inverted',tag=s.style+'/'+s.mode;
+      for(const key of ['popup','submenu','overflow']){
+        assert.deepEqual(s.light[key],inv?s.dark.root:s.light.root,tag+' light-page '+key+' matches complete target Theme');
+        assert.deepEqual(s.dark[key],inv?s.light.root:s.dark.root,tag+' dark-page '+key+' matches complete target Theme');
+      }
+      assert.deepEqual(s.light.popover,s.light.root,tag+' Popover is never inverted with Menu');
+      assert.deepEqual(s.dark.popover,s.dark.root,tag+' dark Popover remains normal');
+      assert.deepEqual(s.light.tooltip,s.light.root,tag+' light Tooltip stays in page scheme');
+      assert.deepEqual(s.dark.tooltip,s.dark.root,tag+' dark Tooltip stays in page scheme');
+      assert.equal(s.light.tipFill,s.light.tipArrow,tag+' Tooltip arrow and panel same background');
+      assert.equal(s.dark.tipFill,s.dark.tipArrow,tag+' dark Tooltip arrow and panel same background');
+    }
+  });
+
+
+  await step('Native Select local-scheme arrow + true TreeSelect panel scope: 8 Styles x 3 themes x 2 pages x 4 Menu modes',async()=>{
+    const rows=await evaluate("(() => {\n  const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n  const oldDark=h.classList.contains('dark'),sheet=d.createElement('style'),host=d.createElement('div');\n  host.style.cssText='position:absolute;left:-10000px;top:0;width:22rem';\n  host.innerHTML='<select class=\"qxframe9a7c2-form-select\" data-page><option>Native</option></select>'+\n    '<div class=\"qxframe9a7c2-popup-surface\" data-popup-root><select class=\"qxframe9a7c2-form-select\" data-popup><option>Native</option></select><div class=\"qxframe9a7c2-native-form\"><select data-native><option>Native</option></select></div></div>'+\n    '<div class=\"qxframe9a7c2-tree-select-panel qxframe9a7c2-popup-surface\" data-tree-panel><div class=\"qxframe9a7c2-tree-select-popup-content\"><div class=\"qxframe9a7c2-tree-select-tree-host\"><div class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-tree-check-wrap\"><input class=\"qxframe9a7c2-tree-check\" type=\"checkbox\" checked><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div></div></div></div></div>'+\n    '<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-popover-container\" data-popover-root><select class=\"qxframe9a7c2-form-select\" data-popover><option>Native</option></select></div>';\n  d.head.append(sheet);d.body.append(host);\n  const styles=['vega','nova','maia','lyra','mira','luma','sera','rhea'];\n  const menus=['default','default-translucent','inverted','inverted-translucent'],palettes=['neutral','blue','orange'],rows=[];\n  const read=key=>{const computed=d.defaultView.getComputedStyle(host.querySelector(key));return {scheme:computed.colorScheme,arrow:computed.backgroundImage};};\n  try{\n    for(const style of styles)for(const palette of palettes)for(const menuColor of menus)for(const dark of [false,true]){\n      sheet.textContent=api.compileTheme({...api.state.config,style,baseColor:'neutral',theme:palette,chartColor:palette,menuColor},{generatedAt:''}).body;\n      h.classList.toggle('dark',dark);\n      rows.push({style,palette,menuColor,dark,page:read('[data-page]'),popup:read('[data-popup]'),native:read('[data-native]'),popover:read('[data-popover]'),\n        rootScheme:d.defaultView.getComputedStyle(h).colorScheme,\n        popupScheme:d.defaultView.getComputedStyle(host.querySelector('[data-popup-root]')).colorScheme,\n        treeScheme:d.defaultView.getComputedStyle(host.querySelector('[data-tree-panel]')).colorScheme,\n        treeCheck:d.defaultView.getComputedStyle(host.querySelector('[data-tree-panel] .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator')).backgroundColor});\n    }\n  }finally{h.classList.toggle('dark',oldDark);sheet.remove();host.remove();}\n  return rows;\n})()");
+    assert.equal(rows.length,192,'cross-theme computed-style acceptance must run all combinations');
+    const lookup=new Map(rows.map(r=>[JSON.stringify([r.style,r.palette,r.menuColor,r.dark]),r]));
+    for(const row of rows){
+      const tag=[row.style,row.palette,row.menuColor,row.dark?'dark':'light'].join('/');
+      const rootScheme=row.dark?'dark':'light',invert=row.menuColor.startsWith('inverted');
+      const popupScheme=invert?(row.dark?'light':'dark'):rootScheme;
+      assert.equal(row.rootScheme,rootScheme,tag+' page scheme');
+      assert.equal(row.page.scheme,rootScheme,tag+' standalone native scheme');
+      assert.equal(row.popup.scheme,popupScheme,tag+' local Popup native scheme');
+      assert.equal(row.popupScheme,popupScheme,tag+' Popup root scheme');
+      assert.equal(row.treeScheme,popupScheme,tag+' actual TreeSelect panel class is scheme-bound, not a fake PickerField');
+      assert.equal(row.native.scheme,popupScheme,tag+' native-form select scheme');
+      assert.equal(row.popover.scheme,rootScheme,tag+' non-Menu Popover must not invert');
+      assert.equal(row.popover.arrow,row.page.arrow,tag+' non-Menu Popover arrow matches page');
+      assert.equal(row.native.arrow,row.popup.arrow,tag+' both native select API shapes share Theme arrow');
+      assert.ok(row.page.arrow.includes('linear-gradient(45deg')&&row.page.arrow.includes('linear-gradient(135deg')&&!row.page.arrow.includes('url('),tag+' CSS arrow uses live Theme color');
+      const opposite=lookup.get(JSON.stringify([row.style,row.palette,row.menuColor,!row.dark]));
+      assert.ok(opposite,tag+' opposite page sample');
+      assert.notEqual(row.page.arrow,opposite.page.arrow,tag+' light/dark arrow paint differs');
+      assert.equal(row.popup.arrow,invert?opposite.page.arrow:row.page.arrow,tag+' local inverse selects opposite color without SVG or per-component CSS');
+      assert.notEqual(row.treeCheck,'rgba(0, 0, 0, 0)',tag+' TreeSelect checked indicator remains filled');
+    }
+  });
+
+  await step('Stage5 inverted Popup paired paint: Date/Time/Tree Choice/HEX 64 modes',async()=>{
+    const samples=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,h=d.documentElement;\n const orig=api.state.config,wasDark=h.classList.contains('dark'),host=d.createElement('section'),sheet=d.createElement('style');\n host.style.cssText='position:absolute;left:-10000px;top:0;width:25rem';\n host.innerHTML='<div class=\"qxframe9a7c2-picker-field-panel qxframe9a7c2-popup-surface\"><div class=\"qxframe9a7c2-date-panel\"><button class=\"qxframe9a7c2-date-panel-nav\" type=\"button\">Next</button><button class=\"qxframe9a7c2-date-panel-cell is-selected\">16</button></div><div class=\"qxframe9a7c2-wheel-panel\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">21</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div><div class=\"qxframe9a7c2-color-panel\"><div class=\"qxframe9a7c2-color-panel-fields\"><button class=\"qxframe9a7c2-color-panel-format\">HEX</button><input class=\"qxframe9a7c2-color-panel-input\" value=\"#2869E6\"><button class=\"qxframe9a7c2-color-panel-eye\">Eye</button></div></div></div><div class=\"qxframe9a7c2-tree-select-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset\"><div class=\"qxframe9a7c2-tree-select-popup-content\"><div class=\"qxframe9a7c2-tree-select-tree-host\"><div class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-tree-check-wrap\"><input type=\"checkbox\" class=\"qxframe9a7c2-tree-check\" checked><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div><div class=\"qxframe9a7c2-tree-check-wrap\"><input type=\"checkbox\" class=\"qxframe9a7c2-tree-check\" data-mixed><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div></div></div></div></div><i data-menu style=\"color:var(--qxframe9a7c2-theme-menu-foreground);background:var(--qxframe9a7c2-theme-menu)\"></i><i data-accent style=\"color:var(--qxframe9a7c2-theme-menu-accent-foreground);background:var(--qxframe9a7c2-theme-menu-accent)\"></i><i class=\"qxframe9a7c2-popup-surface\" data-selected-soft style=\"background:var(--_qxframe9a7c2-menu-selected-soft)\"></i><i data-pointer style=\"color:var(--qxframe9a7c2-theme-pointer-focus)\"></i><i data-solid style=\"color:oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)\"></i>';\n host.insertAdjacentHTML('beforeend','<div data-global-tree class=\"qxframe9a7c2-tree\"><div class=\"qxframe9a7c2-tree-check-wrap\"><input data-reference-unchecked class=\"qxframe9a7c2-tree-check\" type=\"checkbox\"><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div><div class=\"qxframe9a7c2-tree-check-wrap\"><input data-reference-checked class=\"qxframe9a7c2-tree-check\" type=\"checkbox\" checked><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div><div class=\"qxframe9a7c2-tree-check-wrap\"><input data-reference-mixed class=\"qxframe9a7c2-tree-check\" type=\"checkbox\"><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div></div>');\n host.querySelector('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree').insertAdjacentHTML('beforeend','<div class=\"qxframe9a7c2-tree-check-wrap\"><input data-popup-unchecked class=\"qxframe9a7c2-tree-check\" type=\"checkbox\"><span class=\"qxframe9a7c2-tree-check-indicator\"></span></div>');\n d.head.append(sheet);d.body.append(host);for(const name of ['menu','accent','selected-soft','solid'])host.querySelector('.qxframe9a7c2-picker-field-panel').append(host.querySelector('[data-'+name+']'));host.querySelector('.qxframe9a7c2-tree-select-panel').insertAdjacentHTML('beforeend','<i data-choice-expected style=\"color:var(--_qxframe9a7c2-type-foreground,var(--qxframe9a7c2-theme-primary-foreground));background:var(--qxframe9a7c2-theme-choice);border:1px solid var(--qxframe9a7c2-theme-choice-border)\"></i>');host.querySelector('[data-mixed]').indeterminate=true;host.querySelector('[data-reference-mixed]').indeterminate=true;host.querySelectorAll('.qxframe9a7c2-tree-check-indicator').forEach(x=>{x.style.transition='none';});\n const c=s=>d.defaultView.getComputedStyle(host.querySelector(s)),rows=[],input=host.querySelector('.qxframe9a7c2-color-panel-input');\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])for(const dark of [false,true])for(const menuColor of ['default','default-translucent','inverted','inverted-translucent']){\n   h.classList.toggle('dark',dark);sheet.textContent=api.compileTheme({...orig,style,menuColor},{generatedAt:''}).body;\n   input.focus();\n   const menu=c('[data-menu]'),accent=c('[data-accent]'),nav=c('.qxframe9a7c2-date-panel-nav'),date=c('.qxframe9a7c2-date-panel-cell.is-selected'),guide=c('.qxframe9a7c2-wheel-panel-center-guide'),field=c('.qxframe9a7c2-color-panel-input'),format=c('.qxframe9a7c2-color-panel-format'),eye=c('.qxframe9a7c2-color-panel-eye'),checked=c('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),mixed=c('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),refChecked=c('[data-reference-checked] + .qxframe9a7c2-tree-check-indicator'),refMixed=c('[data-reference-mixed] + .qxframe9a7c2-tree-check-indicator'),refUnchecked=c('[data-reference-unchecked] + .qxframe9a7c2-tree-check-indicator'),popupUnchecked=c('[data-popup-unchecked] + .qxframe9a7c2-tree-check-indicator');\n   rows.push({style,dark,menuColor,menuText:menu.color,menuBg:menu.backgroundColor,accentText:accent.color,accentBg:accent.backgroundColor,navText:nav.color,dateText:date.color,dateBg:date.backgroundColor,selectedSoftBg:c('[data-selected-soft]').backgroundColor,guideBg:guide.backgroundColor,fieldText:field.color,fieldBg:field.backgroundColor,fieldBorder:field.borderTopColor,pointer:c('[data-pointer]').color,menuSolid:c('[data-solid]').color,formatText:format.color,formatBg:format.backgroundColor,eyeText:eye.color,eyeBg:eye.backgroundColor,expectedChoiceText:c('[data-choice-expected]').color,expectedChoiceBg:c('[data-choice-expected]').backgroundColor,expectedChoiceBorder:c('[data-choice-expected]').borderTopColor,checkedText:checked.color,checkedBg:checked.backgroundColor,checkedBorder:checked.borderTopColor,mixedText:mixed.color,mixedBg:mixed.backgroundColor,mixedBorder:mixed.borderTopColor,refCheckedText:refChecked.color,refCheckedBg:refChecked.backgroundColor,refCheckedBorder:refChecked.borderTopColor,refMixedText:refMixed.color,refMixedBg:refMixed.backgroundColor,refMixedBorder:refMixed.borderTopColor,uncheckedText:popupUnchecked.color,uncheckedBg:popupUnchecked.backgroundColor,uncheckedBorder:popupUnchecked.borderTopColor,refUncheckedText:refUnchecked.color,refUncheckedBg:refUnchecked.backgroundColor,refUncheckedBorder:refUnchecked.borderTopColor});\n }\n h.classList.toggle('dark',wasDark);sheet.remove();host.remove();return rows;\n})()");
+    assert.equal(samples.length,64);
+    for(const v of samples){
+      const k=v.style+'/'+v.dark+'/'+v.menuColor;
+      assert.equal(v.navText,v.menuText,k+' idle Date nav foreground');
+      assert.equal(v.dateText,v.accentText,k+' selected date foreground');
+      assert.equal(v.dateBg,v.selectedSoftBg,k+' selected date uses alpha Menu accent background');
+      assert.notEqual(v.guideBg,'rgba(0, 0, 0, 0)',k+' canonical WheelPanel guide keeps its translucent primary paint');
+      assert.equal(v.fieldText,v.menuText,k+' HEX foreground');
+      assert.equal(v.fieldBg,v.menuBg,k+' HEX background');
+      assert.equal(v.fieldBorder,v.menuSolid,k+' HEX focus border derives from Menu Primary');
+      assert.equal(v.formatText,v.menuText,k+' HEX format foreground');
+      assert.equal(v.formatBg,v.menuBg,k+' HEX format background');
+      assert.equal(v.eyeText,v.menuText,k+' eyedropper foreground');
+      assert.equal(v.eyeBg,v.menuBg,k+' eyedropper background');
+      // Tree owns check state; Shared Choice provides Type foreground, not Menu background.
+      assert.equal(v.checkedText,v.expectedChoiceText,k+' checked TreeSelect glyph uses Choice foreground');
+      assert.equal(v.mixedText,v.expectedChoiceText,k+' indeterminate TreeSelect glyph uses Choice foreground');
+      assert.notEqual(v.checkedText,v.checkedBg,k+' checked glyph contrasts with its fill');
+      assert.equal(v.checkedBg,v.mixedBg,k+' checked/mixed Menu Primary fill match');
+      assert.equal(v.checkedBg,v.checkedBorder,k+' real TreeSelect checked checkbox is a filled square, not a free-floating glyph');
+      assert.equal(v.mixedBg,v.mixedBorder,k+' real TreeSelect indeterminate checkbox is a filled square');
+      assert.equal(v.checkedBorder,v.mixedBorder,k+' checked/mixed Menu border match');
+      assert.equal(v.uncheckedBg,v.expectedChoiceBg,k+' unchecked popup Choice follows Theme Choice fill');
+      assert.equal(v.uncheckedBorder,v.expectedChoiceBorder,k+' unchecked popup Choice follows Theme Choice edge');
+      assert.notEqual(v.uncheckedBorder,v.uncheckedBg,k+' unchecked popup Choice has visible border');
+      assert.equal(v.refCheckedText,v.refMixedText,k+' Tree outside Popup still consumes page Choice');
+    }
+  });
+
+  await step('CALENDAR-UNIT-OWNER-001 real Calendar unit data, same DOM and keyboard/pointer paths',async()=>{
+    const result=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,q=d.defaultView.QXFRAME9A7C2;\n const C=q&&q.BuildingBlocks?.Calendar,P=q&&q.BuildingBlocks?.PeriodPanel;\n if(!C||!P)return {error:'Calendar/legacy exported alias missing'};\n const host=d.createElement('div');host.style.cssText='position:absolute;left:-5000px;top:0';d.body.append(host);\n const modes=[['date','2026-10-14',42],['week','2026-10-14',42],['month','2026-10',12],['quarter','2026-Q3',4],['year','2026',12]];\n const out=[];\n try{\n  for(const [unit,value,count] of modes){\n   const target=d.createElement('div');host.append(target);\n   const calls=[],c=C.create({container:target,document:d,unit,value,onSelect:v=>calls.push(v)});\n   try{\n    const root=c.getRootElement(),grid=root.querySelector('.qxframe9a7c2-calendar-grid');\n    const cells=[...grid.querySelectorAll(':scope > .qxframe9a7c2-calendar-cell')];\n    const button=cells.find(x=>!x.disabled&&!x.classList.contains('is-outside'));\n    const prev=c.getState().viewValue;\n    const before=c.getState().activeKey;\n    const moved=c.handleKeydown(new d.defaultView.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));\n    const after=c.getState().activeKey;\n    const el=button?.querySelector('.qxframe9a7c2-calendar-cell-inner');\n    el?.click();\n    const selected=c.getState().value;\n    c.next();\n    const viewNext=c.getState().viewValue;\n    const delta=(viewNext.getFullYear()-prev.getFullYear())*12+viewNext.getMonth()-prev.getMonth();\n    out.push({unit,count:cells.length,expected:count,period:root.classList.contains('is-period'),weekdaysHidden:root.querySelector('.qxframe9a7c2-calendar-weekdays').hidden,structure:!!button&&button.tagName==='BUTTON'&&button.firstElementChild?.classList.contains('qxframe9a7c2-calendar-cell-view')&&button.firstElementChild.firstElementChild===el,selectionCount:calls.length,selectedTime:selected&&typeof selected.getTime==='function'?selected.getTime():null,keyboard:moved,activeMoved:before!==after,monthDelta:delta,fieldUnit:c.getState().unit});\n   }finally{c.destroy();}\n  }\n }finally{host.remove();}\n return {aliasIdentity:C===P,modes:out};\n})()");
+    assert.equal(result.error,undefined,'shared Calendar + direct public alias available');
+    assert.equal(result.aliasIdentity,true,'PeriodPanel is the exact Calendar object, not a second component');
+    assert.equal(result.modes.length,5,'five unit datasets');
+    for(const m of result.modes){
+      assert.equal(m.count,m.expected,m.unit+' unit data count');
+      assert.equal(m.fieldUnit,m.unit,m.unit+' state unit');
+      assert.equal(m.period,!['date','week'].includes(m.unit),m.unit+' unit geometry');
+      assert.equal(m.weekdaysHidden,m.period,m.unit+' show weekdays only for date/week');
+      assert.equal(m.structure,true,m.unit+' button > view > inner');
+      assert.equal(m.selectionCount,1,m.unit+' exactly one delegated select callback');
+      assert.ok(Number.isFinite(m.selectedTime),m.unit+' selected value is a valid Date across iframe realms');
+      assert.equal(m.keyboard,true,m.unit+' keyboard handled');
+      assert.equal(m.activeMoved,true,m.unit+' active date changes');
+      assert.equal(m.monthDelta,m.unit==='year'?120:m.period?12:1,m.unit+' correct page step');
+    }
+  });
+
+  await step('Stage5 Calendar Week Hover selects seven contiguous dates with opaque Range endpoints',async()=>{
+    const rows=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const C=d.defaultView.QXFRAME9A7C2?.BuildingBlocks?.Calendar;
+      if(!C)return {error:'Calendar unavailable'};
+      const host=d.createElement('div');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);
+      const c=C.create({container:host,unit:'week',value:'2026-10-14',weekStartsOn:1});
+      const snapshot=()=>{
+        const cells=[...c.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')];
+        const selected=cells.filter(n=>n.classList.contains('is-week-selected'));
+        const hover=cells.filter(n=>n.classList.contains('is-week-hover'));
+        const range=cells.filter(n=>n.classList.contains('is-in-range'));
+        const starts=cells.filter(n=>n.classList.contains('is-range-start'));
+        const ends=cells.filter(n=>n.classList.contains('is-range-end'));
+        const boxes=starts.concat(ends).map(n=>d.defaultView.getComputedStyle(n.querySelector('.qxframe9a7c2-calendar-cell-inner')).backgroundColor);
+        const before=starts.map(n=>d.defaultView.getComputedStyle(n,'::before').width);
+        return {selected:selected.length,hover:hover.length,range:range.length,starts:starts.length,ends:ends.length,boxes,before,weekStyles:c.getRootElement().className};
+      };
+      try{
+        const initial=snapshot();
+        const nextWeek=c.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')[24];
+        nextWeek.dispatchEvent(new d.defaultView.PointerEvent('pointermove',{bubbles:true}));
+        const hovered=snapshot();
+        nextWeek.click();
+        const committed=snapshot();
+        c.getRootElement().dispatchEvent(new d.defaultView.PointerEvent('pointerleave',{bubbles:false}));
+        const cleared=snapshot();
+        return {initial,hovered,committed,cleared};
+      }finally{c.destroy();host.remove();}
+    })()`);
+    assert.equal(rows.error,undefined,'week Calendar runtime exists');
+    assert.equal(rows.initial.selected,7,'committed week highlights seven dates, not one date');
+    assert.equal(rows.initial.range,7,'selected week uses existing continuous Range strip');
+    assert.equal(rows.hovered.hover,7,'pointer Hover projects to all seven week cells');
+    assert.ok(rows.hovered.range>=7,'hovered week also uses Range strip');
+    assert.equal(rows.committed.selected,7,'selecting a new week keeps seven connected selected dates');
+    assert.equal(rows.cleared.hover,0,'pointer leave clears the entire weekly hover preview');
+    assert.equal(rows.cleared.selected,7,'clearing Hover does not clear committed week selection');
+    for(const key of ['initial','cleared']){
+      assert.equal(rows[key].starts,1,key+' one start for one week');
+      assert.equal(rows[key].ends,1,key+' one end for one week');
+      assert.ok(rows[key].boxes.every(x=>x&&x!=='rgba(0, 0, 0, 0)'&&x!=='transparent'),key+' raised endpoints are opaque above half width ::before');
+    }
+  });
+
+  await step('Stage5 Vega Mist neutral Hover and independent Slider capsule handle in real Chromium',async()=>{
+    const got=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,h=d.documentElement;
+      const sheet=d.getElementById('qxframe9a7c2-create-theme'),before=sheet.textContent,oldDark=h.classList.contains('dark');
+      const host=d.createElement('section');host.style.cssText='position:absolute;left:-5000px;top:0;width:24rem';
+      host.innerHTML='<div class="qxframe9a7c2-slider is-md"><div class="qxframe9a7c2-slider-rail"></div><div class="qxframe9a7c2-slider-handle"></div></div>'+
+        '<div class="qxframe9a7c2-card" data-shadow>Card</div>'+
+        '<div class="qxframe9a7c2-popup-surface"><div class="qxframe9a7c2-item-surface is-hover" data-popup-hover>Menu</div></div>'+
+        '<div data-nav-hover style="background:var(--_qxframe9a7c2-semantic-subtle-hover)"></div>'+
+        '<div data-nav-active style="background:var(--_qxframe9a7c2-semantic-subtle-active)"></div>';
+      d.body.appendChild(host);
+      const cfg=api.state.config,css=e=>w.getComputedStyle(host.querySelector(e));
+      function sample(baseColor,sliderLook,shapeThumb,dark){
+        h.classList.toggle('dark',dark);
+        sheet.textContent=api.compileTheme({...cfg,style:'vega',baseColor,theme:baseColor,chartColor:baseColor,
+          ext:{...cfg.ext,shadow:'medium',sliderLook,shapeThumb}},{generatedAt:''}).body;
+        return {
+          rail:parseFloat(css('.qxframe9a7c2-slider-rail').height),
+          width:parseFloat(css('.qxframe9a7c2-slider-handle').width),
+          height:parseFloat(css('.qxframe9a7c2-slider-handle').height),
+          radius:css('.qxframe9a7c2-slider-handle').borderRadius,
+          hover:css('[data-nav-hover]').backgroundColor,active:css('[data-nav-active]').backgroundColor,
+          menu:css('[data-popup-hover]').backgroundColor,shadow:css('[data-shadow]').boxShadow
+        };
+      }
+      try{
+        return {neutral:sample('neutral','t4','circle',false),thin:sample('mist','t4','circle',false),
+          thick:sample('mist','t12','circle',false),pill:sample('mist','t4','pill',false),
+          darkMist:sample('mist','t4','pill',true)};
+      }finally{h.classList.toggle('dark',oldDark);sheet.textContent=before;host.remove()}
+    })()`);
+    assert.ok(got.thick.rail>got.thin.rail,'sliderLook must alter rail thickness');
+    assert.equal(got.thick.width,got.thin.width,'rail thickness must not alter handle width');
+    assert.equal(got.pill.rail,got.thin.rail,'pill handle must not alter rail thickness');
+    assert.ok(got.pill.width>got.pill.height,'pill shape must physically widen the handle');
+    assert.equal(got.pill.radius,got.thin.radius,'circle/pill both preserve full rounded shape');
+    for(const field of ['hover','active','menu','shadow'])
+      assert.notEqual(got.thin[field],got.neutral[field],'Mist base color must affect '+field+': '+JSON.stringify(got));
+    assert.ok(!got.darkMist.shadow.includes('rgba(255, 255, 255'),'dark Mist shadow must not be a white glow');
+  });
+
+  await step('Stage5 Modal origin and zero-divider Dialog geometry in real Chromium',async()=>{
+    const got=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const w=d.defaultView, Q=w.QXFRAME9A7C2, style=d.documentElement.style;
+      const key='--qxframe9a7c2-theme-dialog-divider-width';
+      const before=style.getPropertyValue(key),sectionKey='--qxframe9a7c2-theme-card-section',beforeSection=style.getPropertyValue(sectionKey), c=n=>w.getComputedStyle(n);
+      style.setProperty(key,'0px');style.setProperty(sectionKey,'rgb(190 30 30)');
+      const m=Q.Components.Modal.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false});
+      const dr=Q.Components.Drawer.create({document:d,portalContainer:d.body,autoOpen:false,title:'Geometry',content:'Body',footer:'Footer',focusTrap:false,lockScroll:false,placement:'right'});
+      try {
+        const event=new w.MouseEvent('click',{bubbles:true,clientX:40,clientY:80});
+        m.open('pointer-geometry',event);
+        dr.open('drawer-geometry',event);
+        const dialog=m.getDialogElement(),drawer=dr.getPanelElement();
+        const read=p=>{const role=p===dialog?'modal':'drawer',h=p.querySelector('.qxframe9a7c2-'+role+'-header'),f=p.querySelector('.qxframe9a7c2-'+role+'-footer');
+          return {header:c(h).paddingBottom,footer:c(f).paddingTop,panelBg:c(p).backgroundColor,headerBg:c(h).backgroundColor,footerBg:c(f).backgroundColor};};
+        return {originX:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-x'),
+          originY:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-y'),
+          scale:dialog.style.getPropertyValue('--_qxframe9a7c2-modal-motion-scale'),
+          modal:read(dialog),drawer:read(drawer),placement:drawer.dataset.placement};
+      } finally {
+        m.destroy();dr.destroy();
+        if(before)style.setProperty(key,before);else style.removeProperty(key);
+        if(beforeSection)style.setProperty(sectionKey,beforeSection);else style.removeProperty(sectionKey);
+      }
+    })()`);
+    assert.notEqual(got.originX,'0px','pointer Modal must start at the actual click x, not its center');
+    assert.notEqual(got.originY,'0px','pointer Modal must start at the actual click y, not its center');
+    assert.equal(got.scale,'.7','pointer-origin visibly scales from the trigger');
+    for(const role of ['modal','drawer']){
+      assert.equal(got[role].header,'0px',role+' divider-free header has no bottom padding');
+      assert.ok(parseFloat(got[role].footer)>0,role+' divider-free footer keeps button space');
+      assert.equal(got[role].headerBg,got[role].panelBg,role+' divider-free header and panel background match');
+      assert.equal(got[role].footerBg,got[role].panelBg,role+' divider-free footer and panel background match');
+    }
+    assert.equal(got.placement,'right','Drawer retains real placement owner');
+  });
+
+  await step('Stage5 Preview04 inherits Create live CSS, shows all demos and black shadow in dark mode',async()=>{
+    await click('document.querySelector(\'[data-create-item="04"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("theme-playground.html")','Preview04 route',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert")','Preview04 live gallery',15000);
+    // Use the gallery's real search filter: keeping hundreds of expanded
+    // canonical demos above the target otherwise shifts its scroll position
+    // before IntersectionObserver can enqueue it (and leaves heavy idle tasks).
+    await evaluate("(() => {const d=document.querySelector('[data-create-frame]').contentDocument;const input=d.querySelector('[data-qxframe9a7c2-search]');input.value='Alert';input.dispatchEvent(new d.defaultView.Event('input',{bubbles:true}));d.getElementById('component-alert').scrollIntoView({behavior:'instant',block:'center'});return true})()");
+    await waitFor('!document.querySelector("[data-create-frame]").contentDocument.getElementById("component-alert").hidden','Alert is exposed by real gallery filtering',15000);
+    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")','Preview04 theme bridge',15000);
+    await waitFor('document.querySelector("[data-create-frame]").contentDocument.querySelectorAll("#component-alert .qxframe9a7c2-play-example").length>=2','all Alert demos mounted',20000);
+    const result=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,root=d.documentElement;
+      const alert=d.getElementById('component-alert'),theme=d.getElementById('qxframe9a7c2-create-theme'),wasDark=root.classList.contains('dark');
+      root.classList.add('dark');
+      const n=d.createElement('div');n.className='qxframe9a7c2-alert-root is-shadow is-success';d.body.append(n);
+      const shadow=w.getComputedStyle(n).boxShadow;n.remove();root.classList.toggle('dark',wasDark);
+      return {theme:theme.textContent.length,examples:alert.querySelectorAll('.qxframe9a7c2-play-example').length,folds:alert.querySelectorAll('[data-qxframe9a7c2-card-toggle]').length,shadow};
+    })()`);
+    assert.ok(result.theme>100,'live Create compiled theme applied to Preview04');
+    assert.ok(result.examples>=2,'all canonical Alert demos visible');
+    assert.equal(result.folds,0,'no collapsed cards in Preview04');
+    assert.ok(!result.shadow.includes('rgba(255, 255, 255') && !result.shadow.includes('oklch(0.9'),'dark Alert shadow must not use white foreground: '+result.shadow);
+    await click('document.querySelector(\'[data-create-item="02"]\')');
+    await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02',15000);
+    // src changes before the new iframe's scripts have executed; the following
+    // compositor diagnostic requires the actual local QX runtime and live Theme.
+    await waitFor('document.querySelector("[data-create-frame]").contentDocument.body?.dataset.createPreview === "02" && !!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2?.Components?.Modal && document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")?.textContent.length>100','Preview02 body, runtime and Theme restored after Preview04',25000);
+  });
+
+  await step('Stage5 overlay compositor frame timings (diagnostic, not a visual signoff)',async()=>{
+    const timings=await evaluate("(async()=>{\n const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,q=w.QXFRAME9A7C2;\n const host=d.createElement('section');host.style.cssText='position:absolute;left:-2500px;top:0';d.body.append(host);\n const canvas=d.createElement('canvas');canvas.width=160;canvas.height=90;canvas.getContext('2d').fillRect(0,0,160,90);\n const source=canvas.toDataURL('image/png'),imgHost=d.createElement('div');host.append(imgHost);\n const modal=q.Components.Modal.create({document:d,portalContainer:d.body,title:'Motion sample',content:'Compositor profile',autoOpen:false,lockScroll:true,focusTrap:false});\n const drawer=q.Components.Drawer.create({document:d,portalContainer:d.body,title:'Drawer sample',content:'Compositor profile',autoOpen:false,lockScroll:true,focusTrap:false});\n const img=q.Components.Image.create({container:imgHost,src:source,alt:'Performance sampling source',preview:true,width:160,height:90});\n const sample=async act=>{\n  const start=w.performance.now();act();const syncMs=w.performance.now()-start;\n  let first=0,prev=0,maxGap=0,longFrames=0,deltaTotal=0;const gaps=[];\n  for(let i=0;i<28;i++){\n   const t=await new Promise(done=>w.requestAnimationFrame(done));\n   if(!first)first=t-start;\n   if(prev){const gap=t-prev;gaps.push(gap);deltaTotal+=gap;maxGap=Math.max(maxGap,gap);if(gap>34)longFrames++}\n   prev=t;\n  }\n  return {syncMs:+syncMs.toFixed(2),firstFrameMs:+first.toFixed(2),maxGapMs:+maxGap.toFixed(2),longFrames,meanGapMs:+(deltaTotal/Math.max(1,gaps.length)).toFixed(2)};\n };\n try{\n  const result={};\n  result.modalEnter=await sample(()=>modal.open('motion-profile'));\n  result.modalLeave=await sample(()=>modal.close('motion-profile'));\n  result.drawerEnter=await sample(()=>drawer.open('motion-profile'));\n  result.drawerLeave=await sample(()=>drawer.close('motion-profile'));\n  result.imageEnter=await sample(()=>img.openPreview());\n  result.imageLeave=await sample(()=>img.closePreview('motion-profile'));\n  return result;\n }finally{img.destroy();modal.destroy();drawer.destroy();host.remove()}\n})()");
+    for(const name of ['modalEnter','modalLeave','drawerEnter','drawerLeave','imageEnter','imageLeave']){
+      const data=timings[name];
+      assert.ok(data&&Number.isFinite(data.syncMs)&&Number.isFinite(data.firstFrameMs)&&Number.isFinite(data.maxGapMs),'timing recorded for '+name);
+    }
+    console.log('[Stage5 overlay-frame-profile] '+JSON.stringify(timings));
+  });
+
+  await step('Stage5 visible cross-month range clips and 2026-07-27 to 08-02 week endpoints',async()=>{
+    const got=await evaluate("(async()=>{\n const d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView,Q=w.QXFRAME9A7C2;\n const host=d.createElement('div');host.style.cssText='position:absolute;left:-2500px;top:0;width:80rem';d.body.append(host);\n const made=[],make=o=>{const slot=d.createElement('div');host.append(slot);const x=Q.Components.DatePicker.create({...o,container:slot,open:true});made.push(x);return x};\n const col=cell=>{const date=cell&&cell.textContent.trim(),cs=cell&&w.getComputedStyle(cell.querySelector('.qxframe9a7c2-calendar-cell-inner'));return {date,bg:cs?.backgroundColor,ink:cs?.color,classes:cell?.className}};\n try{\n  const wk=make({unit:'week',value:'2026-W31',weekStartsOn:1});\n  const wc=wk.getCalendar();wc.setViewValue(new Date(2026,7,1),{silent:true,source:'qa'});\n  const wr=wc.getRootElement(),wends=[...wr.querySelectorAll('.qxframe9a7c2-calendar-cell.is-range-start,.qxframe9a7c2-calendar-cell.is-range-end')],wselected=[...wr.querySelectorAll('.qxframe9a7c2-calendar-cell.is-week-selected')];\n  const r=make({unit:'date',selection:'range',value:['2026-09-28','2026-10-05'],weekStartsOn:1});\n  const rangeCals=r.getCalendars(),parts=rangeCals.flatMap(c=>[...c.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-cell')]);\n  const clipStart=parts.filter(x=>x.classList.contains('is-range-clip-start')),clipEnd=parts.filter(x=>x.classList.contains('is-range-clip-end'));\n  const selected=parts.filter(x=>x.classList.contains('is-range-start')||x.classList.contains('is-range-end'));\n  return {wk:{count:wselected.length,start:wends.filter(x=>x.classList.contains('is-range-start')).map(col),end:wends.filter(x=>x.classList.contains('is-range-end')).map(col),range:wselected.filter(x=>x.classList.contains('is-in-range')).length},date:{clipsStart:clipStart.map(col),clipsEnd:clipEnd.map(col),falseCaps:clipStart.concat(clipEnd).filter(x=>x.classList.contains('is-selected')).length,selected:selected.map(col)}};\n }finally{made.forEach(x=>x.destroy());host.remove()}\n})()");
+    assert.equal(got.wk.count,7,'week must paint all seven dates including displayed adjacent-month days');
+    assert.equal(got.wk.range,7,'week uses continuous range band');
+    assert.equal(got.wk.start.length,1,'exactly one real week start');
+    assert.equal(got.wk.end.length,1,'exactly one real week end');
+    for(const endpoint of got.wk.start.concat(got.wk.end))
+      assert.ok(endpoint.bg&&endpoint.bg!=='rgba(0, 0, 0, 0)'&&endpoint.bg!=='transparent','cross-month endpoint retains solid background: '+JSON.stringify(endpoint));
+    assert.ok(got.date.clipsStart.length>0&&got.date.clipsEnd.length>0,'both month panels mark visible range strip cuts: '+JSON.stringify(got.date));
+    assert.equal(got.date.falseCaps,0,'visual month cuts do not become selected endpoints');
+  });
+
+  await step('Stage5 CSS Theme controls Dropdown, Select, List and submenu inset without JS',async()=>{
+    const got=await evaluate("(async () => {\n const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,q=win.QXFRAME9A7C2;\n if(!q?.Components?.Dropdown||!q?.Components?.Select||!q?.BuildingBlocks?.List)return {error:'list family unavailable',components:!!q?.Components,buildingBlocks:!!q?.BuildingBlocks};\n const btn=doc.createElement('button');btn.textContent='Menu';doc.body.append(btn);\n const host=doc.createElement('div');doc.body.append(host);\n const root=doc.documentElement;\n const oldX=root.style.getPropertyValue('--qxframe9a7c2-theme-list-padding-x');\n const oldY=root.style.getPropertyValue('--qxframe9a7c2-theme-list-padding-y');\n const drop=q.Components.Dropdown.create({reference:btn,submenuTrigger:'click',submenuOpenDelay:0,items:[{key:'branch',value:'branch',label:'Branch',items:[{key:'child',value:'child',label:'Child'}]},{key:'action',value:'action',label:'Action'}]});\n const select=q.Components.Select.create({container:host,items:[{key:'a',value:'a',label:'Alpha'},{key:'b',value:'b',label:'Beta'}],open:true});\n const listHost=doc.createElement('div');host.append(listHost);\n const list=q.BuildingBlocks.List.create({container:listHost,items:[{key:'x',value:'x',label:'X'}]});\n const settle=()=>new Promise(done=>win.requestAnimationFrame(()=>win.requestAnimationFrame(done)));\n const check=panel=>{\n  const css=win.getComputedStyle(panel),item=panel.querySelector('.qxframe9a7c2-item-collection-item,.qxframe9a7c2-list-item,.qxframe9a7c2-menu-item');\n  return {x:css.paddingLeft,xEnd:css.paddingRight,y:css.paddingTop,yEnd:css.paddingBottom,\n   radius:item?win.getComputedStyle(item).borderTopLeftRadius:null,\n   classes:panel.className};\n };\n try {\n  await Promise.resolve(drop.open('theme-padding'));await Promise.resolve(select.setOpen(true,'theme-padding'));await settle();\n  const panel=drop.getPopupElement(),selectPanel=select.getPopupElement?select.getPopupElement():null;\n  if(!selectPanel||!selectPanel.isConnected||selectPanel.hidden||win.getComputedStyle(selectPanel).display==='none')return {error:'Select popup not mounted and visible',state:select.getState(),connected:!!selectPanel?.isConnected,hidden:selectPanel?.hidden};\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-x','0rem');\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-y','0.5rem');\n  await settle(); const flush={drop:check(panel),select:check(selectPanel),list:check(list.getRootElement())};\n  const row=panel.querySelector('.has-submenu');if(!row)return {error:'no submenu row',flush};\n  row.click();await new Promise(done=>win.setTimeout(done,180));\n  const sub=[...doc.querySelectorAll('.qxframe9a7c2-dropdown-submenu-panel')].find(n=>n.isConnected&&!n.hidden);\n  const submenu=sub?check(sub):null;\n  root.style.setProperty('--qxframe9a7c2-theme-list-padding-x','0.375rem');\n  await settle(); const inset={drop:check(panel),select:check(selectPanel),list:check(list.getRootElement()),submenu:sub?check(sub):null};\n  let rejects=false;try{drop.updateOptions({inset:'all'})}catch(e){rejects=true}\n  return {flush,submenu,inset,rejects};\n }finally{\n  if(oldX)root.style.setProperty('--qxframe9a7c2-theme-list-padding-x',oldX);else root.style.removeProperty('--qxframe9a7c2-theme-list-padding-x');\n  if(oldY)root.style.setProperty('--qxframe9a7c2-theme-list-padding-y',oldY);else root.style.removeProperty('--qxframe9a7c2-theme-list-padding-y');\n  drop.destroy();select.destroy();list.destroy();host.remove();btn.remove();\n }\n})()");
+    assert.equal(got.error,undefined,'shared list-family owners mounted: '+JSON.stringify(got));
+    for(const kind of ['drop','select','list']){
+      assert.equal(got.flush[kind].x,'0px',kind+' flush x');
+      assert.equal(got.flush[kind].xEnd,'0px',kind+' flush right x');
+      assert.equal(got.flush[kind].y,'8px',kind+' independently themed y');
+      assert.equal(got.flush[kind].radius,'0px',kind+' flush item corners');
+      assert.equal(got.inset[kind].x,'6px',kind+' all-sides themed x');
+      assert.equal(got.inset[kind].xEnd,'6px',kind+' all-sides right');
+    }
+    assert.ok(got.submenu,'Dropdown submenu must be present');
+    assert.equal(got.submenu.x,'0px','submenu follows vertical-only CSS Theme');
+    assert.equal(got.submenu.radius,'0px','submenu item corners flush at x=0');
+    assert.equal(got.inset.submenu.x,'6px','submenu follows all-sided Theme without reinsertion');
+    assert.equal(got.rejects,true,'removed JS inset option is rejected');
+  });
+
+  await step('Stage5 Tags editable surface uses Theme dimensions and ScrollLock does not shift page',async()=>{
+    const got=await evaluate("(async()=>{\n  const doc=document.querySelector('[data-create-frame]').contentDocument,win=doc.defaultView,cs=n=>win.getComputedStyle(n),q=win.QXFRAME9A7C2;\n  const host=doc.createElement('div');doc.body.append(host);\n  const tags=q.Components.Tags.create({container:host,items:[{key:'alpha',value:'alpha',label:'alpha'}],editable:true,closable:true});\n  const chip=host.querySelector('.qxframe9a7c2-tag:not(.qxframe9a7c2-tags-add)');\n  const add=tags.getAddTriggerElement();\n  if(add)add.click();\n  await new Promise(done=>win.requestAnimationFrame(done));\n  const input=tags.getInputElement(),inputStyle=input&&cs(input),chipStyle=chip&&cs(chip);\n  const tagState={chipRadius:chipStyle?.borderTopLeftRadius,inputRadius:inputStyle?.borderTopLeftRadius,inputWidth:inputStyle?.borderTopWidth,\n    configuredWidth:cs(host).getPropertyValue('--_qxframe9a7c2-control-border-width').trim(),fieldColor:inputStyle?.borderTopColor};\n  tags.destroy();host.remove();\n  const beforeWidth=win.innerWidth-doc.documentElement.clientWidth;\n  const current=doc.createElement('div');current.style.cssText='position:fixed;left:50%;top:3px;width:10px;height:10px';doc.body.append(current);\n  const baseline=current.getBoundingClientRect().left;\n  const modal=q.Components.Modal.create({document:doc,portalContainer:doc.body,title:'Scroll geometry',content:'Overlay probe',autoOpen:false,lockScroll:true});\n  let scroll;\n  try{\n    await Promise.resolve(modal.open('scroll-geometry'));\n    await new Promise(done=>win.requestAnimationFrame(()=>win.requestAnimationFrame(done)));\n    scroll={gutter:cs(doc.documentElement).scrollbarGutter,overflow:cs(doc.documentElement).overflow,left:current.getBoundingClientRect().left-baseline,\n      compositor:cs(modal.getDialogElement()).willChange};\n  }finally{modal.destroy();current.remove()}\n  return {tags:tagState,scroll,beforeWidth,defaultAnimation:modal.options.animation};\n})()");
+    assert.equal(got.tags.inputRadius,got.tags.chipRadius,'Tag editor radius follows the same Theme Tag radius');
+    assert.ok(parseFloat(got.tags.inputWidth)>=0,'Tag editor border width is resolved');
+    assert.equal(got.defaultAnimation,'zoom','Modal defaults to compositor center zoom');
+    assert.equal(got.scroll.overflow,'hidden','Modal locks root document scrolling');
+    assert.ok(Math.abs(got.scroll.left)<1,'scroll lock does not move fixed centered content');
+    if(got.beforeWidth>0)assert.equal(got.scroll.gutter,'stable','layout scrollbars reserve a stable gutter instead of padding compensation');
+    assert.match(got.scroll.compositor,/transform/,'dialog is promoted for transform-only motion');
+  });
+
+  await step('Stage5 Alert/Dropdown/Tags appearance and Image Preview chrome/leave lifecycle',async()=>{
+    const result=await evaluate(`(async()=>{
+      const d=document.querySelector('[data-create-frame]').contentDocument,win=d.defaultView;
+      const q=win.QXFRAME9A7C2,theme=window.QXFRAME9A7C2_CREATE;
+      if(!q?.Components?.Image||!q?.Components?.Tags)return {error:'Image/Tags runtime unavailable'};
+      const host=d.createElement('section');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);
+      const alert=(classes)=>{const n=d.createElement('section');n.className='qxframe9a7c2-alert-root '+classes;
+        n.innerHTML='<div class="qxframe9a7c2-alert-wrapper"><span class="qxframe9a7c2-alert-icon">!</span>Alert content</div>';host.append(n);return n;};
+      const success=alert('is-outline is-success'),error=alert('is-outline is-error'),muted=alert('is-muted is-warning'),shadow=alert('is-shadow is-info');
+      const head=d.createElement('section');head.className='qxframe9a7c2-dropdown-panel';head.innerHTML='<div class="qxframe9a7c2-item-collection"><div class="qxframe9a7c2-item-collection-group">Group</div><div class="qxframe9a7c2-item-collection-title">Title</div></div>';host.append(head);
+      const chipHost=d.createElement('div');host.append(chipHost);
+      const tags=q.Components.Tags.create({container:chipHost,items:[{key:'one',value:'one',label:'One'}],editable:true,variant:'filled',creatable:true});
+      const imgHost=d.createElement('div');host.append(imgHost);
+      const paint=d.createElement('canvas');paint.width=120;paint.height=80;
+      const ctx=paint.getContext('2d');ctx.fillStyle='#1969ef';ctx.fillRect(0,0,120,80);
+      const source=paint.toDataURL('image/png'); // accepted by URLPolicy; SVG data URIs are forbidden.
+      const img=q.Components.Image.create({container:imgHost,src:source,alt:'Preview visibility',preview:true,width:120,height:80});
+      const cs=n=>win.getComputedStyle(n),colors=[];
+      const docRoot=d.documentElement,sty=d.getElementById('qxframe9a7c2-create-theme');
+      const oldCss=sty?.textContent,wasDark=docRoot.classList.contains('dark');
+      const styles=['vega','nova','maia','lyra','mira','luma','sera','rhea'];
+      try{
+        for(const style of styles)for(const dark of [false,true]){
+          docRoot.classList.toggle('dark',dark);
+          if(sty)sty.textContent=theme.compileTheme({...theme.state.config,style},{generatedAt:''}).body;
+          const chip=chipHost.querySelector('.qxframe9a7c2-tag:not(.qxframe9a7c2-tags-add)'),add=chipHost.querySelector('.qxframe9a7c2-tags-add');
+          colors.push({style,dark,success:cs(success.querySelector('.qxframe9a7c2-alert-icon')).color,error:cs(error.querySelector('.qxframe9a7c2-alert-icon')).color,
+            outline:cs(success).backgroundColor,muted:cs(muted).backgroundColor,shadow:cs(shadow).boxShadow,unshadow:cs(success).boxShadow,
+            groupFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-group')).fontSize),
+            titleFont:parseFloat(cs(head.querySelector('.qxframe9a7c2-item-collection-title')).fontSize),
+            tagBg:cs(chip).backgroundColor,addBg:cs(add).backgroundColor,tagBorder:cs(chip).borderColor,addBorder:cs(add).borderColor,tagBorderStyle:cs(chip).borderStyle,addBorderStyle:cs(add).borderStyle,tagInk:cs(chip).color,addInk:cs(add).color,tagRadius:cs(chip).borderTopLeftRadius,addRadius:cs(add).borderTopLeftRadius,
+            tagHeight:chip.getBoundingClientRect().height,addHeight:add.getBoundingClientRect().height});
+        }
+        docRoot.classList.toggle('dark',false);
+        if(sty)sty.textContent=theme.compileTheme({...theme.state.config,style:'nova'},{generatedAt:''}).body;
+        img.openPreview();
+        await new Promise(r=>setTimeout(r,160));
+        const preview=img.getPreviewElement();
+        const title=preview?.querySelector('.qxframe9a7c2-image-preview-title'),close=preview?.querySelector('.qxframe9a7c2-image-preview-close'),toolbar=preview?.querySelector('.qxframe9a7c2-image-preview-toolbar');
+        const chrome={title:!!title,close:!!close,toolbar:!!toolbar,
+          titleBackground:title&&cs(title).backgroundColor,closeBackground:close&&cs(close).backgroundColor,toolbarBackground:toolbar&&cs(toolbar).backgroundColor,
+          titleBorder:title&&cs(title).borderColor,closeBorder:close&&cs(close).borderColor,toolbarBorder:toolbar&&cs(toolbar).borderColor,
+          titleColor:title&&cs(title).color,closeColor:close&&cs(close).color,toolbarColor:toolbar&&cs(toolbar).color};
+        img.closePreview('qa-exit');
+        const during={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
+          rootHidden:preview.hidden,previewMotionVisible:preview.querySelector('.qxframe9a7c2-image-preview-motion')?.style.visibility};
+        const paintFrames=[];
+        // Sample Chromium rendered frames, not only final state: a landed copy
+        // cannot be hidden while the original is still fading up from opacity 0.
+        for(let frame=0;frame<40;frame++){
+          await new Promise(r=>win.requestAnimationFrame(r));
+          const copy=preview.querySelector('.qxframe9a7c2-image-preview-motion');
+          paintFrames.push({copyHidden:copy?.style.visibility==='hidden',
+            originalOpacity:parseFloat(cs(img.getImageElement()).opacity),
+            sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden')});
+        }
+        await new Promise(r=>setTimeout(r,250));
+        const finished={sourceHidden:img.getRootElement().classList.contains('is-preview-source-hidden'),
+          previewOpen:img.getState().previewOpen,previewPresent:img.getState().previewPresent};
+        return {colors,chrome,during,paintFrames,finished};
+      }finally{
+        if(sty)sty.textContent=oldCss;
+        docRoot.classList.toggle('dark',wasDark);
+        tags.destroy();img.destroy();host.remove();
+      }
+    })()`);
+    assert.equal(result.error,undefined,'runtime Image and Tags available');
+    assert.equal(result.colors.length,16,'eight Styles x two schemes');
+    for(const row of result.colors){
+      const k=row.style+'/'+row.dark;
+      assert.notEqual(row.success,row.error,k+' Alert success/error semantic icons differ');
+      assert.notEqual(row.outline,row.muted,k+' Outline/Muted Alert surfaces differ');
+      assert.notEqual(row.shadow,row.unshadow,k+' is-shadow alone enables elevation');
+      assert.ok(row.groupFont<=row.titleFont+.1,k+' Dropdown Group uses ItemCollection title font size');
+      assert.equal(row.tagBg,row.addBg,k+' Tags Add shares Tag background token');
+      assert.equal(row.tagBorder,row.addBorder,k+' Tags Add shares Tag border color');
+      assert.equal(row.tagBorderStyle,row.addBorderStyle,k+' Tags Add shares Tag border style');
+      assert.equal(row.tagInk,row.addInk,k+' Tags Add shares Tag foreground');
+      assert.equal(row.tagRadius,row.addRadius,k+' Tags Add shares Tag radius');
+      assert.ok(Math.abs(row.tagHeight-row.addHeight)<.75,k+' Tags Add shares Tag height');
+    }
+    assert.ok(result.chrome.title&&result.chrome.close&&result.chrome.toolbar,'Image Preview has three chrome surfaces');
+    assert.equal(result.chrome.titleBackground,result.chrome.toolbarBackground,'Image title and toolbar share control background');
+    assert.equal(result.chrome.closeBackground,result.chrome.toolbarBackground,'Image close and toolbar share control background');
+    assert.equal(result.chrome.titleBorder,result.chrome.toolbarBorder,'Image title and toolbar share border');
+    assert.equal(result.chrome.closeBorder,result.chrome.toolbarBorder,'Image close and toolbar share border');
+    assert.equal(result.chrome.titleColor,result.chrome.toolbarColor,'Image title and toolbar share white foreground');
+    assert.equal(result.chrome.closeColor,result.chrome.toolbarColor,'Image close and toolbar share white foreground');
+    assert.equal(result.during.sourceHidden,false,'independent center-zoom preview does not hide original image during leave');
+    assert.ok(result.paintFrames.some(frame=>frame.copyHidden),'Chromium observed the independent preview copy become hidden at leave completion');
+    assert.ok(result.paintFrames.filter(frame=>frame.copyHidden).every(frame=>frame.originalOpacity>=.98&&!frame.sourceHidden),
+      'The source remains fully opaque across center-zoom leave: '+JSON.stringify(result.paintFrames));
+    assert.equal(result.finished.sourceHidden,false,'authored image recovers after completed leave');
+    assert.equal(result.finished.previewOpen,false,'preview public state closed');
+  });
+
+  await step('Stage5 DatePicker delegates week rendering to Calendar, DateTime separator is visible',async()=>{
+    const got=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument,q=d.defaultView.QXFRAME9A7C2;\n const host=d.createElement('section');host.style.cssText='position:absolute;left:-4000px;top:0';d.body.append(host);\n const single=q.Components.DatePicker.create({container:host,unit:'week',value:'2026-W33',weekStartsOn:1,open:true});\n const range=q.Components.DatePicker.create({container:host,unit:'week',selection:'range',value:['2026-W33','2026-W35'],weekStartsOn:1,open:true});\n const dt=q.Components.DatePicker.create({container:host,time:true,value:'2026-08-15 09:30:00',open:true});\n try{\n  const cal=single.getCalendar(),rc=range.getCalendar(),cs=d.defaultView.getComputedStyle;\n  const separator=dt.getPanelOriginElement().querySelector('.qxframe9a7c2-date-picker-time-panel');\n  return {singleUnit:cal.getState().unit,rangeUnit:rc.getState().unit,\n   selected:cal.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-cell.is-week-selected').length,\n   rangeCount:rc.getRootElement().querySelectorAll('.qxframe9a7c2-calendar-cell.is-in-range').length,\n   border:separator&&cs(separator).borderLeftWidth};\n }finally{single.destroy();range.destroy();dt.destroy();host.remove()}\n})()");
+    assert.equal(got.singleUnit,'week','DatePicker passes week to canonical Calendar');
+    assert.equal(got.rangeUnit,'week','range DatePicker passes week to the same Calendar');
+    assert.equal(got.selected,7,'a selected week paints seven cells');
+    assert.ok(got.rangeCount>=7,'a week range uses the same continuous Range painter');
+    assert.equal(got.border,'1px','DateTime retains Theme boundary between Calendar and TimePanel');
+  });
+
+  await step('CALENDAR-WHEEL-GEOMETRY-001 browser shared 36px, seven rows, dual and drill',async()=>{
+    const v=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const q=d.defaultView.QXFRAME9A7C2,DP=q&&q.Components&&q.Components.DatePicker,WP=q&&q.BuildingBlocks&&q.BuildingBlocks.WheelPanel;\n if(!DP)return {error:'DatePicker unavailable'};\n const box=d.createElement('section');box.style.cssText='position:absolute;left:-4000px;top:0;width:60rem';\n d.body.append(box);const made=[];\n const near=(v,n)=>Math.abs(v-n)<.75;\n const make=(opts)=>{const mount=d.createElement('div');box.append(mount);const c=DP.create({...opts,container:mount,open:true});made.push(c);return c;};\n const measure=(c)=>{\n   const shell=c.getPanelOriginElement(),cal=c.getCalendar(),cals=c.getCalendars();\n   const time=c.getTimePanel(),wheel=time&&time.getWheelPanel(),w=wheel&&wheel.getRootElement();\n   const scroll=w&&w.querySelector('.qxframe9a7c2-wheel-panel-scroll');\n   const item=w&&w.querySelector('.qxframe9a7c2-wheel-panel-item'),guide=w&&w.querySelector('.qxframe9a7c2-wheel-panel-center-guide');\n   const pad=w&&w.querySelector('.qxframe9a7c2-wheel-panel-pad');\n   const host=shell&&shell.querySelector('.qxframe9a7c2-date-picker-calendar-host');\n   const grid=cal&&cal.getRootElement().querySelector('.qxframe9a7c2-calendar-grid');\n   const firstCell=grid&&grid.querySelector('.qxframe9a7c2-calendar-cell');\n   const cs=n=>n?d.defaultView.getComputedStyle(n):null;\n   const wh=n=>n?n.getBoundingClientRect().height:null;\n   const ww=n=>n?n.getBoundingClientRect().width:null;\n   return {\n     wheelCount:wheel&&wheel.getState().visibleItemCount,itemHeight:wh(item),scrollHeight:wh(scroll),guideHeight:wh(guide),\n     padHeight:wh(pad), itemInline:item&&item.style.height, centerDelta:scroll&&guide&&item?(guide.getBoundingClientRect().top+wh(guide)/2-scroll.getBoundingClientRect().top-wh(scroll)/2):null,\n     calendarWidth:ww(cal&&cal.getRootElement()),hostWidth:ww(host),gridWidth:ww(grid),dayWidth:ww(firstCell),dayHeight:wh(firstCell),\n     columns:cals.map(p=>ww(p.getRootElement())),columnCount:cals.length,\n     groupMin:shell&&cs(shell.querySelector('.qxframe9a7c2-date-picker-calendar-group'))?.minWidth,\n     hostMin:cs(host)?.minWidth,\n     gap:grid&&cs(grid)?.gap,\n     scrollInline:scroll&&scroll.style.height\n   };\n };\n const results={};\n try{\n   const std=make({value:'2026-10-15 12:34:00',time:{showSecond:false},needConfirm:true});\n   results.standard=measure(std);\n   const explicit=make({value:'2026-10-15 12:34:00',time:{showSecond:false,visibleItemCount:5},needConfirm:true});\n   results.custom=measure(explicit);\n   const dual=make({selection:'range',panelCount:2,value:['2026-10-10','2026-11-21'],needConfirm:true});\n   results.dual=measure(dual);\n   const disabled=make({value:'2026-10-15',allowYearView:false,allowMonthView:true});\n   const orig=disabled.getCalendar(),root=orig.getRootElement(),before=disabled.getState().value?.getTime();\n   const year=root.querySelector('.qxframe9a7c2-calendar-year'),month=root.querySelector('.qxframe9a7c2-calendar-month');\n   results.disabledTitle={yearDisabled:year?.disabled,monthDisabled:month?.disabled};\n   month?.click();\n   results.drilled={mode:disabled.getState().panelMode,unit:orig.getState().unit,viewMode:orig.getState().viewMode,\n     rootSame:disabled.getCalendar()===orig&&disabled.getCalendar().getRootElement()===root,\n     calendarCount:root.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length,\n     valueSame:disabled.getState().value?.getTime()===before};\n   const monthCell=root.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled)');\n   monthCell?.click();\n   results.returned={mode:disabled.getState().panelMode,viewMode:orig.getState().viewMode,unit:orig.getState().unit,valueSame:disabled.getState().value?.getTime()===before};\n   const opposite=make({value:'2026-10-15',allowYearView:true,allowMonthView:false});\n   const other=opposite.getCalendar().getRootElement();\n   results.opposite={yearDisabled:other.querySelector('.qxframe9a7c2-calendar-year')?.disabled,monthDisabled:other.querySelector('.qxframe9a7c2-calendar-month')?.disabled};\n   other.querySelector('.qxframe9a7c2-calendar-year')?.click();\n   results.yearDrill={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode,\n    rootCount:other.parentNode?.querySelectorAll('.qxframe9a7c2-calendar').length};\n   const yr=other.querySelector('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell:not(:disabled):not(.is-outside)');\n   yr?.click();\n   results.yearToMonth={mode:opposite.getState().panelMode,viewMode:opposite.getCalendar().getState().viewMode};\n   return results;\n }finally{for(const c of made)try{c.destroy()}catch(e){}box.remove();}\n})()");
+    assert.equal(v.error,undefined,'runtime DatePicker exists');
+    const s=v.standard;
+    assert.equal(s.wheelCount,7,'DatePicker embeds 7 wheel items');
+    assert.ok(Math.abs(s.itemHeight-36)<.75,'md physical item is 36px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.scrollHeight-252)<.75,'WheelPanel computes 7x36 viewport 252px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.guideHeight-s.itemHeight)<.75,'Guide directly uses actual item height: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.padHeight-108)<.75,'WheelPanel calculates symmetric 108px snap pad');
+    assert.equal(s.itemInline,'36px','real Wheel Item remains the CSS Guide owner');
+    assert.ok(Math.abs(s.centerDelta)<.75,'guide centered in scroll');
+    assert.ok(Math.abs(s.calendarWidth-262)<.75&&Math.abs(s.hostWidth-262)<.75,'host/calendar both 7*36 + 2*5 = 262px: '+JSON.stringify(s));
+    assert.ok(Math.abs(s.gridWidth-252)<.75&&Math.abs(s.dayWidth-36)<.75&&Math.abs(s.dayHeight-36)<.75,'seven complete square 36px date cells: '+JSON.stringify(s));
+    assert.equal(s.gap,'0px','continuous range strips retain gap zero');
+    assert.equal(s.groupMin,'0px');assert.equal(s.hostMin,'0px');
+    assert.equal(v.custom.wheelCount,5,'explicit count priority');
+    assert.ok(Math.abs(v.custom.scrollHeight-180)<.75&&Math.abs(v.custom.padHeight-72)<.75,'explicit 5x36 and symmetric 72px pads');
+    assert.equal(v.dual.columnCount,2,'dual two actually displayed calendars');
+    assert.ok(v.dual.columns.every(x=>Math.abs(x-262)<.75),'dual same 262px columns '+JSON.stringify(v.dual));
+    assert.equal(v.disabledTitle.yearDisabled,true);
+    assert.equal(v.disabledTitle.monthDisabled,false);
+    assert.deepEqual(v.drilled,{mode:'month',unit:'date',viewMode:'month',rootSame:true,calendarCount:1,valueSame:true},'month drilled within same Calendar');
+    assert.deepEqual(v.returned,{mode:'date',viewMode:'date',unit:'date',valueSame:true},'month selection restores date without committing date precision');
+    assert.deepEqual(v.opposite,{yearDisabled:false,monthDisabled:true},'independent header capabilities');
+    assert.deepEqual(v.yearDrill,{mode:'year',viewMode:'year',rootCount:1},'year title enters same Calendar');
+    assert.deepEqual(v.yearToMonth,{mode:'month',viewMode:'month'},'year pick drills to month');
+  });
+
+  await step('CALENDAR-WHEEL-7-ROW-OWNER browser five Sizes, six full weeks and numeric Calendar cellSize overrides',async()=>{
+    const v=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const q=d.defaultView.QXFRAME9A7C2, DP=q?.Components?.DatePicker, Calendar=q?.BuildingBlocks?.Calendar;
+      if(!DP||!Calendar)return {error:'Missing Calendar or DatePicker'};
+      const container=d.createElement('section');container.style.cssText='position:absolute;left:-9999px;top:0;width:100rem';d.body.append(container);
+      const out={};
+      const height=el=>el?.getBoundingClientRect().height??null;
+      const width=el=>el?.getBoundingClientRect().width??null;
+      try {
+        for(const [size,expected] of Object.entries({xs:28,sm:32,md:36,lg:40,xl:44})){
+          const host=d.createElement('div');container.append(host);
+          const picker=DP.create({container:host,size,value:'2026-10-15 12:34:00',time:{showSecond:false},needConfirm:true,open:true});
+          try{
+            const root=picker.getCalendar().getRootElement(), wheel=picker.getTimePanel().getWheelPanel().getRootElement();
+            const header=root.querySelector('.qxframe9a7c2-calendar-header'),weekday=root.querySelector('.qxframe9a7c2-calendar-weekdays');
+            const grid=root.querySelector('.qxframe9a7c2-calendar-grid'),cell=grid.querySelector('.qxframe9a7c2-calendar-cell');
+            const title=wheel.querySelector('.qxframe9a7c2-wheel-panel-column-title');
+            const item=wheel.querySelector('.qxframe9a7c2-wheel-panel-item'),scroll=wheel.querySelector('.qxframe9a7c2-wheel-panel-scroll');
+            out[size]={expected,header:height(header),weekday:height(weekday),grid:height(grid),cellH:height(cell),cellW:width(cell),gridW:width(grid),calendarW:width(root),title:height(title),item:height(item),scroll:height(scroll),calendarH:height(root),wheelH:height(wheel),dates:grid.children.length};
+          }finally{picker.destroy();host.remove();}
+        }
+        const mount=d.createElement('div');container.append(mount);
+        const standalone=Calendar.create({container:mount,cellSize:34,size:'sm',value:new d.defaultView.Date(2026,9,15)});
+        try{
+          const root=standalone.getRootElement(),cell=root.querySelector('.qxframe9a7c2-calendar-cell');
+          out.explicit={before:height(cell),width:width(root)};
+          standalone.updateOptions({cellSize:38});
+          out.explicit.after=height(root.querySelector('.qxframe9a7c2-calendar-cell'));
+        }finally{standalone.destroy();}
+        return out;
+      }finally{container.remove();}
+    })()`);
+    assert.equal(v.error,undefined,'Calendar and DatePicker available');
+    for(const size of ['xs','sm','md','lg','xl']){
+      const a=v[size],s=a.expected;
+      assert.ok(Math.abs(a.cellH-s)<.75&&Math.abs(a.cellW-s)<.75,size+' square CellSize '+JSON.stringify(a));
+      assert.ok(Math.abs(a.weekday-s)<.75&&Math.abs(a.item-s)<.75,size+' shared weekday/item size '+JSON.stringify(a));
+      assert.equal(a.dates,42,size+' exactly six calendar weeks');
+      assert.ok(Math.abs(a.grid-s*6)<.75&&Math.abs(a.scroll-s*7)<.75,size+' 6+1 date rows match 7 visible Wheel rows');
+      assert.ok(Math.abs(a.header-a.title)<.75,size+' Header and Wheel Column Title exterior height equal '+JSON.stringify(a));
+      assert.ok(Math.abs(a.calendarH-a.wheelH)<.75,size+' total Calendar/Wheel heights match '+JSON.stringify(a));
+      assert.ok(Math.abs(a.calendarW-(7*s+10))<.75&&Math.abs(a.gridW-7*s)<.75,size+' Calendar width from 7 Cells + horizontal padding');
+    }
+    assert.ok(Math.abs(v.explicit.before-34)<.75&&Math.abs(v.explicit.after-38)<.75,'standalone Calendar cellSize and updateOptions');
+  });
+
+  await step('Stage5 Calendar/Wheel 8 Styles x light/dark x five Sizes: actual seven-row geometry',async()=>{
+    const actual=await evaluate(`(() => {
+      const d=document.querySelector('[data-create-frame]').contentDocument;
+      const app=window.QXFRAME9A7C2_CREATE,q=d.defaultView.QXFRAME9A7C2;
+      const DP=q?.Components?.DatePicker;
+      if(!DP||!app?.compileTheme)return {error:'DatePicker or Theme compiler unavailable'};
+      const originalDark=d.documentElement.classList.contains('dark');
+      const sheet=d.createElement('style'),fixture=d.createElement('section'),pickers=[];
+      fixture.style.cssText='position:absolute;left:-5000px;top:0;display:flex;gap:1rem';
+      d.head.append(sheet);d.body.append(fixture);
+      const height=n=>n?.getBoundingClientRect().height??NaN;
+      const width=n=>n?.getBoundingClientRect().width??NaN;
+      const sizes={xs:28,sm:32,md:36,lg:40,xl:44},rows=[];
+      try{
+        for(const [size,expected] of Object.entries(sizes)){
+          const host=d.createElement('div');fixture.append(host);
+          const picker=DP.create({container:host,size,value:'2026-10-15 12:34:00',time:{showSecond:false},needConfirm:true,open:true});
+          pickers.push({picker,size,expected});
+        }
+        for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
+          sheet.textContent=app.compileTheme({...app.state.config,style},{generatedAt:''}).body;
+          for(const dark of [false,true]){
+            d.documentElement.classList.toggle('dark',dark);
+            for(const {picker,size,expected} of pickers){
+              const cal=picker.getCalendar()?.getRootElement();
+              const wheel=picker.getTimePanel()?.getWheelPanel()?.getRootElement();
+              const day=cal?.querySelector('.qxframe9a7c2-calendar-cell');
+              const grid=cal?.querySelector('.qxframe9a7c2-calendar-grid');
+              const weekday=cal?.querySelector('.qxframe9a7c2-calendar-weekdays');
+              const heading=cal?.querySelector('.qxframe9a7c2-calendar-header');
+              const title=wheel?.querySelector('.qxframe9a7c2-wheel-panel-column-title');
+              const scroll=wheel?.querySelector('.qxframe9a7c2-wheel-panel-scroll');
+              const item=wheel?.querySelector('.qxframe9a7c2-wheel-panel-item');
+              const guide=wheel?.querySelector('.qxframe9a7c2-wheel-panel-center-guide');
+              const host=cal?.closest('.qxframe9a7c2-date-picker-calendar-host');
+              rows.push({style,dark,size,expected,day:height(day),dayWidth:width(day),
+                weekday:height(weekday),grid:height(grid),gridWidth:width(grid),
+                header:height(heading),title:height(title),scroll:height(scroll),
+                item:height(item),guide:height(guide),calendar:height(cal),wheel:height(wheel),
+                calendarWidth:width(cal),hostWidth:width(host),weekCount:grid?.children.length,
+                scrollClient:scroll?.clientHeight??0,scrollOverflow:scroll?.scrollHeight??0});
+            }
+          }
+        }
+        return {rows};
+      }finally{
+        pickers.forEach(({picker})=>picker.destroy());
+        fixture.remove();sheet.remove();
+        d.documentElement.classList.toggle('dark',originalDark);
+      }
+    })()`);
+    assert.equal(actual.error,undefined,'DatePicker and Theme compiler available');
+    assert.equal(actual.rows.length,80,'8 styles x 2 modes x 5 sizes');
+    for(const row of actual.rows){
+      const {expected:s}=row, label=row.style+'/'+(row.dark?'dark':'light')+'/'+row.size;
+      const approx=(a,b,part)=>assert.ok(Number.isFinite(a)&&Math.abs(a-b)<.75,label+' '+part+': '+a+' vs '+b);
+      approx(row.day,s,'day height');approx(row.dayWidth,s,'day width');
+      approx(row.weekday,s,'weekday height');approx(row.item,s,'wheel item');
+      approx(row.guide,s,'guide follows item');approx(row.grid,s*6,'six day rows');
+      approx(row.gridWidth,s*7,'seven date columns');
+      approx(row.scroll,s*7,'seven wheel items viewport');
+      approx(row.header,row.title,'header equals wheel title');
+      approx(row.calendar,row.wheel,'total calendar/wheel height');
+      approx(row.calendarWidth,7*s+10,'calendar derives width');
+      approx(row.hostWidth,row.calendarWidth,'host matches calendar width');
+      assert.equal(row.weekCount,42,label+' fixed six-week Calendar DOM');
+      assert.ok(row.scrollOverflow>=row.scrollClient,label+' Wheel scroll not physically undersized');
+    }
+  });
+
+  await step('CALENDAR-RANGE-VISUAL-001 real Calendar wrappers/pseudo geometry and delegated click in page/popup light/dark',async()=>{
+    const value=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const q=d.defaultView.QXFRAME9A7C2,app=window.QXFRAME9A7C2_CREATE;\n if(!q?.BuildingBlocks?.Calendar?.create)return {error:'Real Calendar BuildingBlock unavailable'};\n const savedDark=d.documentElement.classList.contains('dark'),theme=d.createElement('style');\n const holder=d.createElement('div');holder.style.cssText='position:absolute;left:-3000px;top:0;width:44rem;display:flex;gap:1rem';\n const plain=d.createElement('div'),popup=d.createElement('div');\n popup.className='qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel';\n holder.append(plain,popup);d.body.append(holder);d.head.append(theme);\n const callbacks=[],instances=[];\n const range=(date)=>{\n   const inMonth=date.getFullYear()===2026&&date.getMonth()===9;\n   const day=date.getDate();\n   return {selected:inMonth&&(day===1||day===7),inRange:inMonth&&day>=1&&day<=7,rangeStart:inMonth&&day===1,rangeEnd:inMonth&&day===7};\n };\n const results=[];\n try {\n   for(const [key,host] of [['standalone',plain],['popup',popup]]){\n     const calendar=q.BuildingBlocks.Calendar.create({\n       container:host,document:d,viewValue:new Date(2026,9,1),value:new Date(2026,9,1),\n       getCellState:range,\n       renderCell:(date)=>{const span=d.createElement('span');span.textContent=String(date.getDate());return span;},\n       onSelect:(date)=>callbacks.push({key,day:date.getDate(),month:date.getMonth()})\n     });\n     instances.push(calendar);\n   }\n   const select=(root,day)=>{\n     return [...root.querySelectorAll('.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell')]\n       .find(b=>b.textContent.trim()===String(day)&&!b.classList.contains('is-outside'));\n   };\n   for(const dark of [false,true])\n   for(const accent of ['subtle','bold']){\n     d.documentElement.classList.toggle('dark',dark);\n     theme.textContent=app.compileTheme({...app.state.config,style:'nova',menuAccent:accent},{generatedAt:''}).body;\n     for(const [key,host] of [['standalone',plain],['popup',popup]]){\n       const grid=host.querySelector('.qxframe9a7c2-calendar-grid');\n       const cells=grid.querySelectorAll(':scope>.qxframe9a7c2-calendar-cell');\n       const start=select(host,1),middle=select(host,2),end=select(host,7),normal=select(host,12);\n       const css=(node,pseudo)=>d.defaultView.getComputedStyle(node,pseudo);\n       const sample=cell=>{\n         const view=cell?.firstElementChild,inner=view?.firstElementChild,ps=cell?css(cell,'::before'):null;\n         const rc=inner?.getBoundingClientRect(),r=cell?.getBoundingClientRect();\n         return {\n           childCount:cell?.childElementCount,viewClass:view?.className,innerClass:inner?.className,\n           children:view?.childElementCount,buttonTag:cell?.tagName,spanCount:inner?.querySelectorAll('span').length,\n           beforeContent:ps?.content,beforePosition:ps?.position,beforeBg:ps?.backgroundColor,\n           beforeWidth:ps?parseFloat(ps.width):null,beforeLeft:ps?parseFloat(ps.left):null,\n           width:r?.width,innerWidth:rc?.width,innerHeight:rc?.height,\n           outerBg:cell?css(cell).backgroundColor:null,innerBg:inner?css(inner).backgroundColor:null,\n           innerZ:inner?css(inner).zIndex:null\n         };\n       };\n       results.push({dark,accent,key,cellCount:cells.length,gridGap:css(grid).gap,start:sample(start),middle:sample(middle),end:sample(end),normal:sample(normal)});\n     }\n   }\n   const target=select(popup,5);const span=target?.querySelector('.qxframe9a7c2-calendar-cell-inner span');\n   span?.click();\n   return {results,clicked:callbacks.some(c=>c.key==='popup'&&c.day===5&&c.month===9)};\n } finally {\n   for(const instance of instances)try{instance.destroy()}catch(_){}\n   holder.remove();theme.remove();d.documentElement.classList.toggle('dark',savedDark);\n }\n})()");
+    assert.equal(value.error,undefined,'real Calendar must be available in preview runtime');
+    assert.equal(value.results.length,8,'standalone/popup x Light/Dark x subtle/bold');
+    for(const r of value.results){
+      const key=[r.key,r.dark,r.accent].join('/');
+      assert.equal(r.cellCount,42,key+' standard 6-week Calendar renders all 42 dates');
+      assert.equal(r.gridGap,'0px',key+' Calendar has zero gaps');
+      for(const [name,cell] of Object.entries({start:r.start,middle:r.middle,end:r.end,normal:r.normal})){
+        assert.equal(cell.buttonTag,'BUTTON',key+'/'+name+' original button is the calendarDate owner');
+        assert.equal(cell.childCount,1,key+'/'+name+' only view child added');
+        assert.equal(cell.children,1,key+'/'+name+' only inner child of view');
+        assert.equal(cell.viewClass,'qxframe9a7c2-calendar-cell-view',key+'/'+name+' view class');
+        assert.equal(cell.innerClass,'qxframe9a7c2-calendar-cell-inner',key+'/'+name+' inner class');
+        assert.equal(cell.spanCount,1,key+'/'+name+' renderCell content stays in inner');
+        assert.equal(cell.outerBg,'rgba(0, 0, 0, 0)',key+'/'+name+' outer button is not another painter');
+        assert.equal(cell.innerZ,'2',key+'/'+name+' inner sits above strip');
+        assert.ok(Math.abs(cell.innerWidth-cell.innerHeight)<2,key+'/'+name+' inner ratio 1:1');
+      }
+      for(const [name,expectedLeft,expectedWidth] of [['start',.5,.5],['middle',0,1],['end',0,.5]]){
+        const cell=r[name];
+        assert.equal(cell.beforePosition,'absolute',key+'/'+name+' strip CSS-only');
+        assert.notEqual(cell.beforeContent,'none',key+'/'+name+' strip pseudo generated');
+        assert.notEqual(cell.beforeBg,'rgba(0, 0, 0, 0)',key+'/'+name+' strip color visible');
+        assert.ok(Math.abs(cell.beforeWidth/cell.width-expectedWidth)<.06,key+'/'+name+' correct half/full strip width');
+        assert.ok(Math.abs(cell.beforeLeft/cell.width-expectedLeft)<.06,key+'/'+name+' correct half/full strip offset');
+      }
+      assert.equal(r.normal.beforeContent,'none',key+' no range pseudo for ordinary date');
+      assert.notEqual(r.start.innerBg,'rgba(0, 0, 0, 0)',key+' selected start painted on inner square');
+      assert.equal(r.middle.innerBg,'rgba(0, 0, 0, 0)',key+' range middle has no separate inner fill');
+    }
+    assert.ok(value.clicked,'renderCell child click bubbles to original Calendar event delegate');
+  });
+
+  await step('Stage5 shared WheelPanel / WheelPicker / TimePicker guide and unified passive dividers: 8 Styles x 2 schemes x 4 Menu modes x 2 accents',async()=>{
+    const rows=await evaluate("(() => {\n  const d=document.querySelector('[data-create-frame]').contentDocument;\n  const h=d.documentElement,api=window.QXFRAME9A7C2_CREATE;\n  const wasDark=h.classList.contains('dark'),orig=api.state.config;\n  const host=d.createElement('section'),sheet=d.createElement('style');\n  host.style.cssText='position:absolute;left:-10000px;top:0;width:28rem';\n  const wheel=(kind)=>'<div class=\"qxframe9a7c2-wheel-panel\" data-wheel=\"'+kind+'\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">20</div></div><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">30</div></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div>';\n  host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'\n    +wheel('panel')\n    +'<div class=\"qxframe9a7c2-wheel-picker-popup\">'+wheel('picker')+'</div>'\n    +'<div class=\"qxframe9a7c2-time-panel-root\"><div class=\"qxframe9a7c2-time-panel-wrapper\">'+wheel('time')+'</div></div>'\n    +'<div class=\"qxframe9a7c2-cascader-columns\"><div class=\"qxframe9a7c2-cascader-column\">A</div><div class=\"qxframe9a7c2-cascader-column\">B</div></div>'\n    +'<button class=\"qxframe9a7c2-time-picker-now\">Now</button>'\n    +'<i data-accent style=\"background:var(--qxframe9a7c2-theme-menu-accent);color:var(--qxframe9a7c2-theme-menu-accent-foreground)\"></i>'\n    +'<i data-field-edge style=\"border-top:1px solid var(--qxframe9a7c2-theme-field-border)\"></i>'\n    +'</div>';\n  d.body.append(host);d.head.append(sheet);\n  const get=(sel)=>d.defaultView.getComputedStyle(host.querySelector(sel));\n  const samples=[];\n  try {\n    for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])\n    for(const dark of [false,true])\n    for(const menuColor of ['default','default-translucent','inverted','inverted-translucent'])\n    for(const menuAccent of ['subtle','bold']){\n      h.classList.toggle('dark',dark);\n      sheet.textContent=api.compileTheme({...orig,style,menuColor,menuAccent},{generatedAt:''}).body;\n      const accent=get('[data-accent]'),border=get('[data-field-edge]').borderTopColor;\n      samples.push({style,dark,menuColor,menuAccent,accentBg:accent.backgroundColor,accentInk:accent.color,edge:border,\n        panelBg:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        pickerBg:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        timeBg:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-center-guide').backgroundColor,\n        panelBorder:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        pickerBorder:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        timeBorder:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-center-guide').borderTopColor,\n        panelInk:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        pickerInk:get('[data-wheel=\"picker\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        timeInk:get('[data-wheel=\"time\"] .qxframe9a7c2-wheel-panel-item.is-selected').color,\n        wheelDivider:get('[data-wheel=\"panel\"] .qxframe9a7c2-wheel-panel-column + .qxframe9a7c2-wheel-panel-column').borderLeftColor,\n        cascaderDivider:get('.qxframe9a7c2-cascader-column').borderRightColor,\n        timeNowDivider:get('.qxframe9a7c2-time-picker-now').borderTopColor\n      });\n    }\n  } finally {h.classList.toggle('dark',wasDark);host.remove();sheet.remove();}\n  return samples;\n})()");
+    assert.equal(rows.length,128,'Style x page scheme x Menu mode x subtle/bold');
+    for(const r of rows){
+      const k=[r.style,r.dark,r.menuColor,r.menuAccent].join('/');
+      for(const name of ['panelBg','pickerBg','timeBg','panelBorder','pickerBorder','timeBorder'])
+        assert.equal(r[name],r.accentBg,k+' '+name+' uses one Theme accent painter');
+      for(const name of ['panelInk','pickerInk','timeInk'])
+        assert.equal(r[name],r.accentInk,k+' '+name+' pairs with guide background');
+      for(const name of ['wheelDivider','cascaderDivider','timeNowDivider'])
+        assert.equal(r[name],r.edge,k+' '+name+' shares Theme Field border');
+      assert.notEqual(r.accentBg,'rgba(0, 0, 0, 0)',k+' guide remains visible');
+      if(r.menuAccent==='bold')assert.notEqual(r.accentInk,r.accentBg,k+' bold text must contrast accent');
+    }
+  });
+
+  await step('WHEEL-GUIDE-STACK-001 real sibling Scroll above guide: 8 Styles x 2 modes x 4 Menu modes x 2 accents',async()=>{
+    const rows=await evaluate("(() => {\n const d=document.querySelector('[data-create-frame]').contentDocument;\n const h=d.documentElement,api=window.QXFRAME9A7C2_CREATE,wasDark=h.classList.contains('dark'),orig=api.state.config;\n const host=d.createElement('section'),sheet=d.createElement('style');\n host.style.cssText='position:absolute;left:-10000px;top:0;width:28rem';\n const wheel=(kind)=>'<div class=\"qxframe9a7c2-wheel-panel\" data-wheel=\"'+kind+'\"><div class=\"qxframe9a7c2-wheel-panel-columns\"><div class=\"qxframe9a7c2-wheel-panel-column\"><div class=\"qxframe9a7c2-wheel-panel-scroll\" style=\"height:12rem\"><div class=\"qxframe9a7c2-scroll\"><div class=\"qxframe9a7c2-scroll-viewport\"><div class=\"qxframe9a7c2-scroll-content\"><div class=\"qxframe9a7c2-wheel-panel-item is-selected\">09</div></div></div><div class=\"qxframe9a7c2-scroll-track qxframe9a7c2-scroll-track-y\"></div></div><div class=\"qxframe9a7c2-wheel-panel-center-guide\"></div></div></div></div></div>';\n host.innerHTML='<div class=\"qxframe9a7c2-popup-surface qxframe9a7c2-picker-field-panel\">'+wheel('panel')+'<div class=\"qxframe9a7c2-wheel-picker-popup\">'+wheel('picker')+'</div><div class=\"qxframe9a7c2-time-panel-root\"><div class=\"qxframe9a7c2-time-panel-wrapper\">'+wheel('time')+'</div></div></div>';\n d.body.append(host);d.head.append(sheet);\n const samples=[];\n try {\n for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea'])\n for(const dark of [false,true])\n for(const menuColor of ['default','default-translucent','inverted','inverted-translucent'])\n for(const menuAccent of ['subtle','bold']){\n   h.classList.toggle('dark',dark);\n   sheet.textContent=api.compileTheme({...orig,style,menuColor,menuAccent},{generatedAt:''}).body;\n   const result={style,dark,menuColor,menuAccent};\n   for(const kind of ['panel','picker','time']){\n     const root=host.querySelector('[data-wheel=\"'+kind+'\"]');\n     const mount=root.querySelector('.qxframe9a7c2-wheel-panel-scroll');\n     const scroll=mount.querySelector(':scope > .qxframe9a7c2-scroll');\n     const guide=mount.querySelector(':scope > .qxframe9a7c2-wheel-panel-center-guide');\n     const item=scroll?.querySelector('.qxframe9a7c2-wheel-panel-item.is-selected');\n     const scrollCss=scroll&&d.defaultView.getComputedStyle(scroll),guideCss=guide&&d.defaultView.getComputedStyle(guide);\n     result[kind]={validDOM:!!(scroll&&guide&&item&&guide.previousElementSibling===scroll&&scroll.contains(item)),scrollZ:scrollCss?.zIndex,guideZ:guideCss?.zIndex,scrollPos:scrollCss?.position,guidePos:guideCss?.position,guidePaint:guideCss?.backgroundColor,selectedInk:item?d.defaultView.getComputedStyle(item).color:null};\n   }\n   samples.push(result);\n }\n } finally {h.classList.toggle('dark',wasDark);sheet.remove();host.remove();}\n return samples;\n})()");
+    assert.equal(rows.length,128,'all Theme cases test WheelPanel real sibling layout');
+    for(const r of rows){
+      const key=[r.style,r.dark,r.menuColor,r.menuAccent].join('/');
+      for(const kind of ['panel','picker','time']){
+        const v=r[kind];
+        assert.ok(v.validDOM,key+' '+kind+' matches real WheelPanel scrollMount children');
+        assert.equal(v.scrollPos,'relative',key+' '+kind+' Scroll layer positioned');
+        assert.equal(v.guidePos,'absolute',key+' '+kind+' Guide absolute in same containing block');
+        assert.ok(Number(v.scrollZ)>Number(v.guideZ),key+' '+kind+' Scroll item text is painted above guide');
+        assert.notEqual(v.guidePaint,'rgba(0, 0, 0, 0)',key+' '+kind+' guide background not removed to hide bug');
+      }
+    }
+  });
+
+  await step('Official main Tree 3000-node VirtualList and selection',async()=>{
+    await s('Page.navigate',{url:origin+'/docs/qa/tree-large-data.html'});
+    await waitFor("!!window.QXFRAME9A7C2_TREE_QA?.tree || document.querySelector('[data-status]')?.textContent?.includes('Tree unavailable')",'official Tree mount',12000);
+    const initial=await evaluate(`(() => {
+      const tree=window.QXFRAME9A7C2_TREE_QA.tree,s=tree.getState();
+      return {count:s.visibleKeys.length,rows:document.querySelectorAll('.qxframe9a7c2-tree-item').length,
+      viewport:!!document.querySelector('.qxframe9a7c2-virtual-list-viewport'),checked:s.checkedKeys};
+    })()`);
+    assert.equal(initial.count,3000,'official Tree has 3000 roots');
+    assert.ok(initial.rows>0&&initial.rows<150,'official Tree keeps bounded virtual rows');
+    assert.equal(initial.viewport,true,'official Tree shows VirtualList');
+    assert.ok(initial.checked.includes('finance'),'checked child survives initial load');
+    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.expand('company')");
+    await waitFor("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.includes('finance')",'official Tree expands branch');
+    assert.equal(await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length"),3002);
+    await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.collapse('company')");
+    assert.equal(await evaluate("window.QXFRAME9A7C2_TREE_QA.tree.getState().visibleKeys.length"),3000);
+    const rows=await evaluate("document.querySelectorAll('.qxframe9a7c2-tree-item').length");
+    assert.ok(rows>0&&rows<150,'official Tree stays virtual after disclosure');
+  });
+
+  await step('Stage5 Theme Playground visibly mounts new Alert, week picker and Kbd demos',async()=>{
+    await s('Page.navigate',{url:origin+'/docs/theme-playground.html'});
+    await waitFor("!!window.QXFRAME9A7C2ComponentDemos&&!!document.getElementById('component-alert')",'canonical theme playground mounts',15000);
+    for(const [slug,title] of [['alert','Alert：语义 × 外观 × 阴影'],['date-picker','周选择与 Calendar 共用 Range Painter'],['form','Kbd 命令键组合']]){
+      // All canonical examples are expanded: earlier grid rows grow during
+      // idle mounts, so exercise the real search UI before asserting the target.
+      await evaluate("(() => {const search=document.querySelector('[data-qxframe9a7c2-search]');search.value="+JSON.stringify(slug)+";search.dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('component-"+slug+"').scrollIntoView({behavior:'instant',block:'center'});return true})()");
+      const expr="Array.from(document.querySelectorAll('#component-"+slug+" .qxframe9a7c2-play-example-title strong')).some(n=>n.textContent==="+JSON.stringify(title)+")";
+      await waitFor(expr,'new '+slug+' demo visible by default',15000);
+    }
+    const actual=await evaluate("(() => {\n const alert=document.querySelector('#component-alert'),week=document.querySelector('#component-date-picker'),form=document.querySelector('#component-form');\n const rows=[...alert.querySelectorAll('.qxframe9a7c2-alert-root')];\n return {alertCount:rows.length,officialCount:rows.filter(x=>x.querySelector('.qxframe9a7c2-alert-wrapper .qxframe9a7c2-alert-icon')&&x.querySelector('.qxframe9a7c2-alert-section .qxframe9a7c2-alert-title')).length,\n shadowCombined:rows.filter(x=>x.classList.contains('is-shadow')&&(x.classList.contains('is-outline')||x.classList.contains('is-muted'))).length,\n weekNames:[...week.querySelectorAll('.qxframe9a7c2-play-example-title strong')].map(x=>x.textContent),\n liveWeek:week.querySelectorAll('.qxframe9a7c2-date-picker').length,kbd:form.querySelectorAll('.qxframe9a7c2-kbd').length};\n})()");
+    assert.ok(actual.alertCount>=12&&actual.officialCount>=12,'all 12 semantic Alert skins use canonical DOM: '+JSON.stringify(actual));
+    assert.ok(actual.shadowCombined>=2,'combined shadow/muted/outline Alert appears');
+    assert.ok(actual.weekNames.includes('周选择与 Calendar 共用 Range Painter'),'week picker visible without expanding');
+    assert.ok(actual.liveWeek>=2,'two live week pickers exist');
+    assert.ok(actual.kbd>=4,'real Kbd group visible under Form');
   });
 
   assert.deepEqual(errors, [], 'page errors: ' + errors.join('\n'));

@@ -1,5 +1,6 @@
-// createApp theme compiler (v3 §5). Turns a resolved configuration into the complete
-// closed token list (tokens.js): every token in :root, every color token again in .dark.
+// createApp theme compiler (v3 §5). A single :root registry declaration owns
+// all COLOR light-dark() pairs and mode-invariant slots. Only the scheme keyword
+// and actual color-scheme property switch at .dark / existing inverse Popup roots.
 // Only fixed values are produced here; qxframe.css owns every formula (size curve,
 // color-mix states, concentric radii). Values with a shadcn source follow the measured
 // table (tools/qa/spec.json, shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c); values
@@ -75,14 +76,14 @@ const QX_COLORS = {
 
 const STYLE_LOOKS = {
   //        overlay  switch-track         track-border  slider-rail         thumb      thumb-border  choice                  choice-border  radio-fill  thumb-shadow  switch-shadow  meta-gap   progress
-  vega: { overlay: 10, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'primary', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'sm', switchShadow: 'none', metaGap: 0.25, progress: 0.375 },
-  nova: { overlay: 10, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
+  vega: { overlay: 60, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'primary', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'sm', switchShadow: 'none', metaGap: 0.25, progress: 0.375 },
+  nova: { overlay: 60, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
   maia: { overlay: 80, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'primary', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'sm', switchShadow: 'none', metaGap: 0.5, progress: 0.75 },
-  lyra: { overlay: 10, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
+  lyra: { overlay: 60, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
   mira: { overlay: 80, switchTrack: ['input', 'input/80'], switchBorder: 'transparent', rail: 'muted', thumb: 'white', thumbBorder: 'ring', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 100, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.25, progress: 0.25 },
-  luma: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.75 },
-  sera: { overlay: 20, switchTrack: ['input', 'input'], switchBorder: 'input/50', rail: 'input/50', thumb: 'primary', thumbBorder: 'transparent', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 0, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.375, progress: 0.125 },
-  rhea: { overlay: 30, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.5 }
+  luma: { overlay: 60, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.75 },
+  sera: { overlay: 60, switchTrack: ['input', 'input'], switchBorder: 'input/50', rail: 'input/50', thumb: 'primary', thumbBorder: 'transparent', choice: ['transparent', 'input/30'], choiceBorder: 'input', radioFill: 0, thumbShadow: 'none', switchShadow: 'none', metaGap: 0.375, progress: 0.125 },
+  rhea: { overlay: 60, switchTrack: ['input/90', 'input/90'], switchBorder: 'transparent', rail: 'input/90', thumb: 'white', thumbBorder: 'input', choice: ['input/90', 'input/90'], choiceBorder: 'transparent', radioFill: 100, thumbShadow: 'md', switchShadow: 'sm', metaGap: 0.375, progress: 0.5 }
 };
 const SLIDER_THUMB = { vega: 1, nova: 0.75, maia: 1, lyra: 0.75, mira: 0.75, luma: 1, sera: 0.75, rhea: 1 };
 
@@ -93,20 +94,26 @@ const SLIDER_THUMB = { vega: 1, nova: 0.75, maia: 1, lyra: 0.75, mira: 0.75, lum
 // Tailwind v4 shadow scale (rem; color is the theme's own black tint).
 const SHADOWS = {
   none: 'none',
-  xs: '0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.05)',
-  sm: '0 0.0625rem 0.1875rem 0 oklch(0 0 0 / 0.1), 0 0.0625rem 0.125rem -0.0625rem oklch(0 0 0 / 0.1)',
-  md: '0 0.25rem 0.375rem -0.0625rem oklch(0 0 0 / 0.1), 0 0.125rem 0.25rem -0.125rem oklch(0 0 0 / 0.1)',
-  lg: '0 0.625rem 0.9375rem -0.1875rem oklch(0 0 0 / 0.1), 0 0.25rem 0.375rem -0.25rem oklch(0 0 0 / 0.1)',
-  xl: '0 1.25rem 1.5625rem -0.3125rem oklch(0 0 0 / 0.1), 0 0.5rem 0.625rem -0.375rem oklch(0 0 0 / 0.1)',
-  '2xl': '0 1.5625rem 3.125rem -0.75rem oklch(0 0 0 / 0.25)'
+  xs: '0 0.0625rem 0.125rem 0 color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 5%,transparent)',
+  sm: '0 0.0625rem 0.1875rem 0 color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent), 0 0.0625rem 0.125rem -0.0625rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent)',
+  md: '0 0.25rem 0.375rem -0.0625rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent), 0 0.125rem 0.25rem -0.125rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent)',
+  lg: '0 0.625rem 0.9375rem -0.1875rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent), 0 0.25rem 0.375rem -0.25rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent)',
+  xl: '0 1.25rem 1.5625rem -0.3125rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent), 0 0.5rem 0.625rem -0.375rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 10%,transparent)',
+  '2xl': '0 1.5625rem 3.125rem -0.75rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 25%,transparent)',
+  // Dialogs already sit on an overlay; elevation increases by spread first,
+  // not by jumping to a 25% black 2xl halo.
+  'dialog-light': '0 0.25rem 0.875rem -0.375rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 3.5%,transparent), 0 0.0625rem 0.1875rem 0 color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 2.5%,transparent)',
+  'dialog-medium': '0 0.5rem 1.25rem -0.5rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 5%,transparent), 0 0.125rem 0.375rem -0.125rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 3%,transparent)',
+  'dialog-strong': '0 0.75rem 1.75rem -0.625rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 7%,transparent), 0 0.1875rem 0.5rem -0.125rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 4%,transparent)',
+  'dialog-heavy': '0 1rem 2.5rem -0.75rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 9%,transparent), 0 0.25rem 0.75rem -0.1875rem color-mix(in oklab,oklch(from var(--qxframe9a7c2-theme-muted-foreground) 0.12 c h) 5%,transparent)'
 };
 // Shadow axis: low / mid / high tiers move together (card, popup, dialog).
 const SHADOW_TIERS = {
-  none: ['none', 'md', 'none'],
-  light: ['xs', 'md', 'none'],
-  medium: ['sm', 'lg', 'xl'],
-  strong: ['md', 'lg', 'xl'],
-  heavy: ['lg', 'xl', '2xl']
+  none: ['none', 'none', 'none'],
+  light: ['xs', 'xs', 'dialog-light'],
+  medium: ['sm', 'sm', 'dialog-medium'],
+  strong: ['md', 'md', 'dialog-strong'],
+  heavy: ['lg', 'lg', 'dialog-heavy']
 };
 
 // Density: md height / inline padding / gap / icon (rem).
@@ -140,9 +147,9 @@ const CONTROL_LOOK = {
 };
 // Input look: [light bg, dark bg], rest border, side/top weight.
 const INPUT_LOOK = {
-  outline: { bg: ['transparent', 'input/30'], border: 'input', sides: 100 },
-  tinted: { bg: ['input/30', 'input/30'], border: 'input', sides: 100 },
-  subtle: { bg: ['input/20', 'input/30'], border: 'input', sides: 100 },
+  outline: { bg: ['transparent', 'transparent'], border: 'input', sides: 100 },
+  tinted: { bg: ['input/35', 'input/35'], border: 'input', sides: 100 },
+  subtle: { bg: ['input/12', 'input/12'], border: 'input', sides: 100 },
   soft: { bg: ['input/50', 'input/50'], border: 'transparent', sides: 100 },
   underline: { bg: ['transparent', 'transparent'], border: 'input', sides: 0 },
   borderless: { bg: ['transparent', 'transparent'], border: 'transparent', sides: 100 } // QX
@@ -261,18 +268,28 @@ export function themeTokens(resolved) {
   light.overlay = dark.overlay = `oklch(0 0 0 / ${round(looks.overlay / 100)})`;
 
   // Menu color + accent.
+  light['color-scheme'] = 'light';
+  dark['color-scheme'] = 'dark';
   const inverted = isInvertedMenu(resolved.menuColor);
   const translucent = isTranslucentMenu(resolved.menuColor);
-  const menuSource = inverted ? { light: palette.dark, dark: palette.dark } : palette;
+  const menuSource = palette; // Inverted popup reuses the opposite complete Theme block via CSS; do not remap individual Menu colors.
   for (const mode of ['light', 'dark']) {
     const target = mode === 'light' ? light : dark;
     const src = menuSource[mode];
     target.menu = translucent ? alpha(src.popover, 80) : src.popover;
     target['menu-foreground'] = src['popover-foreground'];
-    target['menu-accent'] = src.accent;
-    target['menu-accent-foreground'] = src['accent-foreground'];
+    // One Menu accent axis controls both selected and expanded rows. Subtle
+    // keeps primary tint but uses readable Popover ink; bold uses on-primary.
+    target['menu-accent'] = resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28);
+    target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground'];
+    // Inverse Choice box uses accent-foreground: its mark needs the opposite
+    // palette role in both modes. Subtle = Menu surface; bold = Primary.
+    target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover;
   }
   root['menu-blur'] = translucent ? '1.5rem' : '0';
+  // Dialog blur is a surface Style preference, never controlled by menu color.
+  // Keep the default cheap; explicit Theme overrides can opt in independently.
+  root['dialog-mask-blur'] = ['maia','luma'].includes(style) ? '0.25rem' : '0rem';
 
   // Surface edge + partition.
   const [edgeLight, edgeDark] = EDGE[ext.edge];
@@ -328,6 +345,25 @@ export function themeTokens(resolved) {
   assignInteractionColor('hover-color', ext.hoverColor);
   assignInteractionColor('focus', ext.keyboardFocusColor);
   assignInteractionColor('pointer-focus', ext.pointerFocusColor);
+  // Focus saturation is a separate opaque tonal axis, not an alpha control.
+  // Light moves toward the local surface and reduces OKLCH chroma; deep moves
+  // toward foreground and increases chroma. The base color hue is preserved.
+  // A neutral black/white source naturally keeps c=0, but still gets softer
+  // via its surface-bound lightness. Halo translucency is handled separately.
+  const focusTone = (name, strength) => {
+    if (strength === 'normal') return;
+    for (const mode of ['light', 'dark']) {
+      const target = mode === 'light' ? light : dark;
+      const source = parseOklch(target[name]);
+      const toward = parseOklch(pal[mode][strength === 'light' ? 'background' : 'foreground']);
+      const mix = strength === 'light' ? 0.42 : 0.18;
+      const lightness = Number(source.l) + (Number(toward.l) - Number(source.l)) * mix;
+      const chroma = Math.min(0.4, Number(source.c) * (strength === 'light' ? 0.65 : 1.25));
+      target[name] = `oklch(${round(lightness)} ${round(chroma)} ${source.h})`;
+    }
+  };
+  focusTone('focus', ext.keyboardFocusSaturation);
+  focusTone('pointer-focus', ext.pointerFocusSaturation);
   // Keyboard theme explicitly changes the native focus boundary as before.
   // Pointer color never mutates the keyboard or neutral ring token.
   if (ext.keyboardFocusColor === 'theme') {
@@ -383,8 +419,19 @@ export function themeTokens(resolved) {
   root['control-line-height'] = rem(editorial ? Math.min(controlLine, 1) : controlLine);
   root['border-width'] = '1px';
 
+  // One Menu spacing axis; every list-style popup consumes the same x/y pair.
+  // Browser/Component JS never chooses inset. Explicit Style override wins here.
+  root['list-padding-x'] = ext.menuInset === 'block' ? '0rem' : '0.375rem';
+  root['list-padding-y'] = '0.375rem';
+
   // Containers.
   root['card-padding'] = rem(PADDING[ext.padding]);
+  // Container padding and section separators share the Card's Theme axes.
+  // Modal / Drawer map them to separate structural slots, not viewport gap.
+  root['dialog-padding-x'] = rem(PADDING[ext.padding]);
+  root['dialog-padding-y'] = rem(Math.max(0.75, PADDING[ext.padding] - 0.25));
+  root['dialog-body-padding-y'] = rem(Math.max(0.5, PADDING[ext.padding] - (ext.sections === 'none' ? 0.5 : 0.25)));
+  root['dialog-divider-width'] = ext.sections === 'divider' ? '1px' : '0px';
   // Source peer actions: editorial Sera uses CardFooter Buttons with flex:1 1 0% + min-content clamping;
   // other Styles retain each Button's intrinsic size (one shared Theme slot).
   root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto';
@@ -539,7 +586,7 @@ export function themeTokens(resolved) {
   root['radius-radio'] = shapeRadius(roundShape('shapeRadio'), alloc.button, controlShape);
   root['radius-switch'] = shapeRadius(roundShape('shapeSwitch'), alloc.switch, controlShape);
   root['radius-thumb'] = shapeRadius(roundShape('shapeThumb'), alloc.thumb, controlShape);
-  root['radius-track'] = roundShape('shapeThumb') === 'circle' ? PILL : root['radius-thumb'];
+  root['radius-track'] = ['circle','pill'].includes(roundShape('shapeThumb')) ? PILL : root['radius-thumb'];
   root['radius-avatar'] = shapeRadius(roundShape('shapeAvatar'), alloc.button, controlShape);
   const container = ext.shapeContainer === 'square' ? () => '0' : value => value;
   // Source-locked Empty rounded roles per shared radius-allocation recipe.
@@ -567,7 +614,7 @@ export function themeTokens(resolved) {
   root['slider-track'] = rem(SLIDER[ext.sliderLook]);
   root['slider-thumb'] = rem(SLIDER_THUMB[style]);
   // shadcn Luma thumb is h-4 w-6 (a horizontal capsule); other styles are square.
-  root['slider-thumb-width'] = rem(style === 'luma' ? 1.5 : SLIDER_THUMB[style]);
+  root['slider-thumb-width'] = rem(roundShape('shapeThumb') === 'pill' ? SLIDER_THUMB[style] * 1.5 : SLIDER_THUMB[style]);
   root['progress-track'] = resolved.explicit && resolved.explicit.sliderLook ? rem(SLIDER[ext.sliderLook]) : rem(looks.progress);
   root['progress-ring'] = '7.5rem';
   root['choice-size'] = style === 'sera' ? '1.125rem' : '1rem';
@@ -583,7 +630,7 @@ export function themeTokens(resolved) {
   root['shadow-thumb'] = SHADOWS[looks.thumbShadow];
   root['shadow-switch-thumb'] = SHADOWS[looks.switchShadow];
 
-  // The seven independent axes share these few semantic style/paint slots.
+  // Nine independent axes share the same semantic style/paint slots.
   // Border focus keeps the native border; keyboard outline retains 2px/-1px.
   const FOCUS = { border: ['0', '100%', '0'], outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0', '100%', '0'] };
   const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus];
@@ -591,11 +638,11 @@ export function themeTokens(resolved) {
   root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
   root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
   root['focus-shadow'] = ext.keyboardFocus === 'ring'
-    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    ? '0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 20%,transparent)'
     : '0 0 0 0 transparent';
   // Outline means the actual CSS outline (2px/-1px), not a shadow.
   root['pointer-shadow'] = ext.pointerFocus === 'ring'
-    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
+    ? '0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 20%,transparent)'
     : '0 0 0 0 transparent';
   root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
   root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';
@@ -608,17 +655,22 @@ export function themeTokens(resolved) {
   root['spinner-icon-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-spinner-icon-spin';
   root['loading-spin-animation'] = ext.motion === 'none' ? 'none' : 'qxframe9a7c2-loading-spin';
 
-  // The exported theme is self-contained in each mode: both blocks declare the closed list.
+  // One owner for each COLOR (light-dark) or invariant token. The keyword
+  // color-scheme exception is the only registered value with a .dark override.
   const rootBlock = {}, darkBlock = {};
   for (const token of THEME_TOKENS) {
     if (token.mode === 'color') {
-      if (light[token.name] === undefined || dark[token.name] === undefined) throw new Error('Missing color token: ' + token.name);
-      rootBlock[token.name] = light[token.name];
-      darkBlock[token.name] = dark[token.name];
+      if (light[token.name] === undefined || dark[token.name] === undefined) throw new Error('Missing mode token: ' + token.name);
+      if (token.kind === 'color') rootBlock[token.name] = `light-dark(${light[token.name]}, ${dark[token.name]})`;
+      else {
+        // Keywords cannot be operands of light-dark(). This token remains
+        // an explicit, narrowly registered mode exception.
+        rootBlock[token.name] = light[token.name];
+        darkBlock[token.name] = dark[token.name];
+      }
     } else {
       if (root[token.name] === undefined) throw new Error('Missing token: ' + token.name);
       rootBlock[token.name] = root[token.name];
-      darkBlock[token.name] = root[token.name];
     }
   }
   return { root: rootBlock, dark: darkBlock };
@@ -627,5 +679,28 @@ export function themeTokens(resolved) {
 export function themeBody(resolved) {
   const { root, dark } = themeTokens(resolved);
   const lines = block => Object.entries(block).map(([name, value]) => `  ${TOKEN_PREFIX}${name}: ${value};`).join('\n');
-  return `:root {\n${lines(root)}\n}\n.dark {\n${lines(dark)}\n}\n`;
+  const rootCss = `:root {\n  color-scheme: light;\n${lines(root)}\n}\n`;
+  const darkCss = `.dark {\n  color-scheme: dark;\n${lines(dark)}\n}\n`;
+  if (!isInvertedMenu(resolved.menuColor)) return rootCss + darkCss;
+
+  // CSS-only inverse: exact existing Portal roots; no DOM attributes, new
+  // palettes, Theme token redeclarations or Controller/Portal manipulation.
+  const popupRoots = [
+    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container)',
+    '.qxframe9a7c2-menu-submenu-panel',
+    '.qxframe9a7c2-menu-overflow-panel'
+  ];
+  const inDark = popupRoots.map(selector => '.dark ' + selector).join(',\n');
+  const inLight = popupRoots.map(selector => ':root:not(.dark) ' + selector + ':not(.dark *)').join(',\n');
+  // The native customizable Select is browser top-layer content. Only its
+  // ::picker(select) switches scheme; the closed control remains in page mode.
+  // All existing Menu color declarations continue to consume light-dark() as-is.
+  const picker = 'select:not([multiple]):not([size])';
+  const darkPicker = '.dark ' + picker + '::picker(select)';
+  const lightPicker = ':root:not(.dark) ' + picker + ':not(.dark *)::picker(select)';
+  return rootCss + darkCss
+    + `${inDark} {\n  color-scheme: light;\n}\n`
+    + `${inLight} {\n  color-scheme: dark;\n}\n`
+    + `${darkPicker} {\n  color-scheme: light;\n}\n`
+    + `${lightPicker} {\n  color-scheme: dark;\n}\n`;
 }

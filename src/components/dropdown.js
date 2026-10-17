@@ -41,6 +41,7 @@ function initializeDropdown(instance, options) {
     submenuTrigger: 'hover', submenuOpenDelay: 80, submenuLeaveDelay: 120, submenuOffset: 8
   }, options || {});
   validateItems(opts.items);
+  if (own(opts,'inset')) throw new TypeError('[QXFRAME9A7C2] Dropdown inset is theme CSS (list-padding-x/y), not a JS option.');
   var doc = opts.document || globalThis.document;
   var reference = resolveElement(opts.reference, doc, 'reference');
   var portalContainer = opts.portalContainer ? resolveElement(opts.portalContainer, doc, 'portalContainer') : doc.body;
@@ -73,7 +74,7 @@ function initializeDropdown(instance, options) {
   }
   var panel = doc.createElement('div');
   var arrow = doc.createElement('div');
-  panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; panel.hidden = true;
+  panel.className = 'qxframe9a7c2-dropdown-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; panel.hidden = true;
   arrow.className = 'qxframe9a7c2-dropdown-arrow';
   var rootPopupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
   var triggerSession = null;
@@ -335,7 +336,7 @@ function initializeDropdown(instance, options) {
       var row = surface.list && typeof surface.list.getItemElement === 'function' ? surface.list.getItemElement(String(item.key)) : null;
       if (!row) return;
       row.classList.add('has-submenu');
-      var childPanel = doc.createElement('div'); childPanel.className = 'qxframe9a7c2-dropdown-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset'; childPanel.hidden = true;
+      var childPanel = doc.createElement('div'); childPanel.className = 'qxframe9a7c2-dropdown-submenu-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; childPanel.hidden = true;
       var childFrame = PopupFrame.create({ panel: childPanel, document: doc });
       var childRecord = { key: String(item.key), item: item, trigger: null, popupFrame: childFrame, surface: null, panel: childPanel, parentSurface: surface };
       var childRuntime = PopupRuntime.create({
@@ -525,6 +526,7 @@ function initializeDropdown(instance, options) {
     if (own(next, 'items')) validateItems(next.items);
     if (own(next, 'multiple') && next.multiple !== opts.multiple) throw new Error('[QXFRAME9A7C2] Dropdown multiple is immutable; destroy and recreate to change selection shape.');
     var rebuild = ['items','searchable','selectable','readOnly','size','selectionAppearance'].some(function (name) { return own(next, name); });
+    if (own(next,'inset')) throw new TypeError('[QXFRAME9A7C2] Dropdown inset is theme CSS (list-padding-x/y), not a JS option.');
     Utils.copyOwn(opts, next);
     if (own(next, 'controlled')) valueState.setControlled(opts.controlled === true);
     if (own(next, 'value')) {

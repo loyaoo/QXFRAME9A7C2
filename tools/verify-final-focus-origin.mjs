@@ -102,7 +102,8 @@ while((match=ruleRe.exec(css))){
     selector.includes('.qxframe9a7c2-button:focus:not(:disabled)')||
     (selector.includes('.qxframe9a7c2-input:focus-within:not(.is-disabled)')&&selector.includes('.qxframe9a7c2-input.is-focused:not(.is-disabled)'))||
     (selector.includes('input:not([class*="qxframe9a7c2-"])')&&selector.includes('textarea:not([class*="qxframe9a7c2-"])')&&selector.includes('select:not([class*="qxframe9a7c2-"])'))||
-    (selector.includes('.qxframe9a7c2-form-input:focus:not(:disabled)')&&selector.includes('.qxframe9a7c2-form-textarea:focus:not(:disabled)')&&selector.includes('.qxframe9a7c2-form-select:focus:not(:disabled)'))
+    (selector.includes('.qxframe9a7c2-form-input:focus:not(:disabled)')&&selector.includes('.qxframe9a7c2-form-textarea:focus:not(:disabled)')&&selector.includes('.qxframe9a7c2-form-select:focus:not(:disabled)'))||
+    selector === 'html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus'
   )&&!selector.includes('.qxframe9a7c2-input-control:focus');
   if(pointerGated&&themeOutline&&themeOffset&&uniqueShell)continue;
   unsafeFocusOutlineRules.push(selector);

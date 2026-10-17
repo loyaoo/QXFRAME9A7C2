@@ -111,7 +111,7 @@ function setupTreeSelectRuntime(instance,fieldInit) {
         var panel = doc.createElement('div');
         var popupContentHost = doc.createElement('div');
         var treeHost = doc.createElement('div');
-        panel.className = 'qxframe9a7c2-tree-select-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';
+        panel.className = 'qxframe9a7c2-tree-select-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame';
         panel.hidden = true;
         popupContentHost.className = 'qxframe9a7c2-tree-select-popup-content';
         treeHost.className = 'qxframe9a7c2-tree-select-tree-host';

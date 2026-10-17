@@ -7,7 +7,6 @@
  * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT. */
 :root { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); }
-.dark { color: var(--qxframe9a7c2-theme-foreground); }
 @scope (:root) {
 
   /* Existing semantic/family consumer slots remain the component-facing contract.
@@ -20,9 +19,9 @@
     --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-muted);
-    --_qxframe9a7c2-v2-item-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent);
-    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-v2-item-hover);
-    --_qxframe9a7c2-semantic-subtle-active: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-item-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground));
+    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-item-hover);
+    --_qxframe9a7c2-semantic-subtle-active: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 65%, var(--qxframe9a7c2-theme-muted-foreground));
     --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
@@ -47,7 +46,7 @@
     --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-theme-overlay);
     --_qxframe9a7c2-semantic-overlay-base: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-semantic-overlay-control-hover: var(--qxframe9a7c2-theme-muted);
-    --_qxframe9a7c2-semantic-accent-border: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-semantic-accent-border: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-muted);
     --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-muted);
@@ -72,26 +71,26 @@
     --_qxframe9a7c2-validation-error-focus-shadow: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent);
     --_qxframe9a7c2-validation-warning-focus-shadow: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 20%, transparent);
     --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
-    --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
-    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary));
-    --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
+    --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
+    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
     --_qxframe9a7c2-accent: var(--qxframe9a7c2-theme-primary);
     --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-semantic-on-accent);
   }
   .qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge, .qxframe9a7c2-badge-count, .qxframe9a7c2-badge-ribbon, .qxframe9a7c2-badge-status, .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-message-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root, .qxframe9a7c2-carousel, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root, .qxframe9a7c2-result, .qxframe9a7c2-progress, .qxframe9a7c2-slider, .qxframe9a7c2-rate, .qxframe9a7c2-switch, .qxframe9a7c2-selectgroup, .qxframe9a7c2-form-check-input, .qxframe9a7c2-native-form, .qxframe9a7c2-table, .qxframe9a7c2-item-surface, .qxframe9a7c2-menu, .qxframe9a7c2-tags, .qxframe9a7c2-input, .qxframe9a7c2-loading, .qxframe9a7c2-steps, .qxframe9a7c2-upload, .qxframe9a7c2-pagination, .qxframe9a7c2-tabs, .qxframe9a7c2-tree, .qxframe9a7c2-list, .qxframe9a7c2-transfer, .qxframe9a7c2-avatar, .qxframe9a7c2-card, .qxframe9a7c2-collapse, .qxframe9a7c2-descriptions, .qxframe9a7c2-empty, .qxframe9a7c2-drawer, .qxframe9a7c2-modal-container, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-form-segmented, .qxframe9a7c2-input-otp, .qxframe9a7c2-wheel-panel, .qxframe9a7c2-calendar, .qxframe9a7c2-period-panel, .qxframe9a7c2-time-panel, .qxframe9a7c2-color-panel {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-primary);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground);
-    --_qxframe9a7c2-v2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 80%, transparent);
-    --_qxframe9a7c2-v2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent));
-    --_qxframe9a7c2-v2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 30%, transparent));
-    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
-    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-v2-soft);
-    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
-    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
-    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-type: var(--_qxframe9a7c2-default-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-type-foreground: var(--_qxframe9a7c2-default-foreground, var(--qxframe9a7c2-theme-primary-foreground));
+    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
+    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
+    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
     --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground);
     --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
     --_qxframe9a7c2-control-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
@@ -105,75 +104,83 @@
   /* Resolve current Type locally, including parts that inherit their owner.
      Specificity prevents legacy .is-color aliases from replacing this chain. */
   [class*="qxframe9a7c2-"][class] {
-    --_qxframe9a7c2-v2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 80%, transparent);
-    --_qxframe9a7c2-v2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent));
-    --_qxframe9a7c2-v2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 30%, transparent));
-    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-v2-type-foreground);
-    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
-    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-v2-soft);
-    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-v2-soft);
-    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-v2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-v2-solid-hover);
-    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-v2-type);
+    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
+    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
+    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
+    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-type-foreground);
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
   }
-  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-v2-type: inherit; --_qxframe9a7c2-v2-type-foreground: inherit; }
-  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
-  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
-  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
-  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
-  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-secondary); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground); }
-  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-type: inherit; --_qxframe9a7c2-type-foreground: inherit; }
+  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
+  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
+  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-secondary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground); }
+  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
 
-  [class*="qxframe9a7c2-"].is-primary { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-primary); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground); }
-  [class*="qxframe9a7c2-"].is-grey, [class*="qxframe9a7c2-"].is-gray { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-grey); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-cyan { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-cyan); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-teal { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-teal); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-green { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-green); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-lime { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-lime); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-yellow { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-yellow); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-orange { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-orange); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-red { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-red); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-pink { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-pink); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-purple { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-purple); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-blue { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-blue); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-azure { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-azure); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
-  [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-primary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground); }
+  [class*="qxframe9a7c2-"].is-grey, [class*="qxframe9a7c2-"].is-gray { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-grey); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-cyan { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-cyan); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-teal { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-teal); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-green { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-green); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-lime { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-lime); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-yellow { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-yellow); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-orange { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-orange); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-red { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-red); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-pink { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-pink); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-purple { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-purple); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-blue { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-blue); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-azure { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-azure); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
   /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
-  .qxframe9a7c2-tag, .qxframe9a7c2-badge {
+  .qxframe9a7c2-tag {
     background-color: var(--qxframe9a7c2-theme-secondary);
     color: var(--qxframe9a7c2-theme-secondary-foreground);
     border-color: transparent;
   }
+  /* Default Badge is a neutral status label; explicit is-* colors still win. */
+  .qxframe9a7c2-badge { --_qxframe9a7c2-default-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-default-foreground: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
-  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-v2-soft); color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-soft); color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {
-    background-color: var(--_qxframe9a7c2-v2-type); color: var(--_qxframe9a7c2-v2-type-foreground);
+    background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground);
   }
-  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-outlined {
-    background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border);
-  }
-  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover, .qxframe9a7c2-badge.is-filled:hover, .qxframe9a7c2-badge.is-filled.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 20%, transparent); }
-  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover, .qxframe9a7c2-badge.is-solid:hover { background-color: var(--_qxframe9a7c2-v2-solid-hover); }
-  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover, .qxframe9a7c2-badge.is-outlined:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  /* Outline Badge is a static label: a visible border, never a hoverable action. */
+  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--_qxframe9a7c2-badge-text); border:1px solid var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent); }
+  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-solid-hover); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-tag.is-disabled, .qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-disabled { background-color: var(--qxframe9a7c2-theme-secondary); color: var(--qxframe9a7c2-theme-secondary-foreground); opacity: .5; }
   .qxframe9a7c2-badge-count { background-color: var(--qxframe9a7c2-theme-destructive); color: var(--qxframe9a7c2-theme-destructive-foreground); }
 
-  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
 
-  /* Feedback uses source Alert card/type text, not a per-status background matrix. */
-  .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-message-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root {
-    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-v2-type);
+  /* Alert owns its Appearance/semantic paint in components/alert.css.
+     This layer only maps Notification; no later Alert background override. */
+  .qxframe9a7c2-notification {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
     border-color: var(--qxframe9a7c2-theme-border);
   }
+  .qxframe9a7c2-notification-root {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
+    border-color: var(--qxframe9a7c2-theme-card-edge);
+  }
   .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
-  .qxframe9a7c2-alert-description { color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 90%, transparent); }
+  .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-alert-icon, .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-v2-type); }
-  .qxframe9a7c2-message-content, .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
+  .qxframe9a7c2-message-icon, .qxframe9a7c2-notification-icon { color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
+  .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
 
   /* Table is a data surface. Its selected background is muted, not Primary. */
   .qxframe9a7c2-table, .qxframe9a7c2-table-wrap { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
@@ -186,157 +193,166 @@
 
   /* Selection item paint is source Command/Select highlight, not feedback soft. */
   .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
-  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-item-surface.is-disabled, .qxframe9a7c2-item-surface:disabled, .qxframe9a7c2-list.is-disabled .qxframe9a7c2-item-surface, .qxframe9a7c2-tree.is-disabled .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; opacity: .5; }
-  .qxframe9a7c2-list, .qxframe9a7c2-tree, .qxframe9a7c2-transfer-panel { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  /* Transfer's public/local panel roles win over generic surface Theme paint.
+     In particular, disabled foreground must inherit from its Transfer owner. */
+  .qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }
 
-  .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-v2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-success); }
+  .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-success); }
   .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }
-  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-thumb); border-color: var(--qxframe9a7c2-theme-thumb-border); }
-  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: transparent; --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-theme-border); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
-  .qxframe9a7c2-scroll-thumb:hover { background-color: var(--qxframe9a7c2-theme-border); }
-  .qxframe9a7c2-tooltip-container, .qxframe9a7c2-tooltip-arrow, .qxframe9a7c2-slider-tooltip { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
+  /* Shared translucent neutral scrollbar, no opaque theme-border override. */
+  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-color); --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-color); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
+  .qxframe9a7c2-slider-tooltip { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
   .qxframe9a7c2-avatar { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* Source decoration distribution; inline feedback has no popup shadow. */
-  .qxframe9a7c2-card { --_qxframe9a7c2-v2-card-shadow: var(--qxframe9a7c2-theme-shadow-card); --_qxframe9a7c2-v2-card-explicit-shadow: var(--qxframe9a7c2-theme-shadow-card); box-shadow: var(--_qxframe9a7c2-v2-card-shadow); }
-  .qxframe9a7c2-card.is-shadow, .qxframe9a7c2-card.is-hover-shadow:hover, .qxframe9a7c2-card.is-hoverable:hover { box-shadow: var(--_qxframe9a7c2-v2-card-explicit-shadow); }
   .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
   .qxframe9a7c2-switch-thumb { box-shadow: var(--qxframe9a7c2-theme-shadow-switch-thumb); }
   .qxframe9a7c2-slider-handle { --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb); }
   .qxframe9a7c2-selectgroup-indicator.is-overlay { box-shadow: none; }
-  .qxframe9a7c2-alert-root { box-shadow: none; }
+  /* Alert keeps source-owned configurable elevation. */
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
-  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-color-panel-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-v2-control-bg); border-color: var(--_qxframe9a7c2-v2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  /* ColorPanel source paints input, format and eye as one field family. */
+  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
   .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
-  .qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg); --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text); }
-  .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-v2-type); color: var(--_qxframe9a7c2-v2-type-foreground); }
-  .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-v2-type); }
-  .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
+  .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-carousel-dot-bar[class] { background-color: var(--qxframe9a7c2-theme-muted); }
-  .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-carousel-arrow { --_qxframe9a7c2-carousel-arrow-bg: var(--qxframe9a7c2-theme-background); --_qxframe9a7c2-carousel-arrow-bg-hover: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-carousel-caption { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-upload-preview-mask[class], .qxframe9a7c2-image-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
-  .qxframe9a7c2-image-preview-toolbar { background-color: var(--qxframe9a7c2-theme-foreground); color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-image-preview-tool[class] { color: var(--qxframe9a7c2-theme-background); }
-  .qxframe9a7c2-image-preview-toolbar .qxframe9a7c2-image-preview-tool:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
+  /* Image Preview owns its one chrome background/border/foreground and hover in
+     components/image.css. Do not repaint toolbar or tools from the page Theme. */
   .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-background); --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
 
   /* action: current Type is an input binding, not a separate formula per Type. */
-  .qxframe9a7c2-button {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-primary);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground);
-    --_qxframe9a7c2-v2-outline: var(--qxframe9a7c2-theme-outline);
-    --_qxframe9a7c2-v2-outline-hover: var(--qxframe9a7c2-theme-outline-hover);
-    --_qxframe9a7c2-v2-outline-border: var(--qxframe9a7c2-theme-outline-border);
-    --_qxframe9a7c2-v2-ghost-hover: light-dark(var(--qxframe9a7c2-theme-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent));
-    --_qxframe9a7c2-v2-action-bg: var(--_qxframe9a7c2-v2-outline);
-    --_qxframe9a7c2-v2-action-hover: var(--_qxframe9a7c2-v2-outline-hover);
-    --_qxframe9a7c2-v2-action-text: var(--qxframe9a7c2-theme-foreground);
-    --_qxframe9a7c2-v2-action-border: var(--_qxframe9a7c2-v2-outline-border);
-    --_qxframe9a7c2-v2-action-current: var(--_qxframe9a7c2-v2-action-bg);
-    --_qxframe9a7c2-v2-action-shadow: var(--qxframe9a7c2-theme-shadow-control);
-    /* Component-facing state slots read by button.css (dashed / legacy appearances). */
-    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-v2-action-border);
-    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-v2-action-border);
-    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-v2-action-border);
-    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-v2-action-border);
+  /* Button already owns physical background/border/text/shadow in button.css.
+     Supply only the existing per-state slots, at matching variant specificity:
+     no later Theme painter and no action-current surrogate state machine. */
+  .qxframe9a7c2-button,
+  .qxframe9a7c2-button.is-solid,
+  .qxframe9a7c2-button.is-default.is-solid,
+  .qxframe9a7c2-button.is-outlined,
+  .qxframe9a7c2-button.is-dashed,
+  .qxframe9a7c2-button.is-filled,
+  .qxframe9a7c2-button.is-plain,
+  .qxframe9a7c2-button.is-text,
+  .qxframe9a7c2-button.is-link {
+    --_qxframe9a7c2-button-bg: var(--_qxframe9a7c2-action-bg);
+    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-action-hover);
+    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-hover-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-action-bg);
     --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-pointer-focus);
-    --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-v2-action-hover);
-    --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-v2-action-hover);
-    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-v2-action-bg);
-    --_qxframe9a7c2-button-disabled-text: var(--_qxframe9a7c2-v2-action-text);
-    background-color: var(--_qxframe9a7c2-v2-action-current);
-    border-color: var(--_qxframe9a7c2-v2-action-border);
-    color: var(--_qxframe9a7c2-v2-action-text);
-    box-shadow: var(--_qxframe9a7c2-v2-action-shadow);
+    --_qxframe9a7c2-button-focus-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-action-hover);
+    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-active-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-disabled-bg: var(--_qxframe9a7c2-action-bg);
+    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-disabled-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-hover-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-active-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-disabled-shadow: none;
+  }
+  .qxframe9a7c2-button {
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground);
+    --_qxframe9a7c2-outline: var(--qxframe9a7c2-theme-outline);
+    --_qxframe9a7c2-outline-hover: var(--qxframe9a7c2-theme-outline-hover);
+    --_qxframe9a7c2-outline-border: var(--qxframe9a7c2-theme-outline-border);
+    --_qxframe9a7c2-ghost-hover: light-dark(var(--qxframe9a7c2-theme-muted), color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent));
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-outline);
+    --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-outline-hover);
+    --_qxframe9a7c2-action-text: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-action-border: var(--_qxframe9a7c2-outline-border);
+    --_qxframe9a7c2-action-shadow: var(--qxframe9a7c2-theme-shadow-control);
   }
   .qxframe9a7c2-button.is-secondary {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-secondary);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground);
-    --_qxframe9a7c2-v2-solid-hover: color-mix(in oklch, var(--qxframe9a7c2-theme-secondary) 95%, var(--qxframe9a7c2-theme-foreground) 5%);
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-secondary);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground);
+    --_qxframe9a7c2-solid-hover: color-mix(in oklch, var(--qxframe9a7c2-theme-secondary) 95%, var(--qxframe9a7c2-theme-foreground) 5%);
   }
   .qxframe9a7c2-button.is-default {
-    --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-foreground);
-    --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-background);
   }
-  .qxframe9a7c2-button.is-success { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
-  .qxframe9a7c2-button.is-warning { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
-  .qxframe9a7c2-button.is-error { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
-  .qxframe9a7c2-button.is-info { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
-  .qxframe9a7c2-button.is-danger { --_qxframe9a7c2-v2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-v2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  .qxframe9a7c2-button.is-success { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
+  .qxframe9a7c2-button.is-warning { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
+  .qxframe9a7c2-button.is-error { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  .qxframe9a7c2-button.is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+  .qxframe9a7c2-button.is-danger { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
   .qxframe9a7c2-button.is-solid {
-    --_qxframe9a7c2-v2-action-bg: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-v2-action-hover: var(--_qxframe9a7c2-v2-solid-hover);
-    --_qxframe9a7c2-v2-action-text: var(--_qxframe9a7c2-v2-type-foreground);
-    --_qxframe9a7c2-v2-action-border: transparent;
-    --_qxframe9a7c2-v2-action-shadow: none;
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type-foreground);
+    --_qxframe9a7c2-action-border: transparent;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-filled {
-    --_qxframe9a7c2-v2-action-bg: var(--_qxframe9a7c2-v2-soft);
-    --_qxframe9a7c2-v2-action-hover: var(--_qxframe9a7c2-v2-soft-hover);
-    --_qxframe9a7c2-v2-action-text: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-v2-action-border: transparent;
-    --_qxframe9a7c2-v2-action-shadow: none;
+    --_qxframe9a7c2-action-bg: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-action-border: transparent;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-plain, .qxframe9a7c2-button.is-text {
-    --_qxframe9a7c2-v2-action-bg: transparent;
-    --_qxframe9a7c2-v2-action-hover: var(--_qxframe9a7c2-v2-ghost-hover);
-    --_qxframe9a7c2-v2-action-border: transparent;
-    --_qxframe9a7c2-v2-action-shadow: none;
+    --_qxframe9a7c2-action-bg: transparent;
+    --_qxframe9a7c2-action-hover: var(--_qxframe9a7c2-ghost-hover);
+    --_qxframe9a7c2-action-border: transparent;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
   .qxframe9a7c2-button.is-link {
-    --_qxframe9a7c2-v2-action-bg: transparent;
-    --_qxframe9a7c2-v2-action-hover: transparent;
-    --_qxframe9a7c2-v2-action-text: var(--_qxframe9a7c2-v2-type);
-    --_qxframe9a7c2-v2-action-border: transparent;
-    --_qxframe9a7c2-v2-action-shadow: none;
+    --_qxframe9a7c2-action-bg: transparent;
+    --_qxframe9a7c2-action-hover: transparent;
+    --_qxframe9a7c2-action-text: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-action-border: transparent;
+    --_qxframe9a7c2-action-shadow: 0 0 0 0 transparent;
   }
-  .qxframe9a7c2-button:hover, .qxframe9a7c2-button.is-hover {
-    --_qxframe9a7c2-v2-action-current: var(--_qxframe9a7c2-v2-action-hover);
+  .qxframe9a7c2-button.is-filled {
+    --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
   }
-  .qxframe9a7c2-button:focus-visible, .qxframe9a7c2-button.is-focus { border-color: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-button.is-filled:focus-visible, .qxframe9a7c2-button.is-filled.is-focus { border-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type) 40%, transparent); }
-  /* Source supplies no independent pressed color. Loading freezes the normal
-     expression; disabled keeps that expression and applies whole opacity. */
-  .qxframe9a7c2-button.is-loading, .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled {
-    --_qxframe9a7c2-v2-action-current: var(--_qxframe9a7c2-v2-action-bg);
-  }
+  /* Native, forced, loading and disabled states are resolved by button.css. */
   .qxframe9a7c2-button.is-disabled, .qxframe9a7c2-button:disabled { opacity: .5; }
 
   /* control: same owner for native Input and all existing Picker Controls. */
-  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-color-panel-input, .qxframe9a7c2-pagination-input {
-    --_qxframe9a7c2-v2-control-bg: var(--qxframe9a7c2-theme-field);
-    --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-field-border);
-    background-color: var(--_qxframe9a7c2-v2-control-bg);
-    border-color: var(--_qxframe9a7c2-v2-control-border);
+  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-field-border);
+    background-color: var(--_qxframe9a7c2-control-bg);
+    border-color: var(--_qxframe9a7c2-control-border);
     color: var(--qxframe9a7c2-theme-foreground);
   }
-  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
-  .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-v2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
-  .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-v2-control-border: var(--qxframe9a7c2-theme-warning); }
+  .qxframe9a7c2-input:focus-within, .qxframe9a7c2-input.is-focused, .qxframe9a7c2-input.is-expanded { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input.is-error, .qxframe9a7c2-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-input.is-warning { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-warning); }
   .qxframe9a7c2-input.is-disabled { opacity: .5; }
-  .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-v2-control-bg: var(--qxframe9a7c2-theme-field-disabled); }
+  .qxframe9a7c2-input.is-disabled, .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field-disabled); }
   .qxframe9a7c2-input-control::placeholder, .qxframe9a7c2-input-prefix, .qxframe9a7c2-input-suffix { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-input.is-draft-value > .qxframe9a7c2-input-control { color: var(--qxframe9a7c2-theme-muted-foreground); }
-  .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-v2-control-bg: var(--qxframe9a7c2-theme-muted); }
-  .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-v2-control-border: transparent; --_qxframe9a7c2-v2-control-bg: transparent; }
+  .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-control-border: transparent; --_qxframe9a7c2-control-bg: transparent; }
 
   /* surface: retain Card composition and opt-in divider geometry. */
   .qxframe9a7c2-card {
@@ -353,36 +369,24 @@
      The real border uses the source ring color; QX geometry stays QX-owned. */
   /* Menu color axis: floating menus use the menu surface; popovers and dialogs keep the popover surface. */
   .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container, .qxframe9a7c2-popover-root, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
-    --_qxframe9a7c2-v2-popup-bg: var(--qxframe9a7c2-theme-popover);
-    --_qxframe9a7c2-v2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
   }
-  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
-    --_qxframe9a7c2-v2-popup-bg: var(--qxframe9a7c2-theme-menu);
-    --_qxframe9a7c2-v2-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
     backdrop-filter: blur(var(--qxframe9a7c2-theme-menu-blur));
   }
   .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
-    --_qxframe9a7c2-v2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
-    --_qxframe9a7c2-v2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
-    --_qxframe9a7c2-v2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
-    --_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-popup-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popup-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-popup-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
-    --_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-popup-surface-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-popup-surface-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popup-surface-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
-    --_qxframe9a7c2-popover-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-popover-text: var(--_qxframe9a7c2-v2-popup-text);
-    --_qxframe9a7c2-popover-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
-    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-v2-popup-bg);
-    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-v2-popup-border);
-    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
-    color: var(--_qxframe9a7c2-v2-popup-text);
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
+    --_qxframe9a7c2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
+    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
   }
   /* Popup ItemCollection and ItemSurface otherwise force the page foreground
      onto floating Select options, breaking inverted menu readability.
@@ -390,95 +394,323 @@
   .qxframe9a7c2-popup-surface .qxframe9a7c2-item-collection {
     color: var(--_qxframe9a7c2-popup-surface-text);
   }
+  /* The Popup is the only backdrop painter. Nested option collections must not
+     stack another translucent Menu surface and make 80% opacity look solid.
+     Keep a caller's explicit ItemCollection background override. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-collection {
+    background: var(--qxframe9a7c2-item-collection-bg,transparent);
+  }
   .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface {
     --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-popup-surface-text);
   }
-  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected, .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface.is-selected.is-hover { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground); }
-  .qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {
-    background-color: var(--_qxframe9a7c2-v2-popup-bg);
-    border-color: var(--_qxframe9a7c2-v2-popup-border);
-    box-shadow: var(--_qxframe9a7c2-v2-popup-shadow);
+
+  /* Popup-context contrast contract. Menu color is independent of page light/dark.
+     An inverted menu can be dark on a light page or light on a dark page.
+     Popup children re-declare semantic roles through the scoped universal rule,
+     so a foreground on the panel alone cannot reach nested Picker controls.
+     Resolve each nested consumer against its *own popup surface* instead.
+     This affects Select, Cascader, TreeSelect, DatePicker, TimePicker,
+     ColorPicker and WheelPicker, not their closed trigger controls. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) *,
+  .qxframe9a7c2-menu-submenu-panel,
+  .qxframe9a7c2-menu-submenu-panel *,
+  .qxframe9a7c2-menu-overflow-panel,
+  .qxframe9a7c2-menu-overflow-panel * {
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-menu);
+    /* One alpha-composited recipe for solid and translucent Popup surfaces.
+       Only the popup surface opacity changes between Menu modes; descendant
+       Hover, Selected and passive borders remain translucent overlays. */
+    --_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%, transparent);
+    --_qxframe9a7c2-menu-selected-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-accent) 84%, transparent);
+    --_qxframe9a7c2-semantic-surface-muted: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-surface-hover: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-field-border);
+    --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-navigation-selected-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-control-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
+    --_qxframe9a7c2-control-text-disabled: var(--_qxframe9a7c2-semantic-text-disabled);
+    --_qxframe9a7c2-control-border: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-hover: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-disabled: var(--_qxframe9a7c2-semantic-border-subtle);
+  }
+
+  /* Menu inversion reuses the compiled dark palette. Scroll and Picker
+     decoration must consume Menu foreground contrast, not page colors. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-scroll {
+    --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent));
+    --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent));
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-scroll-thumb:hover {
+    background: var(--qxframe9a7c2-scroll-thumb-hover-color, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  /* A translucent Menu accent already contains the source palette Primary.
+     Restore its original chroma at full opacity for small markers and focus
+     boundaries: neutral stays legible, colored inverted menus stay colored.
+     No extra Theme token or light/dark/inverted selector is necessary. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {
+    --_qxframe9a7c2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-today:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-current:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today:not(.is-selected):not(.is-disabled)::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-current:not(.is-selected):not(.is-disabled)::after {
+    background: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+  /* TreeSelect indicators use the same Choice checked/indeterminate paint as
+     other Checkbox controls. Menu inverse changes only the surface scheme;
+     it must never override the checked mark foreground with Menu background. */
+  /* Hover is a neutral highlight; selected rows alone consume the saturated
+     Menu accent/foreground pair. This applies to all shared ItemSurface users. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-hover:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface:hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-semantic-subtle-hover);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-popover-foreground);
+  }
+  /* An open ancestor is disclosure, not selection. All Picker-backed collections,
+     including Cascader/TreeSelect, keep readable Menu foreground on transparent
+     hover/ancestor paint even with inverted bold accents. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.qxframe9a7c2-tree-item):not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* Tree uses the published main implementation and shared Item states. */
+  /* Picker popup foreground contract: normal day/period cells and wheel rows
+     must use the popup Menu ink even when their nested panel owns color.
+     Keep explicit date-panel text overrides, selected/today and outside-day
+     projection independent. Never apply Menu paint to Popover/Dialog. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel {
+    --_qxframe9a7c2-date-panel-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.is-selected):not(.is-outside):not(.is-today):not(.is-current):not(.is-disabled):not(:disabled) {
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-date-panel-cell-border: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* Current day/month/year retains normal ink + primary bottom dot, not a border. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-border: transparent;
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--_qxframe9a7c2-menu-hover-soft);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
+    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-picker-preset {
+    --_qxframe9a7c2-date-picker-preset-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel {
+    --_qxframe9a7c2-color-panel-field-bg: var(--_qxframe9a7c2-control-bg);
+    /* ColorPanel itself owns field borders; nested Picker does not override. */
+    --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Keyboard outline remains the shared 2px / -1px Focus contract, but on
+     inverse-light popups its color must be derived from the Menu surface,
+     not from the light page. Pointer borders use solid Menu Primary. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel *,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-angle,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-remove {
+    --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+
+  /* Picker's auxiliary controls are not ItemSurface rows. They previously
+     painted page-primary ink onto a potentially opposite menu background. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-time-picker-now {
+    --_qxframe9a7c2-time-picker-now-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Embedded ColorPanel already owns its field paint. Do not repaint its
+     children per Picker type: public ColorPanel overrides remain authoritative. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button.is-active {
+    --_qxframe9a7c2-color-picker-mode-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-color-picker-mode-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-color-picker-mode-border: var(--_qxframe9a7c2-semantic-border);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add {
+    --_qxframe9a7c2-color-picker-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-active,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop.is-active {
+    border-color: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active) {
+    border-color: var(--qxframe9a7c2-theme-field-border);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-selection-indicator.is-check {
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Native Tree checkbox state stays in the input; glyph pairs to Menu surface. */
+
+  /* Inverted Picker: navigation idle/hover and selected cells own paired menu paint. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:not(:disabled) {
+    background: transparent;
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
+    background: var(--_qxframe9a7c2-menu-hover-soft);
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Calendar draws selected day using the inherited Theme state roles on the
+     inner square. Keep direct physical paint only on PeriodPanel's separate DOM. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled):not(.qxframe9a7c2-calendar-cell),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected:not(:disabled) {
+    background: var(--_qxframe9a7c2-menu-selected-soft);
+    border-color: var(--_qxframe9a7c2-menu-selected-soft);
+    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* Shared ColorPanel control source handles idle, hover and keyboard focus. */
+
+  /* Only navigation-specific panels own direct Menu paint. Generic Popup
+   * surfaces and Popover/Tooltip/Pickers consume their family-owned surface
+   * tokens through component foundation, preserving alpha and local scheme. */
+  .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
+    background-color: var(--_qxframe9a7c2-popup-bg);
+    border-color: var(--_qxframe9a7c2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-popup-shadow);
   }
   .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
     background-color: var(--qxframe9a7c2-theme-popover);
     color: var(--qxframe9a7c2-theme-popover-foreground);
-    border: 1px solid var(--_qxframe9a7c2-v2-popup-border);
-    box-shadow: var(--_qxframe9a7c2-v2-dialog-shadow);
+    border: 1px solid var(--_qxframe9a7c2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
   }
-  .qxframe9a7c2-modal-mask, .qxframe9a7c2-drawer-mask { background-color: var(--qxframe9a7c2-theme-overlay); }
-  .qxframe9a7c2-modal-mask.is-maskless, .qxframe9a7c2-drawer-mask.is-maskless { background-color: transparent; }
 
   /* navigation: shadcn item highlighting uses accent, not primary. */
   .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
-  .qxframe9a7c2-menu-item {
-    --_qxframe9a7c2-v2-navigation-bg: transparent;
-    --_qxframe9a7c2-v2-navigation-text: inherit;
-    background-color: var(--_qxframe9a7c2-v2-navigation-bg);
-    color: var(--_qxframe9a7c2-v2-navigation-text);
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item {
+    --_qxframe9a7c2-menu-item-bg: transparent;
+    --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground));
+    --_qxframe9a7c2-menu-render-background: var(--_qxframe9a7c2-menu-item-bg);
+    color: var(--_qxframe9a7c2-navigation-text);
     border-color: transparent;
   }
-  .qxframe9a7c2-menu-item:hover, .qxframe9a7c2-menu-item.is-hover, .qxframe9a7c2-menu-item.is-selected, .qxframe9a7c2-menu-item.is-descendant-selected, .qxframe9a7c2-menu-item.is-open {
-    --_qxframe9a7c2-v2-navigation-bg: var(--qxframe9a7c2-theme-accent);
-    --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-accent-foreground);
+  /* Hover is neutral, expanded uses Menu accent, selection remains separate. */
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item:hover:not(.is-open):not(.is-selected), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-hover:not(.is-open):not(.is-selected) {
+    --_qxframe9a7c2-menu-item-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
   }
-  .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-v2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
-  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-v2-navigation-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
-  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-v2-navigation-bg: transparent; --_qxframe9a7c2-v2-navigation-text: inherit; opacity: .5; }
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-descendant-selected:not(.is-open), .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-active:not(.is-open) {
+    --_qxframe9a7c2-menu-item-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
+    --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
+  }
+  .qxframe9a7c2-menu .qxframe9a7c2-menu-item.is-open:not(.is-selected) {
+    --_qxframe9a7c2-menu-item-bg: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
+    --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-sidebar-foreground);
+    --_qxframe9a7c2-menu-item-text: var(--_qxframe9a7c2-navigation-text);
+  }
+  /* Menu source paints --menu-render-background (not the generic navigation
+     channel). Project Open onto that actual single paint owner, keeping any
+     explicit expanded recipe before the generated Menu accent fallback. */
+  .qxframe9a7c2-menu:not(.is-horizontal) .qxframe9a7c2-menu-item.is-open:not(.is-selected):not(.is-descendant-selected):not(:disabled):not(.is-danger) {
+    --_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);
+    --_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);
+  }
+  .qxframe9a7c2-menu-item.is-danger { --_qxframe9a7c2-navigation-text: var(--qxframe9a7c2-theme-destructive); }
+  .qxframe9a7c2-menu-item.is-danger:hover, .qxframe9a7c2-menu-item.is-danger.is-hover, .qxframe9a7c2-menu-item.is-danger.is-selected, .qxframe9a7c2-menu-item.is-danger.is-open, .qxframe9a7c2-menu-item.is-danger.is-descendant-selected { --_qxframe9a7c2-menu-item-bg: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent)); }
+  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
   /* Shared native/projected choice; state source and QX focus protocol unchanged. */
-  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-v2-choice-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-v2-choice-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-v2-choice-bg); border-color: var(--_qxframe9a7c2-v2-choice-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
   .qxframe9a7c2-native-form input[type="radio"]:checked::before, .qxframe9a7c2-form-check-input[type="radio"]:checked::before, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio::before { background-color: currentColor; }
   .qxframe9a7c2-form-check-input[type="checkbox"] { border-radius: var(--_qxframe9a7c2-choice-radius); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-v2-choice-bg); border-color: var(--_qxframe9a7c2-v2-choice-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled { background-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked:disabled, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:checked:disabled { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
+
+  /* Tree Choice is global: Popup Menu never changes checkbox painting. */
+
   /* Radio fill (theme input): 100% = filled type color, 0% = outlined foreground ring + dot (Sera). */
   .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,
   .qxframe9a7c2-native-form input[type="radio"]:checked:disabled, .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled {
-    background-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), transparent);
-    border-color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
-    color: color-mix(in oklab, var(--_qxframe9a7c2-v2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+    background-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), transparent);
+    border-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+    color: color-mix(in oklab, var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
   }
   .qxframe9a7c2-switch-track { background-color: var(--qxframe9a7c2-theme-switch-track); border-color: var(--qxframe9a7c2-theme-switch-track-border); }
-  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-v2-type); border-color: var(--_qxframe9a7c2-v2-type); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-type); border-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--qxframe9a7c2-theme-foreground)); }
-  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track .qxframe9a7c2-switch-thumb, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--_qxframe9a7c2-v2-type-foreground)); }
+  .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track .qxframe9a7c2-switch-thumb, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--_qxframe9a7c2-type-foreground)); }
 
   /* GEOMETRY qx-md-1: public md lengths -> local fixed CSS rules.
      Every independent root owns index zero; connected groups explicitly share it. */
-  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-date-panel[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
-    --_qxframe9a7c2-v2-size-index: 0;
-    --_qxframe9a7c2-v2-size-ratio: calc(1 + var(--_qxframe9a7c2-v2-size-index) * .125);
-    --_qxframe9a7c2-v2-font-step: clamp(-1, var(--_qxframe9a7c2-v2-size-index), 1);
-    --_qxframe9a7c2-control-height: calc(var(--qxframe9a7c2-theme-control-height) + var(--_qxframe9a7c2-v2-size-index) * .25rem);
+  .qxframe9a7c2-notice-slot[class], .qxframe9a7c2-message-root[class], .qxframe9a7c2-notification-root[class], .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-date-panel[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
+    --_qxframe9a7c2-size-index: 0;
+    --_qxframe9a7c2-size-ratio: calc(1 + var(--_qxframe9a7c2-size-index) * .125);
+    --_qxframe9a7c2-font-step: clamp(-1, var(--_qxframe9a7c2-size-index), 1);
+    --_qxframe9a7c2-control-height: calc(var(--qxframe9a7c2-theme-control-height) + var(--_qxframe9a7c2-size-index) * .25rem);
     --_qxframe9a7c2-control-local-height: var(--_qxframe9a7c2-control-height);
-    --_qxframe9a7c2-control-font-size: max(.75rem, calc(var(--qxframe9a7c2-theme-control-font-size) + var(--_qxframe9a7c2-v2-font-step) * .125rem));
-    --_qxframe9a7c2-control-line-height: max(var(--_qxframe9a7c2-control-font-size), calc(var(--qxframe9a7c2-theme-control-line-height) + var(--_qxframe9a7c2-v2-font-step) * .125rem));
-    --_qxframe9a7c2-control-icon-size: max(.5rem, calc(var(--qxframe9a7c2-theme-control-icon) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-control-padding-inline: max(0rem, calc(var(--qxframe9a7c2-theme-control-padding) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-control-gap: max(0rem, calc(var(--qxframe9a7c2-theme-control-gap) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
+    --_qxframe9a7c2-control-font-size: max(.75rem, calc(var(--qxframe9a7c2-theme-control-font-size) + var(--_qxframe9a7c2-font-step) * .125rem));
+    --_qxframe9a7c2-control-line-height: max(var(--_qxframe9a7c2-control-font-size), calc(var(--qxframe9a7c2-theme-control-line-height) + var(--_qxframe9a7c2-font-step) * .125rem));
+    --_qxframe9a7c2-control-icon-size: max(.5rem, calc(var(--qxframe9a7c2-theme-control-icon) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-control-padding-inline: max(0rem, calc(var(--qxframe9a7c2-theme-control-padding) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-control-gap: max(0rem, calc(var(--qxframe9a7c2-theme-control-gap) + var(--_qxframe9a7c2-size-index) * .125rem));
     --_qxframe9a7c2-control-border-width: 1px;
     --_qxframe9a7c2-control-padding-block: round(down, max(0rem, calc((var(--_qxframe9a7c2-control-height) - max(var(--_qxframe9a7c2-control-line-height), var(--_qxframe9a7c2-control-icon-size)) - 2px) / 2)), .125rem);
-    --_qxframe9a7c2-control-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-field) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-action-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-button) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-choice-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-choice) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-surface-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-card) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-popup-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-popup) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-v2-surface-padding: round(nearest, calc(var(--qxframe9a7c2-theme-card-padding) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-v2-surface-gap: round(nearest, calc(var(--qxframe9a7c2-theme-card-gap) * var(--_qxframe9a7c2-v2-size-ratio)), .125rem);
-    --_qxframe9a7c2-form-check-size: calc(var(--qxframe9a7c2-theme-choice-size) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
+    --_qxframe9a7c2-control-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-field) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-action-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-button) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-choice-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-choice) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-card) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-popup-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-popup) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-padding: round(nearest, calc(var(--qxframe9a7c2-theme-card-padding) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-gap: round(nearest, calc(var(--qxframe9a7c2-theme-card-gap) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-form-check-size: calc(var(--qxframe9a7c2-theme-choice-size) + var(--_qxframe9a7c2-size-index) * .125rem);
   }
-  .qxframe9a7c2-button.is-xs, .qxframe9a7c2-input.is-xs, .qxframe9a7c2-text-field.is-xs, .qxframe9a7c2-form-input.is-xs, .qxframe9a7c2-form-select.is-xs, .qxframe9a7c2-form-textarea.is-xs, .qxframe9a7c2-selectgroup.is-xs, .qxframe9a7c2-form-check.is-xs, .qxframe9a7c2-form-check-input.is-xs, .qxframe9a7c2-form-segmented.is-xs, .qxframe9a7c2-button-group.is-xs, .qxframe9a7c2-input-group.is-xs, .qxframe9a7c2-form-group.is-xs, .qxframe9a7c2-tags.is-xs, .qxframe9a7c2-tag.is-xs, .qxframe9a7c2-badge.is-xs, .qxframe9a7c2-input-otp.is-xs, .qxframe9a7c2-switch.is-xs, .qxframe9a7c2-slider.is-xs, .qxframe9a7c2-progress.is-xs, .qxframe9a7c2-rate.is-xs, .qxframe9a7c2-card.is-xs, .qxframe9a7c2-collapse.is-xs, .qxframe9a7c2-descriptions.is-xs, .qxframe9a7c2-avatar.is-xs, .qxframe9a7c2-empty.is-xs, .qxframe9a7c2-result.is-xs, .qxframe9a7c2-list.is-xs, .qxframe9a7c2-tree.is-xs, .qxframe9a7c2-transfer.is-xs, .qxframe9a7c2-table.is-xs, .qxframe9a7c2-menu.is-xs, .qxframe9a7c2-tabs.is-xs, .qxframe9a7c2-steps.is-xs, .qxframe9a7c2-pagination.is-xs, .qxframe9a7c2-upload.is-xs, .qxframe9a7c2-alert-root.is-xs, .qxframe9a7c2-message.is-xs, .qxframe9a7c2-notification.is-xs, .qxframe9a7c2-popup-surface.is-xs, .qxframe9a7c2-popover-root.is-xs, .qxframe9a7c2-modal-root.is-xs, .qxframe9a7c2-drawer-root.is-xs, .qxframe9a7c2-calendar.is-xs, .qxframe9a7c2-period-panel.is-xs, .qxframe9a7c2-time-panel.is-xs, .qxframe9a7c2-wheel-panel.is-xs, .qxframe9a7c2-color-panel.is-xs { --_qxframe9a7c2-v2-size-index: -2; }
-  .qxframe9a7c2-button.is-sm, .qxframe9a7c2-input.is-sm, .qxframe9a7c2-text-field.is-sm, .qxframe9a7c2-form-input.is-sm, .qxframe9a7c2-form-select.is-sm, .qxframe9a7c2-form-textarea.is-sm, .qxframe9a7c2-selectgroup.is-sm, .qxframe9a7c2-form-check.is-sm, .qxframe9a7c2-form-check-input.is-sm, .qxframe9a7c2-form-segmented.is-sm, .qxframe9a7c2-button-group.is-sm, .qxframe9a7c2-input-group.is-sm, .qxframe9a7c2-form-group.is-sm, .qxframe9a7c2-tags.is-sm, .qxframe9a7c2-tag.is-sm, .qxframe9a7c2-badge.is-sm, .qxframe9a7c2-input-otp.is-sm, .qxframe9a7c2-switch.is-sm, .qxframe9a7c2-slider.is-sm, .qxframe9a7c2-progress.is-sm, .qxframe9a7c2-rate.is-sm, .qxframe9a7c2-card.is-sm, .qxframe9a7c2-collapse.is-sm, .qxframe9a7c2-descriptions.is-sm, .qxframe9a7c2-avatar.is-sm, .qxframe9a7c2-empty.is-sm, .qxframe9a7c2-result.is-sm, .qxframe9a7c2-list.is-sm, .qxframe9a7c2-tree.is-sm, .qxframe9a7c2-transfer.is-sm, .qxframe9a7c2-table.is-sm, .qxframe9a7c2-menu.is-sm, .qxframe9a7c2-tabs.is-sm, .qxframe9a7c2-steps.is-sm, .qxframe9a7c2-pagination.is-sm, .qxframe9a7c2-upload.is-sm, .qxframe9a7c2-alert-root.is-sm, .qxframe9a7c2-message.is-sm, .qxframe9a7c2-notification.is-sm, .qxframe9a7c2-popup-surface.is-sm, .qxframe9a7c2-popover-root.is-sm, .qxframe9a7c2-modal-root.is-sm, .qxframe9a7c2-drawer-root.is-sm, .qxframe9a7c2-calendar.is-sm, .qxframe9a7c2-period-panel.is-sm, .qxframe9a7c2-time-panel.is-sm, .qxframe9a7c2-wheel-panel.is-sm, .qxframe9a7c2-color-panel.is-sm { --_qxframe9a7c2-v2-size-index: -1; }
-  .qxframe9a7c2-button.is-md, .qxframe9a7c2-input.is-md, .qxframe9a7c2-text-field.is-md, .qxframe9a7c2-form-input.is-md, .qxframe9a7c2-form-select.is-md, .qxframe9a7c2-form-textarea.is-md, .qxframe9a7c2-selectgroup.is-md, .qxframe9a7c2-form-check.is-md, .qxframe9a7c2-form-check-input.is-md, .qxframe9a7c2-form-segmented.is-md, .qxframe9a7c2-button-group.is-md, .qxframe9a7c2-input-group.is-md, .qxframe9a7c2-form-group.is-md, .qxframe9a7c2-tags.is-md, .qxframe9a7c2-tag.is-md, .qxframe9a7c2-badge.is-md, .qxframe9a7c2-input-otp.is-md, .qxframe9a7c2-switch.is-md, .qxframe9a7c2-slider.is-md, .qxframe9a7c2-progress.is-md, .qxframe9a7c2-rate.is-md, .qxframe9a7c2-card.is-md, .qxframe9a7c2-collapse.is-md, .qxframe9a7c2-descriptions.is-md, .qxframe9a7c2-avatar.is-md, .qxframe9a7c2-empty.is-md, .qxframe9a7c2-result.is-md, .qxframe9a7c2-list.is-md, .qxframe9a7c2-tree.is-md, .qxframe9a7c2-transfer.is-md, .qxframe9a7c2-table.is-md, .qxframe9a7c2-menu.is-md, .qxframe9a7c2-tabs.is-md, .qxframe9a7c2-steps.is-md, .qxframe9a7c2-pagination.is-md, .qxframe9a7c2-upload.is-md, .qxframe9a7c2-alert-root.is-md, .qxframe9a7c2-message.is-md, .qxframe9a7c2-notification.is-md, .qxframe9a7c2-popup-surface.is-md, .qxframe9a7c2-popover-root.is-md, .qxframe9a7c2-modal-root.is-md, .qxframe9a7c2-drawer-root.is-md, .qxframe9a7c2-calendar.is-md, .qxframe9a7c2-period-panel.is-md, .qxframe9a7c2-time-panel.is-md, .qxframe9a7c2-wheel-panel.is-md, .qxframe9a7c2-color-panel.is-md { --_qxframe9a7c2-v2-size-index: 0; }
-  .qxframe9a7c2-button.is-lg, .qxframe9a7c2-input.is-lg, .qxframe9a7c2-text-field.is-lg, .qxframe9a7c2-form-input.is-lg, .qxframe9a7c2-form-select.is-lg, .qxframe9a7c2-form-textarea.is-lg, .qxframe9a7c2-selectgroup.is-lg, .qxframe9a7c2-form-check.is-lg, .qxframe9a7c2-form-check-input.is-lg, .qxframe9a7c2-form-segmented.is-lg, .qxframe9a7c2-button-group.is-lg, .qxframe9a7c2-input-group.is-lg, .qxframe9a7c2-form-group.is-lg, .qxframe9a7c2-tags.is-lg, .qxframe9a7c2-tag.is-lg, .qxframe9a7c2-badge.is-lg, .qxframe9a7c2-input-otp.is-lg, .qxframe9a7c2-switch.is-lg, .qxframe9a7c2-slider.is-lg, .qxframe9a7c2-progress.is-lg, .qxframe9a7c2-rate.is-lg, .qxframe9a7c2-card.is-lg, .qxframe9a7c2-collapse.is-lg, .qxframe9a7c2-descriptions.is-lg, .qxframe9a7c2-avatar.is-lg, .qxframe9a7c2-empty.is-lg, .qxframe9a7c2-result.is-lg, .qxframe9a7c2-list.is-lg, .qxframe9a7c2-tree.is-lg, .qxframe9a7c2-transfer.is-lg, .qxframe9a7c2-table.is-lg, .qxframe9a7c2-menu.is-lg, .qxframe9a7c2-tabs.is-lg, .qxframe9a7c2-steps.is-lg, .qxframe9a7c2-pagination.is-lg, .qxframe9a7c2-upload.is-lg, .qxframe9a7c2-alert-root.is-lg, .qxframe9a7c2-message.is-lg, .qxframe9a7c2-notification.is-lg, .qxframe9a7c2-popup-surface.is-lg, .qxframe9a7c2-popover-root.is-lg, .qxframe9a7c2-modal-root.is-lg, .qxframe9a7c2-drawer-root.is-lg, .qxframe9a7c2-calendar.is-lg, .qxframe9a7c2-period-panel.is-lg, .qxframe9a7c2-time-panel.is-lg, .qxframe9a7c2-wheel-panel.is-lg, .qxframe9a7c2-color-panel.is-lg { --_qxframe9a7c2-v2-size-index: 1; }
-  .qxframe9a7c2-button.is-xl, .qxframe9a7c2-input.is-xl, .qxframe9a7c2-text-field.is-xl, .qxframe9a7c2-form-input.is-xl, .qxframe9a7c2-form-select.is-xl, .qxframe9a7c2-form-textarea.is-xl, .qxframe9a7c2-selectgroup.is-xl, .qxframe9a7c2-form-check.is-xl, .qxframe9a7c2-form-check-input.is-xl, .qxframe9a7c2-form-segmented.is-xl, .qxframe9a7c2-button-group.is-xl, .qxframe9a7c2-input-group.is-xl, .qxframe9a7c2-form-group.is-xl, .qxframe9a7c2-tags.is-xl, .qxframe9a7c2-tag.is-xl, .qxframe9a7c2-badge.is-xl, .qxframe9a7c2-input-otp.is-xl, .qxframe9a7c2-switch.is-xl, .qxframe9a7c2-slider.is-xl, .qxframe9a7c2-progress.is-xl, .qxframe9a7c2-rate.is-xl, .qxframe9a7c2-card.is-xl, .qxframe9a7c2-collapse.is-xl, .qxframe9a7c2-descriptions.is-xl, .qxframe9a7c2-avatar.is-xl, .qxframe9a7c2-empty.is-xl, .qxframe9a7c2-result.is-xl, .qxframe9a7c2-list.is-xl, .qxframe9a7c2-tree.is-xl, .qxframe9a7c2-transfer.is-xl, .qxframe9a7c2-table.is-xl, .qxframe9a7c2-menu.is-xl, .qxframe9a7c2-tabs.is-xl, .qxframe9a7c2-steps.is-xl, .qxframe9a7c2-pagination.is-xl, .qxframe9a7c2-upload.is-xl, .qxframe9a7c2-alert-root.is-xl, .qxframe9a7c2-message.is-xl, .qxframe9a7c2-notification.is-xl, .qxframe9a7c2-popup-surface.is-xl, .qxframe9a7c2-popover-root.is-xl, .qxframe9a7c2-modal-root.is-xl, .qxframe9a7c2-drawer-root.is-xl, .qxframe9a7c2-calendar.is-xl, .qxframe9a7c2-period-panel.is-xl, .qxframe9a7c2-time-panel.is-xl, .qxframe9a7c2-wheel-panel.is-xl, .qxframe9a7c2-color-panel.is-xl { --_qxframe9a7c2-v2-size-index: 2; }
+  .qxframe9a7c2-button.is-xs, .qxframe9a7c2-input.is-xs, .qxframe9a7c2-text-field.is-xs, .qxframe9a7c2-form-input.is-xs, .qxframe9a7c2-form-select.is-xs, .qxframe9a7c2-form-textarea.is-xs, .qxframe9a7c2-selectgroup.is-xs, .qxframe9a7c2-form-check.is-xs, .qxframe9a7c2-form-check-input.is-xs, .qxframe9a7c2-form-segmented.is-xs, .qxframe9a7c2-button-group.is-xs, .qxframe9a7c2-input-group.is-xs, .qxframe9a7c2-form-group.is-xs, .qxframe9a7c2-tags.is-xs, .qxframe9a7c2-tag.is-xs, .qxframe9a7c2-badge.is-xs, .qxframe9a7c2-input-otp.is-xs, .qxframe9a7c2-switch.is-xs, .qxframe9a7c2-slider.is-xs, .qxframe9a7c2-progress.is-xs, .qxframe9a7c2-rate.is-xs, .qxframe9a7c2-card.is-xs, .qxframe9a7c2-collapse.is-xs, .qxframe9a7c2-descriptions.is-xs, .qxframe9a7c2-avatar.is-xs, .qxframe9a7c2-empty.is-xs, .qxframe9a7c2-result.is-xs, .qxframe9a7c2-list.is-xs, .qxframe9a7c2-tree.is-xs, .qxframe9a7c2-transfer.is-xs, .qxframe9a7c2-table.is-xs, .qxframe9a7c2-menu.is-xs, .qxframe9a7c2-tabs.is-xs, .qxframe9a7c2-steps.is-xs, .qxframe9a7c2-pagination.is-xs, .qxframe9a7c2-upload.is-xs, .qxframe9a7c2-alert-root.is-xs, .qxframe9a7c2-message.is-xs, .qxframe9a7c2-notification.is-xs, .qxframe9a7c2-popup-surface.is-xs, .qxframe9a7c2-popover-root.is-xs, .qxframe9a7c2-modal-root.is-xs, .qxframe9a7c2-drawer-root.is-xs, .qxframe9a7c2-calendar.is-xs, .qxframe9a7c2-period-panel.is-xs, .qxframe9a7c2-time-panel.is-xs, .qxframe9a7c2-wheel-panel.is-xs, .qxframe9a7c2-color-panel.is-xs { --_qxframe9a7c2-size-index: -2; }
+  .qxframe9a7c2-button.is-sm, .qxframe9a7c2-input.is-sm, .qxframe9a7c2-text-field.is-sm, .qxframe9a7c2-form-input.is-sm, .qxframe9a7c2-form-select.is-sm, .qxframe9a7c2-form-textarea.is-sm, .qxframe9a7c2-selectgroup.is-sm, .qxframe9a7c2-form-check.is-sm, .qxframe9a7c2-form-check-input.is-sm, .qxframe9a7c2-form-segmented.is-sm, .qxframe9a7c2-button-group.is-sm, .qxframe9a7c2-input-group.is-sm, .qxframe9a7c2-form-group.is-sm, .qxframe9a7c2-tags.is-sm, .qxframe9a7c2-tag.is-sm, .qxframe9a7c2-badge.is-sm, .qxframe9a7c2-input-otp.is-sm, .qxframe9a7c2-switch.is-sm, .qxframe9a7c2-slider.is-sm, .qxframe9a7c2-progress.is-sm, .qxframe9a7c2-rate.is-sm, .qxframe9a7c2-card.is-sm, .qxframe9a7c2-collapse.is-sm, .qxframe9a7c2-descriptions.is-sm, .qxframe9a7c2-avatar.is-sm, .qxframe9a7c2-empty.is-sm, .qxframe9a7c2-result.is-sm, .qxframe9a7c2-list.is-sm, .qxframe9a7c2-tree.is-sm, .qxframe9a7c2-transfer.is-sm, .qxframe9a7c2-table.is-sm, .qxframe9a7c2-menu.is-sm, .qxframe9a7c2-tabs.is-sm, .qxframe9a7c2-steps.is-sm, .qxframe9a7c2-pagination.is-sm, .qxframe9a7c2-upload.is-sm, .qxframe9a7c2-alert-root.is-sm, .qxframe9a7c2-message.is-sm, .qxframe9a7c2-notification.is-sm, .qxframe9a7c2-popup-surface.is-sm, .qxframe9a7c2-popover-root.is-sm, .qxframe9a7c2-modal-root.is-sm, .qxframe9a7c2-drawer-root.is-sm, .qxframe9a7c2-calendar.is-sm, .qxframe9a7c2-period-panel.is-sm, .qxframe9a7c2-time-panel.is-sm, .qxframe9a7c2-wheel-panel.is-sm, .qxframe9a7c2-color-panel.is-sm { --_qxframe9a7c2-size-index: -1; }
+  .qxframe9a7c2-button.is-md, .qxframe9a7c2-input.is-md, .qxframe9a7c2-text-field.is-md, .qxframe9a7c2-form-input.is-md, .qxframe9a7c2-form-select.is-md, .qxframe9a7c2-form-textarea.is-md, .qxframe9a7c2-selectgroup.is-md, .qxframe9a7c2-form-check.is-md, .qxframe9a7c2-form-check-input.is-md, .qxframe9a7c2-form-segmented.is-md, .qxframe9a7c2-button-group.is-md, .qxframe9a7c2-input-group.is-md, .qxframe9a7c2-form-group.is-md, .qxframe9a7c2-tags.is-md, .qxframe9a7c2-tag.is-md, .qxframe9a7c2-badge.is-md, .qxframe9a7c2-input-otp.is-md, .qxframe9a7c2-switch.is-md, .qxframe9a7c2-slider.is-md, .qxframe9a7c2-progress.is-md, .qxframe9a7c2-rate.is-md, .qxframe9a7c2-card.is-md, .qxframe9a7c2-collapse.is-md, .qxframe9a7c2-descriptions.is-md, .qxframe9a7c2-avatar.is-md, .qxframe9a7c2-empty.is-md, .qxframe9a7c2-result.is-md, .qxframe9a7c2-list.is-md, .qxframe9a7c2-tree.is-md, .qxframe9a7c2-transfer.is-md, .qxframe9a7c2-table.is-md, .qxframe9a7c2-menu.is-md, .qxframe9a7c2-tabs.is-md, .qxframe9a7c2-steps.is-md, .qxframe9a7c2-pagination.is-md, .qxframe9a7c2-upload.is-md, .qxframe9a7c2-alert-root.is-md, .qxframe9a7c2-message.is-md, .qxframe9a7c2-notification.is-md, .qxframe9a7c2-popup-surface.is-md, .qxframe9a7c2-popover-root.is-md, .qxframe9a7c2-modal-root.is-md, .qxframe9a7c2-drawer-root.is-md, .qxframe9a7c2-calendar.is-md, .qxframe9a7c2-period-panel.is-md, .qxframe9a7c2-time-panel.is-md, .qxframe9a7c2-wheel-panel.is-md, .qxframe9a7c2-color-panel.is-md { --_qxframe9a7c2-size-index: 0; }
+  .qxframe9a7c2-button.is-lg, .qxframe9a7c2-input.is-lg, .qxframe9a7c2-text-field.is-lg, .qxframe9a7c2-form-input.is-lg, .qxframe9a7c2-form-select.is-lg, .qxframe9a7c2-form-textarea.is-lg, .qxframe9a7c2-selectgroup.is-lg, .qxframe9a7c2-form-check.is-lg, .qxframe9a7c2-form-check-input.is-lg, .qxframe9a7c2-form-segmented.is-lg, .qxframe9a7c2-button-group.is-lg, .qxframe9a7c2-input-group.is-lg, .qxframe9a7c2-form-group.is-lg, .qxframe9a7c2-tags.is-lg, .qxframe9a7c2-tag.is-lg, .qxframe9a7c2-badge.is-lg, .qxframe9a7c2-input-otp.is-lg, .qxframe9a7c2-switch.is-lg, .qxframe9a7c2-slider.is-lg, .qxframe9a7c2-progress.is-lg, .qxframe9a7c2-rate.is-lg, .qxframe9a7c2-card.is-lg, .qxframe9a7c2-collapse.is-lg, .qxframe9a7c2-descriptions.is-lg, .qxframe9a7c2-avatar.is-lg, .qxframe9a7c2-empty.is-lg, .qxframe9a7c2-result.is-lg, .qxframe9a7c2-list.is-lg, .qxframe9a7c2-tree.is-lg, .qxframe9a7c2-transfer.is-lg, .qxframe9a7c2-table.is-lg, .qxframe9a7c2-menu.is-lg, .qxframe9a7c2-tabs.is-lg, .qxframe9a7c2-steps.is-lg, .qxframe9a7c2-pagination.is-lg, .qxframe9a7c2-upload.is-lg, .qxframe9a7c2-alert-root.is-lg, .qxframe9a7c2-message.is-lg, .qxframe9a7c2-notification.is-lg, .qxframe9a7c2-popup-surface.is-lg, .qxframe9a7c2-popover-root.is-lg, .qxframe9a7c2-modal-root.is-lg, .qxframe9a7c2-drawer-root.is-lg, .qxframe9a7c2-calendar.is-lg, .qxframe9a7c2-period-panel.is-lg, .qxframe9a7c2-time-panel.is-lg, .qxframe9a7c2-wheel-panel.is-lg, .qxframe9a7c2-color-panel.is-lg { --_qxframe9a7c2-size-index: 1; }
+  .qxframe9a7c2-button.is-xl, .qxframe9a7c2-input.is-xl, .qxframe9a7c2-text-field.is-xl, .qxframe9a7c2-form-input.is-xl, .qxframe9a7c2-form-select.is-xl, .qxframe9a7c2-form-textarea.is-xl, .qxframe9a7c2-selectgroup.is-xl, .qxframe9a7c2-form-check.is-xl, .qxframe9a7c2-form-check-input.is-xl, .qxframe9a7c2-form-segmented.is-xl, .qxframe9a7c2-button-group.is-xl, .qxframe9a7c2-input-group.is-xl, .qxframe9a7c2-form-group.is-xl, .qxframe9a7c2-tags.is-xl, .qxframe9a7c2-tag.is-xl, .qxframe9a7c2-badge.is-xl, .qxframe9a7c2-input-otp.is-xl, .qxframe9a7c2-switch.is-xl, .qxframe9a7c2-slider.is-xl, .qxframe9a7c2-progress.is-xl, .qxframe9a7c2-rate.is-xl, .qxframe9a7c2-card.is-xl, .qxframe9a7c2-collapse.is-xl, .qxframe9a7c2-descriptions.is-xl, .qxframe9a7c2-avatar.is-xl, .qxframe9a7c2-empty.is-xl, .qxframe9a7c2-result.is-xl, .qxframe9a7c2-list.is-xl, .qxframe9a7c2-tree.is-xl, .qxframe9a7c2-transfer.is-xl, .qxframe9a7c2-table.is-xl, .qxframe9a7c2-menu.is-xl, .qxframe9a7c2-tabs.is-xl, .qxframe9a7c2-steps.is-xl, .qxframe9a7c2-pagination.is-xl, .qxframe9a7c2-upload.is-xl, .qxframe9a7c2-alert-root.is-xl, .qxframe9a7c2-message.is-xl, .qxframe9a7c2-notification.is-xl, .qxframe9a7c2-popup-surface.is-xl, .qxframe9a7c2-popover-root.is-xl, .qxframe9a7c2-modal-root.is-xl, .qxframe9a7c2-drawer-root.is-xl, .qxframe9a7c2-calendar.is-xl, .qxframe9a7c2-period-panel.is-xl, .qxframe9a7c2-time-panel.is-xl, .qxframe9a7c2-wheel-panel.is-xl, .qxframe9a7c2-color-panel.is-xl { --_qxframe9a7c2-size-index: 2; }
 
   .qxframe9a7c2-form-check > .qxframe9a7c2-form-check-input,
   .qxframe9a7c2-button-group:not(.is-mixed-size) > .qxframe9a7c2-button,
   .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-input,
   .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-button,
   .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-form-input,
-  .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-button { --_qxframe9a7c2-v2-size-index: inherit; }
+  .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-button { --_qxframe9a7c2-size-index: inherit; }
   /* Controls and multi-line Textarea share typography and padding, not
      minimum height: Textarea's base 5rem and authored size overrides must win. */
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class] {
@@ -508,13 +740,13 @@
   .qxframe9a7c2-button.is-circle { border-radius: 50%; }
   /* is-square is geometric (width = height), not a hard-corner shape. */
   .qxframe9a7c2-card[class] {
-    --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-v2-surface-padding));
+    --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-surface-padding));
     --_qxframe9a7c2-card-radius: var(--qxframe9a7c2-card-radius,var(--qxframe9a7c2-theme-radius-card));
     --_qxframe9a7c2-card-heading-gap: var(--qxframe9a7c2-theme-card-meta-gap);
   }
   .qxframe9a7c2-switch[class] {
-    --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
-    --_qxframe9a7c2-switch-width: calc(var(--qxframe9a7c2-theme-switch-width) + var(--_qxframe9a7c2-v2-size-index) * .25rem);
+    --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-switch-width: calc(var(--qxframe9a7c2-theme-switch-width) + var(--_qxframe9a7c2-size-index) * .25rem);
     --_qxframe9a7c2-switch-padding: var(--qxframe9a7c2-theme-switch-inset);
     --_qxframe9a7c2-switch-thumb-height: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
     --_qxframe9a7c2-switch-thumb-width: var(--qxframe9a7c2-switch-thumb-width, min(calc(var(--_qxframe9a7c2-switch-thumb-height) + var(--qxframe9a7c2-theme-switch-thumb-extra)), calc(var(--_qxframe9a7c2-switch-width) - var(--_qxframe9a7c2-switch-padding) * 2 - .25rem)));
@@ -523,15 +755,18 @@
   .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
   .qxframe9a7c2-switch .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track,
   .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(100% - var(--_qxframe9a7c2-switch-thumb-width) - var(--_qxframe9a7c2-switch-padding) + var(--_qxframe9a7c2-switch-track-border-width) - var(--_qxframe9a7c2-switch-press-offset)); }
-  .qxframe9a7c2-slider[class] {
-    --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
-    --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-v2-size-index) * .125rem);
+  /* Shared Slider geometry applies to the real Slider and ColorPanel native
+     hue/alpha controls; neither owns a separate Style/density mapping. */
+  .qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {
+    --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb);
   }
   .qxframe9a7c2-slider-handle { box-sizing: border-box; }
   .qxframe9a7c2-progress[class] {
-    --_qxframe9a7c2-progress-line-size: max(.125rem, calc(var(--qxframe9a7c2-theme-progress-track) + var(--_qxframe9a7c2-v2-size-index) * .125rem));
-    --_qxframe9a7c2-progress-circle-size: round(nearest, calc(var(--qxframe9a7c2-theme-progress-ring) * (1 + var(--_qxframe9a7c2-v2-size-index) * .25)), .125rem);
+    --_qxframe9a7c2-progress-line-size: max(.125rem, calc(var(--qxframe9a7c2-theme-progress-track) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-progress-circle-size: round(nearest, calc(var(--qxframe9a7c2-theme-progress-ring) * (1 + var(--_qxframe9a7c2-size-index) * .25)), .125rem);
   }
   /* END GEOMETRY qx-md-1 */
 

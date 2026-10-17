@@ -107,7 +107,7 @@
 .qxframe9a7c2-notice{
   display:flex;min-width:0;
   position:relative;box-sizing:border-box;flex:0 0 auto;pointer-events:auto;opacity:1;
-  transition:box-shadow 180ms ease;touch-action:pan-y
+  transition:box-shadow var(--qxframe9a7c2-theme-duration-md) ease;touch-action:pan-y
 }
 .qxframe9a7c2-notice::after{
   position:absolute;top:calc(0px - var(--_qxframe9a7c2-notice-gap));right:0;left:0;
@@ -162,9 +162,9 @@
   --_qxframe9a7c2-message-accent:var(--qxframe9a7c2-message-accent,var(--_qxframe9a7c2-accent,var(--qxframe9a7c2-theme-info)));
   --_qxframe9a7c2-message-soft:var(--qxframe9a7c2-message-soft,var(--_qxframe9a7c2-accent-soft,color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent)));
   position:relative;box-sizing:border-box;min-width:8rem;max-width:min(calc(16rem * 2 + 2rem),var(--_qxframe9a7c2-notice-available-inline-size));
-  padding:0.625rem 0.75rem;border:0;
-  border-radius:var(--qxframe9a7c2-message-radius,var(--_qxframe9a7c2-surface-radius));background:var(--qxframe9a7c2-message-bg,var(--_qxframe9a7c2-semantic-surface-raised));
-  color:var(--_qxframe9a7c2-semantic-text);box-shadow:var(--qxframe9a7c2-theme-shadow-popup);font-size:0.875rem;line-height:1.45
+  padding:0.625rem 0.75rem;border:1px solid var(--qxframe9a7c2-message-border,var(--qxframe9a7c2-theme-card-edge));
+  border-radius:var(--qxframe9a7c2-message-radius,var(--_qxframe9a7c2-surface-radius));background:var(--qxframe9a7c2-message-bg,var(--qxframe9a7c2-theme-popover));
+  color:var(--qxframe9a7c2-theme-popover-foreground);box-shadow:var(--qxframe9a7c2-message-shadow,var(--qxframe9a7c2-theme-shadow-popup));font-size:0.875rem;line-height:1.45
 }
 .qxframe9a7c2-message-root.is-loading{--_qxframe9a7c2-message-accent:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-message-soft:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
 
@@ -187,7 +187,7 @@
   --_qxframe9a7c2-notification-accent:var(--qxframe9a7c2-notification-accent,var(--_qxframe9a7c2-accent,var(--qxframe9a7c2-theme-info)));
   --_qxframe9a7c2-notification-soft:var(--qxframe9a7c2-notification-soft,var(--_qxframe9a7c2-accent-soft,color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent)));
   position:relative;box-sizing:border-box;min-width:calc(16rem + 2rem);max-width:min(calc(16rem + 9rem),var(--_qxframe9a7c2-notice-available-inline-size));
-  padding-block:0.875rem;padding-inline:1rem 2.5rem;border:0;
+  padding-block:0.875rem;padding-inline:1rem 2.5rem;border:1px solid var(--qxframe9a7c2-notification-border,var(--qxframe9a7c2-theme-card-edge));
   border-radius:var(--qxframe9a7c2-notification-radius,var(--_qxframe9a7c2-surface-radius));background:var(--qxframe9a7c2-notification-bg,var(--_qxframe9a7c2-semantic-surface-raised));
   color:var(--_qxframe9a7c2-semantic-text);box-shadow:var(--qxframe9a7c2-theme-shadow-popup);font-size:0.875rem;line-height:1.45
 }

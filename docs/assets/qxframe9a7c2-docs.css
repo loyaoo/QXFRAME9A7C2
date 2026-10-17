@@ -3,28 +3,20 @@
   color-scheme: light;
   /* Docs chrome consumes the same resolved semantic owner as the live components.
    * Fallbacks keep the standalone docs shell readable before the runtime CSS loads. */
-  --qxframe9a7c2-docs-bg: var(--_qxframe9a7c2-semantic-bg, #f4f6f8);
-  --qxframe9a7c2-docs-surface: var(--_qxframe9a7c2-semantic-surface, #ffffff);
-  --qxframe9a7c2-docs-text: var(--_qxframe9a7c2-semantic-text, #18202a);
-  --qxframe9a7c2-docs-muted: var(--_qxframe9a7c2-semantic-text-secondary, #667180);
-  --qxframe9a7c2-docs-border: var(--_qxframe9a7c2-semantic-border-subtle, #d9dee5);
-  --qxframe9a7c2-docs-accent: var(--qxframe9a7c2-theme-palette-blue, #2563eb);
-  --qxframe9a7c2-docs-ok: #147a50;
-  --qxframe9a7c2-docs-warn: #9a6500;
-  --qxframe9a7c2-docs-danger: #a73535;
+  --qxframe9a7c2-docs-bg: var(--_qxframe9a7c2-semantic-bg, light-dark(#f4f6f8, #11151b));
+  --qxframe9a7c2-docs-surface: var(--_qxframe9a7c2-semantic-surface, light-dark(#ffffff, #191f27));
+  --qxframe9a7c2-docs-text: var(--_qxframe9a7c2-semantic-text, light-dark(#18202a, #edf2f7));
+  --qxframe9a7c2-docs-muted: var(--_qxframe9a7c2-semantic-text-secondary, light-dark(#667180, #9aa7b6));
+  --qxframe9a7c2-docs-border: var(--_qxframe9a7c2-semantic-border-subtle, light-dark(#d9dee5, #303844));
+  --qxframe9a7c2-docs-accent: var(--qxframe9a7c2-theme-palette-blue, light-dark(#2563eb, #60a5fa));
+  --qxframe9a7c2-docs-ok: var(--qxframe9a7c2-theme-success, light-dark(#147a50, #63d6a3));
+  --qxframe9a7c2-docs-warn: var(--qxframe9a7c2-theme-warning, light-dark(#9a6500, #f0bd62));
+  --qxframe9a7c2-docs-danger: var(--qxframe9a7c2-theme-destructive, light-dark(#a73535, #ff8c8c));
   --qxframe9a7c2-docs-radius: 14px;
 }
+/* The HTML root is the only docs mode switch. No duplicate paint tables. */
 html[data-theme="dark"] {
   color-scheme: dark;
-  --qxframe9a7c2-docs-bg: var(--_qxframe9a7c2-semantic-bg, #11151b);
-  --qxframe9a7c2-docs-surface: var(--_qxframe9a7c2-semantic-surface, #191f27);
-  --qxframe9a7c2-docs-text: var(--_qxframe9a7c2-semantic-text, #edf2f7);
-  --qxframe9a7c2-docs-muted: var(--_qxframe9a7c2-semantic-text-secondary, #9aa7b6);
-  --qxframe9a7c2-docs-border: var(--_qxframe9a7c2-semantic-border-subtle, #303844);
-  --qxframe9a7c2-docs-accent: var(--qxframe9a7c2-theme-palette-blue, #60a5fa);
-  --qxframe9a7c2-docs-ok: #63d6a3;
-  --qxframe9a7c2-docs-warn: #f0bd62;
-  --qxframe9a7c2-docs-danger: #ff8c8c;
 }
 * { box-sizing: border-box; }
 body {

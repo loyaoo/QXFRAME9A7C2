@@ -21,7 +21,6 @@ import { Renderer } from '../core/renderer.js';
 import { KeyboardNavigation } from '../core/keyboardNavigation.js';
 import { FocusController } from '../core/focusController.js';
 import { TagNavigation } from '../core/tagNavigation.js';
-import { ScrollVisibility } from '../core/scrollVisibility.js';
 import { DOMTemplate } from '../core/domTemplate.js';
 import { DOM } from '../core/dom.js';
 import { Lifecycle } from '../core/lifecycle.js';
@@ -85,13 +84,15 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         controlElement=controlHost.controlElement; valuesNode=controlHost.valuesNode; input=controlHost.input; clearButton=controlHost.clearButton; arrow=controlHost.toggle;
         prefix=controlHost.prefix; suffix=controlHost.suffix; valueTarget=controlHost.valueTarget;
         if (!headlessMode && !projectionMode && !host && opts.formField && binding.source !== 'external') Control.placeFieldRoot(root, host, opts.formField);
-        var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-flush'; panel.hidden = true; panel.tabIndex = -1;
+        var panel = doc.createElement('div'); panel.className = 'qxframe9a7c2-cascader-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame'; panel.hidden = true; panel.tabIndex = -1;
         var popupContentHost = doc.createElement('div'); popupContentHost.className = 'qxframe9a7c2-cascader-popup-content'; panel.appendChild(popupContentHost);
         var columnsHost = doc.createElement('div'); columnsHost.className = 'qxframe9a7c2-cascader-columns'; popupContentHost.appendChild(columnsHost);
         var popupFrame = instance.setupPopupFrame({ panel: panel, document: doc });
+        // PopupFrame remains the shared resource owner. The columns never
+        // scroll horizontally; nested ItemCollections own vertical option scroll.
         var columnsScroll = popupFrame.attachViewport({
           root: popupContentHost, viewport: columnsHost, content: columnsHost, document: doc,
-          axis: 'x', wheelAxis: 'x', wheelPropagation: true, scrollbarVisibility: 'auto',
+          axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden',
           focusable: false, keyboard: false, controller: instance
         });
         scope.add(function () { if (columnsScroll) columnsScroll.destroy(); columnsScroll = null; });
@@ -418,7 +419,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
     
         function ensureColumnVisible(record) {
           if (!record || !record.host || !columnsHost) return false;
-          return ScrollVisibility.ensureVisible(columnsHost, record.host, { axis:'x', align:'nearest' });
+          return true; // each column is always fitted, never horizontally scrolled
         }
         function bindListVirtualFocus(record) {
           if (!record || !record.list || !keyboard || !keyboard.virtualFocus || !record.list.bindVirtualFocus) return null;
@@ -577,6 +578,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
         function destroySearchList() { if (searchList) searchList.destroy('cascader-search-refresh'); searchList = null; }
         function renderSearchResults() {
           destroyColumns(); destroySearchList();
+          panel.style.setProperty('--qxframe9a7c2-cascader-column-count','1');
           var hostNode = doc.createElement('div'); hostNode.className = 'qxframe9a7c2-cascader-search-results'; columnsHost.appendChild(hostNode);
           var results = searchPaths();
           searchList = ItemCollection.create({ container: hostNode, scrollAdapter:popupFrame.createAdapter(), items: results, selectable: false, disabled: opts.disabled === true, readOnly: opts.readOnly === true, size: opts.size, virtual: opts.virtual, virtualThreshold: opts.virtualThreshold, height: opts.height, maxHeight: opts.maxHeight,
@@ -597,6 +599,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var pathItems = pathByKeys(activePathKeys);
           var levels = [currentItems];
           for (var p = 0; p < pathItems.length; p += 1) { var nested = childrenOf(pathItems[p]); if (nested.length) levels.push(nested); else break; }
+          panel.style.setProperty('--qxframe9a7c2-cascader-column-count',String(levels.length));
           levels.forEach(function (items, index) {
             var column = doc.createElement('div'); column.className = 'qxframe9a7c2-cascader-column'; DOM.setPrivate(column, 'cascaderColumn', String(index)); columnsHost.appendChild(column);
             var record = { index: index, items: items, host: column, list: null };
@@ -635,7 +638,7 @@ var binding = null, root = null, controlElement = null, valuesNode = null, input
           var activeRecord = columnRecords[activeColumnIndex];
           if (activeRecord && keyboardCursorKey) { activeRecord.list.setActiveKey(keyboardCursorKey, { source: 'instance', reason: 'restore-keyboard-cursor', silent: true }); if (keyboard && keyboard.virtualFocus && keyboard.virtualFocus.getState().modality === 'keyboard') activateRecordVirtualFocus(activeRecord, 'restore-keyboard-cursor', null); }
           refreshSelectionSurfaces();
-          if (columnsScroll) columnsScroll.refresh('cascader-columns');
+          // No horizontal refresh: flex sizing fits the available popup width.
           syncSemanticRegistry();
         }
     

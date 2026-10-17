@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>QX Official Tree Large Data QA</title>
+<link rel="stylesheet" href="../../dist/qxframe9a7c2.css">
+<style>body{font:1rem/1.5 Arial,sans-serif;padding:1.5rem;max-width:45rem;margin:auto}.row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}button[data-action]{padding:.5rem}.summary{margin-bottom:.8rem}</style>
+<script src="../../dist/qxframe9a7c2.js"></script></head>
+<body><h1>Official Tree: 3000 Nodes · VirtualList · Selection</h1>
+<div class="row"><button data-action="expand">Expand Company</button><button data-action="collapse">Collapse Company</button><button data-action="last">Scroll last</button><button data-action="measure">Refresh</button></div>
+<div data-status class="summary">Preparing...</div><div data-tree></div>
+<script>
+(function(){
+'use strict';
+var Q=window.QXFRAME9A7C2,T=Q&&(Q.Components&&Q.Components.Tree||Q.BuildingBlocks&&Q.BuildingBlocks.Tree),label=document.querySelector('[data-status]');
+if(!T){label.textContent='Tree unavailable: missing BuildingBlocks.Tree';return;}
+var rows=Array.from({length:3000},function(_,i){var k='root-'+i;return {key:k,value:k,label:'Workspace '+i};});
+rows[0]={key:'company',value:'company',label:'Company',items:[{key:'finance',value:'finance',label:'Finance'},{key:'design',value:'design',label:'Design'}]};
+var tree=T.create({container:document.querySelector('[data-tree]'),items:rows,virtual:true,virtualThreshold:120,height:'28rem',maxHeight:'28rem',showLine:true,checkable:true,checkedKeys:['finance']});
+function measure(){var s=tree.getState();label.textContent='Visible: '+s.visibleKeys.length+' | Rendered DOM: '+document.querySelectorAll('.qxframe9a7c2-tree-item').length+' | Checked: '+s.checkedKeys.join(',')+' | Official main Tree';}
+window.QXFRAME9A7C2_TREE_QA={tree:tree,measure:measure};
+document.querySelectorAll('[data-action]').forEach(function(b){b.addEventListener('click',function(){var a=b.dataset.action;if(a==='expand')tree.expand('company');else if(a==='collapse')tree.collapse('company');else if(a==='last')tree.scrollTo('root-2999');measure();});});
+measure();
+})();
+</script></body></html>

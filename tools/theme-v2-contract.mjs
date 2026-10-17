@@ -25,12 +25,22 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.match(fixture.styles.sera.entries.find(e=>e.selector==='.cn-badge-variant-destructive').apply, /hover:text-destructive\/70/);
   // createApp v3: theme inputs are the closed --qxframe9a7c2-theme-* list; style-specific fills
   // are compiled into tokens, so only the shared (style-independent) formulas remain here.
-  const p='--qxframe9a7c2-theme-',t='--_qxframe9a7c2-v2-type';
+  const p='--qxframe9a7c2-theme-',t='--_qxframe9a7c2-type';
   const allowed=new Set();
   const alpha=(name,weights)=>weights.forEach(n=>allowed.add('color-mix(inoklab,var('+name+')'+n+'%,transparent)'));
   alpha(t,[10,20,30,40,70,80,90]);alpha(p+'muted',[50]);alpha(p+'destructive',[10,20,50]);
   alpha(p+'primary',[10,20,30,80]);alpha(p+'pointer-focus',[50]);alpha(p+'success',[10,20]);alpha(p+'info',[10,20]);alpha(p+'warning',[20]);
   allowed.add('color-mix(inoklch,var('+p+'secondary)95%,var('+p+'foreground)5%)');
+  // Shared Menu state overlays are alpha-composited on whichever Popup
+  // surface the generator emits (opaque or translucent); no mode-specific skins.
+  alpha(p+'menu-foreground',[12,26]);alpha(p+'menu-accent',[84]);
+  // QX base-neutral hover: the user's neutral base (Mist/Olive/Mauve/etc.),
+  // not saturated Theme Primary, supplies shared Calendar/Item/Menu tint.
+  // Register exactly these three neutral formulas, not arbitrary CSS mixes.
+  const baseHover='color-mix(inoklab,var('+p+'muted)78%,var('+p+'muted-foreground))';
+  allowed.add(baseHover);
+  allowed.add('color-mix(inoklab,var('+p+'muted)65%,var('+p+'muted-foreground))');
+  allowed.add('color-mix(inoklab,'+baseHover+'70%,transparent)');
   const fill='var('+p+'radio-fill)';
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',transparent)');
   allowed.add('color-mix(inoklab,var('+t+',var('+p+'primary))'+fill+',var('+p+'foreground))');
@@ -46,13 +56,17 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.doesNotMatch(source,/var\(\s*--qxframe9a7c2-palette-|rgb\(\s*var\(|--qxframe9a7c2-theme-v2-|@layer|:is\(|:where\(|display\s*:\s*grid|\d(?:vw|vh|fr)\b/);
   // v3 §5.4: no style selectors at runtime; top-level rules are :root / .dark base rules and one @scope (:root).
   assert.doesNotMatch(source,/data-qxframe9a7c2-style/,'Styles must not appear at runtime');
+  const permittedTopLevel=new Set([
+    '@scope (:root)', ':root', '.dark',
+    '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
+  ]);
   let cursor=0,scopes=0;
   while(cursor<source.length){
     while(/\s/.test(source[cursor]??'')&&cursor<source.length)cursor++;
     if(cursor===source.length)break;
     const open=source.indexOf('{',cursor);assert.ok(open>cursor);
     const prelude=source.slice(cursor,open).trim();
-    assert.match(prelude,/^(?:@scope \(:root\)|:root|\.dark)$/,'No ungated top-level rules in the canonical Theme system: '+prelude);
+    assert.ok(permittedTopLevel.has(prelude),'No ungated top-level rules in the canonical Theme system: '+prelude);
     let depth=1,end=open+1;for(;end<source.length&&depth;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
     assert.equal(depth,0);cursor=end;if(prelude.startsWith('@scope'))scopes++;
   }

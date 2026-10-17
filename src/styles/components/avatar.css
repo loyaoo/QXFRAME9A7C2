@@ -11,8 +11,8 @@
   align-items:center;justify-content:center;
   overflow:hidden;
   border-radius:var(--_qxframe9a7c2-identity-shape-radius,50%);
-  background:var(--_qxframe9a7c2-semantic-subtle);
-  color:var(--_qxframe9a7c2-semantic-text-secondary);
+  background:var(--qxframe9a7c2-avatar-bg,var(--qxframe9a7c2-theme-muted));
+  color:var(--qxframe9a7c2-avatar-color,var(--qxframe9a7c2-theme-muted-foreground));
   font-size:calc(var(--_qxframe9a7c2-avatar-size) * .36);
   font-weight:600;
   line-height:1;
@@ -28,7 +28,17 @@
 .qxframe9a7c2-avatar.is-circle{border-radius:var(--_qxframe9a7c2-identity-shape-radius,50%)}
 .qxframe9a7c2-avatar-status{position:absolute;inset-inline-end:var(--qxframe9a7c2-avatar-status-inline-end,0);inset-block-end:var(--qxframe9a7c2-avatar-status-block-end,0);box-sizing:border-box;width:28%;height:28%;border:var(--qxframe9a7c2-avatar-status-border-width,var(--_qxframe9a7c2-fixed-avatar-status-border-width)) solid var(--_qxframe9a7c2-semantic-bg);border-radius:var(--_qxframe9a7c2-identity-shape-radius,50%);background:var(--qxframe9a7c2-theme-success)}
 .qxframe9a7c2-avatar-group{display:inline-flex;align-items:center}
-.qxframe9a7c2-avatar-group>.qxframe9a7c2-avatar+.qxframe9a7c2-avatar{margin-inline-start:calc(-1 * var(--qxframe9a7c2-avatar-group-overlap,0.5rem));box-shadow:0 0 0 var(--qxframe9a7c2-avatar-group-ring,var(--_qxframe9a7c2-fixed-avatar-group-outline-width)) var(--_qxframe9a7c2-semantic-bg)}
+.qxframe9a7c2-avatar-group>.qxframe9a7c2-avatar+.qxframe9a7c2-avatar{margin-inline-start:calc(-1 * var(--qxframe9a7c2-avatar-group-overlap,0.5rem));box-shadow:0 0 0 var(--qxframe9a7c2-avatar-group-ring,var(--_qxframe9a7c2-fixed-avatar-group-outline-width)) var(--qxframe9a7c2-avatar-group-separator,var(--qxframe9a7c2-theme-card))}
 
-.qxframe9a7c2-avatar-group-overflow{display:inline-flex;align-items:center;justify-content:center;min-width:var(--_qxframe9a7c2-avatar-size,var(--qxframe9a7c2-avatar-md-size,2.25rem));height:var(--_qxframe9a7c2-avatar-size,var(--qxframe9a7c2-avatar-md-size,2.25rem));margin-inline-start:calc(-1 * var(--qxframe9a7c2-avatar-group-overlap,0.5rem));padding-inline:0.375rem;border-radius:var(--_qxframe9a7c2-identity-shape-radius,50%);background:var(--_qxframe9a7c2-semantic-subtle-hover);color:var(--_qxframe9a7c2-semantic-text-secondary);box-shadow:0 0 0 var(--qxframe9a7c2-avatar-group-ring,var(--_qxframe9a7c2-fixed-avatar-group-outline-width)) var(--_qxframe9a7c2-semantic-bg);font-size:0.75rem;font-weight:600}
+.qxframe9a7c2-avatar-group-overflow{display:inline-flex;align-items:center;justify-content:center;min-width:var(--_qxframe9a7c2-avatar-size,var(--qxframe9a7c2-avatar-md-size,2.25rem));height:var(--_qxframe9a7c2-avatar-size,var(--qxframe9a7c2-avatar-md-size,2.25rem));margin-inline-start:calc(-1 * var(--qxframe9a7c2-avatar-group-overlap,0.5rem));padding-inline:0.375rem;border-radius:var(--_qxframe9a7c2-identity-shape-radius,50%);background:var(--_qxframe9a7c2-semantic-subtle-hover);color:var(--_qxframe9a7c2-semantic-text-secondary);box-shadow:0 0 0 var(--qxframe9a7c2-avatar-group-ring,var(--_qxframe9a7c2-fixed-avatar-group-outline-width)) var(--qxframe9a7c2-avatar-group-separator,var(--qxframe9a7c2-theme-card));font-size:0.75rem;font-weight:600}
 
+/* Avatar status and group modes continue to consume Theme identity surfaces. */
+.qxframe9a7c2-avatar.is-outlined{outline:1px solid var(--qxframe9a7c2-theme-border);outline-offset:-1px}
+.qxframe9a7c2-avatar.is-muted{background:var(--qxframe9a7c2-theme-muted);color:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-avatar.is-primary{background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,var(--qxframe9a7c2-theme-card));color:var(--qxframe9a7c2-theme-primary)}
+.qxframe9a7c2-avatar-group.is-spaced{gap:var(--qxframe9a7c2-avatar-group-gap,.5rem)}
+.qxframe9a7c2-avatar-group.is-spaced>.qxframe9a7c2-avatar+.qxframe9a7c2-avatar{margin-inline-start:0;box-shadow:none}
+.qxframe9a7c2-avatar-status.is-success,.qxframe9a7c2-avatar-status.is-online{background:var(--qxframe9a7c2-theme-success)}
+.qxframe9a7c2-avatar-status.is-warning,.qxframe9a7c2-avatar-status.is-away{background:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-avatar-status.is-error,.qxframe9a7c2-avatar-status.is-busy{background:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-avatar-status.is-muted,.qxframe9a7c2-avatar-status.is-offline{background:var(--qxframe9a7c2-theme-muted-foreground)}

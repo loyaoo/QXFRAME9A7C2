@@ -172,7 +172,7 @@ function setupTags(instance) {
   root.className='qxframe9a7c2-tags'+(opts.hosted===true?' is-hosted':'');
   surface.className = 'qxframe9a7c2-tags-surface';
   input.className='qxframe9a7c2-tags-input';
-  var addTrigger=doc.createElement('button');addTrigger.type='button';addTrigger.className='qxframe9a7c2-tags-add';addTrigger.textContent=String(opts.addLabel||'+ Add Tag');
+  var addTrigger=doc.createElement('button');addTrigger.type='button';addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add';addTrigger.textContent=String(opts.addLabel||'+ Add Tag');
   var adding=opts.hosted===true&&opts.editable===true;
   input.type = 'text';
   addTrigger.tabIndex = -1;

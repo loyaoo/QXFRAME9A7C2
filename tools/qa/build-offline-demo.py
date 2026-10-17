@@ -12,6 +12,7 @@ import os
 import re
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import threading
 import urllib.request
@@ -21,7 +22,7 @@ artifact_arg, head, run_id, artifact_id, merge_sha, tree_sha = sys.argv[1:7]
 artifact = Path(artifact_arg).resolve()
 base = Path(sys.argv[7]).resolve() if len(sys.argv) > 7 else artifact.parent
 base.mkdir(parents=True, exist_ok=True)
-out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S4-dist-docs-LOCAL-' + head[:8] + '.zip')
+out = base / ('QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-' + head[:8] + '.zip')
 work = base / ('offline-QXFRAME9A7C2-' + head[:8])
 assert len(head) == len(merge_sha) == len(tree_sha) == 40
 shutil.rmtree(work, ignore_errors=True)
@@ -34,7 +35,8 @@ with zipfile.ZipFile(artifact) as outer:
     with zipfile.ZipFile(io.BytesIO(outer.read(nested[0]))) as inner:
         assert inner.testzip() is None
         required = ('docs/create/index.html', 'docs/create/preview-01.html',
-                    'docs/create/preview-02.html', 'dist/qxframe9a7c2.js',
+                    'docs/create/preview-02.html', 'docs/create/preview-03.html',
+                    'docs/create/preview-03.js', 'docs/create/preview-03-extra.js', 'docs/create/preview-03-coverage.json', 'docs/create/preview-03.css', 'dist/qxframe9a7c2.js',
                     'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css')
         assert set(required).issubset(inner.namelist()), 'Missing Create or QA script in Actions artifact'
         inner.extractall(work)
@@ -43,18 +45,30 @@ with zipfile.ZipFile(artifact) as outer:
 # ZIP. Never leave a vague 'current run' label or stale hardcoded count.
 ledger_path=work/'docs/create/offline-qa-changes.mjs'
 ledger=ledger_path.read_text('utf-8')
-assert ledger.count('__QA_BUNDLE_HEAD__')>=1, 'current batch must contain exact-HEAD annotations'
+assert 'const groups = ' in ledger, 'QA ledger must declare the current batch, including zero-visual-change batches'
 active_regions = ledger.count('__QA_BUNDLE_HEAD__')
 active_cards = re.findall(r"^\s*\['([a-z0-9-]+)','([^']+)',\[$", ledger, flags=re.M)
-assert active_cards and len(set(id for id, _ in active_cards)) == len(active_cards), 'active annotation groups must be distinct'
+assert len(set(id for id, _ in active_cards)) == len(active_cards), 'active annotation groups must be distinct'
+if active_regions == 0:
+    assert not active_cards and 'const groups = [];' in ledger, 'a non-visual batch must clear all previous QA highlights'
+else:
+    assert active_cards, 'visual-change markers require real Card groups'
 active_summary = ', '.join(name for _, name in active_cards)
 # The acceptance batch may belong to Preview 01, Preview 02, or both.
 preview02_html = (work/'docs/create/preview-02.html').read_text('utf-8')
 preview02_changed = any(('data-card="' + card + '"') in preview02_html for card, _ in active_cards)
+preview03_html = (work/'docs/create/preview-03.html').read_text('utf-8')
+preview03_changed = any(('data-card="' + card + '"') in preview03_html for card, _ in active_cards)
 ledger_path.write_text(ledger.replace('__QA_BUNDLE_HEAD__',head[:8]),'utf-8')
+# A syntactically broken QA module renders no annotation while static count
+# checks and HTTP 200 still pass. Validate the exact transformed ZIP payload.
+node = shutil.which('node')
+assert node, 'Node.js is required to syntax-check the offline QA artifact'
+subprocess.run([node, '--check', str(ledger_path)], check=True)
+assert ledger_path.read_text('utf-8').count('__QA_BUNDLE_HEAD__') == 0
 
 online = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js'
-for name in ('index.html', 'preview-01.html', 'preview-02.html'):
+for name in ('index.html', 'preview-01.html', 'preview-02.html', 'preview-03.html'):
     file = work / 'docs/create' / name
     html = file.read_text('utf-8')
     assert html.count(online) == 1, name
@@ -66,6 +80,20 @@ for name in ('index.html', 'preview-01.html', 'preview-02.html'):
     html = html.replace('</body>',
         '  <script type="module" src="./offline-qa-changes.mjs"></script>\n</body>')
     file.write_text(html, 'utf-8')
+
+# Preview04 is the canonical Theme Playground, routed directly from Create.
+# It lives at docs/ rather than docs/create/, so preserve its original
+# stylesheet/runtime references and only inject annotated local QA copies.
+playground_file = work / 'docs/theme-playground.html'
+playground_html = playground_file.read_text('utf-8')
+assert 'data-create-preview="04"' in playground_html, 'Preview04 must be the canonical Create-linked full gallery'
+assert 'offline-qa-changes' not in playground_html, 'Production Theme Playground must stay unannotated'
+assert playground_html.count('</head>') == playground_html.count('</body>') == 1
+playground_html = playground_html.replace('</head>',
+    '  <link rel="stylesheet" href="create/offline-qa-changes.css">\n</head>')
+playground_html = playground_html.replace('</body>',
+    '  <script type="module" src="create/offline-qa-changes.mjs"></script>\n</body>')
+playground_file.write_text(playground_html, 'utf-8')
 
 (work / 'START-DEMO.cmd').write_text(
     '@echo off\ncd /d "%~dp0"\nwhere node >nul 2>nul\n'
@@ -104,25 +132,26 @@ http.createServer((req,res)=>{
     '\nSame Git tree: ' + tree_sha + '\nQXFRAME run: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n', encoding='utf-8')
 (work / 'README-本地验收.md').write_text(
-    '# QXFRAME9A7C2 Stage4 Windows 离线验收\n\n'
+    '# QXFRAME9A7C2 Stage5 Windows 离线验收\n\n'
     '开发 HEAD: ' + head + '\nPR CI 合成 SHA: ' + merge_sha +
     '\n同一 Git tree: ' + tree_sha + '\nQXFRAME CI: ' + run_id +
     '\nActions artifact: ' + artifact_id + '\n\n'
     '## 启动\n\n双击 START-DEMO.cmd（Node.js 18+ 或 Python 3 即可），无需 npm、git 或网络。'
     '访问 http://127.0.0.1:4173/docs/create/ 。'
-    '单独的 Preview 01、02 分别在 docs/create/preview-01.html、preview-02.html。\n\n'
+    '单独 Preview 01/02/03 分别在 docs/create/preview-01.html、preview-02.html、preview-03.html。\n\n'
     '## 改动高亮定位（仅离线版）\n\n'
     '默认开启。Create 右下角的「验收标注 · 离线专用」清单列出卡片、'
     '具体改变和提交号；橙色实线框是修改过的 Card，虚线是内部改动区域。'
     '点击变更条目定位到对应卡片；点击「关闭高亮 · 原貌对比」恢复干净画面。'
-    '独立打开 Preview 01、02 也有同样的清单。所有改动标记只注入此本地包副本，'
-    '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n'
-    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。') +
-    '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。'
-    ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')
+    '独立打开 Preview 01、02、03 也有同样的清单。所有改动标记只注入此本地包副本，'
+    '在线 Create/Pages 和上游严格几何测试完全不加载。\n\n' +
+    ('本轮且仅本轮：' + str(len(active_cards)) + ' Cards / ' + str(active_regions) + ' regions：' + active_summary + '。'
+     if active_regions else '本轮为组件覆盖清单及验收门禁更新，0 张视觉改动卡片，0 处高亮；原有 Preview 视觉不变。') +
+    '旧批黄色高亮已清零，历史修复保留在仓库文档和 Git 记录中。' +
+    ('本轮 Preview 03 为 Theme 全组件视觉统一，不再标注上一轮反色 Picker 卡片。' if preview03_changed else ('本轮包含 Preview 02 改动。' if preview02_changed else 'Preview 02 本批没有改动。')) +
     '31 张 Preview 02 卡片已经用户人工验收通过；高亮仅标记最近一次实际代码变更。\n\n'
     '之后每批更改卡片必须同步更新 docs/create/offline-qa-changes.mjs 的清单。'
-    'Stage 3 已合并；Stage 4 Preview 02 全部 31 张卡片已通过用户人工验收。此验收包来自 Draft PR #266，未经单独授权仍未合并 main，Stage 5 未启动。\n', encoding='utf-8')
+    'Stage 3/4 已合并；Preview 01/02 已通过用户验收。Preview 03 是新开发内容，来自 Stage 5 Draft PR #267，未合并 main，尚待验收。\n', encoding='utf-8')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
@@ -132,7 +161,7 @@ cwd = os.getcwd()
 os.chdir(work)
 server = Server(('127.0.0.1', 0), Quiet)
 threading.Thread(target=server.serve_forever, daemon=True).start()
-checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html',
+checks = ('docs/create/', 'docs/create/preview-01.html', 'docs/create/preview-02.html', 'docs/create/preview-03.html', 'docs/create/preview-03.js', 'docs/create/preview-03-extra.js', 'docs/create/preview-03-coverage.json', 'docs/create/preview-03.css',
           'docs/create/offline-qa-changes.mjs', 'docs/create/offline-qa-changes.css',
           'docs/theme-playground.html', 'dist/qxframe9a7c2.js', 'dist/qxframe9a7c2.css')
 try:

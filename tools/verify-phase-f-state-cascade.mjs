@@ -61,7 +61,7 @@ assert.equal(count('--_qxframe9a7c2-calendar-cell-text'),0,'Calendar must not wr
 assert.match(css,/\.qxframe9a7c2-calendar-cell\.is-outside:not\(\.is-selected\):not\(\.is-in-range\)\{--_qxframe9a7c2-date-panel-cell-text:var\(--_qxframe9a7c2-semantic-text-disabled\);color:var\(--_qxframe9a7c2-semantic-text-disabled\)\}/,
   'Calendar outside-month dates must project the shared date-panel text channel to the disabled/muted semantic text color.');
 
-assert.equal(count('.qxframe9a7c2-card{'),1,'Card root must not be reopened as a late override.');
+assert.equal((css.match(/^\.qxframe9a7c2-card\{/gm)||[]).length,1,'Card root must not be reopened as a late override (descendant .card-deck>.card is not a root rule).');
 assert.match(css,/\.qxframe9a7c2-card\{[^}]*overflow:visible;/,
   'Card generic root must keep overflow:visible in its canonical owner.');
 const card=pos('.qxframe9a7c2-card{');

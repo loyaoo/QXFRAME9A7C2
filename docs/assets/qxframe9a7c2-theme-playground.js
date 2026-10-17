@@ -7,7 +7,7 @@ var STORAGE_KEY='qxframe9a7c2-theme-playground-browser-v2';
 var defaults={query:'',category:'all',kind:'all',railCollapsed:false};
 var state=loadState();
 var componentRecords=new Map();
-var observer=null;
+var observer=null, pendingMounts=[],mountScheduled=false,unloading=false;
 
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
 function loadState(){try{return Object.assign({},defaults,JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||{});}catch(_){return Object.assign({},defaults);}}
@@ -47,7 +47,7 @@ function renderShell(){
         '<section class="qxframe9a7c2-play-intro">'+
           '<div class="qxframe9a7c2-card qxframe9a7c2-play-hero"><div class="qxframe9a7c2-play-eyebrow">统一视觉系统 · 全组件画布</div><h1>一个页面检查全部动态 / 静态组件</h1><p>主题配置只由新版主题配置区负责。本区域只负责组件目录、筛选和 canonical Demo 挂载，不再保存、计算或写入任何旧主题 Token。</p><div class="qxframe9a7c2-play-hero-actions"><a class="qxframe9a7c2-button is-primary is-solid is-md" href="#theme-v2-studio">配置主题</a><button class="qxframe9a7c2-button is-default is-outlined is-md" type="button" data-qxframe9a7c2-scroll-components>查看全部组件</button></div><div class="qxframe9a7c2-play-stat-row"><span class="qxframe9a7c2-play-stat"><strong>'+catalog.length+'</strong><span>全部组件</span></span><span class="qxframe9a7c2-play-stat"><strong>'+dynamicCount+'</strong><span>动态 / Runtime</span></span><span class="qxframe9a7c2-play-stat"><strong>'+staticCount+'</strong><span>静态 / CSS</span></span></div></div>'+
         '</section>'+
-        '<section id="all-components"><div class="qxframe9a7c2-play-section-head"><div><h2>全部组件</h2><p>默认每个组件挂载第一个 canonical live demo；需要时可在卡片底部展开全部示例。</p></div></div><div class="qxframe9a7c2-play-grid" data-qxframe9a7c2-grid></div></section>'+
+        '<section id="all-components"><div class="qxframe9a7c2-play-section-head"><div><h2>全部组件</h2><p>全部 canonical live demo 直接展开显示；滚动时分批挂载，避免一次性阻塞。</p></div></div><div class="qxframe9a7c2-play-grid" data-qxframe9a7c2-grid></div></section>'+
       '</div>'+
     '</main>'+
   '</div>';
@@ -56,15 +56,74 @@ function renderShell(){
   wireShell();
 }
 
-function renderCards(){var grid=document.querySelector('[data-qxframe9a7c2-grid]');if(!grid)return;grid.innerHTML='';catalog.forEach(function(meta){var currentChange=meta.docsChange||null;var card=document.createElement('article');card.className='qxframe9a7c2-card qxframe9a7c2-play-card'+(currentChange?' is-release-highlight':'');card.id='component-'+meta.slug;card.dataset.name=meta.name;card.dataset.slug=meta.slug;card.dataset.category=meta.category;card.dataset.kind=cardKind(meta);if(currentChange){card.dataset.releaseHighlight=currentChange.version||'';card.dataset.releaseChange=currentChange.summary||'';}card.dataset.search=[meta.name,meta.cn,meta.description,meta.category].concat(meta.features||[]).join(' ').toLowerCase();card.innerHTML='<header class="qxframe9a7c2-card-header qxframe9a7c2-play-card-head"><div class="qxframe9a7c2-play-card-title"><div class="qxframe9a7c2-play-card-title-row"><strong>'+esc(meta.name)+'</strong><span class="qxframe9a7c2-play-kind '+(cardKind(meta)==='dynamic'?'is-dynamic':'')+'">'+(cardKind(meta)==='dynamic'?'动态':'静态')+'</span>'+(currentChange?'<span class="qxframe9a7c2-play-release-badge" title="'+esc(currentChange.summary||currentChange.label||'Updated docs')+'">'+esc([currentChange.version,currentChange.label].filter(Boolean).join(' · '))+'</span>':'')+'</div><small>'+esc(meta.cn)+' · '+esc(meta.category)+'</small></div><a class="qxframe9a7c2-play-card-link" href="components/'+esc(meta.slug)+'.html"><span>完整文档</span><span class="qxframe9a7c2-icon qxframe9a7c2-icon-external-link is-line is-round is-stroke-3 is-xs"></span></a></header><div class="qxframe9a7c2-card-body qxframe9a7c2-play-card-body" data-qxframe9a7c2-card-body><div class="qxframe9a7c2-play-example"><div class="qxframe9a7c2-play-example-title"><strong>正在加载 canonical demo…</strong><span>'+esc(meta.description)+'</span></div></div></div><footer class="qxframe9a7c2-card-footer qxframe9a7c2-play-card-foot"><span class="qxframe9a7c2-play-card-log" data-qxframe9a7c2-card-log>等待进入视口后挂载</span><button class="qxframe9a7c2-button is-default is-text is-sm qxframe9a7c2-play-card-toggle" type="button" data-qxframe9a7c2-card-toggle hidden>展开全部</button></footer>';grid.appendChild(card);componentRecords.set(meta.slug,{meta:meta,card:card,specs:null,instances:[],expanded:false,mounted:false});});setupObserver();applyFilters();}
-function setupObserver(){if(observer)observer.disconnect();if('IntersectionObserver' in global){observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var rec=componentRecords.get(entry.target.dataset.slug);if(rec&&!rec.mounted)mountRecord(rec);observer.unobserve(entry.target);}});},{rootMargin:'600px 0px'});componentRecords.forEach(function(rec){observer.observe(rec.card);});}else componentRecords.forEach(function(rec){mountRecord(rec);});}
+function renderCards(){var grid=document.querySelector('[data-qxframe9a7c2-grid]');if(!grid)return;grid.innerHTML='';catalog.forEach(function(meta){var currentChange=meta.docsChange||null;var card=document.createElement('article');card.className='qxframe9a7c2-card qxframe9a7c2-play-card'+(currentChange?' is-release-highlight':'');card.id='component-'+meta.slug;card.dataset.name=meta.name;card.dataset.slug=meta.slug;card.dataset.category=meta.category;card.dataset.kind=cardKind(meta);if(currentChange){card.dataset.releaseHighlight=currentChange.version||'';card.dataset.releaseChange=currentChange.summary||'';}card.dataset.search=[meta.name,meta.slug,meta.cn,meta.description,meta.category].concat(meta.features||[]).join(' ').toLowerCase();card.innerHTML='<header class="qxframe9a7c2-card-header qxframe9a7c2-play-card-head"><div class="qxframe9a7c2-play-card-title"><div class="qxframe9a7c2-play-card-title-row"><strong>'+esc(meta.name)+'</strong><span class="qxframe9a7c2-play-kind '+(cardKind(meta)==='dynamic'?'is-dynamic':'')+'">'+(cardKind(meta)==='dynamic'?'动态':'静态')+'</span>'+(currentChange?'<span class="qxframe9a7c2-play-release-badge" title="'+esc(currentChange.summary||currentChange.label||'Updated docs')+'">'+esc([currentChange.version,currentChange.label].filter(Boolean).join(' · '))+'</span>':'')+'</div><small>'+esc(meta.cn)+' · '+esc(meta.category)+'</small></div><a class="qxframe9a7c2-play-card-link" href="components/'+esc(meta.slug)+'.html"><span>完整文档</span><span class="qxframe9a7c2-icon qxframe9a7c2-icon-external-link is-line is-round is-stroke-3 is-xs"></span></a></header><div class="qxframe9a7c2-card-body qxframe9a7c2-play-card-body" data-qxframe9a7c2-card-body><div class="qxframe9a7c2-play-example"><div class="qxframe9a7c2-play-example-title"><strong>正在加载 canonical demo…</strong><span>'+esc(meta.description)+'</span></div></div></div><footer class="qxframe9a7c2-card-footer qxframe9a7c2-play-card-foot"><span class="qxframe9a7c2-play-card-log" data-qxframe9a7c2-card-log>等待进入视口后挂载</span></footer>';grid.appendChild(card);componentRecords.set(meta.slug,{meta:meta,card:card,specs:null,instances:[],mounted:false});});setupObserver();applyFilters();}
+function scheduleMounts(){
+ if(mountScheduled||unloading||!pendingMounts.length)return;
+ mountScheduled=true;
+ var run=function(){
+  mountScheduled=false;
+  if(unloading)return;
+  var record=pendingMounts.shift();
+  if(record){record.mountQueued=false;if(!record.mounted&&record.card.isConnected)mountRecord(record);}
+  // One heavy demo per idle slot, never a synchronous cascade in one scroll
+  // observer callback or an opening/closing overlay animation frame.
+  scheduleMounts();
+ };
+ if(typeof global.requestIdleCallback==='function')global.requestIdleCallback(run,{timeout:250});
+ else global.requestAnimationFrame(run);
+}
+function enqueueMount(rec){
+ if(!rec||rec.mounted||rec.mountQueued)return;
+ rec.mountQueued=true;pendingMounts.push(rec);scheduleMounts();
+}
+function setupObserver(){
+ if(observer)observer.disconnect();
+ if('IntersectionObserver' in global){
+  observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){
+   if(!entry.isIntersecting)return;
+   var rec=componentRecords.get(entry.target.dataset.slug);
+   enqueueMount(rec);observer.unobserve(entry.target);
+  });},{rootMargin:'400px 0px'});
+  componentRecords.forEach(function(rec){observer.observe(rec.card);});
+ }else componentRecords.forEach(enqueueMount);
+}
 function makeCtx(rec,specs){return {meta:rec.meta,example:function(spec){specs.push(spec);return spec;},log:function(message){var host=rec.card.querySelector('[data-qxframe9a7c2-card-log]');if(host)host.textContent=String(message);},track:function(instance){if(instance&&typeof instance==='object')rec.instances.push(instance);return instance;},refresh:function(){},q:function(){return global.QXFRAME9A7C2||null;},button:function(text,fn){var b=button(text,{appearance:'outlined',size:'sm'});if(typeof fn==='function')b.addEventListener('click',function(event){try{fn(event);}catch(error){var host=rec.card.querySelector('[data-qxframe9a7c2-card-log]');if(host)host.textContent='Action error: '+error.message;}});return b;},row:function(){var row=document.createElement('div');row.className='qxframe9a7c2-docs-control-row';return row;}};}
 function destroyRecord(rec){while(rec.instances.length){var inst=rec.instances.pop();try{if(inst&&typeof inst.destroy==='function')inst.destroy('theme-playground-remount');}catch(_){}}var body=rec.card.querySelector('[data-qxframe9a7c2-card-body]');if(body)body.innerHTML='';}
 function mountRecord(rec){if(!global.QXFRAME9A7C2ComponentDemos||typeof global.QXFRAME9A7C2ComponentDemos.mount!=='function'){setTimeout(function(){mountRecord(rec);},0);return;}var specs=[];try{global.QXFRAME9A7C2ComponentDemos.mount(rec.meta.name,makeCtx(rec,specs));rec.specs=specs;rec.mounted=true;renderRecord(rec);}catch(error){rec.mounted=true;var body=rec.card.querySelector('[data-qxframe9a7c2-card-body]');if(body)body.innerHTML='<div class="qxframe9a7c2-play-card-error">'+esc(error&&error.stack||error)+'</div>';var log=rec.card.querySelector('[data-qxframe9a7c2-card-log]');if(log)log.textContent='Demo mount failed';}}
-function renderRecord(rec){destroyRecord(rec);var body=rec.card.querySelector('[data-qxframe9a7c2-card-body]'),toggle=rec.card.querySelector('[data-qxframe9a7c2-card-toggle]'),log=rec.card.querySelector('[data-qxframe9a7c2-card-log]');if(!body)return;var specs=rec.specs||[];if(!specs.length){body.innerHTML='<div class="qxframe9a7c2-play-card-error">No canonical demo registered for '+esc(rec.meta.name)+'.</div>';if(log)log.textContent='No demo spec';return;}var selected=rec.expanded?specs:specs.slice(0,1);selected.forEach(function(spec){var section=document.createElement('section');section.className='qxframe9a7c2-play-example';section.innerHTML='<div class="qxframe9a7c2-play-example-title"><strong>'+esc(spec.title||rec.meta.name)+'</strong><span>'+esc(spec.description||'')+'</span></div><div class="qxframe9a7c2-play-example-live '+(spec.column?'is-column':'')+'"><div class="qxframe9a7c2-play-demo-host"></div></div>';body.appendChild(section);var host=section.querySelector('.qxframe9a7c2-play-demo-host');try{spec.mount(host);}catch(error){host.innerHTML='<div class="qxframe9a7c2-play-card-error">'+esc(error&&error.stack||error)+'</div>';if(log)log.textContent='Demo error · '+String(spec.title||rec.meta.name);}});if(toggle){toggle.hidden=specs.length<=1;toggle.textContent=rec.expanded?'收起':'展开全部 '+specs.length+' 个';toggle.onclick=function(){rec.expanded=!rec.expanded;rec.card.classList.toggle('is-expanded',rec.expanded);renderRecord(rec);};}if(log&&log.textContent.indexOf('error')<0&&log.textContent.indexOf('Error')<0)log.textContent=(rec.expanded?specs.length:1)+'/'+specs.length+' canonical demo'+(specs.length>1?'s':'')+' mounted';}
-function applyFilters(){var q=String(state.query||'').trim().toLowerCase(),visible=0;componentRecords.forEach(function(rec){var meta=rec.meta,kind=cardKind(meta),show=(!q||rec.card.dataset.search.indexOf(q)>=0)&&(state.category==='all'||meta.category===state.category)&&(state.kind==='all'||kind===state.kind);rec.card.hidden=!show;if(show)visible+=1;});var count=document.querySelector('[data-qxframe9a7c2-count]');if(count)count.textContent=visible+' / '+catalog.length+' 组件';document.querySelectorAll('[data-qxframe9a7c2-kind]').forEach(function(b){b.classList.toggle('is-active',b.dataset.qxframe9a7c2Kind===state.kind||b.getAttribute('data-qxframe9a7c2-kind')===state.kind);});var e=document.querySelector('.qxframe9a7c2-play-empty');if(!visible){var grid=document.querySelector('[data-qxframe9a7c2-grid]');if(grid&&!e){e=document.createElement('div');e.className='qxframe9a7c2-play-empty';e.textContent='没有匹配的组件。';grid.appendChild(e);}}else if(e)e.remove();saveState();}
+function selectedLatestSpecs(_rec,specs){return specs;}
+function renderRecord(rec){destroyRecord(rec);var body=rec.card.querySelector('[data-qxframe9a7c2-card-body]'),log=rec.card.querySelector('[data-qxframe9a7c2-card-log]');if(!body)return;var specs=rec.specs||[];if(!specs.length){body.innerHTML='<div class="qxframe9a7c2-play-card-error">No canonical demo registered for '+esc(rec.meta.name)+'.</div>';if(log)log.textContent='No demo spec';return;}var selected=selectedLatestSpecs(rec,specs);selected.forEach(function(spec){var section=document.createElement('section');section.className='qxframe9a7c2-play-example';section.innerHTML='<div class="qxframe9a7c2-play-example-title"><strong>'+esc(spec.title||rec.meta.name)+'</strong><span>'+esc(spec.description||'')+'</span></div><div class="qxframe9a7c2-play-example-live '+(spec.column?'is-column':'')+'"><div class="qxframe9a7c2-play-demo-host"></div></div>';body.appendChild(section);var host=section.querySelector('.qxframe9a7c2-play-demo-host');try{spec.mount(host);}catch(error){host.innerHTML='<div class="qxframe9a7c2-play-card-error">'+esc(error&&error.stack||error)+'</div>';if(log)log.textContent='Demo error · '+String(spec.title||rec.meta.name);}});if(log&&log.textContent.indexOf('error')<0&&log.textContent.indexOf('Error')<0)log.textContent=specs.length+'/'+specs.length+' canonical demo'+(specs.length>1?'s':'')+' mounted';}
+function applyFilters(){
+ var q=String(state.query||'').trim().toLowerCase(),visible=0;
+ componentRecords.forEach(function(rec){
+  var meta=rec.meta,kind=cardKind(meta),show=(!q||rec.card.dataset.search.indexOf(q)>=0)&&(state.category==='all'||meta.category===state.category)&&(state.kind==='all'||kind===state.kind);
+  rec.card.hidden=!show;
+  if(show)visible++;
+ });
+ // A search must not spend idle slots rendering Cards hidden by that search.
+ // Hidden, previously queued Cards stay lazily observable when shown again.
+ pendingMounts=pendingMounts.filter(function(rec){
+  if(!rec.card.hidden)return true;
+  rec.mountQueued=false;
+  if(observer&&!rec.mounted)observer.observe(rec.card);
+  return false;
+ });
+ // Searching a specific component makes it the next idle-mounted Card.
+ // All demos stay expanded after mount; unrelated offscreen Cards remain lazy.
+ if(q)componentRecords.forEach(function(rec){
+  if(!rec.card.hidden&&(rec.meta.name.toLowerCase()===q||rec.meta.slug===q)){
+   if(observer)observer.unobserve(rec.card);
+   enqueueMount(rec);
+  }
+ });
+ var count=document.querySelector('[data-qxframe9a7c2-count]');
+ if(count)count.textContent=visible+' / '+catalog.length+' 组件';
+ document.querySelectorAll('[data-qxframe9a7c2-kind]').forEach(function(b){b.classList.toggle('is-active',b.dataset.qxframe9a7c2Kind===state.kind||b.getAttribute('data-qxframe9a7c2-kind')===state.kind);});
+ var e=document.querySelector('.qxframe9a7c2-play-empty');
+ if(!visible){var grid=document.querySelector('[data-qxframe9a7c2-grid]');if(grid&&!e){e=document.createElement('div');e.className='qxframe9a7c2-play-empty';e.textContent='没有匹配的组件。';grid.appendChild(e);}}else if(e)e.remove();
+ saveState();
+}
 function wireShell(){var shell=document.querySelector('[data-qxframe9a7c2-play-shell]');var collapse=document.querySelector('[data-qxframe9a7c2-play-collapse]');if(collapse)collapse.addEventListener('click',function(){if(global.innerWidth<=980){shell.classList.remove('is-mobile-rail-open');return;}state.railCollapsed=!state.railCollapsed;shell.classList.toggle('is-rail-collapsed',state.railCollapsed);saveState();});var mobile=document.querySelector('[data-qxframe9a7c2-mobile-menu]');if(mobile)mobile.addEventListener('click',function(){shell.classList.toggle('is-mobile-rail-open');});var search=document.querySelector('[data-qxframe9a7c2-search]');if(search){search.value=state.query||'';search.addEventListener('input',function(){state.query=this.value;applyFilters();});}var category=document.querySelector('[data-qxframe9a7c2-category]');if(category){category.value=state.category;category.addEventListener('change',function(){state.category=this.value;applyFilters();});}document.querySelectorAll('[data-qxframe9a7c2-kind]').forEach(function(b){b.addEventListener('click',function(){state.kind=this.getAttribute('data-qxframe9a7c2-kind');applyFilters();});});var scroll=document.querySelector('[data-qxframe9a7c2-scroll-components]');if(scroll)scroll.addEventListener('click',function(){var target=document.getElementById('all-components');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});});if(state.railCollapsed&&global.innerWidth>980)shell.classList.add('is-rail-collapsed');}
-function cleanup(){componentRecords.forEach(function(rec){destroyRecord(rec);});if(observer)observer.disconnect();}
+function cleanup(){unloading=true;pendingMounts.length=0;componentRecords.forEach(function(rec){destroyRecord(rec);});if(observer)observer.disconnect();}
 function boot(){renderShell();applyFilters();global.addEventListener('pagehide',cleanup,{once:true});global.QXFRAME9A7C2_THEME_PLAYGROUND=Object.freeze({getState:function(){return Object.assign({},state);}});}
 function waitForDemos(){if(global.QXFRAME9A7C2ComponentDemos&&typeof global.QXFRAME9A7C2ComponentDemos.mount==='function'){boot();return;}setTimeout(waitForDemos,0);}
 if(global.QXFRAME9A7C2){app.innerHTML='<div class="qxframe9a7c2-play-loading">正在加载全部 QXFRAME9A7C2 组件…</div>';waitForDemos();}else app.innerHTML='<div class="qxframe9a7c2-play-loading">需要先加载 QXFRAME9A7C2 dist runtime。</div>';

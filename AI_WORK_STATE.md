@@ -1,3 +1,1280 @@
+## CURRENT — 2026-10-17 Stage5 SURFACE-SHADOW-REAL-MIST-CONFIG-001 (CI pending)
+- Corrected new Chromium Surface Shadow matrix to use real `baseColor:'mist'`, not ignored `base:'mist'`. The 8 Styles x light/dark x none/heavy matrix now explicitly tests the owner's Mist base. Production CSS unchanged by this follow-up. Latest HEAD requires its own double green CI and exact-tree artifact. PR Draft; main unchanged.
+
+## CURRENT — 2026-10-17 Stage5 SURFACE-ELEVATION-CONSUMERS-001 (CI pending)
+- Verified new work baseline HEAD `15e8b7e197a1f107f350af970564aaa5d2739732`; PR #267 Draft/Open, QXFRAME #38987328662 and CSS Schema #38987328669 both success. Main untouched.
+- Focused remaining real Theme-token gaps rather than redoing completed Mist, Focus, Slider or Modal work. In Card Grid hover, removed independently hardcoded black elevation and used the existing Card public override → Theme shadow-card chain. In Table `is-shadow`, removed independently hardcoded elevation and used its existing public override → Theme shadow-card chain.
+- Table fixed-column edge shadows remain black (rgba black .24) by design, independent from generic Table surface elevation; fixed ColorPicker hues and named grey palette deliberately unchanged. No change to existing Theme Token inventory, Theme compiler or embedded Vega/Mist/Blue default. This addresses elevation-strength synchronization, not a claim that all visually grey UI is fixed.
+- Added strict source checks and true Chromium pointer-Hover × 8 Styles × light/dark × none/heavy Shadow checks. No existing test or gate removed. Preview04 has no positively verified exact corresponding Grid Hover + Table Shadow child fixture; local-only QA ledger clears all previous marks and uses zero misleading highlights.
+- **Current:** wait for latest-head QXFRAME + CSS Schema CI; if green, obtain exact-tree official Actions dist+docs, build/check Windows ZIP (CRC/HTTP/SHA256), owner visually verify residual Mist and Focus. Stage5 in progress, no trustworthy whole-program percent denominator; do not assert 100%.
+
+## CURRENT — 2026-10-17 Stage5 PREVIEW04-RETURN-READY-001 (CI pending)
+- Focus saturation new Chromium test PASSED in exact-head CSS Schema #38986750179 (its passed list includes `Focus saturation deep/light is opaque and the two halo modes use blurred 20-percent alpha`). The run failed LATER at the overlay compositor diagnostic because the Preview04→02 transition's existing wait accepted the old iframe document before the new Preview02 DOM had a `body`; `d.body.append` then threw. This is a real asynchronous navigation readiness race, not an invalid Focus implementation.
+- Strengthened the preceding real Chromium readiness assertion to require `document.body.dataset.createPreview==='02'` AND the actual QX Modal runtime AND injected Theme. No diagnostic or test removed/relaxed, and the production Focus implementation is unchanged.
+- New exact-head CI and Windows offline QA zip pending. PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-17 FOCUS-SATURATION-TEST-REGEX-001 (CI pending)
+- Corrected new static Focus saturation audit to reject actual alpha-conversion calls / transparent values, not the slash in source comments. Original opaque color assertions and real Chromium tests remain active. QXFRAME/CSS CI must be checked against the newest commit; previous default-theme green runs do not authorize new change completion.
+
+## CURRENT — 2026-10-17 Stage5 FOCUS-SATURATION-HALO-001 (exact-head CI pending)
+- Branch baseline `48da0b65e647e4fb23e21fdbc5a61856b514ecbb`; prior HEAD's QXFRAME #38930407282 and CSS Schema #38930407280 were both green. This batch is a NEW owner-requested Focus axis change.
+- Added `keyboardFocusSaturation` (`kfocus-saturation`) and `pointerFocusSaturation` (`pfocus-saturation`), each independent and Style-following by default. Available values: `light / normal / deep` (浅色/标准/深色); defaults `normal` to preserve existing Theme output and the owner-provided embedded Vega+Mist+Blue default CSS.
+- Compiler adjusts selected keyboard and pointer Focus OKLCH lightness and chroma independently, preserves the original hue, always emits fully opaque `oklch(l c h)` with no alpha. This is not an opacity control. Existing Focus style (border/outline/halo) and source color (neutral/theme/black-white) remain separate; no new CSS components or redundant semantic Theme Token owners.
+- Both halo modes use `0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-[pointer-]focus) 20%,transparent)`: CSS shadow alpha is independent of fully opaque Focus color. Outline remains real CSS outline 2px/-1px; normal Control shadow remains separate.
+- Added static source/Theme safeguards and real Chromium mode/strength tests. No prior Stage5 visual signoff or merge authorization. PR #267 stays Draft, main unchanged. Next: verify exact-head QXFRAME/CSS CI, fix regressions without relaxing checks, package Windows dist+docs latest HEAD.
+
+## CURRENT — 2026-10-16 Stage5 DEFAULT-POINTER-OUTLINE-FOCUS-001 (CI pending)
+- Exact-head QXFRAME CI #38930046158 failed native pointer Focus browser test in tools/verify-final-focus-lifecycle.html. Its previously valid expectation was "pointer mode has no outline", but the owner-provided new CSS default explicitly sets pointerFocus='outline' and pointerFocusColor='theme'. Updated only two visibility assertions to require real >=2px pointer outline, including after typing, with FocusOrigin preserved; keyboard Tab still requires its own >=2px outline. All lifecycle, controlled value, upload, iframe and runtime gates stay untouched.
+- New Actions QXFRAME + CSS Schema and exact-tree full Windows ZIP pending, PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-EXACT-BYTES-001 (CI pending)
+- Exact-head QXFRAME #38929676186 reached strict new compiled CSS parity gate and caught a single-byte difference (new theme.css lacked the generator's final newline after .dark closing brace). The 220 Theme token values and ordering were already identical. Restored the generated LF terminator in canonical src/styles/main/theme.css; strict byte-for-byte verification and tools/build-theme.mjs --check remain enforced (no gate changed).
+- Next latest-HEAD double-green Actions, exact-tree dist+docs offline Windows ZIP. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 DEFAULT-THEME-EXACT-COMPILER-001 (CI pending)
+- CSS Schema #38928651021 failed in tools/verify-theme-visual-v2.mjs:43 because it hardcoded framework default Nova+Neutral. Owner intentionally changed only embedded framework CSS default. The verifier now constructs the frozen explicit Vega+Mist+Blue embedded config and asserts exact whole :root+.dark output equality, with Create editor Reset still Nova+Neutral. Eight Style compilation checks and original formula/mutation/Chromium gates unchanged.
+- Global CSS Theme changes remain exactly 220 root tokens, no second CSS override. Prior localized offline QA groups cleared; PR #267 Draft, main unchanged. New exact-head QXFRAME/CSS Schema + offline Actions ZIP pending.
+
+## CURRENT — 2026-10-16 Stage5 QA-SLUG-LOCATOR-CLEANUP-001 (CI pending)
+- QXFRAME Actions #38929111665 failed new test that old Slider/Calendar/Dropdown/Card marks must be absent: legacy local QA navigation still had a four-id switch-case although groups=[] correctly removed all displayed marks. Removed that unnecessary hardcoded four-id route and implemented generic canonical slug id lookup plus existing Preview data-card fallback, preserving all current/older Card paths. Strict no-stale-mark test remains enforced, no test relaxation.
+- Default Vega Mist Blue compiled CSS and the 220 schema values unchanged. Next current HEAD double-green CI, Actions artifact and Windows QA ZIP. PR #267 remains Draft, main frozen.
+
+## CURRENT — 2026-10-16 Stage5 DEFAULT-CONTROL-SHADOW-AND-QA-001 (CI pending)
+- Exact-head first QXFRAME CI #38928650187 failed existing Nova-specific source gate at verify-create-app.mjs:392, asserting default shadow-control must be transparent. Owner's generated Vega export explicitly sets controlShadow=on, so source is correct: updated strict gate to require active shadow-control and independently transparent pointer/keyboard focus shadows. Original shared normal shadow and real outline checks retained.
+- The new batch is global default Theme only, no isolated Preview Card fix. Cleared all 4 old QA Card markers by setting local-only change ledger groups=[]; updated strict QA source gate to demand zero stale highlights. Packager already explicitly supports a zero-visual-change/global batch while carrying the full dist+docs bundle.
+- Previous CSS Schema CI #38928651021 was still running when changed. New same-head QXFRAME & CSS Schema verification pending, PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 EMBEDDED-DEFAULT-VEGA-MIST-BLUE-001 (CI pending)
+- User supplied a 2026-10-16 15:52:47 Create 2.19.81 CSS export and asked for this as the bundled default framework CSS. Settings: Vega / Mist base / Blue theme+chart / Sans / default radius / block-only menu padding / wide Switch / medium elevation / pointer Focus outline in theme blue / pill Slider handle. The owner text has 220 unique :root Theme slots, plus the sole legal .dark color-scheme keyword override.
+- Latest pre-work HEAD 2f4b23fa9ab304b289d01493b1fd2c60099eb5b9, PR #267 Draft/Open, both QXFRAME #38921190457 and CSS Schema #38921190380 success. Preserves all preceding Stage5 Slider, Mist, Preview04 and Modal fixes.
+- Used actual compiler from current same-tree GitHub Actions dist+docs locally; compared the exact owner config against the supplied CSS: all 220 root values identical, body byte-for-byte identical. Changed only tools/build-theme.mjs to compile the pinned embedded config, the generated sole owner src/styles/main/theme.css, the 220 defaultRoot mirrors in docs/generated/theme-public-schema.json, plus strict source gates. No second overriding CSS. Create editor defaultConfig()/URL/Reset stays Nova/Neutral (distinct v3 editor baseline); no blind UI reset changes.
+- Next: exact-head QXFRAME + CSS Schema CI, revalidate all source gates without relaxing them, obtain official same-tree dist+docs artifact, build Windows local ZIP and report evidence. Stage5 user visual signoff outstanding; PR Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-QA-NEWLINE-001 (CI pending)
+- Corrected an unnecessary double-escaped newline in local-only Theme Playground QA injections. The packager now inserts standard source line breaks before </head> and </body>, matching the existing Preview01–03 injection method. No change to production pages, no test disable. Next exact-head CI and official same-tree Windows ZIP.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-ANNOTATION-001 (CI pending)
+- Found genuine local QA delivery omission: tools/qa/build-offline-demo.py injected change markup only into docs/create/index and Preview01–03, not docs/theme-playground.html (actual Preview04). Consequently this batch's four Preview04 Slider/Calendar/Dropdown/Card markers could not render in the official Windows ZIP.
+- Packager now injects CSS/JS relative to docs/ only into local extracted canonical Theme Playground, while Create and Preview01–03 behavior remains unchanged. Added exact strict static gates for Preview04 injection and production HTML isolation. Parent change list remains exactly four; no prior QA highlights carried forward.
+- Full exact-HEAD QXFRAME/CSS Schema Actions and official same-tree artifact/Windows ZIP still pending. Preserve PR #267 Draft and main; no Stage5 signoff.
+
+## CURRENT — 2026-10-16 Stage5 SLIDER-LUMA-SHAPE-OWNER-001 (CI pending)
+- Cross-Style audit caught a subtle remaining ambiguity: Luma source default had a 1.5rem-wide thumb while its config falsely labeled it shapeThumb=circle. Set Luma's style-following default to shapeThumb=pill; result stays 24×16px (no visual regression). All explicit circle selections become width=height; explicit pill widens it 1.5× across ALL eight Styles. Removing the Luma hardcoded width branch makes Shape Policy sole owner. No new knob token or shadow exception. Updated source test for preserved Luma default semantics.
+- Revised exact-HEAD GitHub Actions pending; previous ad7d3dde checks no longer latest after this commit. Owner Mist/Slider signoff and ZIP pending. PR Draft; main untouched.
+
+## CURRENT — 2026-10-16 Stage5 MIST-EXACT-FORMULA-SCHEMA-001 (CI pending)
+- Previous CI on af0a4fc5 failed strict old source-lock assertions in verify-create-app.mjs for prior Menu-foreground 12% hover. Original frozen shadcn fixture unchanged. Updated three exact literal expectations to new QX base-neutral Popup Hover formula.
+- CSS Schema #38918569246 also rejected the new neutral-muted/muted-foreground mixes as not in the closed source formula set. Added exactly three fully spelled out allowable shared formulas (hover/active/translucent popup) to tools/theme-v2-contract.mjs. Kept source-lock detector, mutation test, no style selectors, and no scope relaxation. This is an explicit source-derived palette state adaptation, not bypass.
+- Slider track thickness and handle pill remain separate. Card/Popup/Dialog shadow now uses relative OKLCH base-muted-foreground hue/chroma with low lightness without nested light-dark. Next exact-head QXFRAME/Schema/Chromium and Windows official offline bundle. PR #267 Draft; main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 MIST-BROWSER-SYNTAX-CLEANUP-001 (CI pending)
+- New Chromium Mist test had a double-escaped slash in its nonwhite-shadow assertion; replaced with strict equivalent literal string check. Production source and all other tests unchanged. This is a syntax repair, not test removal.
+- Current batch visual QA has only four Preview04 marks. Need next HEAD double-green CI and exact-build Windows ZIP. PR Draft; main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 MIST-CARD-QA-AND-CHROMIUM-001 (CI pending)
+- Added real Chromium acceptance for exact Vega+Mist (with independent thick rail/round/pill handle) versus Neutral. Tests computed slider dimensions, actual muted Hover/Active and popup Menu background, Card shadow for both palettes, and dark shadow non-white. Theme CSS and prior light/dark class restored; no snapshot shortcuts.
+- Offline QA ledger now marks only 4 new Preview04 areas: Slider handle/track, Calendar base-tint, Dropdown popup hover, Card elevation. Old Modal/Drawer/Alert yellow highlights cleared. Source Create HTML is untouched; QA overlays remain local-zip-only.
+- Earlier Shadow Schema failure was corrected in relative-OKLCH batch af0a4fc5. Latest CI and full ZIP still pending; Stage5 not user signed off, PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 SHADOW-RELATIVE-COLOR-SCHEMA-001 (CI pending)
+- QXFRAME CI #38918569196 correctly failed strict vega/default Theme Schema: a Shadow-kind token cannot contain light-dark() even nested in color-mix. No baseline or assertion changes are authorized.
+- Replaced nested light-dark in generated Card/Popup/Dialog/Control/thumb shadows with CSS relative oklch(from Theme muted-foreground 0.12 c h), then mixed to specified shadow alpha. The CSS color inherits each base palette's hue and chroma yet remains optically dark in light AND dark schemes without manual anti-theme selectors; Shadow token contains no forbidden light-dark. Updated static regression check, retained exact original Schema gate. Prior Slider/neutral hover fixes remain.
+- Next exact-head CI, real Chromium dynamic visual assertions, new offline QA, owner signoff; PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 MIST-NEUTRAL-SLIDER-001 (CI pending)
+- User supplied Vega+Mist query and screenshots showing Slider “胶囊12” actually changing track thickness and neutral Hover/shadows looking grey. Work baseline `redesign/create-stage5` HEAD `4f414e0b826e0035bd0afec82f0922a72d6449cc`, PR #267 Draft; both QXFRAME #38892010265 and CSS Schema #38892010037 SUCCESS before this batch. Preserve already completed Stage5 overlay/Preview04 fixes.
+- Verified compiler: `sliderLook=t12` maps to 0.75rem rail, not a capsule handle. Relabeled track axis and t12 value and added independent `shapeThumb=pill` (1.5× handle width with Theme thumb radius PILL). Track axis, density and default Style mappings retain their existing semantics.
+- Verified Mist base theme has cool-blue neutral roles, but global neutral hover and popup hover used grey-looking foreground/alpha recipes; Style-neutral Card/Popup/Control shadows use literal black. Shared Hover now mixes Theme muted with base muted-foreground for stronger neutral hue; Popup derives translucent equivalent to preserve inverted/translucent menus. Shadow series now derives ink from base muted-foreground (light) or base background (dark), keeping dark ink on dark backgrounds, without adding Theme slots. Existing menu selection/semantic status/primary remains independent.
+- Scanned official previous-success dist CSS; other raw black/white uses include ColorPicker black gradients, mask overlays, table depth, ImagePreview controls and other contrast/depth shadows. Do not rewrite intentional black visual-contrast / alpha compositing indiscriminately. Need focused audit of additional tintable neutral surfaces and appropriate Chromium multi-Style light/dark tests.
+- Strict static regression guards added for Slider separation, base-neutral Hover, and shadow source; exact-head CI and Windows QA ZIP remain pending. No merge; owner approval still required.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-SEARCH-SLUG-OWNER-001 (CI pending)
+- The expanded-gallery QA now exercises actual input search with canonical slugs, including 'date-picker'. The existing gallery search index had name/CN/description/category/features but omitted slug; the new exact-slug enqueue code alone cannot help if filtering first hides slug-matched cards. Real functional search gap established from source.
+- Added meta.slug to the one canonical dataset.search index, preserved normal name/CN/features, added strict source assertion. No new search system or eager mounting. Both CI and Windows artifact need verification on exact new HEAD; PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 CANONICAL-GALLERY-EXPANDED-LOCATOR-QA-001 (CI pending)
+- With Preview04 expanded canonicals, old standalone docs/theme-playground browser gate still did one-off smooth scroll to Alert, DatePicker and Form; other lazy-mounted expanding rows can shift targets offscreen before observer scheduling. This is the same demonstrated race as the Preview04 test.
+- Proactively refactored the **existing strict** canonical gallery browser test to use actual gallery search for each canonical target and instant scroll, preserving all assertions: Alert semantic variants/12 skins, Week DatePickers and Kbd Form group. Exact-name/slug priority is now owned by the gallery's source mount queue. Tests don't bypass mounting and don't relax count thresholds.
+- Latest f49e922b CSS/QXFRAME runs were in progress when source gate was updated; new exact-head CI required. PR #267 Draft; main unchanged. Do not claim all tests green until finished latest runs.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-RETURN-READY-QA-001 (CI pending)
+- Exact-head CSS Schema #38889941013 reached and **passed** the newly added real Chromium Preview04 test (Create compiled theme, all canonical Alert demos mounted after search, no fold control, computed dark shadow). The subsequent pre-existing overlay compositor timing test failed because switching back to Preview02 waited only for iframe src assignment; its remote QX JS runtime was still undefined. This is an asynchronous route readiness race in the test, not evidence of component regression.
+- Added strict return-route wait checking actual Preview02 QX Components.Modal runtime and nonempty Create Theme CSS before the next compositor test; no timeout removed and no production code changed. QXFRAME #38889940952 was still running when diagnosed. New exact-head both-CI and Windows artifact pending; PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-FILTER-QUEUE-001 (CI pending)
+- Owner asks continue: branch HEAD 54b8b694 QXFRAME #38889592013 / CSS #38889592059 still executing when resumed implementation. Previous both-red HEAD bb950ef7 real browser tests timed out waiting for canonical Alert mount in full expanded grid.
+- Confirmed functional gallery issue: applyFilters toggled hidden but neither de-queued old hidden Cards nor prioritized exact component search. Updated gallery's single existing pendingMounts/IntersectionObserver authority: remove hidden queued Cards and re-observe for later display, enqueue exact visible component name/slug ahead of unrelated offscreen work. No blanket eager mount or extra timers; all canonical demos still open. Regression gate asserts both behaviors.
+- Browser test exercises actual search and verifies canonical Alert demos, Create Theme bridge, no collapse and dark shadow. PR #267 Draft, main untouched. Next: run latest exact-HEAD both CI, build verified offline ZIP only after pass.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-GALLERY-FILTER-QA-001 (CI pending)
+- GitHub HEAD bb950ef79b0afe777ef6cf988cfd794314454a57 QXFRAME CI #38887141367 and CSS Schema #38887141177 both fail the same newly added Chromium condition: Alert card never finished lazy mounting after a one-time smooth-scrolling adjustment. This is NOT a green build.
+- Production gallery retains all examples expanded and per-card viewport/idle lazy mounts. Browser QA now exercises the **real existing gallery search field** to filter the Alert card into the rendered set before asserting actual canonical Alert demos, compiled Create theme, absence of collapse controls, and computed dark semantic shadow. Instant scroll plus search is deterministic even with large expanding card rows. Assertions are preserved (not relaxed).
+- New exact-head CI and full Windows dist+docs ZIP are pending. PR #267 still Draft; main unchanged. Current work focus: eliminate the Preview04 lazy-gallery CI blocker without removing lazy scheduling.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-LAZY-GALLERY-BROWSER-001 (CI pending)
+- CSS Schema Actions #38885893121 reached real Chromium Preview04 acceptance; waited for all Alert demos without scrolling the iframe to their offscreen card. Canonical Gallery deliberately schedules demo mounts only near its viewport; a hidden/offscreen Alert has no need to load. Fixed strict test to scroll canonical Alert card into view before requiring actual mounted examples, live compiled CSS, no folds and dark-black shadow. Retains real mounting assertion and lazy rendering performance policy; does not weaken gate.
+- Next: run exact-head CSS + QXFRAME CI, obtain complete Action dist+docs artifact, prepare offline QA. PR #267 Draft; main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 QA-LEDGER-MAPPING-001 (CI pending)
+- Exact-head QXFRAME CI #38885641939 failed because existing strict offline QA gate still demanded old ImagePreview highlight from the preceding batch. Updated only its expected current-round mapping to Modal/Drawer/Preview04 Alert, and added a real canonical playground card-id authority check. Kept the exactly-three-annotations assertion, stale-highlight exclusion and bundling checks; no gate weakened. PR #267 Draft; main untouched. Next exact-head Actions and offline ZIP.
+
+## CURRENT — 2026-10-16 Stage5 CHROMIUM-ALERT-TEST-SYNTAX-001 (CI pending)
+- Exact-head QXFRAME #38885225745 failed at Node --check of new browser-only Alert assertion: mistakenly double-escaped regex with an unterminated group. Replaced regex with equivalent string-based non-white computed shadow assertion; did not disable checking and did not change production behavior. Next: rerun strict real Chromium + Schema gates, create verified latest-head ZIP. PR Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-OFFLINE-LOCATOR-001 (CI pending)
+- Exact-head QXFRAME CI #38884927899 failed at existing static contract requiring explicit Preview03 navigation in offline QA. Previous routing simplification to group[3]||'01' was valid functionally but removed an audited explicit mapping. Restored explicit 04/03/02/01 routing, retaining both original third-page and new fourth-page locator paths. Gate itself unchanged.
+- No visual acceptances or CI declared green. PR #267 Draft, main untouched. Next: verify source/Chromium/Schema and Actions artifact before offline bundle.
+
+## CURRENT — 2026-10-16 Stage5 PREVIEW04-TOGGLE-STATIC-GATE-001 (CI pending)
+- Exact-head QXFRAME #38884717800 reaches createApp static gates; new strict no-collapse check caught a stale unused selector for the removed expand button. Deleted the dead selector rather than loosening the assertion; dynamic Preview04 always mounts all canonical demos.
+- CSS schema color problem previously corrected with palette-black Theme token; no new Theme token or ratchet exception.
+- PR #267 Draft, main unchanged; next exact-head CI/Chromium and dist+docs artifact verification pending.
+
+## CURRENT — 2026-10-16 Stage5 ALERT-SHADOW-TOKEN-GATE-001 (CI pending)
+- Full QXFRAME Actions #38884370626 rejected a new hardcoded literal in Alert CSS: theme-tokens hardcoded-color components/alert 0→1. This is a genuine authoritative Theme gate failure, not a test false positive.
+- The source now derives Alert shadow ink from the existing registered --qxframe9a7c2-theme-palette-black with color-mix alpha 15%; preserves black/dark ink in either mode without a new Theme color token or gate baseline expansion. Updated strict source gate and browser non-white Alert test accordingly; no assertion removed or gate relaxed.
+- Next: validate exact-head CI and Windows full dist+docs artifact. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 MODAL-ZOOM-DIALOG-SURFACE-PREVIEW04-001 (CI pending)
+- Owner acceptance: Modal zoom visually too small. Updated point scale .8→.7, center fallback .94→.86 while preserving initial click translation and reverse exit.
+- Divider width 0px: Modal/Drawer header padding-bottom=0, footer padding-top remains positive (Theme dialog padding) for button spacing. CSS named style queries inherit panel background for header/footer when divider 0, preserving distinct Section background if divider visible.
+- Alert shadow is black oklch regardless of foreground (dark mode formerly white). Create Preview04 routes to canonical docs/theme-playground.html; reuses Create preview.js live compiled theme injection. All canonical component examples visible with existing idle/viewport lazy mounting, no per-card collapse buttons.
+- Regression: static gates and real Chromium tests extended for above; local QA only marks current Modal, Drawer, Preview04 Alert regions. Stage5 owner video/visual acceptance not yet signed off. PR #267 stays Draft, main untouched. Next: run exact-head Actions/Chromium, fix any regression, package verified full Windows offline dist+docs ZIP.
+
+## CURRENT — 2026-10-16 Stage5 DRAWER-FOOTER-CASCADE-001 (CI pending)
+- Exact HEAD 93437e79 Chromium QXFRAME Actions #38876758290 failed at newly added *real computed-style* check: drawer divider-free footer top padding remained nonzero.
+- Root cause verified in CSS source: Drawer footer's existing full `padding:` shorthand followed our early `padding-block-start` override; CSS cascade silently replaced it. Moved the exact same Theme-derived header/footer logical edge-padding rules AFTER all Drawer footer shorthand declarations. No assertion removed or loosened; browser still asserts actual 0px for Modal and Drawer.
+- PR #267 remains Draft, main unchanged. New QXFRAME and CSS Schema CI pending. No visual/performance signoff; Stage5 not complete.
+
+## CURRENT — 2026-10-16 Stage5 IMAGE-CHROME-MOTIONCORE-ACTIVE-001 (CI pending)
+- After Modal origin test migration commit 32f56de2, inspected shared MotionCore startFresh/onActive: open media enters on the second animation frame, leave media begins on the first leave frame. Previous ImagePreview root chrome was toggled synchronously in openPreview/closePreview, a full scheduler frame before image transition; uniform duration alone was not synchronized.
+- Move ImagePreview is-chrome-visible/is-chrome-leaving toggles to the existing previewMotion Transition onActive context (enter/leave) so image and positional control motion start at the same active frame; preserve no new timers, both presence owners and last-frame handoff safeguards.
+- This extra source change remains a pending follow-up commit and requires new exact-head Actions/visual signoff. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 MODAL-ORIGIN-E3-TEST-MIGRATION-001 (CI pending)
+- Post-source commit 942f3348, QXFRAME Actions #38875646821 failed in real Chromium phase-E Modal/Drawer verification, at the legacy expectation that Modal uses noncentral CSS transform-origin only for zoom-origin and default zoom ignores triggerTarget.
+- The newly requested behavior intentionally uses a stable 50% 50% transform anchor and preserves pointer-relative translate(X,Y) for BOTH zoom-origin and default zoom. Updated the existing strict Chromium regression to assert nonzero trigger translation and identical saved exit translation, including the default trigger path. No CI check removed or disabled.
+- Exact-HEAD dual Actions rerun is next; no new performance/visual claim; PR #267 remains Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 DIALOG-ORIGIN-PREVIEW-LIFECYCLE-001 (CI pending)
+- Resumed verified branch redesign/create-stage5 @ 214d24464e9716e4291854b8b9ef2af7297cc71d; PR #267 remains Draft/Open, main untouched.
+- Modal default zoom now measures the opening trigger once, translates from its pointer/focus origin toward center and reverses along the same saved path on leave. Programmatic opens without a trigger keep center zoom. Mask remains fade-only.
+- Drawer existing 4-side slide and mask fade ownership retained. Modal/Drawer use the existing Theme divider width to give header lower padding and footer upper padding exactly 0 when divider is hidden.
+- Reduced only the four shared Dialog shadow grades; none/card/popup remain separate and unchanged.
+- ImagePreview source maintains one mask/media leave lifecycle. Media center-scales; title, close, toolbar and navigation directionally slide without extra scaling, with the same Theme transition enter/leave duration as the mask/media. Forced layout read on exit is limited to actual thumbnail-handoff mode.
+- Three current-only offline QA markers: danger-dialog, account-drawer, asset-preview. Strict source assertions updated to this exact batch.
+- PRE-CI only: exact-HEAD two Actions, Chromium before/after trace, owner video signoff and successful official dist+docs ZIP still pending. Stage 5 NOT complete or signed off. Next: run both CI, remedy actual regressions, verify official artifact, keep Draft.
+
+## CURRENT — 2026-10-16 Stage5 GENERATED-DEFAULT-THEME-ALIGNMENT-001 (CI pending)
+- QXFRAME #38866044388 passed canonical public Schema alignment, but `verify:theme-default` rejected stale generated `src/styles/main/theme.css`.
+- Reconciled Nova default compilation values from the new authoritative compiler: dialog padding x=1rem, y=.75rem, body=.75rem, divider-width=0px (Nova sections=muted), shadow-popup=none for surface none, dialog-mask-blur=0rem independent of Menu. Updated the mirrored `theme-public-schema.json` root values for those six entries; no other dimensions or color tokens modified.
+- The **same** exact-match `build-theme.mjs --check` and strict Schema/default Theme equivalence gates remain enabled. Next dual CI; then browser cross-month+overlay profiling, Actions Windows ZIP. PR Draft/main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 PUBLIC-SCHEMA-DIALOG-MIRROR-001 (CI pending)
+- QXFRAME #38865662250 passed Theme default Token check but failed `verify-create-app.mjs` canonical `theme-public-schema.json` mirror: four new registered Dialog geometry tokens absent. Synchronized exactly four existing names/defaults with live `tokens.js` and default `theme.css`; tokenCount 216→220, colorCount/geometryInputs unchanged.
+- Did not loosen schema equal-list/default-value gate or invent a second registry. Prior Calendar visible-month clips, seven-day week endpoints, Dialog section/soft shadow roles, separate Blur, real Chromium performance diagnostic retained.
+- Next exact-head both GitHub workflows, fix actual browser failures, build successful Actions dist+docs Windows ZIP; owner visual and performance still pending. PR Draft/main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 OVERLAY-FRAME-TIMING-001 (CI pending)
+- Added real Chromium diagnostic for Modal/Drawer/Image independent open+leave timing, recording synchronous call cost, time to first requestAnimationFrame, max/mean frame gap and >34ms frame count, printed as `[Stage5 overlay-frame-profile]`. It is a diagnostic, **not a passed FPS gate** and cannot certify owners' perception or real GPU performance on their machine.
+- No MotionCore surgery yet: two-frame boundaries and forced layout reads are proven code paths but their contribution to stutter needs actual runtime evidence.
+- Cross-month date/week, Theme dialog partition, independent blur and monotonic Dialog shadows remain on branch; latest exact-HEAD QXFRAME+CSS Schema and Windows package pending. PR Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 DIALOG-SHADOW-ROLE-CONSUMER-001 (CI pending)
+- Source inspection proved `src/styles/components/modal.css` and `drawer.css` consumed `--qxframe9a7c2-theme-shadow-popup` as default root fallback, despite separate compiler `shadow-dialog` values. This contradicts older analytical statement that dialog role was already attached.
+- Replaced both fallback slots with `--qxframe9a7c2-theme-shadow-dialog` while preserving explicit per-component shadow overrides, and added strict source assertion requiring dialog role and rejecting popup role in both stylesheets.
+- Prior Calendar visible-month endpoints/opaque week endpoints, Style-based section spacing/soft shadow and blur independence preserved. Next final same-HEAD dual CI, browser acceptance and official ZIP. Performance trace still pending, no stutter fix claim. PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 QA-MARKERS-CURRENT-BATCH-001 (CI pending)
+- Latest QXFRAME #38865310442 advanced past theme-tokens and failed static `verify-create-app.mjs` on `support-triage`: current QA ledger correctly cleared previous Tags/Image batch and marks capacity-calendar, release-planner, danger-dialog, account-drawer, but static gate still expected prior four.
+- Updated strict one-to-one QA Card/region map to exactly the four currently changed Cards, with unchanged checks for correct Card existence, no stale highlights, and exact HEAD placeholder count. No component CSS/JS regression gate modified.
+- Next run both exact HEAD CI; inspect runtime browser regressions (week/date visible clips, dialog visual tokens) and repair proven issues; official Windows bundle only after both green. Performance profiling still outstanding, no stutter success claim. PR Draft and main untouched.
+
+## CURRENT — 2026-10-16 Stage5 TEST-AFTER-MODEL-IMPORT-001 (CI pending)
+- Source commit `f335164d` fixed default Theme Dialog tokens and allowed CSS Schema token checks. QXFRAME #38865069168 failed `verify-create-app.mjs:129` before browser: new cross-month/dialog test executed before `const model = await import(...)` and `const data = await import(...)` were initialized.
+- Moved the **same strict assertions unchanged** below those canonical model/data imports. No code owners or test tolerances weakened. Previous Calendar month-cap, week, dialog Theme padding, shadow/blurring fixes retained.
+- Next: latest-head dual CI, diagnose real runtime failures, official exact-HEAD offline dist/docs ZIP. Image/Modal/Drawer performance timings still not profiled, so no frame-rate completion claim. PR Draft; main untouched.
+
+## CURRENT — 2026-10-16 Stage5 DIALOG-DEFAULT-REGISTRY-SYNC-001 (CI pending)
+- Earlier QXFRAME #38864685900 failed strictly at `verify-theme-tokens`: newly registered and compiled Dialog spacing/divider tokens had zero declarations in default `src/styles/main/theme.css`. This is a default-Theme authority bug, not a CI tolerance issue.
+- Added exactly one default root declaration each for dialog-padding-x/y, dialog-body-padding-y, divider-width, matching the existing default Modal geometry. createApp compiler drives the same four tokens across Styles. Full JS and CSS schema gates remain strict.
+- Branch PR #267 Draft/main unchanged. Next both latest-HEAD CI, fix actual remaining browser/test failures, generate official offline dist/docs ZIP after both green. No performance signoff without a trace.
+
+## CURRENT — 2026-10-16 Stage5 CROSSMONTH-DIALOG-ACCEPTANCE-001 (CI pending)
+- Baseline last full green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`; current source commits `b34de0c` and `be7a26d` update Calendar/DatePicker and Modal/Drawer/Theme compiler.
+- Added strict static + Chromium regression: July27–Aug2 selected week (seven days with opaque endpoints), Sept–Oct two-panel clipping using visual-only month edge flags; Theme section lines/partition, menu/dialog blur independence, five distinct dialog shadow grades, none = truly none for all roles.
+- Current offline QA marks ONLY four affected Preview03 Cards; old Tags/Image/ScrollLock highlights removed, because they did not change in this batch.
+- Next latest-HEAD QXFRAME+CSS Schema CI; fix strictly evidenced failures; official exact-HEAD Actions dist+docs Windows ZIP CRC and 13 HTTP resources. Browser performance profile remains separate and not yet completed; no stutter-success claim. PR #267 Draft and main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 DIALOG-THEME-PARTITION-SHADOW-001 (CI pending)
+- Baseline previous commit `b34de0cafd60c0c3b1b80d2f75fd9cbe043dea58` first fixed Calendar cross-month visible clips and week endpoints; no main/PR merge.
+- In createApp compiler the surface shadow tiers now move monotonically: none emits none for all surfaces; Popup tiers xs/sm/md/lg, Dialog has separately tuned low-alpha soft two-layer elevation in four steps instead of medium jumping to xl and heavy to 25% black 2xl.
+- Dialog mask blur is independent of translucent menu: default 0 except gentle 4px style presets for Maia/Luma. Explicit maskBlur / CSS Theme override still possible.
+- Added four registered Theme geometry tokens dialog-padding-x/y, dialog-body-padding-y, dialog-divider-width from existing padding/sections axes; Modal/Drawer consume Card's shared muted-section and border roles. None removes borders, divider uses real 1px, muted shows grouped section background without extra divider. Header/body/footer horizontal text edges align; viewport gap remains separate.
+- Next add strict Chromium test for July27–Aug2 week, Sept–Oct clipped date range, 8 Styles/sections/shadow mapping; CI; official exact HEAD offline ZIP; performance frame trace still required before claiming stutter eliminated. PR #267 Draft and main untouched.
+
+## CURRENT — 2026-10-16 Stage5 CALENDAR-MONTH-CLIP-001 (CI pending)
+- Resumed exact previous green `7403a4a66ca7a0b2278c3250dcccef3f7bcabe43`, PR #267 Draft, main unchanged.
+- Corrected DatePicker outside-date projection for `unit:'week'`: maintain full week range across displayed adjacent-month dates; ordinary date range still clips at month panel.
+- Calendar single owner now projects `is-range-clip-start/end` at actual visible first/last date of ordinary month-range strips; these are visual `::before` corners only, never selected/dark endpoints.
+- Corrected transparent range middle selector to exclude `is-range-start/end` so real cross-month week endpoints retain opaque Theme primary fill and contrast.
+- Next: real Chromium for 2026-07-27..08-02 and Aug/Sep or Sep/Oct month clips + strict CSS role check, then shadows/Modal/Drawer Theme partition, dual CI and successful offline ZIP. No fabricated animation performance conclusions.
+
+## CURRENT — 2026-10-16 Stage5 SCROLLLOCK-PARITY-STATIC-GATE-001 (both final CI pending)
+- Previous HEAD `79aae66381d1f3b17b552253a7dcca9fe4753291`, CSS Schema run #38855234984 pending at start. QXFRAME #38855235140 blocked in **static** `verify-create-app.mjs:2163`: it asserted the old literal `unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x))`, which no longer represents the narrowly guarded ScrollLock source approval. This is not a runtime or build-parity failure.
+- Updated that test to require the exact **guarded** `unauthorized` predicate plus explicit approved-scrollLock fragments and restoration. Strict rejection of all other unauthorized Core/Tree/TreeSelect source deltas is preserved; no changed browser tolerance or component behavior.
+- Next exact HEAD QXFRAME CI/CSS Schema; after both green, official dist+docs Windows ZIP + CRC and HTTP checks. Owner visual signoff still open; PR Draft, main frozen.
+
+## CURRENT — 2026-10-16 Stage5 SCROLLLOCK-EXPLICIT-JS-INTEGRITY-001 (both final CI pending)
+- Current source baseline `fbb7626eea22edd0e224789d8baaa68bde0c450c`; exact-head CSS Schema #38853173174 SUCCESS. QXFRAME #38853173173 passed full release and independent real createApp Chromium **111/111 steps**, including shape 768-case, ScrollLock, Theme menu padding, Modal/Drawer/Image and Tags. Final QXFRAME job failed at the separate JS build integrity check with one and only one unauthorized file: `src/core/scrollLock.js` (real owner-approved change for page shift on locking scrollbars).
+- `tools/verify-js-build-matches-main.mjs` still rejects all unexpected JS deltas and verifies reproducible dist builds. It now permits **only this one core ScrollLock delta**, conditioned on strict source fragments proving `width>0` document-root guard, native stable scrollbar-gutter, fallback padding compensation, overflow lock, and DOMProjection restoration. No wildcard additions, no disablement, no changed geometry/performance assertions.
+- Previous fbb7626 Badge Theme radius regression fix and CSS Schema green preserved. Next: exact new HEAD QXFRAME and CSS Schema, official Actions dist+docs matched-tree Windows zip (CRC + localhost 13/13). Latest owner video animation signoff still required; PR #267 must remain Draft, main unchanged. No synthetic Stage/overall percentage.
+
+## CURRENT — 2026-10-16 Stage5 BADGE-THEME-RADIUS-AUTHORITY-001 (new CI pending)
+- Factual restored head `fb7ba833a3dd08725de70ffd5f9db9d0b78be76c`, PR #267 Draft/Open/main untouched. QXFRAME #38851609343 and CSS Schema #38851609406 both red at Chromium 8-style shape matrix: `vega/false/default/badge actual 6px expected 26px`.
+- Root cause: `src/styles/components/visual-recipe.css` assigned the compact shape radius to .badge after component Badge's Theme radius declaration. Also `theme-visual-v2-style-consumers.css` left .badge[class] dangling in tabs-only selector after prior Tag cleanup. Removed Badge from both competing radius declarations; `badge.css` is sole Badge radius owner, standalone Tags/Editor independently consume the same Theme radius-badge role.
+- Added static acceptance requiring single Badge Theme authority; strict 768-case Chromium shape test remains unchanged (no tolerances relaxed). Prior Style-driven ListFrame padding x/y, scrollLock scrollbar-gutter, Modal/Drawer/Image center-compositor motion and Tags Theme colors retained.
+- Next: run exact HEAD QXFRAME CI + CSS Schema. If failure, inspect next concrete component in shape matrix and fix source owner. Only after both green generate official Windows dist+docs ZIP with CRC/13 localhost checks. Await owner visual signoff; do not merge PR.
+
+## CURRENT — 2026-10-16 Stage5 TAG-THEME-BADGE-RADIUS-SINGLE-OWNER-001 (new HEAD both CI pending)
+- After Tag/Compact/Control chain change, exact-head CSS Schema #38850708736 still measured Tag/editor `18px` vs `14px` in real Chromium. Full source ownership inspection located the actual late override: `src/styles/main/theme-visual-v2-style-consumers.css` high specificity `.qxframe9a7c2-tag[class]{border-radius:var(--qxframe9a7c2-theme-radius-badge)}`; input did not consume the Badge Theme mapping.
+- Moved the Badge Theme mapping into the ONE Tag/editor/focus radius fallback chain, `--qxframe9a7c2-tag-radius → --qxframe9a7c2-theme-radius-badge → --_qxframe9a7c2-compact-shape-radius → --_qxframe9a7c2-control-radius` and removed the late Tag-only CSS property. Public user override now wins over Theme Badge, and every Tags part receives identical values. No hardcoded px values.
+- Static gates updated to require that chain and refuse both prior duplicate radius owners; **real Chromium strict equality unchanged**. Prior Menu inset x/y, ScrollLock stable gutter and compositor overlay work frozen.
+- Next both new-HEAD QXFRAME and CSS Schema, official same-tree Windows dist+docs ZIP, CRC + localhost 13 resources, owner visual signoff. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-LEGACY-GATE-ALIGNMENT-001 (both CI pending)
+- Found two obsolete static acceptance assertions in `verify-create-app.mjs`: one still demanded editor Control-only Radius after the verified 18px-vs-4px mismatch, another claimed every standalone Add editor remained transparent despite Theme-filled and solid variants.
+- Updated assertions to require the canonical Tag → Compact Shape → Control radius, and restrict transparent editing to the explicit outlined appearance; pointer/keyboard Focus contract unchanged.
+- No new CSS/JS runtime change or browser threshold relaxation. Re-run exact-HEAD QXFRAME and CSS Schema, package only verified Actions output; PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-COMPACT-SHAPE-RADIUS-001 (latest HEAD needs both CI)
+- After fixing the public Modal facade test at `ad24bd587c9dc19189dd8f021c6afe949036af67`, QXFRAME CI #38849440972 reached the real Chromium Style geometry check and exposed `Tag editor radius: '4px' !== '18px'`. This is a production CSS responsibility defect, not a false browser assertion.
+- Root cause: `src/styles/components/visual-recipe.css` overrides ordinary Tag border-radius with compact-shape radius, while `src/styles/components/tags.css` editor consumed Control radius. Consolidated the canonical chain `--qxframe9a7c2-tag-radius → --_qxframe9a7c2-compact-shape-radius → --_qxframe9a7c2-control-radius` for Tag, standalone editor and keyboard focus shell, and removed the recipe's redundant Tag border-radius owner. No fixed 18px workaround.
+- Added static gate checking all four Tag descendants use the same chain and no secondary recipe override. Real Chromium Tag/editor exact computed-radius equality remains strict. Prior Theme-driven menu x/y, stable scrollbar lock, compositor motion remain frozen.
+- Run both new-HEAD QXFRAME and CSS Schema, then official same-tree Windows dist+docs QA bundle; PR #267 remains Draft and main untouched. Do not declare full visual signoff.
+
+## CURRENT — 2026-10-16 Stage5 ROOT-SCROLL-TAGS-MOTION-CI-RESTORE-001 (CI pending)
+- Factual GitHub HEAD before change: `0c47e91a86a6ac5f5d2ad1797536083d0367ff55`; PR #267 Draft/Open, main untouched. Latest QXFRAME CI #38847944200 and CSS Schema #38847944185 both fail in Chromium Stage5 Tags editable surface/ScrollLock check at line 3228 with `TypeError: Cannot read properties of undefined (reading 'animation')`. The test read `QXFRAME9A7C2.Components.Modal.options.animation`, but public Components exposes a create facade, not a static Modal constructor.
+- Fixed only the fixture to create Modal without explicit animation and measure `modal.options.animation` from the actual concrete instance, **while retaining the strict 'zoom' default assertion**, real Tags border/radius, root scroll-lock geometry, fixed-center, and compositing assertions. No production override or loosened acceptance.
+- Existing Theme-driven menu padding x/y, Tags 3-variant Theme paint, stable root scrollbar-gutter, Modal/Drawer/Image animation and lazy Theme Playground changes remain intact.
+- Next exact step: run QXFRAME CI and CSS Schema on the new HEAD; if failure remains inspect exact browser assertion and repair the true root cause. Deliver official same-HEAD dist+docs Windows ZIP only after both green + CRC/localhost checks. Do not merge PR or modify main; Stage/overall visual signoff pending.
+
+## CURRENT — 2026-10-16 Stage5 GALLERY-LAZY-MOUNT-PERF-001 (final CI pending)
+- The user's 45-second recording visibly scrolls through the canonical theme playground near Modal/Drawer/Loading. Existing `IntersectionObserver` eagerly mounted all intersecting demo components in one callback, potentially monopolizing the UI thread while overlay transform/opacity transitions run.
+- The one existing playground runtime now queues visible records with requestIdleCallback(timeout 250ms) (rAF fallback), processing one real Demo per callback, with 400px prefetch margin instead of 600px. Empty queues stop; pagehide discards remaining work. No framework new Controller and no duplicate registration.
+- Static gate prevents eager IO fanout regression. Earlier shared Theme Tags variants, root scrollbar stability, overlay compositor motion and Phase E center/origin compatibility fixes retained.
+- The latest exact-HEAD QXFRAME/CSS Schema are required again. No promise of a measured 60fps result; validate against owner device/video and official artifact. PR #267 remains Draft, main not modified.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-THEME-PRIVATE-VARIANT-OWNER-001 (CI pending)
+- QXFRAME #38847141357 failed strict CSS Theme Token ownership: direct declarations of five public `--qxframe9a7c2-tag-input-*` names inside component variant selectors. This is a real schema violation introduced by last batch; **not** a CI mistake.
+- Corrected Tags outlined/solid mapping to private `--_qxframe9a7c2-tags-variant-input-{bg,border,text}` values consumed as fallbacks by the existing input Theme token resolution. Public Theme names remain inputs only and only the Theme layer can declare them.
+- Static gate now requires private slot ownership and refuses public Tag appearance declarations in variant selectors. No new public Theme token, controller, or painter. Pending exact-HEAD two Actions and Chromium.
+- PR #267 Draft/main unchanged; owner visual signoff not received.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-THREE-VARIANT-EDITOR-001 (latest CI pending)
+- Standalone Tags input now mirrors filled/outlined/solid Tag appearance: base input consumes public/tag Theme slots; outlined uses transparent bg/semantic border, solid uses semantic text/inverse foreground, default filled stays subtle. Existing Tag renderer/controller unmodified, no duplicate input JS parameter.
+- Static gate added to stop outlined/solid editor regression. Earlier ScrollLock and compositor-overlay motion patches preserved; Chromium Tags edit state still checked, full CI pending at new HEAD.
+- User's observed native scrollbar "overlay" cannot be enforced by browser CSS across all OS; stable native gutter avoids layout jump, framework Scroll component already supports overlaid custom tracks for scrollable regions.
+- PR #267 Draft, main untouched. No Stage or overall signoff.
+
+## CURRENT — 2026-10-16 Stage5 MODAL-CENTER-DEFAULT-REGRESSION-001 (latest CI pending)
+- Earlier QXFRAME CI #38846412043 correctly flagged obsolete Phase E fixture: first-trigger Modal was implicitly exercising default origin zoom, but the user requested a center zoom default without costly force-layout. Kept exact trigger origin assertion by explicitly selecting `animation:'zoom-origin'`, then added separate strict default center zoom assertion with triggerTarget set.
+- Chromium createApp Stage5 ScrollLock fixture now supplies exact iframe `document` and `portalContainer` to Modal, matching the canonical constructor (not top-level global document). Real center/gutter validation preserved.
+- Latest new HEAD both CI still pending, full Windows artifact not delivered; PR #267 remains Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-SCROLL-OVERLAY-BROWSER-001 (latest CI pending)
+- Added strict source gate for editable Tag border width/radius, shared root ScrollLock stable gutter, Modal center zoom without forced layout, Modal/Drawer mask compositor and Image Preview compositing.
+- Added real Chromium active Tags editing and Modal lock/center geometry test, asserting Theme-consistent tag radius, scrolling disabled while overlay active, fixed center position unchanged, and stable native scrollbar gutter when width>0. No empty-computed-style allowance.
+- Current offline QA ledger highlights only four changed Preview03 Cards: Tags, Modal, Drawer, Image Preview. Earlier Theme ListFrame yellow highlight removed, theme-driven menu spacing functionality preserved.
+- Two GitHub Actions gates for this final HEAD still pending; any browser failures must be diagnosed before closing. Then official full dist+docs Windows ZIP and owner video signoff, PR Draft and main untouched.
+
+## CURRENT — 2026-10-16 Stage5 OVERLAY-COMPOSITOR-001 (latest CI pending)
+- Source-level performance change: Modal now defaults to centered zoom rather than expensive pointer-origin layout remeasurement. Explicit `animation:'zoom-origin'` remains supported; removed the style transition/transform override-read-restore sequence and kept at most one ordinary rect read for explicit origin requests. Both documented default-option sources updated together. Zoom transform shrank from .86 to .94.
+- Modal/Drawer masks retain theme-configured optional blur but eliminate full-screen brightness backdrop processing: overlay background already tints. Active surfaces use transform/opacity compositing; Image Preview center-zoom copy uses composited transform/opacity. Drawer panel motion remains the existing single motion descriptor.
+- Prior Tags Theme border/radius and ScrollLock stable gutter fix committed. Must verify independent Chromium open/leave, scroll geometry, visual close behavior; no fps claim until measured on user's system.
+- Latest HEAD pending QXFRAME/CSS Schema, then successful Actions Windows complete dist+docs artifact and owner visual acceptance; PR Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-TOKEN-SCROLL-GUTTER-001 (CI pending)
+- Verified PR #267 Draft against main at head 7d4c8a0324b6d7d8faa90f784aee4ed54c596cd6; prior head QXFRAME and CSS Schema green; this batch needs its own CI.
+- Replaced hardcoded Tag/Input editor 1px border and editor reset border:1px transparent, radius Control-only and shadow:none. Canonical Theme-derived control border-width, Tag radius and input paint now own edit and idle geometry. Pointer/keyboard focus rules remain.
+- ScrollLock reserves stable scrollbar gutter while locking document root in capable Chromium with non-overlay scrollbar. No transient padding compensation in this branch, preventing document width shift. Zero-width overlay scrollbars unchanged; unsupported/nonroot fallback preserved.
+- Next: optimize shared overlay motion in separate source batch, add browser gates, both Actions CI, current-HEAD artifact and Windows ZIP. PR Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 SELECT-LISTFRAME-MOUNTED-GEOMETRY-001 (latest CI required)
+- Live GitHub head `44be3f0ccaf57ad610072ab846018bb90eaa7a5f` had CSS Schema #38840566907 fail at real Chromium `select flush x: '' !== '0px'`. This differs from Theme CSS style failure: Select popup exists by getter but was not yet visibly mounted in the fixture. Prior `q.BuildingBlocks.List` test entry correction proceeded to Select as expected.
+- Retained the **strict 0px/6px** geometry gate: explicitly `select.setOpen(true,'theme-padding')`, wait for two animation frames, reject disconnected/hidden/display:none Select popup as a separate failure before querying computed padding. No accepting empty strings, no CSS/Theme/Controller modifications.
+- Eight-Style default all/block and serialized override static gate is committed. Pending latest exact-head two CI results, artifact and Windows `dist+docs` packaging CRC/13 HTTP. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 MENU-STYLE-MODE-PARITY-GATE-001 (new CI required)
+- Authoritative user request: shared Dropdown/Select/List/menu popup frame spacing is Theme-driven `list-padding-x/y`, not JS `inset`; menu mode presets differ across the 8 Styles, with an explicit user override. Production CSS/compiler/data/config implementation was present at `b9794e71`.
+- QXFRAME CI #38837608098 and CSS Schema #38837608175 were red because Chromium fixture incorrectly read `QXFRAME9A7C2.Components.List`; List intentionally belongs to `QXFRAME9A7C2.BuildingBlocks.List`. Corrected the test in commit `c14ba43d`; strict popup geometry assertions retained.
+- This increment adds a static 8-Style authoritative parity gate for expected all/block defaults, compiled x/y tokens, user override, and URL round-trip. No runtime/style changes or acceptance threshold reductions.
+- Next: exact-HEAD QXFRAME and CSS Schema CI, official same-HEAD Actions `dist+docs` artifact to full Windows ZIP, ZIP CRC, localhost HTTP QA. PR #267 stays Draft, main unchanged. Owner screenshot visual signoff still pending.
+
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-BUILDINGBLOCKS-TEST-FIX-001 (final CI pending)
+- Latest live GitHub baseline `b9794e71feb0d8732f1e6316011618275255a04e` is PR #267 Draft/Open. Both QXFRAME CI #38837608098 and CSS Schema #38837608175 failed the new Chromium Theme-menu-spacing step before geometry validation: it accessed non-existent `QXFRAME9A7C2.Components.List` though the canonical runtime intentionally publishes List as `QXFRAME9A7C2.BuildingBlocks.List`. This is a test entrypoint error, not evidence of a List runtime rendering defect.
+- Updated only the real Chromium fixture to use BuildingBlocks.List; retained strict Dropdown/Select/List/submenu x/y and radius assertions, live CSS theme updates and rejection of retired Dropdown JS inset. No production code, Theme output or validation thresholds weakened.
+- Verified existing Theme path: createApp menuInset Style axis (all/block) emits --qxframe9a7c2-theme-list-padding-x/y; one shared ListFrame CSS shorthand consumes it in Dropdown, Select, List, nested popup; native select picker also consumes same pair. Remaining: CI at new HEAD, artifact, full Windows offline ZIP/CRC/HTTP and owner visual signoff. PR Draft; main untouched.
+
+## CURRENT — 2026-10-16 Stage5 NATIVE-SELECT-PICKER-SPACING-001 (CI pending)
+- Native Chromium customizable `select::picker(select)` used an independent fixed 0.25rem padding. Now it consumes the same Theme `list-padding-y/x` pair as all JS ListFrames, and its native option corner radius becomes zero automatically when x=0. Existing native color-scheme inverse rules untouched.
+- Static consumer gate asserts native x/y and radius formula; previous named tests and Theme Schema ownership retained. Two CI gates must still pass latest exact HEAD; PR #267 stays Draft/main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 SOURCE-ESM-LIST-CLOSEOUT-001 (new CI pending)
+- QXFRAME CI `ef4d19e2` passed source/static gates through browser suite but failed an obsolete `verify-source-esm-browser.mjs` List fixture that updated `inset:false` and demanded `getState().inset`. Removed obsolete option expectations, retained `bordered:false` runtime check, and asserted inset is absent from JS state. Actual CSS switching is tested on live Dropdown/Select/List/submenu in `verify-create-app-browser.mjs`.
+- No runtime/theme changes in this commit, PR #267 stays Draft, main untouched. Next exact-HEAD QXFRAME/CSS Schema, inspect any further browser failures and build official Windows acceptance ZIP only from passing artifact.
+
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SCHEMA-001 (CI pending)
+- QXFRAME CI on previous new HEAD failed because `preview-03-coverage.json` referenced retired Dropdown JS inset browser step. Retargeted to current real CSS Theme-run-time geometry step; guard not relaxed.
+- Public docs/generated/theme-public-schema.json now mirrors both new Theme tokens, default Nova values and closed token registry (214 → 216, 21 → 23 geometry roles); canonical Schema gate updated accordingly.
+- Windows offline QA active overlay cleared older 5 regions and targets only current quick-action-menu region. No direct modification to other previously accepted Preview Cards.
+- New Theme CSS system and demo/browser gate committed in prior two commits, awaiting both exact-HEAD QXFRAME CI and CSS Schema Chrome checks. PR #267 Draft; main untouched.
+
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SPACING-TESTS-001 (CI pending)
+- Updated canonical demos: Dropdown/Select spacing is Theme-only; List illustrates x=0/6px via local CSS custom property, never `inset` JS args. New visible Dropdown demo title in Theme Playground.
+- Replaced obsolete Dropdown runtime inset mode Chromium test with real CSS Theme mutations: Dropdown root/submenu + Select + List must respond immediately to x=0/y=8px and x=6px without rebuilding JS; flush row corners must be 0. Reject removed `drop.updateOptions({inset})`. Static gate enforces no old JS owner and one shared CSS shorthand.
+- Exact previous green `a75b1504`; new head pending final two CI gates and Windows dist+docs. PR #267 Draft and main untouched.
+
+## CURRENT — 2026-10-16 Stage5 LISTFRAME-THEME-SPACING-001 (source implementation; CI pending)
+- User explicitly requires all Dropdown/Select/related select-list popups to take side inset from Theme CSS, **not** Dropdown/List JS `inset` option. New canonical Theme tokens `--qxframe9a7c2-theme-list-padding-x/y` feed shared `.qxframe9a7c2-list-frame` padding shorthand; x=0 removes side gutter and clips row-radius by shared structural calculation; y remains independent.
+- All ListFrame owners (Dropdown with nested submenu, Select, TreeSelect, Autocomplete, Cascader, Table filter, Menu submenu, standalone List) no longer hard-code is-inset/is-flush class. Dropdown/List reject obsolete `inset` options instead of silently applying JS state. Menu submenu avoids double padding by reusing existing level padding role (0 when framed).
+- createApp Ext group Surface now includes menuInset choices "四周留白"/"仅上下留白"; absent = follow Style, defaults per eight Styles. `compiler.js` emits one CSS Token pair; default Nova root is block. Must update canonical docs, Chromium gates, static tests, browser screenshot and CI before treating done.
+- Current baseline head `a75b1504dded71dda70e56cd0a765127be3b34f2` QXFRAME CI and CSS Schema passed before this new feature. PR #267 Draft, no merge or main modifications.
+
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-ITEM-SURFACE-RADIUS-FIX-002 (CI pending)
+- CSS Schema run #38832416256 Chromium found actual `block.itemRadius = 24px` despite ListFrame 0px. Root cause: `.qxframe9a7c2-item-surface` redeclared `--_qxframe9a7c2-item-radius` on the row, masking the inherited ListFrame mode. Removed that redeclaration; `.item-surface` and `.item` radius consumers now read existing structural private slot first and fall back to public/theme radius only when unframed. One owner, no duplicate override selector.
+- Strict Dropdown Browser gate still forces public 24px radius and demands block/none/nested 0px; retains full four-edge padding checks. Never weaken the gate.
+- Latest exact-HEAD QXFRAME and CSS Schema must pass; owner visual signoff and official Windows dist+docs bundle pending. PR #267 remains Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 THEME-PLAYGROUND-BROWSER-001 (CI pending)
+- Real Chromium opens `docs/theme-playground.html` and scrolls lazy canonical Alert/DatePicker/Form cards into view; verifies 12 official Alert skins, 2 combined-shadow skins, 2 live week picker demos and 4 Kbd controls. This closes source-only visibility verification.
+- Previous visual source edits retained; next exact HEAD two CI plus official Windows dist+docs owner QA. PR #267 Draft, main not modified.
+
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-INSET-POLICY-001 (pending CI)
+- Corrected ListFrame→Item row radius consumer precedence: private `--_qxframe9a7c2-item-radius` from structural all/block/none must override public item radius only when framed; unframed Item still reads its public fallback.
+- Browser gate now sets a conflicting explicit 1.5rem public radius on the real open popup and demands block/none rows + submenu stay 0px. No extra painter and no relaxed tests. The Screenshot source owner fix remains.
+- Next exact HEAD green QXFRAME and CSS Schema, then Windows official dist+docs ZIP; PR Draft and main untouched.
+
+## CURRENT — 2026-10-16 Stage5 DROPDOWN-ROW-RADIUS-OWNER-001 (CI pending)
+- Screenshot's gray item hover left/right pill-gaps remained even with `inset:block`; the static `.qxframe9a7c2-item` consumed only a public radius token and missed the existing ListFrame `--_qxframe9a7c2-item-radius:0px`. Fixed only the static Item radius consumption fallback to honor the frame private mode token.
+- Strict real Chromium Dropdown inset all/block/none gate now checks actual ItemCollection row `borderTopLeftRadius`, including nested submenu. No duplicated ListFrame painter or CSS override. Prior Alert/Kbd public demos and explicit Image trajectory test retained.
+- Next exact-HEAD CI two gates, official Windows artifact and owner visual verification; PR Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 ALERT-PUBLIC-DEMO-001 (pending CI)
+- User requested newly added Alert appearance/semantic demos visibly in theme-playground. Corrected an existing 12-entry demo that had rendered only a title: now creates each canonical Alert wrapper/icon/section/description, covers four semantic intents × muted/outline/shadow and extra shadow+muted/outline combinations.
+- New static Kbd shapes now appear under public Form demo, since Kbd has no independent catalog entry. All use existing `composition.css` source and no new JS/CSS painter or separate Kbd component.
+- Both examples auto-display in theme playground through the same canonical example registry. Current Image preview center zoom and Calendar unit fix are pending latest CI. PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 IMAGE-TRAJECTORY-EXPLICIT-REGRESSION-001
+- On screenshot-source HEAD `f4b988886b7909787043f6952c3bdd8a31383d76`, QXFRAME CI #38831110093 advanced past CSS gate but old `verify-final-audit-regressions.mjs` fixture demanded source-position trajectory on `preview:true`, which now correctly means center zoom by owner request. Kept strict trajectory test by making its fixture explicitly `preview:{trajectory:true}`; did not relax geometry or source-handoff assertions. Default center path separately tested by `verify-create-app-browser.mjs`.
+- Next run exact-HEAD QXFRAME and CSS Schema; investigate additional red tests by root cause. Draft PR #267; main untouched.
+
+## CURRENT — 2026-10-16 Stage5 IMAGE-NAV-SINGLE-OWNER-001 (final CI pending)
+- QXFRAME CI run #38830861623 failure exposed actual CSS duplicate-owner growth `components/image: 11 -> 13`: nav had border/bg/color declared by both toolbar family rule and nav own rule, and inherited transparent button painter. Solved at source: exclude nav from toolbar and generic tool selectors, give nav one self-contained border/bg/ink/sizing rule. No baseline relaxation.
+- Previous commits: DatePicker(Calendar week owner), DateTime border, Tags editor; Image Preview center zoom; canonical theme-playground recent demos and tests. Remaining: exact-HEAD QXFRAME and CSS Schema + image visual owner signoff, official Windows bundle. Draft PR #267, main unchanged.
+
+## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-ACCEPTANCE-001 (CI pending)
+- User screenshots revealed unresolved Tags edit state, Dropdown inline hover gap, DatePicker week mismatch/range caps, DateTime separator, Image Preview return flash and dark nav, plus missing visible theme playground variants.
+- Source commits preceding this checkpoint repaired unit week propagation to actual Calendar; Calendar remains sole date/week painter; DateTime field border; Tags input skin; separate Image Preview center-scale/fade with source kept visible; high contrast preview nav.
+- Theme playground now reveals existing Alert/Calendar/Dropdown/Tags/Image/Tabler additions by default and adds DatePicker week/range and DateTime examples. Basic Dropdown docs uses public block inset.
+- Static and real Chromium acceptance added: DatePicker primary/secondary week unit, seven day week paint, date/time border, Image source stays visible; 5 current visual QA cards marked (old batch highlights removed).
+- Next: verify exact-HEAD QXFRAME CI, CSS Schema and Chromium; if red diagnose actual source/test root, then Windows dist+docs official Actions QA ZIP. PR #267 Draft, main untouched; no Stage/global completion claim.
+
+## CURRENT — 2026-10-16 Stage5 VISUAL-DEMO-EXPOSURE-001 (final CI pending)
+- Registered live DatePicker single/range week and DateTime separator demos in the same canonical supplement system.
+- Theme Playground previously showed first demo only, hiding registered Alert semantic/appearance matrix and Calendar/Dropdown/Tags/Image/Tabler variants; now exposes selected recent examples by default, retaining "expand all" for less frequently used cases.
+- Basic Dropdown playground menu uses public block inset so hovering an item fills both inline edges; framework's other all/none presets remain available.
+- Existing DatePicker/Tags/Image source fixes are not yet fully verified. Next: new Chromium/static gates, same-HEAD QXFRAME+CSS Schema checks and Windows offline visual QA package. PR #267 stays Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 IMAGE-CENTER-ZOOM-001 (CI pending)
+- User disallowed source-position trajectory due repeat flashing. Image now defaults to independent centered preview DOM (already exists) and a centered scale+fade Transition. Source image stays fully paintable for default preview; legacy trajectory remains explicit opt-in.
+- Navigation arrow was dark because shared button rule set nav background transparent/ink inherit; restored preview dark surface and white foreground directly on nav, no second Theme token. Source handoff executes only if trajectory is explicitly true.
+- Next exact-HEAD browser check for preview opening/close; compare latest Windows screenshot, then produce official verified QA ZIP. PR Draft, main frozen.
+
+## CURRENT — 2026-10-16 Stage5 OWNER-SCREENSHOT-CALENDAR-001 (new CI pending)
+- User screenshots: DatePicker week did not forward unit to its Calendar instances and single week range painting diverged; corrected owner wiring and calculated actual week endpoints, leaving Calendar sole renderer and RangePainter.
+- DateTime calendar/time split uses Theme border again. Standalone Tags active editor base fill now matches Tag semantic skin rather than unthemed outlined field.
+- Next: Image Preview center motion, theme-playground expanded new demo cases, strict Chromium; reverify exact final HEAD in CI. PR #267 Draft, main untouched.
+
+## CURRENT — 2026-10-16 Stage5 NONVISUAL-QA-OVERLAY-001 (new exact-HEAD CI pending)
+- This is a non-visual coverage audit follow-up: prior `TAGS-PAINT-OWNER-001` was validated and its old Support Triage +Add yellow highlight must **not** appear in a new docs/tests-only Windows ZIP.
+- Found the canonical offline packager incorrectly required at least one visual annotation; modified `tools/qa/build-offline-demo.py` to allow exactly 0 cards/0 regions only if `const groups = [];` is present, while retaining strict positive-batch distinct-group and exact-HEAD checks.
+- `docs/create/offline-qa-changes.mjs` now declares an empty current batch; updated `verify-create-app.mjs` to assert zero, reject historic Tags highlight, and keep production Create HTML free of QA modules. Offline full dist+docs and CRC/13 HTTP checks remain mandatory.
+- Next: verify QXFRAME CI and CSS Schema on this final branch HEAD, package the successful Actions dist+docs artifact, then continue per-family Theme/state/density/popup-role verification. PR #267 remains Draft; main untouched, owner signoff still pending.
+
+## CURRENT — 2026-10-16 Stage5 FULL-COMPONENT-ACCEPTANCE-MATRIX-001 (CI pending)
+- Factual start: `17fce108d7b2692678b94aba068dab6528d58a4d` PR #267 Draft/Open, QXFRAME #38821636346 and CSS Schema #38821636219 both SUCCESS; main unchanged. Tag/Add last batch and 66 live Preview03 cards are frozen.
+- Found a **real missing Stage5 v3 §7(7) deliverable**: Preview03 registered 66 Cards / 65 unique families but had no explicit shadcn alignment, Theme verification, or manual owner-signoff statuses; `src/components/index.js` exports 10 additional modules absent from the 65-family inventory.
+- Added `stage5Acceptance` to canonical `docs/create/preview-03-coverage.json` with 65 family records plus 10 shared exported surfaces, each tied to a real owner Card, with evidence-scoped and honest pending statuses; added `STAGE5-COMPONENT-ACCEPTANCE-2026-10-16.md` and strict `verify-create-app.mjs` gate to prevent untracked future exports or forged matrix completion. Commercial preview remains 66 Cards; no additional painter, Controller or duplicate UI Card.
+- Further incomplete: per-component 8-Style/light-dark state/density/shape/popup role matrix for unverified families, current Image Preview flash manual comparison, final shadcn geometry where applicable, owner acceptance. Legacy theme-generator retained until explicitly accepted and authorized for removal.
+- Next: run both GitHub CI at the exact new HEAD, fix genuine test failures, deliver successful Actions dist+docs complete Windows offline ZIP with CRC/HTTP validation; PR stays Draft, main not modified. Percent cannot be inferred from commercial card count.
+
+## CURRENT — 2026-10-16 Stage5 TAGS-PAINT-OWNER-001 (new CI required)
+- Resumed from prior fully verified HEAD `cf57f0f0273f32828d6f1dc78d4707b99c24d0c8`, PR #267 Draft/Open, main `718da2a6be0bc71520adb0451429cd3d3d8320b3` untouched. Previous [QXFRAME #38762800127](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/38762800127) and [CSS Schema #38762800176](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/38762800176) both Success with Chromium 108/108; these results apply to the previous HEAD only.
+- The supplied Tags screenshot and owner's request identified a remaining visual discrepancy: ordinary Tag and +Add used different appearance despite shared geometry. In `src/styles/components/tags.css` removed add-only transparent background, Control border, dashed border, and separate hover paint. The Add action now literally inherits the canonical Tag background/foreground/border/hover, Theme and variant; keeps only pointer interaction and existing editing FocusOrigin rules. No new Theme token or second painter.
+- `docs/create/preview-03.js` Support Triage uses real `Tags({editable:true})` to display the Add action for visual inspection; commercial Card count unchanged. Static owner gate and Chromium now assert Add/Tag background, ink, border-color/style, radius and height across eight Styles × light/dark. Hosted editors remain unchanged.
+- `docs/create/offline-qa-changes.mjs` highlights only current Support Triage → +Add region, removing previous Calendar/Alert/Dropdown/Image and Tabler/Kbd yellow annotations. Do not invent a new Preview01/02 visual change.
+- **Next**: await both latest-head QXFRAME CI and CSS Schema Acceptance; only on two green workflows build official same-HEAD Windows dist+docs ZIP with CRC and 13/13 HTTP resource checks. Await owner visual signoff, especially Image Preview video comparison. No merge/main changes or Stage/global invented percentages.
+
+## CURRENT — 2026-10-15 Stage5 DROPDOWN-INSET-CI-RESTORE-001: verified owner-visual acceptance package, awaiting owner signoff
+- Latest **fully verified source + CI artifact baseline**: development HEAD `ba5e77fccf9bbf236911a85bbbb858747e995522` (commits `d550deb`, `ba5e77f`), PR #267 Draft/Open targeting main; frozen main `718da2a6be0bc71520adb0451429cd3d3d8320b3`. Any subsequent documentation-only checkpoint must be checked against the then-current Git HEAD; do not treat the baseline SHA as an eternal branch pointer.
+- Final baseline CI: [QXFRAME #38756256638](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/38756256638) **SUCCESS** (full release, standalone build, browser interactions, Windows tools); [CSS Schema Acceptance #38756256502](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/38756256502) **SUCCESS**, Chromium **108/108** test steps. Synthetic PR merge `7573d774170f234029a0ca290aa389ba81ec9f59` and development HEAD have identical tree `711eaf592e83e15f8fa35ec03b383fc94e81da7d`.
+- Original twin failures at `b39b7c6`: generated `Dropdown.inset` missing in `docs/generated/component-api.json` / JS docs contract; and browser read `paddingLeft === ''` from the closed, unmounted Popup. Canonical `Dropdown.inset` now reports string, schema and docs JS block synced by existing authoritative sync logic; strictly tested root and submenu after real open, with all/block/none and four-sided computed geometry plus invalid enum. Existing single ListFrame painter remains in `src/styles/main/fixed-values.css`, so no second owner and no weakened ratchets.
+- **Official successful Actions dist+docs artifact** [#11985510342](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/38756256638/artifacts/11985510342). From the identical tree generated a complete Windows offline ZIP `QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-ba5e77fc.zip`: **749 files, ZIP CRC PASS, 13/13 localhost HTTP 200**, Preview 01/02/03 all included. SHA256: `2318d1e28f0eba8e1888212ab7e140e5c005fa8a78c8f192d156a257833bee4e`. Offline-only QA labels five current visual acceptance regions: Calendar, Alert, Dropdown, Tags, Image Preview. Older highlights removed.
+- Earlier 74 incremental component fixes retained; Stage5 66/66 commercial Preview03 cards covered. Browser gate includes whole-week Calendar hover/range opacity, semantic Alert combinations, ItemCollection group headings, Tag Add/Control focus and Image Preview leave source opacity handoff. Automated PASS is not owner-signed visual PASS.
+- **Remaining (manual/acceptance)**: owner review the offline ZIP against supplied Tags PNG and 19.7s Image Preview video, verify actual flashing/frame continuity; audit all remaining state/density/shape/popup roles. Do not declare Stage 5 or overall program 100% and do not invent a completion percentage where full denominator/signoff is absent.
+- **Next exact step**: no additional production changes unless owner supplies visual defects or explicit next-stage instruction; keep PR #267 Draft, do not merge/delete branch/change main. Any new Git commit (including a documentation-only checkpoint) changes HEAD and requires fresh CI/artifact matching that new HEAD before calling the new HEAD fully verified.
+
+## CURRENT — 2026-10-15 Stage5 DROPDOWN-INSET-CI-RESTORE-001 (CI verification pending)
+- Verified GitHub head b39b7c69949317bbbe31e71a3259be8d82ab5f72; PR #267 Draft/Open against main. QXFRAME #38749981081 failed generated Dropdown inset API contract; CSS Schema #38749981183 measured paddingLeft on a closed and unmounted popup.
+- Canonical Dropdown inset is string; the sorted generated API JSON and sync:docs-api contract block were regenerated without weakening the verifier.
+- Verified the one canonical ListFrame all/block/none gutter and item-radius painter already lives in src/styles/main/fixed-values.css. A diagnostic duplicate in picker-family.css tripped QXFRAME #38755844215 duplicate-owner ratchet; the duplicate was removed without changing the authoritative rule. Chromium opens real Popups and strictly measures mounted root/submenu padding in all modes (no empty-string allowance).
+- Earlier Calendar/Alert/Tags/ImagePreview implementations preserved. Pending final same-HEAD QXFRAME/CSS Schema CI, 8-Style visual checks, official dist+docs artifact and Windows ZIP, owner signoff. Main untouched; no merge and no unsupported Stage/overall % assertion.
+
+## CURRENT — 2026-10-15 Stage 5 user visual batch (new Dropdown/Tags/playground/diagnostics; final gates pending)
+- Owner's screenshots and recorded Ant Design week interaction reviewed. Calendar range edge rounding, one-week Hover, opaque endpoints, Today marker, Alert semantic appearance, ItemCollection heading, ImagePreview title/close/toolbar chrome and single-frame source-handoff already landed on the protected Stage5 branch before this continuation; do not duplicate their painters or controllers. Exact prior verified baseline `f77c02c` had both QXFRAME and CSS Schema Success.
+- This continuation: introduced **Dropdown `inset:'all'|'block'|'none'`** through the existing ListFrame (root and submenu panel, supports updateOptions, enum validation). `block` has only padding-block and zero inline gutter; no duplicate ItemCollection or background. Browser acceptance checks the three variants and invalid option rejection. The authorized source difference was added to `verify-js-build-matches-main`.
+- **Tags**: standalone Add Tag now shares real Tag height/radius while using transparent background and dashed border with Control border color. The standalone active editor uses the same Tag radius, a solid Control border, pointer focus color/shadow and keyboard focus outline. Hosted tags remain owned by parent Control and are not touched.
+- **Theme Playground**: new canonical examples for Calendar week/quarter/cellSize, Alert intention/appearance, Dropdown all/block/none, Image Preview, and Card/Badge/Avatar/Progress/Kbd/Form static combinations. All reuse actual components/static classes; no second JS/runtime or theme generator. `docs/create/offline-qa-changes.mjs` now marks only current user issues (Calendar/Alert/Dropdown/Tags/Image Preview), removing unrelated old Tabler/Kbd yellow highlights.
+- **Image Preview**: optional per-stage diagnostics via the preview document's `QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG=true` property; traces close-request, mask-leave-done, image-trajectory-done, finalize-start/end with elapsedMs, source opacity and visibility. No timing, mask, or overlay state owner changed. Previous source-opacity handoff race fix preserved. User can send console log if >1s close pause persists.
+- First attempted CI failed at `verify-modern-architecture` solely because a debug comment contained an old-style `window.QXFRAME9A7C2` string. This comment was corrected without weakening the architecture assertion, pending latest exact HEAD final CI.
+- **Remaining**: both exact-head QXFRAME and CSS Schema green, official Windows full dist+docs offline package with CRC/13 HTTP checks, direct manual UI visual signoff including video re-record, and full Stage5 open state/density/popup role acceptance. PR #267 **Draft/Open**; no merge or main changes. Batch code implementation completed, verification incomplete; no credible Stage/global percentage can be asserted.
+
+## CURRENT — 2026-10-15 Stage5 owner visual batch: Image Preview source-opacity handoff + CI restoration (final gate pending)
+- Approved seven user issues remain owned by one implementation each: Calendar range endpoints/whole-week Range paint, Alert semantic appearance, Dropdown ItemCollection groups, Tags Add inherits Tag/Theme, Image Preview title/close/tool controls and leave no-flash. Prior commits already implemented those behavior/style changes; no parallel recipe or semantic token added.
+- During resumed work, verified PR #267 Draft/Open and fixed two genuinely blocking CI test defects: `b1cab6d` prevents local lambda `path` from shadowing Node path module; `7857341` counts only true independent Card root selectors and does not confuse `.card-deck>.card` with a duplicate root. Tests remain active, no gate bypass.
+- Found actual unhandled Image Preview flicker race: the original image had an opacity transition on removing `is-preview-source-hidden`, so the preview copy could disappear one frame before the original finished fading in. Commit `5086746` adds temporary private `is-preview-source-handoff` that suppresses only source opacity transition while handing off, forces fully visible opacity before releasing overlay, and removes state on finish/reopen. Normal Image opacity transitions remain unchanged.
+- Chromium acceptance `01b8c38` now samples 40 consecutive real animation frames during leave: whenever the trajectory copy is hidden, the authored source must already be fully opaque and unhidden. Existing 8 Styles×light/dark chrome contrast, seven-day Calendar, Alert shape, Dropdown group and Tag sharing gates remain strict.
+- **Remaining:** latest exact HEAD both QXFRAME CI and CSS Schema PASS; from matching official CI `dist+docs` build create full Windows offline ZIP, run CRC and 13 local HTTP checks, label only this owner visual batch in QA, report no arbitrary Stage/global completion percent. PR #267 must remain Draft, never merge without owner approval.
+
+## CURRENT — 2026-10-15 Kbd single-owner reconciliation (final CI pending)
+- Exact CSS Theme gate exposed a duplicate: original Kbd is already in components/composition.css. Merged new sizes/outline/primary/group into that original owner, deleted new components/kbd.css and removed its manifest entry. Moved Card Stamp's is-lg to private size slot, removed duplicated FormHelp text painter (visual-recipe remains sole typography owner). Tests and design audit updated. Do not re-add second Kbd implementation.
+- PR #267 Draft. Both final GitHub Actions and Windows full dist+docs verification pending.
+
+## CURRENT — 2026-10-15 Calendar geometry + Tabler static components (final CI pending)
+- Implementation: Calendar year/-12/+12 navigation, every Range row capped, two Calendar panels use 1rem gap without divider; existing Height/CellSize unchanged. Static CSS extends Card/Badge/Avatar/Alert/Progress/Tabs/Tag/NativeForm/InputGroup and adds exactly one preexisting Kbd owner extended in composition.css. The commercial Preview03 66 Card count stays unchanged; a separate non-Card static visual area shows representative skins.
+- Browser gate exercises real Calendar year buttons and static families across 8 Styles×light/dark; static gate verifies CSS classes and one Kbd entry; QA current-only ledger tracks ten regions. Specification/details: docs/create/STAGE5-TABLER-STATIC-FORMS-2026-10-15.md.
+- PR #267 remains Draft/Open. Final exact-HEAD QXFRAME CI and CSS Schema checks are pending. Need repair any genuine gate issues and produce official full Windows offline package, then owner visual verification. No main merge.
+ 
+## CURRENT — 2026-10-15 Stage5 Calendar range/week cap and dual/header navigation (CI pending)
+- Owner screenshot demands rounded caps at every visible range week start/end, true two-column gap without center divider, and paired year/month header navigation arrows. Calendar retains one renderer and uses its existing delegated navigation (month +/-1; year +/-12); dual outer arrows remain visible, inner arrows suppressed with display:none instead of visibility:hidden. TimePanel divider removed in favor of real gap. Range endpoint Cell remains opaque over the ::before strip; week selection/hover follows same painter.
+- PR #267 Draft/Open, main untouched. Requires exact HEAD CI and browser acceptance after update. Tabler/daisyUI static family expansion tracked separately; no claim of completion yet.
+
+## CURRENT — 2026-10-15 Stage 5 OWNER-VISUAL-20261015 targeted CSS collision fixes (final CI pending)
+- User requested seven focused visual corrections: opaque Calendar range endpoints; connected seven-day week hover/selection; semantic Alert appearance matrix; Dropdown group label parity with ItemCollection title; Tags +Add direct Tag/Theme Token reuse; Image Preview chrome foreground/background/border parity and exit flashing recorded on a 19.7s video. Existing Stage 5 PR #267 is Draft/Open; main is frozen.
+- Recovered existing focused source/test commits through HEAD e701add (including Calendar week ranges, source-owned Tag Add, Image Preview trajectory handoff and real Chromium tests). Latest two workflow runs at e701add failed browser Alert `nova/false is-shadow alone enables elevation`. Fixed source root in `src/styles/components/alert.css`: explicit `is-shadow` elevation is a Theme-foreground-based mixed shadow, independent of Style's Card shadow toggle; public `--qxframe9a7c2-alert-shadow` still overrides it. Commit fc9f29d.
+- Chromium then advanced to Image Preview chrome and failed `Image title and toolbar share control background`. Found an obsolete late theme-visual-v2.css painter overriding only toolbar/tool background and foreground. Removed all three competing rules. Preview chrome colors/borders now have exactly one owner in `src/styles/components/image.css` and use its already-existing Theme-aware on-dark control palette. Commit 1f58286.
+- Source Image preview still performs atomic trajectory-landed copy/source ownership handoff before fade-mask finishes, both transitions gate final hide. Calendar week hover and range endpoint tests remain strict. Next steps: exact-final HEAD two GitHub Actions green including Chromium, official CI dist+docs Windows offline acceptance ZIP with only this batch's five affected Preview03 regions highlighted, CRC and HTTP check; record failures truthfully. No merge or global percentage until actual visual owner acceptance.
+
+## CURRENT — 2026-10-15 Stage 5 image leave atomic handoff and final visual gate (CI pending)
+- Current Stage 5 user visual batch includes 7 targeted fixes across Calendar, Alert, Dropdown, Tags and Image Preview. Image Preview supplied recording reviewed. Correct handoff: preview trajectory completes and copy becomes invisible; authored source is revealed *in that same frame*, even if mask still fading. The mask and content controllers BOTH still gate final PopupSurface hide/deactivation. This differs from earlier state entry claiming source remained hidden until mask completion, which could produce an empty gap. 
+- Source fix commit 62f4e12 and matching static sequence check 3f80898 replace two stale contradictory comments/assertions. Do not revert to premature copy cleanup or delay source unhide until mask completion.
+- Maintain PR #267 Draft/Open, main untouched. Run latest exact-HEAD QXFRAME CI and CSS Schema, verify 7×7 week hover and Image Preview frame-handoff Chromium tests, then official full Windows dist+docs ZIP with only this batch's 5 modified Preview03 cards highlighted. Owner visual acceptance remains pending; no stage/total percent assertion.
+
+## CURRENT — 2026-10-15 Stage 5 OWNER-VISUAL-20261015: 7 focused owner corrections (CI pending)
+- Owner screenshots/video reviewed (Image Preview 19.7s screen recording shows modal controls and exit/return episodes); current branch redesign/create-stage5 PR #267 remains Draft/Open; main untouched; baseline HEAD e9161681f5ffaf125a8661db332eed3dffd42436 QXFRAME CI #38698075746 and CSS Schema #38698075733 both Success.
+- Calendar: Range Start/End raised inner surface now opaque over half-width ::before continuation; week Calendar projects selected and hovered week onto seven contiguous cells and reuses exact Range ::before; respects weekStartsOn and value ownership.
+- Alert: native is-muted/is-outline/is-shadow and is-success/error/warning/info classes consume semantic Theme accents; three real Alert variants rendered in Preview03; deleted later theme-visual-v2 Alert paint competing with component owner.
+- Dropdown group heading: scoped size .875em and text derived from same ItemCollection role at 60% foreground intensity; Tags Add uses literal .qxframe9a7c2-tag class with inherited variant/Theme paint, dropping independent square Button styling.
+- Image Preview Title/Close/Toolbar share single border/background/text white-compatible paint; exit waits BOTH Mask/Content leave before authored source is unhidden; media transform reset happens after hidden preview, not during visible leave.
+- Source batch commits: 998a75b (8 primary files), 1871c56 (static tests + QA current-only regions + JS parity source authorization), 2c1942d (static check ordering), 8ee1f2c (real browser tests), dbbf3a3 (live Alert Preview03 samples), 9ed8491 (Preview03 sample flow), 82ffbcd (remove duplicate Alert painter). Browser checks cover week 7-cell Hover and selected range, Alert appearances, dropdown headings, Tag Add parity across 16 schemes, Image Preview actual chrome and exit.
+- Latest exact-HEAD QXFRAME and CSS CI validation pending. Next: inspect failures, fix only evidenced issues; create fully verified official HEAD Windows dist+docs ZIP with solely current changed cards marked; owner visual signoff still required. Never merge PR #267 without owner's explicit approval.
+- Engineering progress: source implementation submitted, 0/2 final CI gates confirmed at checkpoint; Stage 5 and overall % not certified without owner visual verdict.
+
+## CURRENT — 2026-10-15 Stage5 S5-PREVIEW03-CHOICE-STATE-001 added 48-card operation regression (CI pending)
+- Resume verified PR #267 Draft/Open, HEAD 3eeaea44c717fa46238f64dda47af72f01172dd0, main untouched; QXFRAME #38693675387 and CSS Schema #38693675438 both Success. 103/103 real Chromium createApp steps including 80-case Calendar/Wheel state matrix; official full Windows ZIP completed. This is accepted baseline, not repeated.
+- Stage5 Preview03 full 66-card source matrix already checks 66 visible across 8 Styles×2 schemes. On inspection its `mountErrors` is already appended with 48-card expanded errors; do not claim missing error gate. `Calendar` intentionally appears twice as date and fiscal period while `PeriodPanel` is an exact Calendar alias; do not resurrect a second period implementation or change truthful canonical 65-unique-owner semantics merely to satisfy marketing counts.
+- New actual Chromium acceptance `2eeca9f09676969f14aa1c2293566f042421f739` checks 48 expanded Cards, six local action buttons, real Checkbox/Radio/Switch selection and exclusivity, local vendor form validity, live-event creation, state transition, and checked Switch contrast/visible Choice geometry across 8 Styles×light/dark (16 modes). No production source/style changes and no new public tokens.
+- Next exact step: inspect latest PR exact-HEAD QXFRAME CI and CSS Schema, fix only failures proven by browser/source, do not weaken checks; update record/PR and use official build for next full Windows dist+docs ZIP if a new source change warrants it. No merge; Stage5 full all-state visual owner acceptance remains incomplete and no defensible global percentage.
+
+## CURRENT — 2026-10-15 Stage5 S5-STATE-MATRIX-001 eight-Style / two-mode / five-Size browser geometry expansion (CI pending)
+- Restored owner-approved HEAD 249935f5a1491e676bd68ba3e8060c85c3b7f6d9: canonical Wheel/Calendar sizes 28/32/36/40/44px, exact-HEAD QXFRAME #38690886581 and CSS Schema #38690886521 both successful; 748-file Windows full dist+docs local acceptance ZIP already generated and validated. PR #267 Draft/Open, main unchanged, visual signoff still pending.
+- Stage 5 coverage inventory is 66/66 families/cards, but all-state / all-style visual approval is not complete. Resuming only explicit missing coverage, no arbitrary repaint: Chromium date/time geometry smoke now runs 8 Styles x light/dark x 5 Sizes = 80 actual DOM cases with shared 1+6=7 Calendar/Wheel heights, Header/Title parity, cell square sizes, Guide/Item sizing, panel/host width, fixed 42-day DOM and Scroll extent. Preserve normal date row ownership and independent Calendar cellSize overrides.
+- New browser test committed as 7ebadcb82534520b743e34ea170db6136b92f045; exact-HEAD QXFRAME and CSS Schema CI pending. Next: inspect both workflows, fix genuine failures without weakening acceptance; build official exact-tree full Windows ZIP only after success; report remaining owner visual acceptance. No merge. Stage/overall percentage not credible without owner-final state denominator; this task has test code submitted but no browser execution yet.
+- No production CSS/JS change in this batch; local QA ledger remains on last visually modified Calendar/DatePicker cards instead of falsely highlighting diagnostic-only changes.
+
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 approved Size +4px adjustment (CI pending)
+- Owner revised the canonical shared xs/sm/md/lg/xl size values from 24/28/32/36/40 to **28/32/36/40/44px** (+4px each); md now 36px for BOTH Calendar CellSize and WheelPanel real ItemHeight. No second size map, Guide trim or Scroll/Padding overrides.
+- Calendar still renders Header matched to Wheel Column Title, one Weekdays row plus exactly six date rows to match Wheel default seven items. md derived scroll viewport 252px (7×36), top/bottom snap padding 108px, Calendar grid 252px (7×36), whole Calendar/host width 262px (252+5×2); WheelPanel alone computes its derived scroll/guide/padding.
+- Updated WheelMetrics authority, static utility and create gates, full Chromium geometry tests across five Sizes, design ownership doc and offline QA current-only labels. PR #267 stays Draft, main unmodified. Latest exact HEAD two green CIs, verified full dist+docs Windows ZIP and owner visual QA remain pending.
+- This is a focused sizing change: no new layout branch, runtime controller or Theme token. Stage/global progress is not independently quantifiable.
+
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 browser fixture correction (CI pending)
+- Source and static acceptance (133 checks), Windows Tools and build stages progressed on `ddbf7e1`; QXFRAME #38676126267 and CSS Schema #38676126282 both reached actual Chromium, then failed at geometry test initialization because an embedded DatePicker with `time` received a date-only string not valid for the DateTime default format.
+- `2f4c769` replaces those two fixture values and the five-size geometry fixture with real Date objects including time. The production date parser and WheelPanel behavior are unchanged; no gate weakened. Latest exact HEAD double-green CI, five-size browser equal heights and artifact remain pending.
+- PR #267 remains Draft/Open; main and frozen Tree/Controller untouched. Overall and Stage percentage cannot credibly be quantified.
+
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 unified 1+6=7 implementation (CI pending)
+- Owner approved one shared five-size metric: WheelMetrics xs/sm/md/lg/xl=24/28/32/36/40px; default Wheel itemHeight=32px for md and seven visible items. WheelPanel original Scroll, Guide, Padding and Snap calculations remain intact; the erroneous DatePicker guide trim is gone.
+- Ordinary six-row Calendar now maps Header height to Wheel Column Title height, Weekdays to one Item and six Calendar Grid rows to six Items. Calendar exposes a numeric pixel cellSize option for standalone overrides. DatePicker Calendar hosts derive width from 7×CellSize+actual horizontal padding (default 5px×2).
+- Source updated: wheelMetrics, calendar, date-picker, picker-family.css; static + Chromium browser five-size geometry assertions updated; technical ownership docs updated. New exact-HEAD QXFRAME/CSS CI both green, real browser execution and official full dist+docs ZIP are REQUIRED before acceptance.
+- Task progress is implementation submitted, validation pending. Stage/global percentages not reliably quantifiable. PR #267 Draft/Open, main untouched. No autonomous merge.
+
+## CURRENT — 2026-10-15 dual-calendar browser smoke test migrated (CI pending)
+- QXFRAME #38669779570 reached full Chromium suite and found the old dual-year/month drill smoke test still called removed getYearPanel/getMonthPanel functions.
+- The existing drill smoke test now selects year/month cells in its already captured active drillPanel Calendar instance; left/right, draft, keyboard first-arrow, focus-ring and view-preservation assertions remain unchanged. Added static assertion against stale API reuse.
+- Full latest-head QXFRAME and CSS Schema success / official Windows ZIP still pending; no credible Stage/global percentage. PR #267 Draft/Open, main untouched.
+
+## CURRENT — 2026-10-15 generated Docs API sync (CI pending)
+- QXFRAME #38669536969 failed the existing sync-docs-api --check because docs/assets/qxframe9a7c2-component-api.js still embedded prior generated contract payload.
+- Synchronized existing generated marker block exactly from docs/generated/component-api.json using the canonical tools/sync-docs-api-contracts.mjs algorithm; no manual parallel option API.
+- Stage/global progress unquantified. Two CI successes on latest final SHA plus Chromium and official full ZIP still required. PR #267 stays Draft/Open; main untouched.
+
+## CURRENT — 2026-10-15 Runtime Schema generated-contract sync (CI pending)
+- QXFRAME #38669282727 found generated docs/generated/component-api.json missing DatePicker allowYearView and allowMonthView after core contract change; no contract gate weakened.
+- Generated DatePicker fields now include both boolean capabilities; acceptance explicitly validates their type. This preserves one canonical component API, not a duplicate schema or historical alias.
+- Latest final Chromium, two green CI and exact artifact still pending. Stage/overall % not credibly quantified; PR #267 Draft and main untouched.
+
+## CURRENT — 2026-10-15 legacy regression test adapted to single Calendar owner (CI pending)
+- QXFRAME #38668956123 failed because old browser regression still called getYearPanel() and getMonthPanel(), APIs removed with the detached instances.
+- Regression now accesses getCalendar() in both year/month mode and explicitly checks object identity with the original DatePicker Calendar; mouse modality/focus assertions preserved. No duplicated renderer or deprecated getter reinstated.
+- Other real browser geometry/CI/official ZIP still under verification. No Stage/overall % denominator; PR #267 Draft/Open; main untouched.
+
+## CURRENT — 2026-10-15 full offline QA ledger current changes (CI pending)
+- Offline QA yellow marks now only release-planner's DatePicker field and capacity-calendar's Calendar widget, with inner region metadata. Old Calendar-only last-round and all other card highlights removed.
+- Official dist/docs Windows ZIP must be rebuilt from the final successful HEAD using tools/qa/build-offline-demo.py, not from prior artifact; no artifact claimed here.
+- PR #267 remains Draft/Open. Stage/overall percentages unquantified.
+
+## CURRENT — 2026-10-15 Calendar Header capability contract gate repair (CI pending)
+- QXFRAME run #38668447618 exposed a real schema rejection: DatePicker previously refused the newly declared allowYearView/allowMonthView because the closed component contract did not register them.
+- Registered both as boolean fields in DatePicker's existing typed component contract, not as a new controller or duplicate API. Full current-head CI + Chromium still required.
+- Stage/overall unquantified; PR #267 Draft/Open; main untouched.
+
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 new Chromium assertions (CI pending)
+- Added actual browser DOM geometry acceptance for 7 × 36px wheel=252px, 32px guide border-box, 108px leading pad, guide center, 264px Calendar/host, 252px seven-column grid, 36px day boxes, explicit visibleItemCount override, dual panels and header on/off + month/year drill same instance.
+- Tests have NOT yet been executed on final SHA; accept only real double green plus screenshot/ZIP. PR #267 Draft; main untouched; Stage/global percentages not credibly quantified.
+
+## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 DatePicker consolidation (CI pending)
+- Calendar now separates immutable unit from mutable viewMode; date/year/month drill reuses originating Calendar root. DatePicker creates only primary, optional physically visible secondary, and period Calendar per unit, without detached year/month instances.
+- allowYearView and allowMonthView default true, have independent disabled state for title and keyboard/mouse gate; explicit option overrides supported. All real browser/Focus/snap gates must still run before completed claim.
+- Stage/global percentages not credibly quantifiable; PR #267 Draft/Open, main/frozen Tree+Controller unchanged.
+
+## CURRENT — 2026-10-15 CALENDAR-VIEW-MODE-OWNER-001 Calendar source (CI pending)
+- Calendar now distinguishes immutable selection unit from mutable viewMode; title mouse/keyboard delegates to one capability check, allowing independent allowYearView/allowMonthView and preserving period onTitleRequest.
+- DatePicker integration still needs to eliminate extra year/month instances; next commit must implement that before final acceptance. PR #267 stays Draft, main unchanged; no credible Stage/global percent.
+
+## CURRENT — 2026-10-15 CALENDAR-WHEEL-GEOMETRY-001 source changes (CI pending)
+- Verified previous development HEAD fd9bd1a180b6fb8eedc819737b7f1808a3306816, PR #267 Draft/Open, main 718da2a6be0bc71520adb0451429cd3d3d8320b3. Earlier dual green CI predates these changes.
+- DatePicker internal TimePanel defaults to 7 visible rows; WheelMetrics.md remains 36px, WheelPanel computes 252px scroll and 108px top/bottom pads. Explicit time.visibleItemCount remains higher priority.
+- WheelPanel guide visual trim is 0.25rem only within DatePicker's TimePanel; md guide 32px vs real 36px item. No runtime DOM correction, global WheelMetrics change or new Theme token.
+- DatePicker Calendar host and internal date-panel share one derived width: 7 × active control height + 12px inset (md=264px). Group/hosts min-width=0; dual separator does not consume 1px width. Calendar grid remains gap:0 with shared range ::before.
+- Remaining: Chromium geometry/snap boundary and cross-theme tests, single Calendar viewMode + year/month title gate, two workflows green on final SHA, exact-HEAD official Windows zip. Stage/overall % not credibly quantified. Tree/Controller/main untouched, PR remains Draft.
+
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 frozen Phase C fixture compliance (CI pending)
+- Prior QXFRAME #38651927510 stopped at the exact-frozen HOTFIX6 compatibility-fixture diff; the 0add6330 focus assertion was incorrectly edited directly in `tools/fixtures/legacy-hotfix6/verify-browser-smoke-phase-c.html`. Restore those fixture bytes exactly from parent 297740de.
+- Browser validation now uses the existing `adaptLegacySmokeSource` projection in `tools/verify-browser-smoke.mjs`, replacing only the historical `.period-panel-cell` selector/check for this intentionally consolidated single Calendar. It retains ArrowRight keyboard test and requires one `Calendar.is-period` cell with computed solid outline >=2px.
+- No change to runtime or frozen Tree/Controller. CI must prove real keyboard visual focus and all regression gates on the same HEAD; #267 Draft/Open, main untouched. No credible Stage/global %.
+
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 legacy keyboard-focus browser ratchet repair (CI pending)
+- The former 297740de QXFRAME #38650400583 reached legacy Phase C real Chromium smoke. Only failing check: `regression-period-panel-keyboard-focus` measured 0 on obsolete `.period-panel-cell.is-keyboard-focus`. Source Calendar now intentionally renders `.calendar-grid > .calendar-cell.date-panel-cell` for every unit; the activeKey correctly moved from 2026-08 to 2026-09. Do not revive standalone Period DOM or CSS.
+- Updated actual legacy browser test to find the one canonical Calendar active cell, and REQUIRE visible computed 2px solid keyboard outline, not merely count a class. Existing key ArrowRight and month/unit assertions kept. No changes to Calendar runtime or frozen Controllers/Tree.
+- QXFRAME #38650400583 failed only at old CSS selector; CSS Schema #38650400578 Success at the same HEAD. Next: both workflows on this new HEAD; exact-HEAD official Windows dist/docs artifact + clean QA labels after double green.
+- PR #267 must remain Draft/Open; main unchanged. Stage/overall progress not credibly quantified.
+
+## CURRENT — 2026-10-15 CALENDAR-UNIT-OWNER-001 cross-frame Chromium test correction (CI pending)
+- Latest state before change: development HEAD 66e09bc0189afffd0759c7d098e10b3fe27c5afb, PR #267 Draft/Open, main unchanged; QXFRAME #38592636159 and CSS Schema #38592636269 both failed at browser Calendar five-unit check `date one delegated select` rather than core Theme Schema.
+- Cause identified in new fixture: Calendar runtime `Date` objects are created in Preview iframe realm. Using outer-page `selected instanceof Date` misclassifies valid Date objects. The check now independently asserts exactly one `onSelect` call and a finite `selected.getTime()`, without weakening the event/selection contract. Do not change Calendar runtime while confirming this.
+- Next: same HEAD QXFRAME/CSS Schema workflows; investigate any additional actual Chromium failure, then exact-HEAD official Windows dist/docs acceptance and QA labels. Existing date/week/month/quarter/year single Calendar owner must be retained. Frozen Tree/Controller/main untouched; never merge #267. Stage/overall completion not credibly quantified.
+
+## CURRENT — 2026-10-14 Calendar unit docs coverage gate repair (CI pending)
+- QXFRAME #38592260766 passed earlier source/controller/schema tests and stopped at Preview03 catalog assumption 66 unique component families. This unification intentionally has 65 canonical components across unchanged 66 Card demos, with both date and quarter as Calendar. Gate now asserts exactly 65 unique and two Calendar consumers, preserving 66 Cards and 48 new Cards; not suppressing the check.
+- Next same-HEAD dual workflows, real browser month/quarter/year + DatePicker drill, official acceptance bundle when both pass.
+
+## CURRENT — 2026-10-14 Browser Smoke + Preview03 Calendar period consumer migration (CI pending)
+- Legacy Preview03 fiscal-periods now mounts Calendar({unit:quarter}) directly and declares the same component type in coverage JSON. Browser smoke regression for quarter/month drill now queries actual Calendar.cell button + view/inner; keyboard selection remains asserted. One Calendar owner; compatibility import alias is not used by any DatePicker/Preview03 internal consumer.
+- Next full CI, real keyboard/hover/range source, no Tree/Controller or main edits. Draft PR #267 remains Open.
+
+## CURRENT — 2026-10-14 Calendar period title keyboard unification (CI pending)
+- One Calendar handler now routes Period title keyboard activate to onTitleRequest and title arrow keys to correct unit page (year decade, month/quarter year). Previously PeriodPanel's independent FocusController handled this; single owner must retain behavior.
+- Browser test covers five datasets and key navigation; do not weaken Phase-C input gates. Await exact final SHA CI.
+
+## CURRENT — 2026-10-14 Calendar single owner source+real Chrome gate
+- Added one real Chromium test on preview runtime, checking Calendar and PeriodPanel object identity (no second component), five data units, 42/12/4/12 item counts, Calendar view/inner DOM, one selected click, one keyboard path and month/year/decade paging. Existing Calendar day 8-case range visual test remains.
+- Added static gates asserting no PeriodPanel implementation or CSS grid and DatePicker solely Calendar.create. Pending actual same HEAD CI and any browser regression diagnosis. PR #267 Draft; no merge.
+
+## CURRENT — 2026-10-14 Calendar unit migration CI checkpoints
+- QXFRAME #38590468831 failed the old FocusController gate demanding separate focus implementation inside period-panel.js; this is now a single export alias. Updated Focus, Phase C, ScrollVisibility and audit gates to insist PeriodPanel is one Calendar identity with shared controller/cell hover owner.
+- Calendar period virtual focus now invokes canonical ScrollVisibility.ensureVisible. CSS Flex gate and CreateApp period acceptance moved to .calendar.is-period. Next real Chrome period API tests and same HEAD dual CI.
+- No source Tree/Controller edits, no merge. Stage/global progress not yet quantifiable.
+
+## CURRENT — 2026-10-14 Calendar unit owner consolidation (CI pending)
+- Starting baseline 455470dd41115f746f2f1fd22c72954209e51234, QXFRAME and CSS Schema Success; PR #267 Draft, main unchanged.
+- New Calendar unit policy supplies month, quarter and year data through the same Calendar DOM + ActiveItem / ValueController / Focus / Interaction pipeline as date/week. DatePicker now calls Calendar.create for all modes.
+- PeriodPanel module has only one-line direct Calendar export alias for existing callers, with no second DOM, event owner or state machine.
+- Period styling now uses Calendar.is-period geometry and the same button > cell-view > cell-inner and range ::before painter. CI Flex acceptance updated; JS authorisation declares this owner-requested module removal.
+- Next: update stale CI assertions and run full Chromium Calendar unit/navigation tests + Theme gates. Maintain Draft and do not merge. No credible Stage or overall % yet.
+
+## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 existing hover test moves to actual painter (CI pending)
+- QXFRAME #38582099562 passed through final audit regressions. Old outside-month hover assertion sampled outer Calendar button background, which now deliberately stays transparent. Preserved its pointer/hover/outside-color checks; asserted button remains transparent and visible inner cell changes background on hover. This is a real behavior ratchet, not removal of coverage.
+- Next latest HEAD CI (both workflows), real Calendar Chromium test, official Windows dist/docs. PR #267 Draft; no merge or Controller/Tree source edits.
+
+## CURRENT — 2026-10-14 Calendar test gate clarified (CI pending)
+- Intermediate QXFRAME #38581551123 passed Schema/Theme gates but failed an overbroad static test forbidding any `.date-picker-composite.has-time` selector, accidentally catching existing responsive flex-direction:column (which is not a Calendar visual override). Narrowed to reject only consumer-owned Calendar sizing declarations; preserves mobile layout and owner ban on DateTime-specific Calendar style.
+- Chromium real Calendar matrix already added; verify next run before packaging. PR Draft/main unchanged.
+
+## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 static ownership gate and normalized Calendar density (CI pending)
+- Initial GitHub CI #38580554960 stopped at duplicated adaptive Calendar `padding` authored in two rules. Unified cell padding to canonical grid cell; weekday padding retained in its own rule, no gate exception.
+- Removed DateTime-specific `.date-picker-composite.has-time` Calendar dimensions; canonical `.calendar.is-adaptive-month` owns minimum nine-row height for all consumers while retaining existing Theme calendar cell-size input. Updated existing DateTime static gate to assert no consumer-specific Calendar sizing. Reset current-only QA to `release-planner` DatePicker Calendar region; added shared structural/style DOM regression ensuring outer button owns calendarDate and no JS range backing node.
+- Next: Chromium real Calendar computed range + event test, CI dual Success, official bundle. main/Tree/Controllers unchanged and PR #267 Draft.
+
+## CURRENT — 2026-10-14 CALENDAR-RANGE-VISUAL-001 initial implementation (CI pending)
+- From verified HEAD ffa1db1cca839a420d35664a7783da3b30738bc7; PR #267 Draft/Open, main 718da2a6. Owner requested Ant-style date range visual geometry directly in shared Calendar: `calendar-grid` gap:0; button retains all private event/value/hover/focus ownership, two styling children `cell-view > cell-inner`; range backing exclusively on button `::before`, no range node. Added vertical padding, continuous middle strip, 50% start/end segments, raised square inner date with existing Date/Theme state values.
+- Existing fixed-values Today pseudo and late Theme direct Calendar paint adjusted so selected/today appear on inner instead of being painted twice on the outer Calendar button. PeriodPanel remains independent. Explicit authorization `Calendar` in Stage5 JS build diff allowlist; frozen Tree/TreeSelect/Controllers unchanged.
+- NEXT: add source structure/real Chromium computed paint+click+renderCell tests, update current-only offline QA highlights, final same-HEAD QXFRAME and CSS Schema CI, validate official Windows full dist/docs. No merge; Stage/global completion percentage not credibly quantifiable yet.
+
+## CURRENT — 2026-10-14 DateTime private sizing role fixes Theme Token ratchet
+- QXFRAME #38565566451 reached verify:theme-tokens and detected a NEW public component token declaration in picker-family `.date-picker-composite.has-time`: `--qxframe9a7c2-calendar-cell-size`, forbidden by public-token owner count. Replaced with context-specific override of existing **private** `--_qxframe9a7c2-calendar-adaptive-cell` on the actual adaptive Calendar consumer, which has enough specificity to override its own default and media setting. No new token/compat alias; preserves Theme control height sizing.
+- Keep all Theme Token ratchets and same-HEAD dual CI; do not claim full completion until browser validated.
+
+## CURRENT — 2026-10-14 PeriodPanel CSS Flex structural gate aligned to zero-gap Ant selection (CI pending)
+- QXFRAME #38564865028 reached legacy verify:css-grid-layout-trio. Its original regex required 25%-less-gap period cells and now contradicted screenshot-mandated 25% full-width gap-zero range. Replaced assertion with more stringent 25% exact and `column-gap:0` plus original no-CSS-grid guard. No broad baseline change.
+- Need same-HEAD dual green and real browser tests; remaining screenshot focus areas documented.
+
+## CURRENT — 2026-10-14 DateTime Calendar/TimePanel aligned density and height (CI pending)
+- Source DatePicker only (not TimePanel/WheelPanel globally): if consumer time options lack visibleItemCount, use 9 visible rows (WheelMetrics itemHeight remains the established Theme size projection; explicit visibleItemCount untouched). Composite `.has-time` Calendar uses existing Theme control-height size axis for six-week day cells and nine-row min-height; right TimePanel wheel no longer visually ends early under a taller Calendar, without CSS-overriding JS inline scroll height or breaking snap padding.
+- DatePicker JS is an intentional explicitly authorized delta to main in existing verify-js-build-matches-main allowlist; Tree/Controller untouched. Need real Chrome popup computed height validation, both DateTime and non-time regression. PR #267 Draft; final dual CI pending.
+
+## CURRENT — 2026-10-14 screenshot changes new offline QA ledger
+- Reset local-only `offline-qa-changes.mjs` to 10 **current screenshot-fix** Preview03 regions, clearing previous WheelPanel z-index-only markers and overview markers. Each marker uses real Card/inner DOM; Source HTML remains untouched (overlay only bundled in Windows QA).
+- Additional final tasks: same SHA CI double green, repair gate errors, official Windows ZIP and real browser smoke. DateTime picker Calendar/Time wheel height remains the one unclosed geometry item; no unsafe snap CSS.
+- Stage/overall percentages not credible without denominator. PR #267 Draft.
+
+## CURRENT — 2026-10-14 sync Dropdown compact group font gate to rem CSS
+- QXFRAME #38564278117 verified Registry/Token and failed only in Stage5 new ItemCollection group static assertion still expecting legacy .875em while source has required 0.875rem. Corrected test literal; no code change, no weakening of functional group header checks. Re-run final CI.
+
+## CURRENT — 2026-10-14 mirror configured Nova overlay into canonical Registry Schema
+- QXFRAME #38563832290 passed prior gates and stopped at verify-create-app.mjs canonical Theme Schema mirror: changed static Theme overlay 0.1 ->0.6 but generated docs/generated/theme-public-schema.json still 0.1. Updated only this token defaultRoot, preserving 214-token registry and all token names/ordering. Existing gate remains enforced.
+- Next QXFRAME + CSS Schema dual on final HEAD and browser tests; not complete yet.
+
+## CURRENT — 2026-10-14 DatePicker composite widths and Presets divider (CI pending)
+- Removed two-rem intrinsic max-width subtraction that left a trailing blank on DatePicker popup. Calendar Scroll+group now shrink/intrinsic rather than grow and leave unused right-hand white strip. Presets divider paints on enclosing Scroll shell, not clipped viewport, and matches field-border Theme.
+- DateTime Calendar / TimePanel *height* parity remains to be measured: do not override JS inline Wheel scroll viewport height because that would break snap centering. DatePicker JS divergence would require explicit build-allowlist consideration.
+- PR 267 stays Draft/Open; main/Tree/Controller unchanged.
+
+## CURRENT — 2026-10-14 align previous Item static assertion to repaired layout
+- QXFRAME #38563351476 completed CSS Token ratchets and failed on old Step3 Item visual assertion requiring `flex-wrap:wrap` in item-surface.css. That obsolete behavior was the exact screenshot issue (checkbox on its own line). Updated test to REQUIRE flex-wrap:nowrap; retains source contract and additional content-wrap checks; no CSS revert. CI still pending final HEAD.
+
+## CURRENT — 2026-10-14 stage5 verify-theme-tokens correction (CI pending)
+- QXFRAME #38562936754 passed css-constraints but failed theme-tokens hardcoded-color ratchet: newly duplicated rgb(255 255 255 / .14) Image Preview close hover. Original toolbar literal must not be duplicated. Added one private component-local --_image-preview-hover derived via color-mix 14% of registered theme palette white, consumed by both toolbar and close/nav. No public token/alias, no gate weakening.
+- Next: re-run official same-head CI, Chrome screenshot tests.
+
+## CURRENT — 2026-10-14 mask color token gate CI correction (pending)
+- QXFRAME #38562627197 passed css-constraints, stopped at verify:theme-tokens because new literal rgb(0 0 0) in Image Preview exceeded hardcoded-color baseline. Mapped default to existing registered palette-black Theme token (opaque both modes), preserving independent adjustable mask opacity and avoiding a new token. Updated static ratchet, did not disable/raise baseline.
+- Further gates/Chromium still pending. Stage5 owner screenshot acceptance pending; PR Draft.
+
+## CURRENT — 2026-10-14 fix CI CSS constraint (pending)
+- Same-HEAD QXFRAME 38561916341 failed verify:css-constraints: new `.item-collection-group` font-size `.875em` increases non-rem-length by one. Changed only that to 0.875rem; otherwise unchanged. Keep original non-rem baseline; no weakening gate. Follow up exact final HEAD CI and browser evidence.
+
+## CURRENT — 2026-10-14 Stage5 Dropdown/Cascader Choice + group heading (CI pending)
+- Root cause for black unchecked boxes: old Popup.is-open CSS colored every checkbox in an expanded row, including an unchecked item, making it look selected. Now inverse contrast applies only when checkbox truly checked/indeterminate; unselected receives the common Choice empty border and surface. Tree/TreeSelect are untouched.
+- ItemCollection group heading now compact neutral transparent text, no Option-sized fill/height/cursor, preserving navigation semantics.
+- Next: screenshot computed Chrome regression and remaining DatePicker geometry. PR #267 remains Draft.
+
+## CURRENT — 2026-10-14 Stage5 Steps/Item/List/Tags screenshot fix (CI pending)
+- Default horizontal Steps rail is now an in-flow flex sibling after the icon/title, preventing connector drawing through title/subtitle/percent; other Step modes stay untouched.
+- Static Item and vertical List no longer flex-wrap leading checkbox/icon onto its own line; content flexes and wraps inside its own min-width:0 column.
+- Tags Add and editing input now share tokenized Tag height/radius/ink/surface/border without dashed standalone appearance. Other Tag variants and hosted control architecture unchanged.
+- Await browser screenshot verification; no Tree/Controller/main edits.
+
+## CURRENT — 2026-10-14 Stage5 Alert/Badge screenshot fixes (CI pending)
+- Alert source uses visible Theme border and configurable Theme shadow-card; removed late shadow:none. Badge statuses now use source own semantic accent/soft roles, no later neutral Tag background reset; outlined labels preserve status ink.
+- Remaining screenshots: Dropdown/Cascader Choice, group titles, Steps, Item, Tag Add, DatePicker composite geometry. PR #267 Draft; do not merge.
+
+## CURRENT — 2026-10-14 Stage5 screenshot batch: Mask default configuration and Image Preview toolbar (CI pending)
+- User explicitly said NOT to hard-clamp opacity. All eight style look mask default values now >=50% (six formerly 10/20/30 →60; Maia/Mira 80 unchanged); default CSS Nova overlay now 60%, custom Theme mask tokens retain precedence.
+- Image Preview fixed alpha compositing: own solid black mask default with editable mask color + 82% opacity, no Theme Overlay double alpha painting. Close button/nav hover now same translucent white as Preview toolbar hover; no unrelated button hover edits.
+- Next: verify exact CI; continue remaining screenshot family-specific bugs. Stage/overall progress not credible yet.
+
+## CURRENT — 2026-10-14 Stage5 screenshot batch: contiguous DatePicker/PeriodPanel range strips and transparent Menu (CI pending)
+- User clarified Calendar grid gap must be ZERO, not merely visually smaller. Seven equal width cells connect selected/range background within each week row, including adaptive months; PeriodPanel range slots have no horizontal gap. No runtime date selection changes.
+- Inline Menu root now defaults transparent; explicit recipes and popup surface remain separate. Previous WheelPanel z-index fix aa0c2194 was already committed and awaiting CI; do not rework.
+- Next: mask default thresholds (per-style configured values >=50%, not fixed clamp), Alert, Badge, Dropdown/Cascader Choice, Steps, Item, Tags, Image Preview close and date/time geometry. No Tree/Controller/main/merge. Stage and overall percentages not credibly quantified.
+
+## CURRENT — 2026-10-14 Stage5 WHEEL-GUIDE-STACK-001 (exact-HEAD CI pending)
+- Owner reproduced the real WheelPanel issue: center guide paints over selected item because actual `.qxframe9a7c2-scroll` and `.qxframe9a7c2-wheel-panel-center-guide` are siblings under `.qxframe9a7c2-wheel-panel-scroll`, not because of foreground contrast. Prior computed-color tests used a noncanonical test DOM and missed this. Fix is only source `picker-family.css` direct-child Scroll z-index `z-local-above=2` > guide `z-local-raised=1`, preserving accent guide and Theme ink unchanged.
+- Update source contract and Chromium regression to test sibling topology and stacking across Style/light-dark/inversion/accent. Offline annotation reset to current three Preview03 consumers (Release Planner TimePicker, Shift Allocation TimePanel, Dial Settings WheelPicker). No changes to frozen Tree/Controller or runtime WheelPanel, PR #267 Draft, main unchanged.
+- Next: final same-HEAD QXFRAME + CSS Schema CI Success; if complete, official exact-HEAD dist/docs Windows bundle + CRC/HTTP and current-only highlights. Progress not credibly quantified.
+
+## CURRENT — 2026-10-14 Popup passive border convergence
+- Replaced old popup Menu-foreground 26%-mixed passive border alias with direct theme-field-border consumption across semantic border, semantic subtle border and ColorPanel passive Hover border. The common Wheel/Cascader/TimePicker separators use the same field-border. Existing accent/focus states remain Theme primary; no new Theme or private token; tests and real CSS color probes updated. Dual CI for this HEAD pending, PR #267 stays Draft.
+
+## CURRENT — 2026-10-14 Stage5 wheel guide + picker borders + Preview03 overview (CI pending)
+- Started from verified 990660d321faa742c5aca027040056a018f90553. Updated actual source on intermediate commit 2398adbc129a8eb5e134081867ca6db63bf0596f: canonical WheelPanel guide now reads existing Menu accent (bold full Primary / subtle 28% transparent) for both border and fill, selected Wheel item reads matching Menu accent foreground (public time-panel-selected-text override preserved); removed PickerField duplicate guide painter. Wheel/Cascader dividers and TimePicker Now top border consume theme-field-border in all schemes. Preview03 overview uses 4 native Card/CardContent compositions, no imitation .pv3-overview>.pv3-metric paint.
+- Acceptance gates: update static and real Chromium Style x page scheme x Menu inversion x bold/subtle matrix, and reset offline QA to this batch only (overview, TimePanel, WheelPicker). No frozen Tree/Controller edits, no registry expansion, no historical recipe alias. PR #267 Draft/Open and main untouched; require same-HEAD dual CI and official dist/docs artifact before claiming completion.
+- Progress Stage and overall not credibly quantified.
+
+## CURRENT — 2026-10-14 final QA marker selector fix, revalidate exact-head CI
+- Same-HEAD dual CI succeeded on b5132c46. While inspecting exact official dist/docs, offline QA selector for platform-tree targeted nonexistent data-pv3x-widget="platform-tree"; actual TreeSelect host in Preview 03 is data-pv3-component="workspace-tree-select". Corrected ledger and current-round static QA expectation to target real DOM, without framework Tree/Controller changes. Refresh official dist/docs artifact and dual CI from this final commit; package only final same-HEAD dual-success artifact, verify all three markers with browser plus ZIP CRC, HTTP.
+- Stage 5 and overall progress not credibly quantified yet. Draft PR #267 must not be merged.
+
+## CURRENT — 2026-10-14 Button pointer halo compositor repair (CI pending)
+- QXFRAME #38536760620 real Chromium failed at browser verify-create-app-browser.mjs:2852: secondary solid Button focus persists but pointer box-shadow computes none despite a real theme pointer red halo. Root cause: new Button Theme state mapping forwarded the old visual variant '--action-shadow:none' into component's original 'box-shadow:var(--state-shadow),var(--theme-pointer-shadow)' painter, and 'none, shadow' is an invalid CSS shadow list. Normalize only four visual Button variant no-shadow inputs to valid transparent 0 0 0 0 shadow. Existing Theme shadow-control off already emits that same zero-length value. Preserve Button pointer and keyboard outline/mouse shadow and true configured control elevation. Add static ratchet rejecting future none used as a composite item. Next exact same HEAD dual CI + official dist/docs artifact.
+
+## CURRENT — 2026-10-14 align inverted Menu selected-row assertion with actual scoped selector (CI pending)
+- QXFRAME #38536291502 full verification stopped at old static regex for Popup ItemSurface selected, requiring the former generic selector that also matched Tooltip; test now requires the narrowed actual Menu selector with Tooltip excluded. Kept the selected-row paint assertion instead of removing it. Continue same-HEAD full browser/dual CI and offline acceptance. Previous CI failures must not be called success.
+
+## CURRENT — 2026-10-14 acceptance gates synchronized to single-owner repair (CI pending)
+- First same-HEAD QXFRAME run 38535471221 reached verification but failed on previous QA ledger savings-targets. The old TreeSelect computed assertion expected the now-confirmed wrong Menu-bg checkmark foreground. Gate update enforces current three annotations, actual Choice Type foreground/check contrast, inverted Tooltip scheme and arrow/background parity across page/menu modes. css-gates Menu selector allowlist now matches exact Tooltip exclusion. Do not weaken CI; correct state owner is the required expectation.
+- Next: QXFRAME/CSS Schema same-HEAD CI, official artifact and full Windows package. No merge.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Button/TreeSelect/Tooltip ownership batch (CI pending)
+- Started from verified head 4f25a3eebeb3cbf2d24d8c01f56107e7aba123e6, Draft/Open PR #267, main unchanged. Existing same-HEAD QXFRAME and CSS Schema green before this batch.
+- Button: remove late duplicate background/border/color/shadow painting; map existing Theme action roles into component-owned state slots at variant specificity, preserving button.css single painter and focus/disabled logic.
+- TreeSelect: remove portal-local checked indicator Menu background foreground override; preserve common Checkbox checked/indeterminate Choice pairing, no frozen Tree or Controller edits.
+- Tooltip: inverse Menu selector was inadvertently matching Tooltip popup-surface. Scope compiled inverse Menu scheme and Theme Menu semantic projection away from Tooltip, allowing its existing inverse surface pair (foreground/background) and same-color arrow to work in both light/dark.
+- Next: exact HEAD CI (QXFRAME + CSS Schema), inspect failing browser assertions if any, official exact-HEAD dist/docs artifact and current-only offline QA bundle. No merge.
+
+## CURRENT — 2026-10-14 collision merge dependency graph no-cycle correction (CI pending)
+- On rerun, GitHub QXFRAME #38522141822 failed verify-phase-f-token-graph.mjs: actual --_qxframe9a7c2-menu-item-bg self-referencing declaration. This came from the previous old v2 navigation-item projection: when merged with the canonical MenuItem Token, the line became alias-to-self. Removed ONLY that redundant projection; existing MenuItem state --_menu-item-bg values and --_menu-render-background paint owner stay intact. Strengthened static QA to reject this specific reappearance. Need all-cycle graph 0 and browser suite same-HEAD green before acceptance.
+
+## CURRENT — 2026-10-14 ownership reconciliation and static test repair (CI pending)
+- Resolved 12 previously duplicated v2 names by actual state owners and distinct DOM semantics, removing recipe names and duplicate Card/Poup painting. See docs/LIGHT-DARK-TOKEN-OWNERSHIP.md.
+- Fixed two stale static checks after this change: TreeSelect check indicator name, and canonical Schema :root matching (old JS regex accidentally matched literal backslash+s, causing latest QXFRAME CI #38521826814 to fail before reaching component tests). Correctly parse each Theme root line by exact registered key.
+- Next: full dual CI plus real Chromium against current HEAD; never reintroduce version/recipe aliases; don't report completed acceptance until green.
+
+## CURRENT — 2026-10-14 resolve 12 old v2 collisions by single-ownership semantics (CI PENDING)
+- Owner rejected mechanical 'recipe-*' namespace: it hides, rather than resolves, duplicate implementation. Audited original CSS variable definitions, consumers and component paint owners for 12 colliding slots.
+- MERGED into existing component/family slots, not a new extra layer: action-bg/action-border, control-bg/control-border (including hover/focus/disabled mapping), popup-bg/popup-text/popup-border/popup-shadow (drop self-referential projector), card-shadow (Card CSS now sole state/box-shadow authority consuming Theme shadow).
+- DISTINCT SEMANTICS: navigation-bg (whole menu container) vs menu-item-bg (one interaction/selection row): replaced duplicated variable with existing component MenuItem bg slot and render channel. choice-bg/choice-border (SelectGroup labels) vs checkbox/radio/tree check control marker: named precisely check-indicator-bg/check-indicator-border. No version or recipe aliases.
+- Removed duplicate late Card box-shadow rules; Card own is-outlined/loading/elevated state logic remains effective. Public card-shadow override supported through canonical Card owner.
+- All source definitions and consumer reads adjusted; static acceptance rejects historic/private recipe variables, self-aliasing and a second Card shadow implementation. Frozen Tree/TreeSelect CSS/JS and Controller remain unchanged.
+- Run exact-HEAD CSS Schema, full Chromium and Windows artifact; if a state changes unexpectedly, fix ownership at original component, never create another projection variable.
+
+## CURRENT — 2026-10-14 last CSS-only legacy direct dark shadow branch removed (CI pending)
+- Scanned full bundled CSS: --qxframe9a7c2-shadow-popup existed as two declarations in fixed-values.css but had ZERO var(--qxframe9a7c2-shadow-popup) consumers in the bundled runtime CSS. Old historical size-tree manifest only mentions source context, not a live consumer. Removed this dead output-only public shadow alias and direct .dark shadow geometry override. Popup surfaces instead consume the existing canonical --qxframe9a7c2-theme-shadow-popup, which is already owned by the Theme generator (no new shadow token, no geometry changes to actual components). Static QA now rejects the obsolete alias and verifies canonical Theme shadow remains.
+- Across all 61 canonical framework CSS modules, no active explicit .dark paint override remains beyond allowed Theme color-scheme keyword and shared :root,.dark scopes. Documentation chrome uses light-dark and color-scheme; no hand-authored light/dark paint table remains there.
+
+## CURRENT — 2026-10-14 canonical schema mirrors :root not last .dark override
+- Fixed canonical Schema defaultRoot for registered keyword --qxframe9a7c2-theme-color-scheme to light (the original mirror mapping incorrectly took its last .dark:dark declaration). Static CI now compares every Schema defaultRoot value to the first :root block in src/styles/main/theme.css and checks all 78 COLOR tokens are light-dark(). This makes the Schema verifiably descriptive, not a second generated Theme owner.
+
+## CURRENT — 2026-10-14 retired phantom Theme v2 pilot registry; Docs colors light-dark (CI pending)
+- Found docs/generated/theme-public-schema-v2.json was an obsolete 'REPRESENTATIVE_PILOT' listing 105 nonexistent --qxframe9a7c2-theme-v2-* public tokens (30 required + 42 optional + 12 overrides + 21 geometry). No repository consumers of the old filename were found by code search. Retire old file and create docs/generated/theme-public-schema.json as a read-only, 214-token mirror of live docs/create/tokens.js and src/styles/main/theme.css, 21 current canonical geometry inputs; no second Theme token authority. Strict CI compares exact names with active readRegistry() and enforces one schema. Filename change is docs data only, not runtime CSS/JS.
+- Docs chrome css 9 color slots now use existing semantic/Theme tokens with light-dark() fallback, and HTML data-theme=dark declares only color-scheme. Removed old 9-color explicit dark table. No modification to docs state switching script or framework components.
+- Previously removed 40/40 --_qxframe9a7c2-v2-* private declarations/reads from framework CSS; no v1/v3 tokens in all 61 framework CSS modules. Remaining legitimate non-color .dark popup shadow geometry described separately. Draft PR #267 remains open; current HEAD dual CI and Windows ZIP pending.
+
+## CURRENT — 2026-10-14 global light-dark and zero versioned CSS Token naming (CI pending)
+- Audited 61 canonical src/styles CSS modules plus 3 Create CSS modules for literal v1/v2/v3 custom property names and direct .dark rules. All but one direct .dark paint in theme-visual-v2 already absent. Removed the now-redundant .dark foreground declaration, because :root references light-dark Theme foreground and cascades automatically. No component Tree/Controller changes.
+- Remaining exactly 12 colliding --_qxframe9a7c2-v2-* private variable names converted to distinct --_qxframe9a7c2-recipe-{action-bg,action-border,card-shadow,choice-bg,choice-border,control-bg,control-border,navigation-bg,popup-bg,popup-border,popup-shadow,popup-text}. References and definitions synchronized in 3 CSS modules + static assertions. Public --qxframe9a7c2-theme-* untouched, original --_qxframe9a7c2-{x} definitions retained and not aliased/merged. This completes 40/40 legacy v2 private name cleanup (28 previous + 12 current); v1/v3 CSS Token names not found in audited modules.
+- CI now rejects any v1/v2/v3 CSS custom property name (dist CSS and selected source CSS), checks both existing semantic owners and renamed recipe owners co-exist. Residual .dark popup shadow with different size geometry remains an intentional non-color exception, not a hand-painted color override. Still review remaining non-CSS/JS runtime computed colors and any behavior changes; do not misstate whole-repository absolute absence.
+- Must pass current HEAD dual CI, Chromium and offline dist+docs artifact before being marked accepted. PR #267 remains Draft; main unchanged.
+
+## CURRENT — 2026-10-14 current-only offline QA map (CI pending)
+- Rebased opt-in Windows offline QA annotations to the actual current changed regions: Preview 01 savings-targets native Select picker; Preview 03 sla-tooltip Tooltip trigger/arrow (2 cards, 2 regions). Eliminated stale previous highlights, no production HTML injected. Strict static ledger selectors/count updated. Popconfirm demo remains reference, unchanged.
+- Full Windows ZIP must use exact successful dual-CI HEAD/official artifact; no reuse of stale ZIP.
+
+## CURRENT — 2026-10-14 Popup surface token authority bug exposed by Chromium (CI pending)
+- Exact-head CSS Schema #38516572186 browser caught Tooltip arrow/background alpha mismatch (arrow rgba(12,44,88,.64) vs body white). Reproduced locally with real Chromium, traced to late theme-visual-v2.css overwriting family-owned --_popup-surface-* slots and direct background-color on ALL popup-surface/popover-container. Corrected generic projection to retain shared --_popup-* fallbacks but NOT override component family-owned popup-surface/Popover private slots or generic color/paint. Direct Menu paint kept ONLY on menu-submenu and menu-overflow. Removed duplicate .popover-root private bg/text projection to respect public Popover values.
+- Independent local Playwright confirmed: Tooltip translucent override rgba(12,44,88,.64) paints actual body identically to arrow; Popover public rgba(66,22,88,.57) paints its body; generic Popups retain original normal Theme surface/background. Real 64-way Tooltip/Popconfirm arrow acceptance and other Menu/Picker tests must still pass same-head CI.
+- Previous QXFRAME #38516572117 failed because a newly added static picker selector regex had literal over-escaping (0 matches). Replaced regex with exact generated paired scheme-block string checks; forbids ANY picker color declaration. Runtime CSS picker remains color-scheme-only.
+- Frozen Tree/TreeSelect & Controller unchanged, Draft PR #267 not merged.
+
+## CURRENT — 2026-10-14 browser test source-string syntax and stable arrow geometry (pending)
+- Same-head QXFRAME CI #38516341409 failed Full release verification before browser execution: the new native Select Theme probe inserted raw line breaks inside a JS evaluate('...') string. Escaped those line breaks as literal \\n in browser test source. Tooltip/Popconfirm arrow geometry probes now use identical 10rem×4rem test roots so pixel left/top offsets are comparable across labels; real shared CSS formulas unchanged. This corrects tests, not runtime color/geometry. Strict CI required.
+
+## CURRENT — 2026-10-14 CI diagnostic geometry regex fixture update (pending exact-HEAD CI)
+- Previous superseded HEAD 1e2a170e QXFRAME CI failed in tools/verify-css-token-size-tree.mjs because tools/theme-v2-geometry-contract.mjs still expected old string 'v2-size-ratio' and 'v2-font-step' AFTER their 28 safe private token names were removed. Fixes ONLY expected private variable names in geometry verifier; no geometry values changed. Other earlier CSS Schema failure was a stale native picker expected-page-color assertion on b9c099, now replaced by color-scheme reference swatch comparison on current head.
+- Do not claim current CI green until same-HEAD runs finish.
+
+## CURRENT — 2026-10-14 real Tooltip/Popconfirm arrow parity matrix (CI pending)
+- Added 64 Chromium cases (8 Styles × 2 modes × top/right/bottom/left) comparing actual computed dimensions, transforms, offsets and border-edge geometry between Popconfirm's Popover arrow and Tooltip. Also asserts Tooltip arrow background matches its surface's semi-transparent rgba, with no clip-path or extra opacity. No component JS changes. This catches size/offset/alpha regressions from theme/placement changes.
+
+## CURRENT — 2026-10-14 Native picker browser proof and stronger role equivalence (CI pending)
+- Standalone real Chromium check: style only select::picker(select){color-scheme:dark} under light page. Computed Select scheme=light; picker scheme=dark; option scheme=dark; picker/option colors resolve to dark arm of inherited light-dark Theme variables. No option override is required.
+- Upgraded main createApp Chromium 64-case matrix: expected Menu roles are computed from an isolated color-scheme swatch; inverse picker/selected/idle/disabled colors must equal that swatch, in addition to picker opposite scheme and unchanged closed control. This tests both color-scheme propagation and actual paint without adding any CSS color overrides.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 v2 private token collision audit and rename checkpoint (CI pending)
+- Scanned full ~1.1 MB concatenated CSS: 1,868 distinct CSS variable names; 40 private --_qxframe9a7c2-v2-* symbols. Exactly 12 have an already-existing unversioned target; 28 do NOT. Renamed all 28 safe v2 tokens consistently across definitions/consumers and located contract/browser/static references, without introducing aliases or redeclaring public Theme COLOR roles. Kept 12 versioned collision cases separate pending semantic owner consolidation; raw v2 count by itself is NOT proof of duplicate public Theme systems.
+- Strict static anti-regression assertions added: 28 names absent, all 12 colliding pairs distinct. Native Select Chromium checks closed control page scheme vs inverse top-layer picker scheme, without changes to selector color paints. Tooltip uses Popconfirm geometry, no clipped triangle.
+- Require same-HEAD double CI and real Chrome before acceptance. No Tree/Controller changes, PR #267 Draft.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 current batch (pending CI)
+- User correction: Native ::picker(select) inverse is ONLY a CSS color-scheme switch on the picker pseudo element, no CSS color declaration changes, no Popconfirm arrow on picker. Closed native Select remains page scheme. Generated theme includes paired top-layer picker scheme-only selectors; strict Theme schema and browser coverage being upgraded.
+- Tooltip arrow now matches Popconfirm/Popover rotated square size/offset and four-sided border geometry; removes divergent clip-path triangle, consumes Tooltip surface background and preserves alpha. No Tooltip/Popover/Controller JS changes.
+- v2 private token audit confirmed nontrivial name collision risks (12 of 40 old v2 tokens collide with existing unversioned names in built CSS); rename ONLY proven collision-free tokens after checking references and tests. Legacy named tokens are not evidence of a second public Theme registry.
+- Draft PR #267, frozen Tree/TreeSelect CSS/JS and Controller remain unchanged. Pending exact-HEAD dual CI + browser + Windows offline ZIP.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 current-only offline annotations (CI pending)
+- Changed opt-in offline QA ledger to a single Preview 01 savings-targets native Select control (1 card/1 region) matching THIS consumer batch. Removed previous TreeSelect/ColorPicker highlights. Global Create/Preview surface color migration is not arbitrarily represented by unrelated card highlights. Strict static ledger/count gate updated, opt-in QA markers still excluded from production.
+- Official artifact/ZIP must match final dual-green HEAD; no old dist+docs acceptable.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 extended Chromium matrix (pending CI)
+- Expanded actual Chromium computed-style acceptance for 8 Styles × neutral/blue/orange × 2 page modes × 4 Menu options (192 cases). Asserts root, local inverse Popup, actual TreeSelect panel selector and non-Menu Popover scheme, plus native Select CSS chevron in two native class shapes matching opposite-page paint. This tests real computed background-image, not raw Theme variables. Keeps prior 64-mode Date/Time/Tree Choice/HEX checks and all frozen JS unchanged.
+- No success claimed before same-HEAD GitHub CI; tracked unverified until Actions finishes.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 Native Select + Create mode consumer closeout (CI pending)
+- Replaced native Select hardcoded light/dark data-URI SVG arrow with CSS chevron strokes colored by existing light-dark muted-foreground token. The two short diagonal strokes keep the old 24px SVG path width when scaled to a 1rem icon; no Portal/Controller/DOM change. External arrow-image remains optionally overridable (arrow-size also configurable). Eliminated .dark-specific SVG branch so inverse Popup descendants honor local color-scheme. Native picker still inherits OS scheme; geometry/focus/interaction unchanged.
+- Converted Create picker menu surface/border, preview canvas ring/backdrop, Preview01/02 backgrounds and Preview03 body background to scoped light-dark declarations; removed redundant :root.dark color selectors. Color sources, numeric shadows, layout, and Style recipes preserved.
+- Raised strict static acceptance for no mode-specific native arrow/Preview colors, no data SVG arrow. Pending: exact HEAD dual CI, full Chromium neutral/blue/orange x 8 Style x 2 page schemes x 4 menu variants, official exact-HEAD Windows dist+docs QA.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 CSS-order and offline QA contract
+- Migrated protected CSS concat source assertions to verify unique :root light-dark COLOR declaration and scheme-only .dark, preserving full 61-module verbatim concat. Updated offline QA to mark ONLY current Theme scope areas on Preview03 platform-tree and brand-studio (2 cards/2 regions); previous Tree-specific checkbox highlight removed. No runtime DOM/class change.
+- Exact-HEAD CI not yet green; official local Windows package not yet generated. Frozen Tree/TreeSelect/Controller unchanged. PR Draft/Open.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 legacy mode color consumer batch (CI not yet verified)
+- Consolidated fixed-values.css two paired legacy color projection blocks: three scroll colors + 27 older semantic/mode colors now resolve via light-dark() at consumer; unchanged aliases declared once; full Popup shadow geometry retained as the single mode exception. No Tree/TreeSelect/Controller modifications. Source color/formula operands untouched; rem/shape/focus/behavior unchanged.
+- Continue requiring exact-HEAD dual CI and real Chromium browser acceptance; not a claim of completed global migration.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-GLOBAL-001 (implementation checkpoint; CI not yet verified)
+- GitHub PR #267 Draft/Open at start: HEAD 8431c83c4c2bd2be4c4e355858d3d7a15c4d7a89; main 718da2a6be0bc71520adb0451429cd3d3d8320b3; old QXFRAME CI 38499590420 and CSS Schema 38499590409 both Success (not evidence for this change).
+- Bounded inventory scanned all 61 CSS source modules and Create app/preview CSS: global duplicated Theme COLOR declarations reside in generated main/theme.css; other .dark sites cluster in fixed-values.css, theme-visual-v2-style.css, native Select embedded SVG and Create shell; most components have no per-mode branches. Frozen Tree/TreeSelect JS/CSS untouched.
+- This batch changes compiler/export/default Theme to one :root owner per each of 78 COLOR light-dark() roles and invariant token, .dark switches color-scheme with only the registered keyword exception; existing inverse Popup roots flip local color-scheme without a duplicate palette, DOM or Controller changes. Fixed-values and shared consumer no longer override that Popup scheme. Strict closed schema and Create assertions upgraded; import validates compiler body as well as header.
+- Not completed: full non-Theme legacy CSS mode conversion (especially fixed-values and native Select SVG image), complete browser Style x Theme x Popup matrix, same-HEAD dual CI, offline artifact ZIP/CRC/HTTP. Do not claim Stage/global percent without audited denominator. Do not merge #267.
+
+## CURRENT — 2026-10-14 LIGHT-DARK-CORE-001 (migration in progress)
+- Starting verified HEAD b69c90316d56711551aa5ebf0a5a7f28f425c04c: QXFRAME CI 38488288711 / CSS Schema 38488288658 both Success; PR #267 Draft/Open, main unchanged.
+- Owner selects B: zero DOM change inverted Menu using existing Popup CSS selectors, opposite full Theme blocks and common --qxframe9a7c2-theme-color-scheme. No new inverse attribute, .dark class on Popup, extra palette, or JS surgery.
+- Explicit new migration: 78 registered color Theme tokens now compile as light-dark(light,dark), identical in the existing two full declaration blocks as a compatibility first stage. Keyword color-scheme stays light/dark (not a CSS color); fixed-values.css consumes the shared keyword instead of literal scheme, native form selects inherit their local color-scheme. Frozen Tree/TreeSelect/Controller source untouched.
+- Tests: a closed-registry light-dark static gate and adjusted Menu/source-native scheme checks; final dual CI/browser pending. Do not report full migration done yet: duplicated C pairs in two legacy blocks remain until export/schema consolidation; old mode-based output-only compatibility tokens and embedded non-color SVG URLs need audit. No fabricated Stage/overall %.
+- NEXT: pass exact-head double CI and browser style modes; migrate remaining legacy literal mode roles with safe equivalence; only then same-SHA official dist+docs Windows ZIP CRC/HTTP. Never merge PR #267 without owner approval.
+
+## CURRENT — 2026-10-14 Zero-DOM theme-level inverse Menu (CI pending)
+- User rejected [data-qxframe9a7c2-scheme="inverse"] and nested .dark in application DOM; both violate CSS-only theme selection. Theme configuration must enable inversion without changing authored DOM, runtime JS, or plugin portal classes.
+- Corrected compiler: default menu emits only :root and .dark blocks; inverted/inverted-translucent menu emits the SAME two complete Theme token blocks, with the existing .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel and .qxframe9a7c2-menu-overflow-panel selectors added to the opposite block under matching root light/dark ancestor. Explicit nested .dark is respected. Page and non-Menu Popover/Dialog stay normal.
+- Deleted DOM attribute selectors. Menu colors derive from normal light/dark palette; inversion occurs once at Theme declaration ownership, not in per-component tokens. Added one keyword token --qxframe9a7c2-theme-color-scheme as the sole semantic bridge for native color-scheme and light-dark() alignment; it flips with the same two blocks, and common popup CSS consumes it.
+- Updated Token closed registry, generator default Theme output, exact Theme owner schema and 3-style × 2-menu-mode real Popup browser matrix. No component JS or Tree CSS changes. QA is currently centered on platform-tree popup only.
+- PR #267 Draft/Open and main unchanged. No merge until user approves. Require exact-head QXFRAME CI + CSS Schema Acceptance both green, official dist+docs ZIP, CRC/HTTP13/13. Do not report finished with stale artifact.
+- Pending: verify all Menu/Picker browser cases and remove redundant legacy inversions progressively after CSS-only Theme system is proven, without relaxing source formulas or adding one-off component fixes.
+
+## CURRENT — 2026-10-13 Local inverse Theme scope (CI pending)
+- Request: replace bespoke inverted Menu component adaptations with an actual subtree scheme switch consuming exactly the existing .dark / :root Token declarations. CSS color-scheme alone does not switch CSS custom property values.
+- Added [data-qxframe9a7c2-scheme="inverse"] as an alias to the TWO generated Theme token blocks: in light page it selects the exact .dark block; under nearest .dark ancestor it selects the exact light :root block. The :not(.dark *) guard avoids the light-page inverse rule overriding nested .dark inversion.
+- Set color-scheme:light/dark at the same scheme boundary, preserving native widget and light-dark() behavior, plus foreground inheritance on inverse roots. No additional Theme Token, no duplicated token blocks, no component-specific inverse CSS, no JS/Tree edits.
+- Independent Chromium style test on generated blue Nova scheme (light root, light-page inverse, nested .dark, dark-page inverse) confirmed exact matching values for --theme-background/foreground/primary and color-scheme in both directions.
+- Theme Studio continues to compile two ordered full token blocks; generator default src/styles/main/theme.css mirrors this. Added static and Chromium tests for three style presets and both root schemes.
+- Integration note: portals mounted outside a triggering subtree do not inherit it; put the scheme attribute on the actual portal root. This adds a general mechanism; legacy Menu generator 'inverted' palette strategy is not yet migrated and should not be claimed as removed. Keep PR #267 Draft / not merged; double CI and same-HEAD Windows ZIP pending.
+
+## PREVIOUS — TreeSelect real portal checkbox regression (CI verified green)
+- Owner screenshot proves Light-page inverted Menu TreeSelect check/mixed marks render floating with missing box, while a Dark-page standalone Tree has visible square; prior 64-mode Chromium test used a *fabricated* .picker-field-panel containing a Tree.
+- Definitive root cause: actual TreeSelect portal is .qxframe9a7c2-tree-select-panel.qxframe9a7c2-popup-surface, NOT .picker-field-panel, so previous overrides never matched. Real original-browser CSS computed checked bg oklch(0.205) light-page black against dark popup; Chromium with corrected portal selector and transitions disabled measures checked/mixed bg oklch(0.922) and on-menu dark glyph, unchecked transparent with visible menu-local border.
+- Fixed src/styles/main/theme-visual-v2.css by moving private solid Menu Primary role to shared popup surface and applying contextual checkbox visual projection only to .tree-select-panel. Tree JS/CSS, TreeSelect JS, Choice source unchanged.
+- Rebuilt 64-case Chromium fixture with actual sibling TreeSelect popup wrapper and explicit checked/mixed/unchecked; no more synthetic PickerField containing Tree. Source gate checks actual selectors. Offline QA only platform-tree's TreeSelect control (1 card / 1 region); older yellow markers removed.
+- Prior validated baseline d0c774331102c25742cf5e8c016878207ff27030, double CI green; PR #267 Draft/Open. Next: exact-head double CI, successful official GitHub dist+docs artifact, complete Windows ZIP CRC/HTTP13/13. No merge or false completion percentages.
+
+## CURRENT — 2026-10-13 Stage5 screenshot follow-up (CI pending)
+- Resumed verified green 5b3177096b190a9cf05e0342acefc80710e78ef9, PR #267 Draft/Open; the owner reports light-inverted menus lost ColorPicker visible outline and the themed Today dot / WheelPanel guide became white or neutral. Screenshots also show TreeSelect Choice checkbox contrast against dark popup.
+- Root cause: Theme V2 late popup consumer explicitly changed today ::after to menu-foreground and Wheel guide to neutral menu-foreground mixes, regardless of primary theme; ColorPanel local focus was derived from light page Pointer/Focus; TreeSelect visual Choice used page Primary while nested in dark Menu. @scope (:root) is the pinned canonical single scope, not a rogue selector.
+- Implement one shared Picker Menu Primary solid color by unpremultiplying theme-menu-accent's alpha in a private CSS role using modern relative oklch. No extra generated Theme token, no theme-specific selector. Today ::after uses this solid Menu Primary (Neutral uses contrast white in dark popup, colored palettes retain hue); Wheel guide uses menu-accent border and menu-selected-soft background. ColorPicker embedded descendants use menu foreground for 2px / -1px keyboard outline and Menu Primary for pointer focus + active swatch. Picker-contained TreeSelect Checkbox projection uses Menu primary/on-menu roles; real Tree state/DOM and standalone Tree CSS/JS untouched.
+- Current QA ledger 3 Preview03 cards (Release Scheduler, Brand Studio, Workspace Explorer), four current-only highlighted trigger regions; previous QA highlights cleared. Added 64-style/mode Menu regression assertions for today pseudo, Guide color, ColorPanel selected borders and TreeSelect checked/mixed/unchecked popup-vs-global. Source gate adjusted to reflect contextual popup visuals.
+- NEXT: exact HEAD QXFRAME and CSS Schema, correct any failures without loosening pinned schema, build official same-SHA dist+docs Windows offline ZIP from Actions artifact, verify CRC/13 HTTP endpoints, PR #267 must remain Draft, never merge without explicit approval. No ungrounded progress percentages.
+
+## CHECKPOINT — 2026-10-13 CI pinned Menu ColorMix source
+- QXFRAME CI run 38396117774 stopped at verify:phase-f-token-graph on new unregistered menu-foreground 52%, 76%, 36% mixes. Existing shadcn/source mapping allows 12% and 26% Menu foreground; re-used 12% track/guide fill and 26% thumb/guide edge, and solid Menu foreground only for scrollbar hover. Did not weaken canonical ColorMix gate.
+- NEXT same-head dual CI and real Chromium computed paint, official ZIP only on green.
+
+## CURRENT — 2026-10-13 Stage5 user screenshot visual batch (exact-head CI pending)
+- Resume baseline ddcd50bd6a598838edef1754964dd72e65af8d04, PR #267 Draft/Open and dual CI green before current edits.
+- Owner screenshots: inverted menu today dot / blue subtle selection / scroll thumb & wheel guide; Cascader column padding; Transfer and Upload Dropzone corners too large; Modal open sometimes centers; Tabs vertical action padding and default segmented look.
+- One Menu dark palette source (inverse-light and dark). Raise shared subtle Menu accent alpha 14%→28%, regenerate both default Theme values. Today marker / Scroll track & thumb / Wheel guide derive from Menu foreground (not page Primary or light Scroll).
+- Nested radius from existing theme-radius-item (no new Theme slots): Transfer-panel and Upload-dropzone; public override remains first. Cascader columns use existing fixed spacing. Tabs JS default segmented while explicit line/card remain supported, restore tab-action vertical padding. Modal delayed pointer valid 2.5s and focused trigger center fallback, autoOpen still centers; Tree/TreeSelect unchanged.
+- Offline QA only this batch: seven Preview03 Cards, eight regions. Static source regression gates, JS parity allowlist narrowly includes owner-authorized Tabs source. NEXT exact HEAD dual CI/Chromium, official dist+docs artifact, full Windows ZIP CRC/HTTP. No auto-merge, no unsupported completion percentages.
+
+## CURRENT — 2026-10-13 Stage5 P2 Preview03 font and Motion batch (CI pending)
+- Verified initial HEAD dcf5ba425e04cd447a788d10dc9e11b6ec4c4aed, PR #267 Draft/Open/unmerged, both exact-head workflows Success; previous Windows ZIP complete.
+- Fixed Preview03 hero + full-coverage section headings to use existing Theme heading font; replaced fixed .16s/.2s in event-stream and workflow-state private composition with Theme duration-sm/md, including Motion:none => 0ms.
+- New QA ledger exactly 2 Preview03 Card regions, previous highlights removed. Static and 8 Styles x 2 modes computed-style browser assertions verify heading font and standard/none Motion.
+- NEXT: final-HEAD dual CI, successful official Actions dist+docs, full Windows offline ZIP with CRC and QA/highlight verification; never merge PR without owner approval. No reliable denominator for Stage/overall completion %.
+
+## CURRENT — 2026-10-13 Stage5 neutral controls + Tooltip batch
+- Baseline: b0762de7968202a83491b74e35ac1b4c47ce408f, PR #267 Draft/Open; QXFRAME CI 38365780345 and CSS Schema 38365780326 Success. Official artifact 11797765587 matched branch SHA. Full Windows dist+docs old-baseline ZIP created with six prior highlights, CRC and HTTP 13/13 validated. Local Chromium blocked by managed browser URL policy; do not report local Chromium success.
+- New batch: checked Radio/Checkbox wins Hover border; Tooltip inverse theme + rotate(45deg) square/outward clipping; Upload Dropzone Flex column no wrapping; ColorPanel dual hue+alpha rails/preview equal height; Popconfirm icon first-line text alignment; SelectGroup inline indicator and label center; Avatar neutral and explicit backdrop separator override; Badge default/dot neutral and indicator follows exterior; Alert description neutral; Secondary Button muted neutral. Build offline QA Python concatenation repaired and current highlighted cards switched to this batch only.
+- Tree main-identical JS/CSS/contract files were not modified. PR #267 remains Draft and shall not merge before owner acceptance. This change needs new exact-head double-green CI plus official artifact before calling QA complete. No objective Stage/overall denominator; no fabricated percentage.
+
+## CURRENT — 2026-10-13 S5 Navigation/Tree/Tooltip/Dialog follow-up
+- Parent HEAD bb9e1f93df93b1b67dfb74c8f6e60fc490835efa already passed QXFRAME CI 38358999152 and CSS Schema 38358999243. User reported final visual gaps; PR #267 remains Draft, never merge.
+- Navigation Menu (the main menu, NOT portalled dropdown): Theme V2 paints Hover/Active/Selected/Open backgrounds using a local translucent Primary or Sidebar foreground mix, and uses --qxframe9a7c2-theme-sidebar-foreground for all text instead of inverse Menu popup ink. Portalled submenu popup retains its own Menu inversion.
+- Tree: shared Item/Popup rules exclude .qxframe9a7c2-tree-item from Open/Selected/Descendant/Indeterminate background roles. Only genuinely selected Tree node gets Primary text. Keep class, keyboard focus and hover semantics; official Tree JS/CSS unmodified.
+- Tooltip: actual arrow paint derives from --_qxframe9a7c2-popup-surface-bg, same as Tooltip content container. Outside-only non-overlapping clip-path triangle avoids double alpha; no Tooltip rotate declaration from shared Popover rule. All four placements remain supported.
+- Dialog: independent registered Theme --qxframe9a7c2-theme-dialog-mask-blur in the closed createApp token list, compilation 0.375rem when translucent / 0 normally, max .5rem via CSS clamp, no inherited Theme Menu 1.5rem blur. Both root/dark generated theme blocks updated; local dialog override remains supported; maskless always none. 
+- QA only highlights six new region slots on Preview03; previous 13-card highlights cleared. New CI and Chromium evidence required; do not claim passed before exact-head green.
+
+## CURRENT — 2026-10-13 S5 visual consistency batch HEAD under CI
+- Implemented 13 current regions across WheelPanel/Picker, theme-derived semitransparent Scroll, structural-only Tree Open, ColorPanel roundness, Message/Notification Card border, Date/Period Today+Current dot, actual Popconfirm Button.is-sm/full-width, Popover padding, and independent darkened Modal/Drawer masks + blur + depth. Current-only Preview03 QA ledger replaces previous Tree rollback highlight. No changes to official main Tree JS/CSS. No PR merge.
+- CI rerun required. CSS role test updated to reflect Tree exclusion and canonical WheelPanel paint. Rollback/P1 baseline preserved.
+
+## CHECKPOINT — 2026-10-13 official main Tree toggle exempt from Stage5 Shape Theme axis
+- CSS Schema 38350068378 reached Chromium and failed only because old Stage5 shape matrix expected Tree toggle radius=0 when user explicitly restored main Tree. Independent Chromium measurement of main confirms original toggle remains 50% even under radius:none. Remove only Tree toggle entry from 25-part Theme-shape matrix (24 others kept under 8x2x2 strict evaluation). Keep exact main Tree CSS, not modified to satisfy rejected Stage5 policy. Next dual green CI and official artifact; no merge.
+
+## CHECKPOINT — 2026-10-13 main Tree verified paint semantics
+- Independently measured actual main official qxframe CSS in Chromium: Tree Normal transparent; Tree Open and Tree Selected both consume the standard muted Item state. This is identical to official main and intentionally differs from prior Stage5 custom neutral Open variant. Removed outdated Stage5-only transparent Open test; retained independent Menu accent comparison. Main Tree CSS/JS source left exact. Re-run full browser CI.
+
+## CHECKPOINT — 2026-10-13 generated TreeSelect schema restored
+- QXFRAME run 38349675889 passed earlier build verifications and found docs-generated API schema still exposed twelve removed TreeSelect options. The only differences in docs/generated/component-api.json and generated contract segment of docs/assets/qxframe9a7c2-component-api.js against main are TreeSelect parameters; restore both exact main Git blobs. Recheck docs sync/strict contract CI. No merge.
+
+## CHECKPOINT — 2026-10-13 official Tree legacy corner exemption
+- QXFRAME run 38349523253 failed early static gate because Stage5 test required theme-radius role inside tree.css, contrary to exact main tree.css restored per owner. Retained main blob and excluded only Tree from new Stage5 corner test; all other components remain gated. Exact HEAD dual CI pending. No merge.
+
+## CHECKPOINT — 2026-10-13 Tree rollback QA annotation scope
+- Offline QA ledger now highlights only Preview03 platform-tree: workspace-tree and workspace-tree-select (2 regions); previous Menu P1 QA highlight is cleared, with underlying Menu fix intact. JS parity source gate updated to strict official main Tree/TreeSelect. Exact-head dual CI still required.
+
+## CHECKPOINT — 2026-10-13 Tree official 3000-node Chromium update
+- Removed Stage5-only lazy-retry/paging/edit browser checks; actual 3000-node gate now tests published Tree visible-key model, bounded VirtualList DOM and expansion/checked state. QA page rebuilt with only official options; tree.js/tree-select.js/contracts/tree.css are exact main blobs. New HEAD needs dual CI and official artifact. No merge.
+
+## CURRENT — 2026-10-13 Restore Tree to production main (CI pending)
+- User rejected experimental Stage5 Tree as buggy; authoritative main HEAD 718da2a6be0bc71520adb0451429cd3d3d8320b3; previous Stage5 HEAD 6ddbb3118289e012a2c10c3197d7874a8d0a3b27; PR #267 remains Draft/Open, never merge.
+- Restored exact Git blobs from main for Tree JS, TreeSelect JS, componentContracts, Tree CSS; removed Stage5-only Tree state-paint rules; Preview03 uses only existing official API and static children. All other components and P1 Notice/Menu edits untouched.
+- IMPORTANT next: update Stage5 Tree-only static/Chromium gates and 3000-row QA to official capabilities, verify CI and package successful exact-head Actions dist+docs. Do not reintroduce retryLoad, inline Tree editing or loadMore paging.
+
+## CHECKPOINT — 2026-10-13 P1 computed ink CSS Color4 browser gate correction
+- CSS Schema run 38346639362 validated earlier browser gates, then failed our new P1 check because Chromium returns modern computed colors as `oklch(...)` rather than `rgb(...)`; visual ink not confirmed defective. New test now dynamically compares resolved Menu accent ink to resolved Popover foreground on the same actual iframe element, both color modes and radius values, without assuming legacy serialized color syntax. All previously passed real Notice radius zero/nonzero computed tests retained. New exact-head dual CI needed. PR #267 Draft/Open.
+
+## CHECKPOINT — 2026-10-13 P1 generator source of truth (CI fix)
+- QXFRAME run 38346425250 failed verify:theme-default because first P1 commit updated compiler but left generated src/styles/main/theme.css stale. Nova/neutral Popover foreground = light oklch(0.145 0 0), dark oklch(0.985 0 0). These differ from old Primary 0.205/0.922. Matched generated output for two changed Token values; kept Scheme A: subtle=Popover ink, bold=Primary ink. Updated static expectations. Handoff 0.205/0.922 values reflected old Primary and cannot simultaneously equal compiler's new Popover ink. Verify canonical builder CI and browser.
+- Next exact-head dual CI and Message/Notification real-radius/browser evidence. No merge.
+
+## CURRENT — 2026-10-13 Stage5 Token Audit P1 (implementation, CI pending)
+- Resume verified branch redesign/create-stage5 / PR #267 Draft/Open, HEAD 7e8060b70f1c95524ed3bb7ce6b60a367226b30d; QXFRAME CI 38344282173 and CSS Schema 38344282290 were Success for the preceding Tree source, not for this change.
+- P1 #2: changed docs/create/compiler.js only for subtle foreground: source popover-foreground; bold remains primary-foreground. Canonical default theme light/dark already contained oklch(0.205 0 0)/oklch(0.922 0 0), so no manual generated theme.css change required. Choice mark contrast remains explicit src.popover for neutral foreground filling, bold src.primary; do not conflate disclosure and selection.
+- P1 #1: real Notice Slot / Message Root / Notification Root now explicitly receive V2 radius geometry computation with --_surface-radius/--_action-radius and existing override ownership. Card root, stacking proxy and close can follow Theme radius including zero. Do not edit the 18 suspected families blindly.
+- P2 #9 verified literal Notice box-shadow transition 180ms, connected to theme-duration-md instead; other P2/P3 remain evidence-pending.
+- Added static and Chromium regression (real Notice create, two modes, zero/nonzero Radius), retaining Tree 3000 stress gate. Offline QA cleared old Tree highlights and scopes one Menu Preview03 region only; Notice is a floating overlay inspected in component demos.
+- NEXT: exact-head dual CI and real Chromium evidence. If successful, official matching Actions dist+docs artifact, ZIP CRC/QA JS/HTTP routes, PR remains Draft, no merge. Stage5 visual owner acceptance and P2/P3 evidence triage still incomplete. Completion percentage: not recalculated without evidence-based coverage denominator.
+
+## CHECKPOINT — 2026-10-13 Stage5 static verifier adapts to narrowly authorized TreeSelect contract
+- QXFRAME run 38344117231 failed in verify:create-app at a stale literal string requiring old unauthorized-source filter. Updated the assertion to require the new stricter filter with `coreContractAllowed` and the exact TreeSelect schema-only guard. Separately compared main/current core file: only 12 new options, 85 old options same order, byte-identical remainder.
+- Retry dual CI; do not merge PR #267. Full 3000-node Chromium suite already passed on preceding source; only JS parity closure remains.
+
+## CHECKPOINT — 2026-10-13 QXFRAME JS parity after full Tree browser pass
+- CSS Schema Acceptance success and QXFRAME createApp / 3000-row Tree Chromium successfully passed on prior HEAD `75772db529af906ce015b676b36e62f67e2dfd97`.
+- QXFRAME release failed only on unauthorized source diff `src/core/componentContracts.js`. The user authorized exactly 12 new TreeSelect public options; verified narrow allowlist now checks added keys exactly, ensures original key order unchanged and compares all other file bytes to main with only that schema segment normalized. No blanket componentContracts exception.
+- Next: dual latest-HEAD CI, exact Actions dist+docs full Windows QA ZIP and true final state. PR #267 remains Draft/Open.
+
+## CHECKPOINT — virtual Tree inline rename DOM reconciliation (2026-10-13)
+- CI run 38342415739 passed 3000-node mount, virtual DOM and first lazy failure/retry; failed when clicking the visible rename action because virtual same-key row did not expose inline input immediately. Added narrow Tree-owned row content reconciliation after state refresh for both begin and finish edit. Does not discard virtual scroll state, replace VirtualList or touch ItemCollection root.
+- Next check 3000-node action/edit/scroll stages under exact HEAD dual CI, then official dist+docs Windows package.
+
+## CURRENT — Tree lazy and virtual paging CI correction (2026-10-13)
+- PR #267 is Draft/Open. Latest resumed head `2e77323df8f96b402a9752f3420ee8b7cb4ec486` failed both CI workflows due to the real 3000-node browser test waiting for the first simulated lazy error.
+- Exact cause: Tree per-node `loadRecord` and scroll `appendPage` checked `result.isCurrent()` *after* `AsyncTask.run` had resolved and cleared its active task. That predicate is always false even on a successful, current completion. AsyncTaskGroup already omits stale results; keep the independent paging generation guard and drop late re-check. Both consumers now accept non-null result with destroy/generation protection.
+- Added static regression to prevent future double-check; preserve browser 3000-node virtualization, retry, editing, auto pagination gate. Wait for dual green CI, official Actions artifact, complete Windows dist+docs ZIP with only current Tree/TreeSelect QA highlights.
+- No merge/main/backup changes.
+
+## CURRENT — 2026-10-13 3k Tree browser gate root-cause
+- CSS Schema run 38340698279 reached last Chromium step and 3000 virtual QA mount timed out. Verified actual public runtime export: `BuildingBlocks.Tree` in src/runtime/runtime.js; Tree is **not** one of Components' 40 public component adapters. The demo incorrectly used Components.Tree. Fixed real demo to use Q.BuildingBlocks.Tree, and browser assertion to report missing exports instead of silent timeout. Preserve strict 3k virtual/lazy/rename/scroll checks.
+- Next: both exact-head CI green then Actions full dist+docs artifact / Windows ZIP. PR #267 Draft/Open, never merge.
+
+## CHECKPOINT — 2026-10-13 TreeSelect generated Docs API synchronization
+- QXFRAME run 38340428457 reached verify:docs-api and detected stale generated contract params block after Schema extension. Rebuilt docs/assets/qxframe9a7c2-component-api.js generated block using the exact tools/sync-docs-api-contracts.mjs algorithm and current docs/generated/component-api.json, without touching handwritten API docs. Next: exact head dual CI / Chromium / full dist+docs artifact.
+
+## CHECKPOINT — Stage5 TreeSelect strict schema (2026-10-13)
+- Live Theme Studio CI identified concrete Preview03 mount failure: TreeSelect does not accept unknown option 'lazy'. The public ComponentContract was updated to register lazy/edit callbacks and paged scrolling options, forwarded to canonical inner Tree. Do not remove lazy from Preview03 or disable strict option contracts.
+- Next: check exact-head CI and actual Chromium Tree 3000 virtual stress; official ZIP only on green. PR #267 remains Draft.
+
+## CHECKPOINT — Stage5 Tree paging async ownership (2026-10-13)
+- Audit found direct AbortController in paged Tree; replaced with existing canonical AsyncTaskGroup, consistent with lazy loadChildren and stale-response cancellation. DOM.listen owns scroll lifecycle; registered Theme destructive role used for failure icon. No bypass to gate.
+
+## CURRENT — 2026-10-13 Tree Layui/video reference, lazy branches and large virtual paging
+- PR #267 Draft/Open. User requests video-style Tree actions (add/rename/delete), Layui-like disclosure/lines/checkbox/disabled and both lazy node loading and thousand-row VirtualList with incremental scroll paging.
+- Tree JS includes opt-in per-node actions (emit callbacks, never silently mutate external data), lazy=true + item.hasChildren flag with loadChildren and explicit retryLoad; large paged roots loadMore({cursor,pageSize,signal}) on near-bottom Scroll, abort/revision guards and page stats; delegates viewport windowing to ItemCollection/VirtualList. TreeSelect forwards lazy and operations. Standard tree showLine adopts box toggles and dotted connectors. Preview03 Tree + TreeSelect demo includes lazy Partners and edit operations.
+- Next: exact-head CI static and Chromium (including 3k nodes / scroll paging / lazy retry) and matching official full Windows dist+docs offline ZIP. Only platform-tree Card 2 regions QA highlighted; no main/backup changes.
+
+## CURRENT — 2026-10-13 Tree Layui/video behaviors + large-data loading
+- PR #267 Draft/Open, branch redesign/create-stage5; no main/backup merge. Owner requires Layui-like Tree (plus/minus lines, checked cascade, disabled, click), video-style inline add/rename/remove, async per-node lazy loading with explicit hasChildren/leaf signals, and *large-data virtual list with incremental scroll pagination*.
+- Prior Stage5 Tree Color separation accepted by CI at 0f944067 (QXFRAME + CSS Schema green); continuing from that exact source only.
+- Canonical Tree and TreeSelect reuse existing ItemCollection/VirtualList instead of duplicating virtual-scroller implementation. New Tree loadNextPage with loadMore({cursor,pageSize,signal,tree}), hasMore/pageCursor, passive near-bottom listener, in-flight throttle and destroy/data-reset invalidation; source CSS contains optional inline operations (callbacks, no silent business-data mutation), showLine plus/minus boxing, lazy error/retry.
+- Tree/TreeSelect are explicitly added to exact JS deviation allowlist; unrelated JS stays parity checked. Next: actual Playwright/CDP browser verification for virtual 1000+ data, scroll paging, lazy retry and edit; docs/create QA only platform-tree 1 card / 2 regions; dual CI/official offline artifact required. Do not claim full acceptance before gates.
+
+## CURRENT — Stage5 Tree Open vs Selected visual fix (2026-10-13; CI pending)
+- User's Preview03 Workspace Explorer showed Company/Product solid blue despite merely expanded and partially checked. Canonical Tree Open/descendant/indeterminate must be structural and visually neutral; only Selected receives selection highlight.
+- Fixed Theme V2 Tree row state mapping (standalone and embedded TreeSelect), preserves neutral hover, independent selected+open and existing Menu/Cascader popup rules. Choice projection no longer inverts canonical Tree checkboxes merely because ancestors are expanded.
+- Offline QA current batch: only Preview03 platform-tree Card's workspace-tree + workspace-tree-select regions (1 Card / 2 regions); prior highlights cleared. Static/Chromium state regressions and exact-head GitHub CI plus Windows dist+docs artifact are next.
+- PR #267 stays Draft/Open; main and backup untouched. Baseline `f3898829d6963be64288baa58e4f874765f16c31` previously had both workflows successful; Stage5 still pending owner acceptance.
+
+## CURRENT — Stage5 hosted Tag chip horizontal padding regression fix (2026-10-13; CI pending)
+- PR #267 remains Draft/Open on `redesign/create-stage5`, no main/backup edits, do not merge. Started from previously verified head `32ce4173526b47e188ff0feaa3b4270be8dcf780` with both earlier workflows green.
+- Owner reported TagInput outer padding now correct but internal Tag text sits against chip borders. Root cause: `src/styles/components/native-input.css` set hosted `--_qxframe9a7c2-compound-item-inset:0px`; `tags.css` uses that slot for actual chip `padding-inline`. The earlier shell-padding fix conflated two independent insets.
+- Fix only hosted chip inset to shared `--_qxframe9a7c2-fixed-space-2`, identical to Select Multiple Tag chip. Keep symmetric compound control shell inset, row heights, editors, close icons, standalone Tags, and ordinary Input unchanged. Add strict static and 8-Style × 2-mode × sm/md/lg browser measurement for nonzero symmetric chip padding and Select parity.
+- Offline QA reset to only Preview03 customer-quality / customer-tags (1 Card / 1 region); earlier highlights cleared. New HEAD requires dual green CI and matching official full dist+docs Windows offline package; CRC / QA JS syntax / HTTP gates before owner visual acceptance.
+
+## CURRENT — Stage5 real Cascader Popup Chromium gate (2026-10-13, dual CI pending)
+- Existing 90/90 browser checks on cea35914 predecessor passed; a new browser assertion now opens the actual Preview03 Cascader, clicks United States > East, verifies 3 adjacent columns and no horizontal overflow. This addresses user requirement previously only covered by synthetic three-column checks.
+- Real interaction gate adds no relaxing of existing Chromium assertions; PR #267 Draft/Open; no main or backup writes. Local Chromium direct navigation is blocked by runtime policy (ERR_BLOCKED_BY_ADMINISTRATOR), so exact-head GitHub Actions Chromium is the authority.
+- Next: dual CI green on this final HEAD; matching official Actions full dist+docs -> Windows QA ZIP, verify node syntax, 14 HTTP paths, CRC; owner visual acceptance still pending.
+
+## CURRENT — Stage5 explicit Cascader runtime authorization (2026-10-13; dual CI rerun pending)
+- QXFRAME CI 38327606362 completed all 90 Create Chromium browser assertions; failed the next JS build gate `verify-js-build-matches-main` solely because `src/components/cascader.js` was missing from Stage5's explicit authorized deviation list. CSS Schema CI 38327606305 succeeded.
+- User explicitly authorized this Cascader multi-column, hidden vertical Scroll and PopupFrame runtime fix. Updated the *exact* JS authorized source list with Cascader only; unrelated JS must still equal main, all emitted names and deterministic current-head rebuild must still match. Strict separate static test asserts both Cascader y-axis ownership and the narrow authorization presence. Do not revert Cascader to old horizontal scroll just to pass parity.
+- Next: exact-head dual CI success, matching official dist+docs artifact, full Windows local ZIP with CRC, QA node --check and 14 HTTP checks. PR #267 Draft/Open, main/backup untouched; owner Stage5 acceptance still pending.
+
+## CURRENT — Stage5 Menu Choice contrast correction (2026-10-13, new dual CI pending)
+- PR #267 remains Draft/Open; only redesign/create-stage5 changed, main/backup untouched.
+- Previous commit 8522a34c disabled transient MenuItem transitions in Chromium measurement only; exact Open/hover assertions unchanged. CSS Schema 38327102701 advanced beyond Menu Open to first actual failure: vega/false/subtle Checkbox mark ink contrasts with its foreground-colored fill.
+- Cause: Open Checkbox fill used menu-accent-foreground (subtle = opaque Primary) while mark stripped alpha from menu-accent (also Primary), so the two matched. Registered closed Theme `menu-accent-contrast`, derived from opaque Menu surface in subtle and Primary in bold, consumed only in choice-visual.css; compiler, default theme root/dark and strict static checks updated together.
+- No old accepted artifact can certify this round. Cascader real popup interaction and full 8-Style/light-dark matrix remain pending final CI.
+- Next: repair first real CI failure (if any), obtain dual green on exact HEAD, package matching official dist+docs artifact as Windows START-DEMO.cmd full ZIP, node --check QA, 13+ HTTP paths and CRC. Stage5 owner visual acceptance pending.
+
+## CURRENT — Stage5 Menu Open state final paint correction (2026-10-13, CI pending)
+- PR #267 stays Draft/Open; main and backup untouched. No rollback of Stage3/4, original style and DOM/Controller policy retained.
+- User's current requested round: distinct Input Look outline/tinted/subtle (including dark mode), Open vs Hover for Tree/TreeSelect/Cascader/Menu with bold/subtle accent and Choice-owned inverse Checkbox, TagInput/Select Multiple symmetric outer padding, contiguous Cascader columns without horizontal scroll/gaps. Previous commits contain those changes; browser acceptance matrix enforces multiple Styles and both color modes.
+- CI on HEAD `92c9d0d7` failed both workflows at the SAME Chromium computed-style assertion: `vega/false/subtle Menu Open consumes its local Menu accent`. Actual Open background was `oklab(0.922 0 0)`, expected dynamic translucent menu accent `oklch(0.922 0 0 / .14)`. Root cause: Menu render channel `--_qxframe9a7c2-menu-render-background` was still resolved through the earlier `--_qxframe9a7c2-menu-recipe-expanded` slot, bypassing generated `--qxframe9a7c2-theme-menu-accent` even after fixing item background.
+- New correction in `src/styles/components/menu.css` and `src/styles/main/theme-visual-v2.css`: both Open item and effective render background/ink consume dynamic Menu accent + accent-foreground directly; Hover is still independently neutral, selected keeps own state. `tools/verify-create-app.mjs` static strict checks now explicitly reject legacy expanded-recipe overriding final Menu paint. Dynamic Chromium checks still use computed paint without tolerance weakening.
+- Latest code patch `ea0c1ad8` is under dual CI review. Do **not** describe the current-HEAD offline package or visual fixes as accepted until QXFRAME CI and CSS Schema Acceptance both succeed on the exact SHA. Prior green b5c53913 offline artifact is obsolete for this round.
+- Next: check newest PR HEAD/CI, repair remaining actual failures without disabling assertions, then download same merge SHA's official dist+docs CI artifact, build complete Windows offline package (START-DEMO.cmd), validate QA module `node --check`, 13 HTTP paths and ZIP CRC, return exact download link. Scope 4 Preview03 cards/5 regions only, clear earlier highlight.
+
+## FINAL GATE CORRECTION — 2026-10-12 (await latest dual CI)
+- Open / Hover CSS has explicit **standalone Tree** background/color paint (generic item paint previously resolved neutral accent instead of its local Menu theme accent). Disabled/check-disabled remain protected.
+- Menu root Open priority was incorrectly Hover first: `src/styles/components/menu.css` now resolves expanded accent+foreground before Hover; explicit Menu recipe override still has priority. Added Chromium local-palette Menu and Tree Open/Hover checks rather than cross-comparing inverted Popup and page-local Tree.
+- Choice Open Checkbox mark uses `oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)` to remove soft accent alpha while retaining exactly the Menu theme hue; no extra Theme token. CSS token verifier now narrowly recognizes this exact **registered Theme-token-only relative color** as nonliteral (physical hard-coded color gate unchanged). Previous release CI failed only because it counted this expression as a fixed color.
+- User-visible deliverable is blocked until latest QXFRAME + CSS Schema jobs succeed on the exact SHA. PR #267 stays Draft, no merge; must use official artifact corresponding to that SHA and 4 Cards / 5 QA regions.
+
+## CURRENT — 2026-10-12 Stage5 Input / Menu Open / Cascader QA closeout (final CI pending)
+- PR #267 Draft/Open, do not merge; main/backup unchanged. Last accepted Stage5 offline baseline was b5c53913, which predates this visual batch.
+- Implemented: Input outlined background transparent in both themes, subtle/tinted/soft at 12/35/50% Input alpha; compiler output and canonical theme.css kept in sync. Hosted TagInput and Select Multiple equal inline/block compound inset.
+- Cascader: popup width reflects level count; adjacent bounded flex columns, no horizontal scrolling or extra whitespace, search one column. PopupFrame still owns hidden vertical Scroll; horizontal ScrollVisibility dependency/obsolete assertion removed. Each list continues its own vertical option scroll.
+- Popup/Cascader/TreeSelect/standalone Tree/Menu: Hover remains neutral; Open uses local Menu accent and paired foreground (subtle = theme primary alpha, bold = opaque theme primary). Tree's actual Open paint explicitly consumes the local accent, avoiding accidental generic item-background precedence. Menu's expanded source now wins over hover-first context.
+- Checkbox paint owner is choice-visual.css only: Open row reverses to accent foreground box and opaque relative accent mark (also readable when subtle accent has alpha); theme/menu must not directly own Tree Checkbox glyphs.
+- Chromium/source gates: eight Styles/light-dark Input look, compound insets, popup/tree/menu Open/Hover, checkbox contrast, contiguous Cascader columns, owner restrictions; offline QA only current 4 Preview03 Cards / 5 changed regions. Browser assertions compare each rendered item to its local menu context, not an unrelated inverted Popup color. Strict CSS Schema, Theme equivalence and controller gates preserved.
+- Final tasks: verify both CI success on exact latest HEAD, extract matching official dist+docs artifact, build and CRC/Node-syntax/HTTP-test complete Windows offline ZIP, then user visual acceptance. Stage 5 overall is not complete; no invented percent.
+
+## FOLLOW-UP — 2026-10-12 Stage5 Cascader ScrollVisibility ratchet migration (CI pending)
+- Cascader no longer needs horizontal column reveal. Removed obsolete `ScrollVisibility` import and x-axis ensureVisible. It remains `PopupFrame.attachViewport`-owned with y-axis/hidden scrollbar, and adjacent flex columns are bounded by Popup width.
+- Updated `tools/verify-shared-utility-authorities.mjs` to assert correct **new architecture** rather than require deleted horizontal behavior: PopupFrame ownership must exist; axis/wheel y only, custom scrollbar hidden; no horizontal reveal and no direct scrollLeft geometry. The previous strict guard against duplicate scroll geometry remains.
+- Other prior phase checks for PeriodPanel/WheelPanel still assert their shared ScrollVisibility ownership. This migration is Cascader only.
+- PR #267 remains Draft; latest dual CI and Windows dist+docs offline ZIP require exact current-head evidence before delivery.
+
+## FOLLOW-UP — 2026-10-12 Stage5 standalone Tree Open visual alignment (CI pending)
+- The previous Popup-only Open color consumer missed standalone Tree. Added `.qxframe9a7c2-tree .qxframe9a7c2-tree-item.is-open:not(.is-selected)` in Theme V2 consumer: the **item only** gets Menu theme Open accent/foreground. Tree/list root still has no forced background/border/foreground.
+- Canonical `choice-visual.css` now projects reverse Checkbox colors for standalone Tree Open as well as Popup Open, while ordinary Tree Choice states remain global. Added Chromium computed-style checks for standalone Tree Open, ink, Checkbox background across Style/light-dark/Menu bold/subtle, and static owner checks.
+- Final CI must be green on the exact updated HEAD before packaging. No merge main/backup; PR #267 stays Draft.
+
+## CURRENT CORRECTION — 2026-10-12 Stage5 shared ownership + default Theme (CI pending)
+- Input Look compiler/Theme changed together: `outline` transparent in both modes, `subtle` 12%, `tinted` 35%, `soft` 50%. Canonical `src/styles/main/theme.css` root/dark defaults updated to match compiled output; do not loosen Theme equivalence gate.
+- Popup Menu Hover stays neutral. Open is theme-menu-accent and menu-accent-foreground; menuAccent `subtle` = primary/14 with primary ink, `bold` = primary with primary foreground. User requested Open vs Hover distinction across Menu/TreeSelect/Cascader.
+- User-requested bold Open checkbox inversion is implemented in **canonical Choice** (`src/styles/components/choice-visual.css`) scoped to Popup Open Item; no Menu ownership of Tree checkbox paint, no change to normal Tree states. Global Choice/Tree ownership verifier remains strict.
+- Cascader multi-column is contiguous flex nowrap with popup width driven by column count; search is one column. `PopupFrame.attachViewport` resource ownership is retained to satisfy 11-controller contract, but axis is **y** and scrollbarVisibility `hidden`; no horizontal scroll. CSS explicitly resets `qxframe9a7c2-scroll` / viewport height and overflow to prevent trailing gaps/crop.
+- TagInput/Select multiple outer horizontal padding equals vertical compound inset; hosted tags inset is 0. Ordinary Input unaffected.
+- Only current 4 Preview03 Cards / 5 regions highlighted. `tools/verify-create-app.mjs` static + `tools/verify-create-app-browser.mjs` Chromium matrices changed with no relaxed theme or ownership guard.
+- Latest green baseline before fixes: `b5c53913`; latest tests for this batch must be checked against exact current HEAD. PR #267 Draft/Open; do not merge main or backup. Produce new complete Windows dist+docs official CI offline ZIP only after two green workflows.
+
+## CURRENT — 2026-10-12 Stage5 Input Appearance / Menu Open / Cascader Layout (CI pending)
+- PR #267 remains Draft/Open. Main and backup untouched. Previous accepted green baseline `b5c53913dd8d` (QXFRAME #38251165246, CSS Schema #38251165185).
+- Input Look compiler: outlined field is transparent in both light and dark; subtle / tinted / soft use distinct 12% / 35% / 50% base Input alpha strength on both themes. Theme source is unchanged; no style-specific CSS rule or third-party framework.
+- `menuAccent=bold` compiles existing Menu Accent channels to strong primary + primary foreground; `subtle` compiles to a light primary 14% tint + primary ink. Hover is menu ink 12%-alpha neutral, Open ancestor is Menu accent+foreground, Selected retains separate shared channel. Checkbox projection nested in a colored Open row reverses to foreground-colored box with Menu accent glyph, including checked/indeterminate.
+- Compound TagInput / Select multiple: outer padding-inline equals padding-block (shared compound inset), hosted tags no longer add a second inline inset; no changes to ordinary Input geometry.
+- Cascader: Ant Design-inspired adjacent columns (no grid, vw/vh/fr), single row flex: 1 1 0; dynamic --qxframe9a7c2-cascader-column-count determines popup width. Removed obsolete horizontal Scroll viewport attachment, scrollbar and ensureVisible x; each ItemCollection continues vertical scroll. Search resets count to 1. Label text uses ellipsis; no wrapping or gap from Scroll.
+- Gate: source contract + 8 Styles × light/dark Chromium calculated state/geometry tests; old horizontal-wrap and unequal compound inset expectations updated. Only 4 Preview03 Cards / 5 regions highlighted in offline QA. Test the user-specified Lyra/Red/Mono/radius-none/Menu inverted/bold URL.
+- TODO: current-HEAD dual CI green; repair any failures, produce exact HEAD Windows dist+docs ZIP from successful official artifact. Overall Stage5 interactive visual acceptance pending, no invented percentage.
+
+## CURRENT — 2026-10-12 Stage5 Skeleton Motion closeout (CI pending)
+- PR #267 remains Draft/Open. Main and backup untouched.
+- After last green HEAD `63dfb2269be8`, downloaded matching official dist+docs Actions artifact (run 38248224044, artifact 11747206951) and packaged complete Windows offline ZIP; ZIP CRC, Node QA syntax and 13 HTTP paths passed. Exact old-HEAD package is `QXFRAME9A7C2-CREATEAPP-V3-S5-dist-docs-LOCAL-63dfb226.zip` (does **not** include the current Skeleton edit).
+- Confirmed Card Skeleton mismatched shared `theme-skeleton-animation` disable: native Skeleton consumed `none`; Card shimmer did not. Current edit keeps Card shimmer (1.3s) when enabled; CSS inherited Theme style query disables Card animation when the shared Skeleton theme token is `none`. No new Theme token or swapped pulse behavior.
+- Browser gate added in `tools/verify-create-app-browser.mjs`: normal pulse/shimmer identity, shared `none` disabled for both, restore identity; static test locks CSS source. Update offline QA highlight to this batch only: Preview03 `revenue-surfaces` Card skeleton (1 Card / 1 region).
+- TODO: verify CSS Schema + QXFRAME browser CI on final HEAD, troubleshoot any failures, create exact latest-head official Windows offline ZIP, test node syntax + HTTP + CRC. Do not merge PR #267. Stage5 overall is not yet visually accepted; no unsubstantiated percentages.
+
+## CURRENT — 2026-10-12 Stage5 Token 审计纠错与离线 QA 修复（本次 HEAD 的 CI 待验证）
+- PR #267 保持 Draft/Open，禁止合并；main / backup 不变。
+- 用户提供的第三方 Token 扰动审计已分类复核，报告：`tools/qa/reports/stage-5/theme-token-coverage-triage-2026-10-12.md`。不能将「计算值未变」等价于「源码未消费 Token」。211 注册 Token = 77 颜色 + 134 其他；无组件消费的 Chart/Sidebar 槽位是否删减必须先核对 Theme 导出 API 的用途。
+- 实锤缺陷 #1：上一轮本地完整 ZIP 的 `docs/create/offline-qa-changes.mjs` 字符串没闭合，QA 标注没有运行。已修复，并加源码 Node 语法门禁 + 最终离线 ZIP 模块 Node 语法门禁；旧包 `b4a1cb17` **不得再称完全通过**。
+- 实锤缺陷 #2：JSON 根等宽字体没有消费 `theme-font-mono`；按 public override → Theme 派生映射 → fallback 修复。
+- 审计中 Alert、Table、Notification/Message close、TimePanel 的主 radius/shadow 源规则其实已经消费 Theme 映射；ImagePreview 黑白半透明属于媒体可读性的候选例外，不能盲改。
+- 已识别未解决：Card Skeleton shimmer 独立 1.3s，不受统一 Skeleton animation 禁止开关；应按共同性设计共享关停机制，保留 shimmer/pulse 差异；Popup、状态矩阵、尺寸/间距扰动未完工。
+- TODO：等当前最终 HEAD 两条 CI 成功后，从同一 CI 合成 SHA 官方完整 dist+docs 包重新制作 Windows 离线验收包，校验 QA 浏览器加载、CRC 和 HTTP；不要重复打包旧 b4a1 产物。整体 Stage5 未完成，不报虚构百分比。
+
+## CURRENT — 2026-10-12 Stage5 compound input / Cascader / translucent Menu (CI acceptance pending)
+- PR #267 remains Draft/Open, main and backup untouched. Exact code progress: all four requested code areas changed (TagInput + Multiple Select geometry; Cascader wrapping; Cascader Open foreground; alpha-composited Menu state backgrounds). This is **not** full Stage5 visual acceptance.
+- TagInput / Select Multiple now share parent Input horizontal/vertical inset and inner height. Chromium scratch measurement against same CSS: single-row sm/md/lg Input, empty/filled TagInput and empty/filled Select all measure **28/32/36 px** after correction. Tags hosted inherits parent size instead of resetting to default; reduced chip/editor line box fits small controls, flex wrap still grows for multiple rows.
+- Cascader popup and 13rem columns now flex-wrap within the popup instead of forcing horizontal scrolling or squeezing labels. Narrow containers place whole columns onto the next row. No new runtime JS or viewport-length CSS. Popup ancestor Open/partial items use Popup Menu foreground, not page primary red against red backgrounds.
+- One Menu skin for solid/translucent/inverted Picker Popup: Hover 12%-ink alpha, ordinary borders 26%-ink alpha, Selected 84%-accent alpha. These overlay actual Popup Menu surfaces and require no per-variant component class or generated Theme token.
+- Chromium 8 Styles × 2 modes test now checks Popup state colors, readable open Cascader ancestors, compound control sizes/paddings, and no Cascader horizontal overflow. Exact-value Theme color-mix allowlist and source/static gate updated without lowering strictness.
+- Offline QA highlights reset to **6 Preview03 Cards / 8 regions** (TagInput, Select/Cascader, TreeSelect, Date/Time, Autocomplete, Dropdown); no production HTML injection and previous highlights cleared.
+- TODO: verify dual successful CI on FINAL HEAD, review browser logs and correct any failures, then package complete exact-HEAD Windows dist+docs official artifact with CRC, SHA256, HTTP checks. Stage5 full 66-family all-state matrix remains unfinished; no arbitrary completion percentage.
+
+## CURRENT — 2026-10-12 Stage5 Menu/ColorPanel/Modal batch (dual CI pending)
+- Owner reproduced Maia/Sera style cases: Popup Menu bold accent wrongly colored every Hover/ordinary border, DatePicker Calendar Hover, TimePicker WheelPanel guide, embedded ColorPanel fields. Cause: Theme V2 wildcard popup roles conflated Menu accent with passive Hover/border and introduced extra child control paint; **not duplicate DatePanel or ColorPanel instances**.
+- New shared V2 popup Menu roles: neutral 12% foreground-on-menu Hover, neutral 26% foreground-on-menu ordinary border. Menu accent only for Selected; DatePanel Hover and WheelPanel guide consume passive roles. ColorPicker embedded ColorPanel fields revert to one shared source role, public ColorPanel field vars remain available.
+- ColorPanel native hue/alpha range pseudo-track/thumb now shares Slider height/rail/thumb/radius/border/shadow policy; preserve hue/alpha gradient. Cross-browser vendor selectors split into valid WebKit/Gecko groups.
+- Owner's 18.48s modal video shows abrupt zoom and second delayed mask fade. Modal origin retains triggerTarget but starts at 86% instead of 20%; OverlayFrameRuntime starts mask/panel leave together, with CSS mask duration >= respective panel leave. On-close focus and resource assertions kept; no extra timers.
+- Chromium 64-case inverse Menu fixture extended for hover/selected separation, Calendar Hover, Wheel guide, ColorPanel field borders and native hue rail/thumb vs Slider. Static QA gate updated.
+- **Current offline QA only 10 Preview03 Cards / 13 regions**; prior 13/15 highlights cleared. Previously successful HEAD de0f26d8 official artifact #11728542163 and Windows ZIP delivered separately as *baseline*, not claim for this new batch.
+- PR #267 remains Draft / Open; main untouched. Next: verify final new HEAD dual CI, fix any true gate failures, inspect Chromium Motion/ColorPanel, official artifact and new Windows ZIP. 66-family full state matrix still incomplete; do not invent Stage/overall percentages.
+
+## CURRENT — 2026-10-12 Stage5 OutlineBadge source-sized border acceptance (new CI pending)
+- CSS Schema #38208424273 failed old Preview01 Sera claimable-balance Badge source geometry expectation. Legacy status label Sera editorial mode had no border and 0px horizontal padding. User explicitly requires all outlineBadge variants to have real border and nonzero padding (and no Hover).
+- Browser fixture now checks Sera expected intrinsic height (100/7+2px for the new two 1px borders), 4px inline inset, and actual borderLeftWidth=1px; Vega/Mira existing 20px height/8px inset remain, all typography and unrelated layout assertions unchanged. This is an improved stricter new Badge visual contract, not a gate bypass.
+- Source changes unchanged: neutral List/Tree surface, OTP container, Tag close, base64 images, Tooltip pair, shared TimePanel, Message, Notification and authorized Overlay JS. PR Draft/unmerged. Need both new same-HEAD CI green, then official Windows ZIP CRC/SHA/HTTP.
+
+## CURRENT — 2026-10-12 Stage5 browser focus regression aligned with sequential mask leave (CI pending)
+- At exact HEAD ca0a85b442369ada758c76542a0da0eece66b850, CSS Schema #38208098300 failed Stage4 real modal focus restore assertion because the old test assumed 280ms from close click until Overlay fully hidden; new authorized two-stage panel->mask exit needs actual lifecycle completion.
+- Replaced fixed 280ms delay only in Stage4 browser test with bounded wait until visible Modal root is hidden; focus assertion remains STRICT and still checks restoration to obs-query after anomaly action.
+- List radius restored without painting root, is-outline Badge border alias fixed, InputOTP structural root, user-authorized Overlay JS modifications, 13 cards/15 regions QA retained. Await exact new-head dual CI.
+## CURRENT — 2026-10-12 Stage5 batch C contract/visual QA (CI pending)
+- HEAD dbfb0b69049804d50db8a46be2d73f748257ffae; PR #267 Draft/unmerged.
+- Corrected accidental List corner regression: List stays UNPAINTED (no forced background/foreground/border), but keeps theme-radius-item so Shape Policy and 800-radius gate remain valid. Tree no root paint.
+- Critical OutlineBadge demo uses class is-outline, whereas source/theme only targeted is-outlined; now both spellings consume a real 1px border and static non-hover appearance. Tag and Message improvements preserved.
+- Static existing TimePicker-specific visual assertion removed; the real component style now consumes the same TimePanel selected role. Test remains on shared source and no duplicate Picker skin.
+- Offline QA reset to 13 current changed Preview03 cards/15 individual regions, from last round platform-tree only; no production QA.
+- JS changes already authorized: InputOTP only container skin, Modal trigger origin, shared Overlay staggered mask leave. Overlay browser test awaits both sequential lifecycle phases. QXFRAME/CSS Schema exact-current-head tests pending; if failure, fix real source/test without disabling any gate.
+## CURRENT — 2026-10-12 Stage5 sequential overlay mask settle regression (CI pending)
+- QXFRAME #38207570765 at 7dd3a5a2 failed existing phase-e-modal-drawer test "modal resource releases after settled leave": the legacy settle() awaited mask and surface concurrently, but new intentional close sequence starts mask leave after surface leave finishes. Thus the first mask.whenSettled() completed before the mask fade even started.
+- Updated strict browser test settle() to await shared surface/mask and then mask again, with ALL previous resource-close assertions retained. Added a first-open origin regression using triggerTarget on first appearance and resource release after the staggered leave.
+- InputOTP remains structural container, CSS fixes and source-only JS allowance (plus current-HEAD reproducible build) unchanged. Next exact HEAD dual CI and official offline ZIP; PR #267 Draft/unmerged, main untouched.
+
+## CURRENT — 2026-10-12 Stage5 batch B: authorized component JS / Overlay synchronization (new CI pending)
+- Resumed dd85e90b2a333723b5d6d27526190590b4ca68d0. Previous QXFRAME CI #38207105605 failed only at obsolete Stage5 static test requiring Picker-only wheel selected state (removed intentionally to match standalone TimePanel). Updated source/Chromium tests to enforce shared TimePanel style, no separate Popup highlight paint.
+- InputOTP: canonical Control segments/focus/value preserved, but InputOTP root explicitly drops .qxframe9a7c2-input Input skin, remains a structural container; segment height token restored locally; hidden generic input remains detached in segmented mode.
+- Modal: supports stable triggerTarget origin even on first programmatic open; Preview03 also supplies origin directly. Shared OverlayFrameRuntime schedules mask leave only when surface leave ends, avoiding backdrop disappearing/flickering mid-close for Modal/Drawer, without animation timers or disabled existing motion.
+- User explicitly authorized component JS changes. Replaced legacy v3 'JS byte-for-byte equals main' gate with *strict source allowlist* (only InputOTP, Modal, OverlayFrameRuntime may differ) plus second byte-identical current-HEAD release build, exact artifact inventory, and original full test pipeline. Other source JS must still match main. CI step renamed to accurately describe authorized comparison.
+- Next verify real Chromium interactive enter/leave/mask and first-open target origin across Modal/Drawer, then same-HEAD two CI green and offline Windows dist+docs. Stage5 full 66-family visual matrix not complete.
+## CURRENT — 2026-10-12 Stage5 component-consumer cleanup, batch A (CI pending)
+- Exact baseline 549876de60261e313fa4a9d3d10657cd84e0a0e4 on Draft PR #267. User approved changes to component JS but this batch limits changes to CSS + docs demo and does not alter main.
+- List/Tree root surfaces: removed automatic background/foreground/border in Theme V2 and List root; inherit arbitrary parent colors/surface, keep ItemSurface states separate.
+- Badge: nonzero horizontal padding and real outlined border; removed interactive hover-specific V2 badge skin while keeping Tag hover. Tag close uses independent smaller icon and hit target, no control-height scaling.
+- Tooltip arrow: removed Theme V2 forced background on both tooltip/arrow; source tooltip root now owns same field color for bubble and arrow.
+- TimePicker/TimePanel: removed Picker-only selected/normal Wheel styling, so embedded TimePanel consumes same selected-text role as standalone. Message: dark-mode visible popover surface, border and popup shadow, preserving public overrides.
+- Preview03: Notification.info now receives documented object API; Modal receives stable origin:modalBtn on first open. Image uses base64 SVG data source; Carousel real images are local base64 SVG images, no broken remote URLs.
+- Not yet completed this batch: InputOTP DOM architecture, actual Drawer/Modal mask exit synchronization, Modal generic first-trigger origin, Notification interaction Chromium assertion, tooltip arrow advanced variants, full 66-family state matrix. Next address JS runtime and CI gates separately.
+## CURRENT — 2026-10-12 Stage5 Global Tree checkbox visual contract (new CI pending)
+- Resume from green 604a0f076b3a64f771c1e8dc5370b00ccd165aef; PR #267 Draft/unmerged, main untouched.
+- Owner's screenshot: TreeSelect popup checkboxes used dark Menu-accent/foreground while direct Tree checked/indeterminate showed global Primary, though TreeSelect uses canonical Tree.create and same classes. Root cause found: TWO groups of Popup-special Tree checkbox paint overrides in src/styles/main/theme-visual-v2.css (private choice slots and direct CSS properties).
+- Deleted both groups. The global Choice and shared Theme V2 selectors remain the ONLY checked/mixed/unchecked paint for both Tree and TreeSelect; Menu coloring still applies to Tree rows/labels but not checkbox. Global Shape and focus remain.
+- Static no-Menu-checkbox rule and 64-case Chromium compare TreeSelect popup and standalone Tree checkbox computed background/border/text for checked, mixed and unchecked. Existing tests remain (Menu, radius 800, interactive); no runtime JS or main changes.
+- NEXT dual green CI on this commit, official complete dist+docs Windows offline ZIP with SHA256/CRC/HTTP. Stage 5 66-family all-state visual acceptance pending.
+
+## CURRENT — 2026-10-12 Stage5 Workspace Explorer Tree/TreeSelect shared visual options (CI pending)
+- Resumed fully green HEAD 65051ddbd83480cac5626814e52c709933c1739c, Draft PR #267 unmerged. User reports Tree standalone vs TreeSelect mismatch in same Workspace Explorer card.
+- Source diagnosis: TreeSelect imports Tree from ./tree.js, constructs its content with Tree.create({container:treeHost,...,showLine:opts.showLine}); it does NOT have a second Tree implementation or node CSS. Both use .qxframe9a7c2-tree-* from src/styles/components/tree.css and shared Choice + Item skin. TreeSelect has separate outer input/Popup classes as required by its role.
+- Actual reproducible discrepancy was Preview03 configuration: standalone Tree explicitly showLine:true, TreeSelect omitted showLine and inherited Tree default false. Aligned TreeSelect demo to showLine:true without changing public component defaults or runtime JS (which must match main). Colour differences from inverse Menu vs Card root remain intentional paired foreground/background; no forced same absolute hex and no Preview-only Tree CSS.
+- Added strict source regression proving TreeSelect invokes Tree.create, forwards showLine, both examples use showLine:true, and Preview03 has no private Tree-node rules. Current offline QA ledger reset to 1 actual Card, 2 inner regions: workspace-tree/workspace-tree-select. Original 64 inverted Menu + 800 radius and other CI gates retained.
+- NEXT: same-HEAD dual CI, produce full official dist+docs artifact and Windows START-DEMO.cmd offline ZIP with CRC/SHA256/13 HTTP routes. Stage5 complete 66-family visual-state matrix remains pending; PR stays Draft, main unchanged.
+
+## CURRENT — 2026-10-12 Stage5 computed-style transition fixture stabilization (CI pending)
+- CSS Schema #38199875395 failed strict 64-case on Vega/light/inverted Tree checked background, actual oklab(0.97 0 0) vs final Menu accent oklch(0.269 0 0). Investigated with Chromium page.set_content + exact canonical CSS and Chrome DevTools matched style rules.
+- Root cause: Choice Visual Surface transitions background-color, and rapid compileTheme loops read interpolated in-flight color. Exact same CSS and DOM with indicator transition:none only within a synthetic style-test fixture resolves final computed accent background oklch(0.269 0 0), foreground oklch(0.985 0 0). The production motion stays unchanged, and other animation/motion regression gates retained.
+- Updated ONLY two synthetic indicator elements to transition:none in the new 64-case computed style fixture; no app/source CSS or tests assertions weakened. All 64 stable final-paint comparisons and previous test gates remain strict.
+- Latest source paint HEAD bcc503f3530c5b2a239bfd26275e68f262d67f69 unchanged; new test HEAD needs two green CI workflows and official Windows full dist+docs package. PR #267 Draft and main untouched.
+
+## CURRENT — 2026-10-12 Stage5 Tree Choice computed-style diagnosis (new CI pending)
+- CSS Schema #38199875395 progressed through prior 64 inverse Menu regression and failed new 64-case on Vega/light/inverted: Tree checked background actual oklab(0.97 0 0), expected Menu accent oklch(0.269 0 0). Source has matching high-specificity scoped rule; root cause not yet established.
+- Added read-only instrument to the SAME strict assertion (not weakened): matched selector test, computed inherited --_v2-choice-bg and --theme-menu-accent, plus full actual case only on mismatch. This will identify whether CSS selector reach or cascade is at fault before further source change.
+- PR #267 Draft/unmerged; no framework runtime or main modifications. Next identify real cascade root, repair CSS, rerun exact-head dual CI then Windows official ZIP.
+
+## CURRENT — 2026-10-12 Stage5 Wheel guide duplicate CSS owner closeout (CI pending)
+- Strict QXFRAME #38199720173 failed theme token duplicate-owner 34 -> 36. Verified the exact css-gates.mjs key contract: (selector,property), not private tokens only. Two additions came from an older .picker-field-panel .wheel-panel-center-guide rule for background and border-block-color plus the new matching selector.
+- Removed only the obsolete older two-property block. The newer single center-guide rule retains background:transparent and menu-accent border; no extra tokens, no suppression. Actual other paired color changes and 64-case browser gate unchanged.
+- PR #267 Draft, main untouched; exact-HEAD dual CI then verified official Windows dist+docs ZIP pending.
+
+## CURRENT — 2026-10-12 Stage5 Date private owner fix (CI pending)
+- QXFRAME #38199547276 failed strict verify:theme-tokens: added Theme V2 private Date state assignments produced four extra duplicate owners (34 to 38) even after removing the ColorPanel private duplicates.
+- New DatePicker/PeriodPanel nav/selected overrides now write only final painted background/color/border-color in scoped picker popup CSS, leaving private state slots owned by components. Hover remains a matched Menu accent/background pair. No weakening of verifier, existing 64-case Chromium and Stage5/Stage4/Stage3 gates retained.
+- PR #267 Draft/unmerged, main unchanged. NEXT exact-head dual green CI and official complete Windows dist+docs offline ZIP CRC/SHA256/HTTP.
+
+## CURRENT — 2026-10-12 Stage5 ColorPanel duplicate-owner closeout (new CI pending)
+- QXFRAME CI #38199405323 on fe00f197 failed at strict verify:theme-tokens: duplicate private variable owners in Theme V2 rose 34->41. Root cause was new .picker-field-panel .color-panel declarations of component-private --_color-panel-field-bg/border/text on a second owner; existing source already owns those.
+- Removed the extra private ownership block. Picker-local ColorPanel input/format/eye now read the already-public --qxframe9a7c2-component-color-panel-field-{bg,border,text} directly, with Menu defaults; same output, no additional private owners. Static test updated to ensure that read-path. Existing keyboard Focus, Shape and Popover/Dialog scope unchanged.
+- Strict 64-mode computed-style Chromium and all baseline tests retained. Rerun two CI workflows on exact new head, then official same-head Windows dist+docs and CRC/SHA256/HTTP. PR #267 Draft, main unchanged.
+
+## CURRENT — 2026-10-12 Stage5 64-mode Chromium popup paint regression added (CI pending)
+- CSS/theme source fix a76b731e... kept intact. Added real Chromium computed-style 64-case matrix (8 Styles x 2 light/dark x 4 Menu modes): DatePicker idle text + selected date pair, Wheel centre guide transparency, Tree checked/indeterminate ink/background pairs, ColorPanel HEX input/format/eye paired Menu background/ink, focus border = pointer-focus.
+- Static Theme source contract and 4 Cards / 6 QA regions remain. PR #267 must stay Draft, no main changes or Stage3/Stage4 rewrite. Next exact HEAD full dual CI, repair errors if needed, official Actions artifact Windows complete dist+docs offline package and 13-route HTTP + CRC/SHA256.
+
+## CURRENT — 2026-10-12 Stage5 inverted popup visual paint closeout (new CI pending)
+- Resumed full green HEAD 596ae1f521e9106653554864d9afa7f78a1d3624, QXFRAME CI #38196035371 / CSS Schema #38196035325 success, PR #267 Draft/unmerged, main unchanged.
+- Owner screenshots identify paired-background/foreground failures: DatePicker idle/hover nav and selected cell, TimePicker selection guide, TreeSelect checked/mixed glyph, and ColorPanel HEX input vs neighboring controls.
+- Corrected shared Theme V2 source (no Preview private CSS): nav idle and hover paired Menu semantic roles; selected date/period background/ink paired; wheel guide transparent, selected row still owns paint; active/mixed Tree Choice final paint after generic Choice rules; ColorPanel public field overrides with Menu defaults, input/format/eye paired, pointer-focus border and keyboard outline preserved. Does not repaint Popover/Dialog or disabled Tree Choice.
+- QA overlay reset to this round's 4 Preview03 Cards / 6 changed regions. Added strict source contract. Existing 64 inverse Picker, 16 Table/Transfer/JSON, 800 radius regression retained.
+- NEXT same-HEAD dual CI with new Chromium popup paint regression, then official complete Windows dist+docs artifact, CRC/SHA256 and local HTTP. Stage5 full 66-family final state matrix remains incomplete.
+
+## CURRENT — 2026-10-12 Stage5 screenshot batch test expectation correction (CI pending)
+- On top of source fix 0ea109cd, updated old 64-case inverse Menu browser expectation: selected Wheel foreground/background now must match Menu accent pair, while normal wheel items still match Menu foreground. Old test expected selected Wheel normal foreground and would reject the new paired consumer. Selection-guide stacking assertion remains.
+- Adjusted strict Table filter static contract to the new native-state + existing is-disabled selector list. Did not weaken gates or alter runtime/preview styles.
+- NEXT exact current commit dual CI, then new official artifact and full Windows offline validation. PR Draft/unmerged.
+
+## CURRENT — 2026-10-12 Stage5 owner screenshot fixes and runtime parity recovery (CI pending)
+- Baseline HEAD 7538401cfc90529879705209fcca73502d7b5b61, Draft PR #267. CSS Schema #38194398636 success, QXFRAME #38194398630 failed at JS build artifacts match main: six outputs changed by Stage5 Table JS edits.
+- Restored src/components/table.js to exact main blob 430ff9e7b40b761f999a302ec20a701b0da5d295. Table native checked/disabled inputs now drive :has() CSS visuals; no new JS runtime fork or relaxed gate.
+- Fixed shared source CSS for owner screenshots: Tree ancestor menu foreground/background paired even when open/partial, Tree checked/indeterminate checkbox glyphs consume Menu colors, Cascader popup minimum first-column width 13rem, TimePicker selected wheel row above guide with Menu paired contrast, ColorPanel focused HEX border uses pointer-focus. Do not interpret overlay on Automation Studio card as its own Tree.
+- Offline QA only 6 truly changed Preview03 Cards/7 regions. Static gate updated; previous 16-case Chromium Table/Transfer/JSON, 64 Menu inversion and 800 radius gates retained. Preview01/02 unchanged.
+- NEXT exact-head dual CI green then official dist+docs Windows full ZIP, CRC/SHA256 and 13 HTTP routes; Stage5 66-family full state acceptance still incomplete.
+
+## CURRENT — 2026-10-12 Stage5 Transfer explicit border vs status precedence (new CI pending)
+- Exact HEAD f4acb82 CSS Schema #38193867512 failed in newly added Chromium matrix at Transfer public border override under .is-disabled: expected explicit rgb(19,33,55), actual Theme input (oklch 0.922...). Table selected background previously failed but now passed up to Transfer assertion.
+- Root cause: .transfer.is-disabled independently reassigned private panel-border, defeating the public slot. The same priority bug existed for status-error and status-warning. All three now use var(--qxframe9a7c2-transfer-panel-border, state-default) preserving explicit public overrides, and retain their status fallback. Shared Theme V2 Transfer rendering still consumes that private resolved slot.
+- Static gate verifies all three state override contracts; existing 16-case Chromium remains strict (not weakened), preexisting 64 inverse Picker and 800 radius remain. NEXT dual exact-HEAD CI then official Windows dist+docs. PR #267 Draft/unmerged, main untouched.
+
+## CURRENT — 2026-10-12 Stage5 Chromium selected-state and Transfer role chain follow-up (CI pending)
+- HEAD e540f8ff previous QXFRAME CI #38193245643 still running; CSS Schema #38193245580 failed only at the newly added Stage5 Chromium fixture: Vega/light Table filter selected row background computed transparent. The earlier SyntaxError was fixed and Chromium reached the new assertions with existing prior steps passing.
+- Table filter selected now uses existing solid --_qxframe9a7c2-semantic-subtle-active (Theme muted) like shared Table/Item selection, not a potentially transparent accent-soft formula; no new mixing or tokens.
+- Inspection of shared Theme V2 revealed its generic .transfer-panel selector replaced the component-owned public panel border and disabled typography. Split List/Tree vs Transfer surface handling, preserving Transfer local background/border and inherited disabled foreground, with strict static gate.
+- Next: exact HEAD dual green CI, then official dist+docs Windows ZIP and 13 HTTP route / CRC / SHA256. PR #267 Draft, no main changes.
+
+## CURRENT — 2026-10-12 Stage5 static verifier syntax fix (CI pending)
+- QXFRAME #38193126439 failed during full release at tools/verify-create-app.mjs: the new current-round QA selector matrix had an unterminated quoted string for data-inspector. Corrected the string literal; no new component source or Theme changes. Previous entire 9-file implementation is retained.
+- Need rerun both CI workflows on resulting exact HEAD and only package the successful official artifact. PR #267 remains Draft/unmerged.
+
+## CURRENT — 2026-10-12 Stage5 Table, Transfer and JSON cross-state batch (CI pending)
+- Verified prior HEAD 2e170d9fc11a0307b42277acbc780236ae9352ba on Draft PR #267, previous QXFRAME CI #38191413763 and CSS Schema #38191413767 success. Preview01/02 not reopened.
+- Table filter now uses real QX styled checks and marks selected/disabled label states with live draft changes, menu-independent popup search foreground/background/focus Theme roles. Transfer panel border public override propagates to header/footer/pagination and its disabled text. JSON typography consumes Control size with public override and current-color caret.
+- Added static contract and 8 Styles x light/dark (16 case) real computed-style assertions, keeping previous 64 inverse Picker and 800 radius gate. Offline QA ledger resets to only 3 current affected Preview03 Cards / 3 regions: plan-governance, workforce-access, data-inspector. Old four-card highlights removed.
+- Next: wait new exact-HEAD dual CI; repair any failures and build complete official same-HEAD Windows dist+docs ZIP with CRC/SHA256/local HTTP. Further full 66-family state/density/shadow QA remains.
+
+## CURRENT — 2026-10-12 Stage5 static gate syntax hotfix (CI pending)
+- Exact QXFRAME #38191190048 failed at a malformed literal RegExp in newly added strict Preview03 3-Switch static gate. Replaced with deterministic split on data-card and </article> plus explicit presence assertion; all strict checks for 3 Input/Track/Thumb and the current 4 Card/5-region QA ledger remain. Source/Theme/Preview code unchanged. NEXT: await new same-HEAD double CI, package latest official artifact only if both success; PR #267 stays Draft/unmerged.
+
+## CURRENT — 2026-10-12 Stage5 CI first failure and WheelPanel foreground occlusion follow-up (CI pending)
+- New HEAD 72032740 QXFRAME CI #38191006431 failed at verify:create-app, NOT build: the static verifier still demanded the previous 13-radius Card QA marker list after current ledger intentionally reset to 4 Cards / 5 regions. Updated the strict expected Card/region selectors and added source checks for 3 actual Switch Input/Track/Thumb triples; old 13 highlights explicitly rejected.
+- Owner's screenshots also showed the WheelPicker selection-guide band painting over the selected row text (including TimePicker and Year/Month). Fixed in shared picker-family.css by painting wheel columns above the center guide (z-local-above vs z-local-raised); extend 64-menu-mode Chromium fixture to assert text painting layer above guide.
+- Keep original 800 radius and 64 inverse Menu tests; two workflows must be success for NEW HEAD before any offline archive. PR #267 Draft/unmerged. Resume remaining full-component visual audit after successful CI.
+
+## CURRENT — 2026-10-12 Stage5 popup foreground, OTP controls and Switch Preview03 repair (CI pending)
+- Baseline b5d93511: QXFRAME #38184967129 and CSS Schema #38184967133 Success; complete official dist+docs #11719416911 was packaged and independently verified (CRC, SHA256, 13 HTTP local routes). This package is the previous approved CI HEAD, not evidence for new edits.
+- Fixed shared Menu popup text consumers: DatePicker normal day and wheel unselected state now pair with Menu foreground while preserving selected/current/outside and public DatePanel text overrides. Popover/Dialog remain independent.
+- InputOTP segments consume standard Theme control background/border/foreground rather than generic surface; Preview03 feature-flags now uses actual QX Switch input/track/thumb markup, retaining native checkbox truth and local status.
+- Extended 64-case Chrome menu contrast regression to normal days and normal wheel rows; Stage5 browser gallery now asserts 3 real Switch tracks, track width and click interaction. Offline QA ledger reset: only this batch's 4 cards/5 regions.
+- Branch redesign/create-stage5; PR #267 remains Draft and unmerged. NEXT: verify exact new HEAD dual CI, inspect failure logs if any, build exact-head official Windows offline ZIP; extend remaining 66-family state/color/spacing/shadow visual QA without touching accepted Preview01/02.
+
+## CURRENT — 2026-10-12 Stage5 shape parity follow-up: Tabs and ColorPanel (CI pending)
+- Earlier 608-case radius audit and complete Windows build at 39e22a12 were green. Further CSS review found Tabs indicator/badge/close and ColorPanel hue/alpha/gradient tracks still locked to 50%/100rem. Fixed only these six ordinary UI shapes to consume the existing Theme radius-track/badge/button slots while keeping public per-component override priority.
+- New Chromium matrix: 8 Styles × light/dark × none/default radius × 25 sampled component parts = 800 computed corners. Offline QA highlights only the 13 affected Preview03 Cards, 13 regions (previous Picker/creation highlights cleared).
+- Continue auditing semantic colors, density, spacing, hover, active, selected, disabled, read-only across the 66 demos. Draft PR #267 stays unmerged; no changes to Preview01/02 cards or Theme token schema.
+
+## CURRENT — 2026-10-11 Preview03 Card skeleton theme QA exemplar (CI pending)
+- The Card Skeleton consumer was corrected to radius-item but had no matching rendered line in the commercial gallery. Added actual QX Card skeleton lines to the Revenue overview card (already existing of 66; no new card count), and re-targeted current-round offline QA highlight to [data-pv3x-card-skeleton], not unrelated nested revenue cards.
+- Preserves 66 Card roots, 66/66 documented family inventory, 11 current changed QA regions, strict Draft PR #267 merge gate. Browser tests must verify resulting page and source constraints; Preview01/02 unchanged.
+
+## CURRENT — 2026-10-11 Stage5 shared Navigation/Data radius propagation (CI pending)
+- Browser radius=none measurement identified inherited 0.25rem (4px) in '--_qxframe9a7c2-navigation-radius' and '--_qxframe9a7c2-data-radius', even when Theme radius-item=0. Corrected one upstream mapping each in fixed-values.css, not new component override layers; this extends to JSON/Sort/Tabs internal consumers still using the shared roles.
+- Browser acceptance now checks 19 QX-only component parts, 8 styles × 2 modes × none/default radius = 608 exact computed-radius assertions. It deliberately does not waive existing Preview01/02 acceptance tests.
+- Program stage5 commercial card gallery 66/66 built; visual/interaction validation of all 66 families remains an open requirement. Draft PR #267 stays unmerged. After two green CI workflows build exact-HEAD Windows offline package; QA overlay only marks 11 component regions in this batch.
+
+## CURRENT — 2026-10-11 Stage5 visual parity QA ledger / 11 current family Cards (CI pending)
+- Offline demo QA highlights exactly 11 touched Preview03 Cards/regions for shared Menu, List, Steps, Tree, Carousel, Progress, Image, Avatar, Badge, Card skeleton and Slider Theme shape corrections. Removed previous inverse Picker 6/8 region highlights. Production docs remain unannotated.
+- 544 computed-corner Chromium assertions (8 styles × two color modes × none/default radius × 17 family parts) added to exact-head CI. Draft PR #267 unchanged merge restrictions; avoid interpreting 66 documentation entries as complete visual acceptance.
+
+## CURRENT — 2026-10-11 Stage5 all component Theme visual parity batch (CI pending)
+- User requests all QX components beyond Preview01/02 to integrate Theme tokens consistently for radius/color/size/states. Real local Chromium audit of 66 Preview03 Cards under Nova radius=none/default, Maia large, Sera found menu-item/list stuck at 4px, fixed round tree/steps/carousel controls, Preview03 Avatar fixed to 100rem, other fixed Badge/Image/Progress/Slider internal corners.
+- Updated 10 shared CSS component families plus Preview03 Avatar example, preserving framework-level radius role tokens and public component overrides; this is not a preview-only patch. New browser gate checks 17 QX-only component parts under 8 Styles × 2 modes × none/default radius = 544 computed corner checks. Existing 66-family doc mapping remains; no claim of full 66-family visual signoff from mapping alone.
+- Branch redesign/create-stage5; Draft PR #267; main untouched. Next validate dual CI and exact-HEAD full Windows dist+docs ZIP; continue cross-component color, disabled, shape and spacing audit.
+
+## CURRENT — 2026-10-11 Inverted Menu Picker QA highlight closeout (CI pending)
+- Only 6 affected Preview03 cards / 8 Picker regions are annotated in offline QA. All 48 previous commercial gallery creation highlights cleared; Preview01/02 accepted cards stay unchanged.
+- Underlying global Theme consumer corrections are in src/styles/main/theme-visual-v2.css, checked via 64 combinations in real Chromium. Draft PR #267 unmerged.
+
+## CURRENT — 2026-10-11 Picker inverted Menu semantic role repair (CI pending)
+- Owner reports incorrect Picker internals in inverse Menu mode. Root cause: floating Menu popup receives --theme-menu bg/fg, nested ItemCollection/Calendar/PeriodPanel/TimePanel/ColorPanel/inputs still rebind page-level semantic/control colors under @scope universal; selected dates and wheel choices hardcode theme-primary.
+- Fixed local role chain in src/styles/main/theme-visual-v2.css for menu popup and nested items, search, groups, footer borders, input, calendar/period selected, wheel selected, presets and color panel. Popover/Dialog surface remains independent from Menu color; no new Theme tokens.
+- Added true Chromium 8 Styles × 2 light/dark × 4 Menu variants = 64 x descendant role checks and static guards. Draft PR #267 remains unmerged. Existing 66 Preview03 Card gallery preserved.
+
+## CURRENT — 2026-10-11 Stage5 Preview03 public Components vs BuildingBlocks correction (CI pending)
+- QX public global has both `Components` and `BuildingBlocks`. QX UMD Components excludes Tree, Calendar, ColorPanel, List, OptionList, PeriodPanel and VirtualList by design: these are public BuildingBlocks. Updated Preview03 18+48 runtime mount helpers to read either namespace; restored real QX Tree cards (no replacement JSON stand-ins).
+- Draft PR #267, 66 original business cards and 66/66 documented family matrix. Next must pass exact-head QXFRAME CI, CSS Schema browser gate, official complete Windows dist+docs artifact. Preview01/02 unchanged, main untouched.
+
+## CURRENT — 2026-10-11 Preview03 expanded to 66 commercial Cards, 66/66 component documentation families (CI pending)
+- Stage5 Draft PR #267; owner requested at least 48 commercial Cards and **all documented QX components**, not a limited 18-Card gallery.
+- 18 existing Preview03 Cards preserved; 48 new QX business compositions added: **66 total**. Repository docs/components has 66 component families, every one mapped in docs/create/preview-03-coverage.json. Distinguish actual QX JS runtime mounting vs QX framework-native CSS/static behavioral components. Avoid falsely claiming static components are JS instances.
+- Added docs/create/preview-03-extra.js for business demos, introduced real additional QX classes (calendar, autocomplete, image, uploader, list, period panel, JSON, virtual list, etc.) with local operations and accurate diagnostics. No changes to approved Preview01/02 or framework CSS/Token.
+- QA ledger now highlights new 48 cards only, previous 18 Preview03 highlights cleared; packaging includes new HTML/CSS/JS/coverage. Browser gates require 66 real Cards in each of 16 modes, and no QX runtime mount errors. CI must be confirmed before owner QA.
+- Stage5 Preview03 is NOT yet user accepted or merged. Await two green checks and official exact-tree full dist+docs Windows bundle; maintain PR #267 DRAFT.
+
+## CURRENT — 2026-10-11 Stage5 Preview03 QX global Tree export correction (CI pending)
+- Chromium CSS Schema workflow #38143540322 exposed real runtime contract: UMD `QXFRAME9A7C2.Components.Tree` is unavailable, even though `src/components/tree.js` exports the ESM class. Avoid new changes to frozen qxframe.js/Stage3 or faking a tree; the Workspace Explorer now composes QX JSON's actual hierarchical Tree-backed viewer with QX TreeSelect. Other 18 Cards remain unchanged.
+- Latest Draft PR #267 head follows fix. Rerun exact-HEAD Chromium/dual CI and official Windows dist+docs. No Stage5 merge, no legacy generator deletion.
+
+## CURRENT — 2026-10-11 CREATEAPP-V3 Stage5 Preview 03 (QX-only business composition gallery; CI pending)
+- Stage 4 PR #266 merged to main: 718da2a6be0bc71520adb0451429cd3d3d8320b3. Preview 01/02 were explicitly accepted by owner; DO NOT regress/edit their cards.
+- Owner directs third createApp preview page: QXFRAME-only commercial compositions absent from pinned shadcn Create, sourced from docs/assets/qxframe9a7c2-admin-views.js and actual src/components APIs. New branch redesign/create-stage5 from merged main. Stage5 PR must stay Draft.
+- Preview 03: 18 operational cards across three wide product columns; QX runtime Tree, TreeSelect, Transfer, Steps, Progress, Table, Pagination, ColorPicker, DatePicker, TimePicker, Cascader, Select, InputNumber, Rate, TagInput, JSON, Carousel, Tags, InputOTP, Slider, Collapse. Separate preview-03.css/js only, no framework CSS/Theme/public token modifications.
+- Next: mount runtime components with real local actions, add static + Chromium gates, verify 8 Styles × 2 modes, check CI and artifact. No legacy generator deletion before final Stage5 acceptance.
+
 ## CURRENT — 2026-10-11 CREATEAPP-V3-S4 Preview 02 owner accepted; Stage 4 closeout (CI pending for documentation-only commit)
 - Owner explicitly confirmed **all 31 Preview 02 Cards have been inspected and are acceptable** (2026-10-11: “卡片都验收了没问题，继续”). Stage 4 Card visual/interaction acceptance is complete (31/31). Do not reopen pixel-only comparisons to shadcn or repeat accepted Stage 3/4 repairs.
 - Previous exact green development HEAD `7cb643cbe70c89f01c250d1432737ec1e3b6d815`, Git tree `ea963b33cdc555501708febdcc0a7320b6154071`: QXFRAME CI #38140220682 SUCCESS; CSS Schema Acceptance #38140220688 SUCCESS; official complete `dist+docs` artifact #11702368628. The prior successful 10-Card Windows bundle was provided to owner.

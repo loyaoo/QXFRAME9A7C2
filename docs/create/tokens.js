@@ -1,21 +1,22 @@
-// QXFRAME9A7C2 theme token closed list (v3 §5.1). The only theme inputs are the
-// `--qxframe9a7c2-theme-*` names below; every theme (the default block inside
-// qxframe.css and every createApp export) writes the whole list: `:root` holds
-// every token, `.dark` also contains every token (with dark values for colors).
-// New tokens are added here only (registered), never ad hoc in CSS.
-//
-// kind:  color | length | number | percent | font | keyword | shadow | time
-// mode: 'color' → mode-specific values; 'root' → identical in both blocks.
+// Closed createApp Theme token registry. Every COLOR role is emitted exactly
+// once under :root as light-dark(light,dark); invariant geometry/typography
+// roles are also single-owner. The registered color-scheme keyword is the one
+// necessary mode exception (.dark: dark); Popup inversions change only the
+// CSS color-scheme property on existing roots, never Theme token values.
+// kind: color | length | number | percent | font | keyword | shadow | time
+// mode: color = paired COLOR, root = invariant, keyword scheme = exception.
 
 export const TOKEN_PREFIX = '--qxframe9a7c2-theme-';
 
 const C = (name, note) => ({ name, kind: 'color', mode: 'color', note });
 const L = (name, note, kind = 'length') => ({ name, kind, mode: 'root', note });
+const K = (name, note) => ({ name, kind: 'keyword', mode: 'color', note });
 
 export const THEME_TOKENS = [
   // shadcn semantic colors (base color + theme + chart + menu accent).
   C('background', 'Page background'),
   C('foreground', 'Page text'),
+  K('color-scheme', 'Native controls / light-dark() parity with local Theme'),
   C('card', 'Card surface'),
   C('card-foreground', 'Card text'),
   C('popover', 'Popup surface'),
@@ -68,6 +69,7 @@ export const THEME_TOKENS = [
   C('menu-foreground', 'Menu text'),
   C('menu-accent', 'Menu item highlight'),
   C('menu-accent-foreground', 'Menu item highlight text'),
+  C('menu-accent-contrast', 'Contrasting ink against Menu accent-foreground, for nested Choice marks'),
   C('card-edge', 'Card ring (surface edge axis)'),
   C('popup-edge', 'Popup / dialog ring (surface edge axis)'),
   C('card-section', 'Card footer band (surface partition axis)'),
@@ -126,7 +128,13 @@ export const THEME_TOKENS = [
   L('border-width', 'Control border width'),
 
   // Containers.
+  L('list-padding-x', 'Shared popup/ListFrame horizontal surface padding; zero means full-width rows'),
+  L('list-padding-y', 'Shared popup/ListFrame vertical surface padding'),
   L('card-padding', 'Card padding (container padding axis)'),
+  L('dialog-padding-x', 'Modal/Drawer section horizontal inset (container padding axis)'),
+  L('dialog-padding-y', 'Modal/Drawer header/footer vertical inset'),
+  L('dialog-body-padding-y', 'Modal/Drawer content vertical inset, accounting for section separation'),
+  L('dialog-divider-width', 'Modal/Drawer section rule; none/muted do not draw duplicate dividers'),
   L('card-footer-peer-flex', 'Card Footer opt-in peer action sizing: Sera equal flex basis with min-content clamp / other intrinsic', 'keyword'),
   L('empty-inset', 'Empty density anchor; also derives media/title geometry'),
   L('empty-icon-size', 'Empty glyph dimension; pinned style recipe distinct from media box'),
@@ -222,14 +230,16 @@ export const THEME_TOKENS = [
   L('shadow-thumb', 'Slider thumb', 'shadow'),
   L('shadow-switch-thumb', 'Switch thumb', 'shadow'),
   L('menu-blur', 'Translucent menu backdrop blur'),
+  L('dialog-mask-blur', 'Modal / Drawer backdrop blur, independent of Menu'),
 
-  // Focus (v3 §4.6). Outline-drawn so component shadows survive; ring = wide translucent outline.
+  // Focus (v3 §4.6): opaque color intensity lives in the two focus COLOR roles;
+  // halo is a separate softly blurred 20%-alpha box shadow, never the saturation axis.
   L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),
-  L('focus-opacity', 'Keyboard focus color strength (ring 40%)', 'percent'),
+  L('focus-opacity', 'Keyboard focus edge paint strength (opaque for outline/border)', 'percent'),
   L('focus-offset', 'Keyboard focus offset (outline -1px inset, ring 0)'),
   L('focus-shadow', 'Keyboard focus real box-shadow ring; none for outline', 'shadow'),
   L('pointer-width', 'Pointer focus width (0 = QX default: no outline)'),
-  L('pointer-opacity', 'Pointer focus color strength', 'percent'),
+  L('pointer-opacity', 'Pointer focus edge paint strength (opaque for outline/border)', 'percent'),
   L('pointer-offset', 'Pointer focus offset'),
   L('pointer-shadow', 'Pointer focus real box-shadow ring; none for default/outline', 'shadow'),
   L('hover-border-strength', 'Hover border contrast; 0% disables border hover', 'percent'),

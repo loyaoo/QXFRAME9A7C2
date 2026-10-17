@@ -142,7 +142,7 @@ var controlHost = FieldHost.resolvePickerControl({
         if (!portalContainer || !portalContainer.appendChild) throw new TypeError('[QXFRAME9A7C2] Select portalContainer must be an Element.');
     
         panel = doc.createElement('div');
-        panel.className = 'qxframe9a7c2-select-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame is-inset';
+        panel.className = 'qxframe9a7c2-select-panel qxframe9a7c2-popup-surface qxframe9a7c2-list-frame';
         panel.hidden = true;
         optionHost = doc.createElement('div');
         optionHost.className = 'qxframe9a7c2-select-option-host';

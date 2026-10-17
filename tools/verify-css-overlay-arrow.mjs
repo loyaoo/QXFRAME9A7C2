@@ -11,6 +11,8 @@ assert.equal(arrowLines.some(line=>/\b10px\b|:-5px\b/.test(line)),false,'Retired
 assert.match(css,/--_qxframe9a7c2-popover-arrow-half:calc\(var\(--_qxframe9a7c2-popover-arrow-size\) \* -\.5\)/,'Popover half-offset must derive from arrow size.');
 assert.match(css,/--_qxframe9a7c2-dropdown-arrow-half:calc\(var\(--_qxframe9a7c2-dropdown-arrow-size\) \* -\.5\)/,'Dropdown half-offset must derive from arrow size.');
 assert.match(css,/\.qxframe9a7c2-popover-arrow\{width:var\(--_qxframe9a7c2-popover-arrow-size\);height:var\(--_qxframe9a7c2-popover-arrow-size\)/,'Popover arrow dimensions must share one owner.');
+assert.match(css,/\.qxframe9a7c2-tooltip-arrow\{width:var\(--_qxframe9a7c2-popover-arrow-size\);height:var\(--_qxframe9a7c2-popover-arrow-size\)/,'Tooltip and Popconfirm share the identical arrow size owner.');
+assert.doesNotMatch(css,/\.qxframe9a7c2-tooltip-root\[data-placement[^\n]*clip-path:/,'Tooltip cannot clip its arrow or diverge from Popconfirm.');
 assert.match(css,/\.qxframe9a7c2-dropdown-arrow\{position:absolute;width:var\(--_qxframe9a7c2-dropdown-arrow-size\);height:var\(--_qxframe9a7c2-dropdown-arrow-size\)/,'Dropdown arrow dimensions must share one owner.');
 const placementLines=css.split(/\r?\n/).filter(line=>line.includes('dropdown-panel[data-placement')&&line.includes('dropdown-arrow'));
 assert.equal(placementLines.length,4,'Dropdown must retain four arrow placement rules.');

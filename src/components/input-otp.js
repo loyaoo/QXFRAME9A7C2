@@ -179,7 +179,11 @@ export class InputOTP extends FieldComponent {
                 return interaction ? interaction.dispatch(event, { ownerId:this.id + '-otp-interaction', source:'keyboard' }) !== 'pass' : false;
             }
         });
-        control.getRootElement().classList.add('qxframe9a7c2-input-otp');
+        const otpRoot = control.getRootElement();
+        // InputOTP is a container of segment inputs, not one Input control.
+        // Keep Control's segment/value/focus controllers, drop only its Input skin.
+        otpRoot.classList.remove('qxframe9a7c2-input');
+        otpRoot.classList.add('qxframe9a7c2-input-otp');
         record.control = this.own(control);
         if (control.onFormReset) control.onFormReset(() => {
             if (!valueState.controlled) valueState.setValue(initialValue, { silent:true, source:'form', reason:'reset' });

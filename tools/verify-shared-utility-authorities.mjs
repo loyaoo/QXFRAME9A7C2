@@ -13,20 +13,18 @@ const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 // 76→80: pure time/wheel algorithms have one owner.
 assert.deepEqual(TimeUnit.parse('11:22:33 PM',{showSecond:true,use12Hours:true}),{hour:23,minute:22,second:33});
 assert.equal(TimeUnit.format({hour:23,minute:22,second:33},{showSecond:true,use12Hours:true}),'11:22:33 PM');
-assert.equal(WheelMetrics.itemHeight('xs'),28);
-assert.equal(WheelMetrics.itemHeight('md'),36);
-assert.equal(WheelMetrics.itemHeight('xl'),44);
+assert.deepEqual(['xs','sm','md','lg','xl'].map(size=>WheelMetrics.itemHeight(size)),[28,32,36,40,44]);
 
 for(const file of ['src/components/time-picker.js','src/components/time-panel.js']){
   const source=read(file);
   assert.match(source,/from ['"]\.\.\/utils\/timeUnit\.js['"]/,`${file} must import TimeUnit.`);
   assert.ok(!/function\s+(?:pad|normalizeTime|formatTime|parseTime|currentTime|cloneTime|sameTime|timeNumber)\s*\(/.test(source),`${file} must not re-own canonical time helpers.`);
 }
-for(const file of ['src/components/time-panel.js','src/components/wheel-panel.js','src/components/wheel-picker.js']){
+for(const file of ['src/components/calendar.js','src/components/time-panel.js','src/components/wheel-panel.js','src/components/wheel-picker.js']){
   const source=read(file);
   assert.match(source,/from ['"]\.\.\/utils\/wheelMetrics\.js['"]/,`${file} must import WheelMetrics.`);
   assert.ok(!/function\s+(?:defaultItemHeight|normalizeWheelSize)\s*\(/.test(source),`${file} must not re-own wheel metrics.`);
-  assert.ok(!/\b(?:xs|sm|md|lg|xl)\s*:\s*(?:28|32|36|40|44)\b/.test(source),`${file} must not duplicate the canonical wheel size map.`);
+  assert.ok(!/\b(?:xs|sm|md|lg|xl)\s*:\s*(?:24|28|32|36|40|44)\b/.test(source),`${file} must not duplicate the canonical wheel size map.`);
 }
 
 // 80→84: hierarchy lookup/traversal lives in TreeQuery and item semantics in ItemAccessors.
@@ -59,14 +57,19 @@ assert.match(tagsSource,/standaloneTagNavigation\.handleKeydown\(event\)/, 'Stan
 assert.ok(!/var\s+preferred\s*=\s*moveVirtualTag\(currentKey,\s*key\s*===\s*['"]Delete['"]\s*\?\s*1\s*:\s*-1\)/.test(tagsSource), 'Tags must not re-own TagNavigation delete reconciliation.');
 
 const cascaderSource=read('src/components/cascader.js');
-assert.match(cascaderSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Cascader must import ScrollVisibility.');
-assert.match(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost,\s*record\.host,\s*\{\s*axis:['"]x['"],\s*align:['"]nearest['"]\s*\}\)/, 'Cascader column reveal must use ScrollVisibility.');
+// Cascader columns are now a bounded flex row, not a horizontal scroller.
+// The original horizontal reveal contract no longer applies. Keep the
+// PopupFrame scroll owner and ban ad hoc scroll geometry or x-axis revival.
+assert.match(cascaderSource,/popupFrame\.attachViewport\s*\(/,'Cascader Scroll stays PopupFrame-owned');
+assert.match(cascaderSource,/axis:\s*'y',\s*wheelAxis:\s*'y',\s*wheelPropagation:\s*true,\s*scrollbarVisibility:\s*'hidden'/,'Cascader horizontal scrollbar and x-wheel are disabled');
+assert.doesNotMatch(cascaderSource,/ScrollVisibility\.ensureVisible\(columnsHost|axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader must never fall back to horizontal reveal');
 assert.ok(!/column\.offsetLeft|viewport\.scrollLeft\s*=/.test(cascaderSource), 'Cascader must not re-own horizontal scroll visibility geometry.');
 
-const periodPanelSource=read('src/components/period-panel.js');
-assert.match(periodPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'PeriodPanel must import ScrollVisibility.');
-assert.match(periodPanelSource,/ScrollVisibility\.ensureVisible\(grid,\s*element,\s*\{\s*axis:['"]both['"],\s*align:['"]nearest['"]\s*\}\)/, 'PeriodPanel item reveal must use ScrollVisibility.');
-assert.ok(!/grid\.scroll(?:Top|Left)\s*=|element\.offset(?:Top|Left)/.test(periodPanelSource), 'PeriodPanel must not re-own scroll visibility geometry.');
+const calendarSource=read('src/components/calendar.js'), periodAlias=read('src/components/period-panel.js');
+assert.match(periodAlias,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'Period API must share Calendar');
+assert.match(calendarSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'Calendar period mode uses canonical ScrollVisibility');
+assert.match(calendarSource,/ScrollVisibility\.ensureVisible\(grid,el,\{axis:'both',align:'nearest'\}\)/, 'Calendar period virtual focus must reveal through shared visibility');
+assert.ok(!/grid\.scroll(?:Top|Left)\s*=|el\.offset(?:Top|Left)/.test(calendarSource),'Calendar cannot re-own scrolling');
 
 const wheelPanelSource=read('src/components/wheel-panel.js');
 assert.match(wheelPanelSource,/from ['"]\.\.\/core\/scrollVisibility\.js['"]/, 'WheelPanel must import ScrollVisibility.');

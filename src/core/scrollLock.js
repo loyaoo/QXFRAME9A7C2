@@ -59,7 +59,14 @@ var records = new WeakMap();
       if (record.count === 0) {
         record.projection = DOMProjection.create();
         var width = settings.compensateScrollbar === false ? 0 : scrollbarWidth(target, doc, win);
-        if (width > 0) {
+        var stableGutter = width > 0 && target === doc.documentElement &&
+          win.CSS && typeof win.CSS.supports === 'function' && win.CSS.supports('scrollbar-gutter', 'stable');
+        if (stableGutter) {
+          // Keep the pre-lock viewport content width without mutating padding
+          // or moving centered/fixed content when native scrollbars disappear.
+          record.projection.setStyle(target, 'scrollbar-gutter', 'stable', target.style.getPropertyPriority('scrollbar-gutter'));
+        }
+        if (width > 0 && !stableGutter) {
           var current = numberStyle(win, target, 'padding-inline-end');
           record.projection.setStyle(target, 'padding-inline-end', String(current + width) + 'px', target.style.getPropertyPriority('padding-inline-end'));
           if (target === doc.documentElement || target === doc.body) {

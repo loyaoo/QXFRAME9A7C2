@@ -23,10 +23,10 @@ export async function verifyGeometryRuleSource(root,{sourceText=null}={}){
     const body=model.compileTheme(model.normalizeConfig({style})).body;
     for(const token of GEOMETRY_TOKENS)assert.match(body,new RegExp('--qxframe9a7c2-theme-'+token+': [^;]+;'),'Compiled '+style+' theme lacks '+token);
   }
-  assert.match(source,/control-height: calc\(var\(--qxframe9a7c2-theme-control-height\) \+ var\(--_qxframe9a7c2-v2-size-index\) \* \.25rem\)/);
-  assert.match(source,/v2-size-ratio: calc\(1 \+ var\(--_qxframe9a7c2-v2-size-index\) \* \.125\)/);
+  assert.match(source,/control-height: calc\(var\(--qxframe9a7c2-theme-control-height\) \+ var\(--_qxframe9a7c2-size-index\) \* \.25rem\)/);
+  assert.match(source,/size-ratio: calc\(1 \+ var\(--_qxframe9a7c2-size-index\) \* \.125\)/);
   assert.match(source,/control-padding-block: round\(down, max\(0rem,/);
-  assert.match(source,/v2-font-step: clamp\(-1, var\(--_qxframe9a7c2-v2-size-index\), 1\)/);
-  for(const [size,index]of [['xs',-2],['sm',-1],['md',0],['lg',1],['xl',2]])assert.match(source,new RegExp('\\.qxframe9a7c2-button\\.is-'+size+'[^{}]+\\{ --_qxframe9a7c2-v2-size-index: '+index+'; \\}'));
+  assert.match(source,/font-step: clamp\(-1, var\(--_qxframe9a7c2-size-index\), 1\)/);
+  for(const [size,index]of [['xs',-2],['sm',-1],['md',0],['lg',1],['xl',2]])assert.match(source,new RegExp('\\.qxframe9a7c2-button\\.is-'+size+'[^{}]+\\{ --_qxframe9a7c2-size-index: '+index+'; \\}'));
   return {schema:3,rules:'qx-md-3',inputNames:GEOMETRY_TOKENS.length,evenLengths:true,legacyFiveSizeOverrides:false,styleSelectors:false};
 }

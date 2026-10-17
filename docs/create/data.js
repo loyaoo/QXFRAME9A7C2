@@ -92,6 +92,9 @@ export const EXT_AXES = [
     { value: 'dense', label: '高密 28' }, { value: 'compact', label: '紧凑 32' }, { value: 'standard', label: '标准 36' },
     { value: 'loose', label: '宽松 40' }, { value: 'touch', label: '超宽松 44', qx: true }],
     defaults: S('standard', 'compact', 'standard', 'compact', 'dense', 'standard', 'loose', 'compact') },
+  { key: 'menuInset', param: 'menu-inset', label: '菜单留白方式', group: 'surface', options: [
+    { value: 'all', label: '四周留白' }, { value: 'block', label: '仅上下留白' }],
+    defaults: S('all','block','all','block','block','all','block','block') },
   { key: 'padding', param: 'padding', label: '容器留白', group: 'size', options: [
     { value: 'p12', label: '极紧凑 12', qx: true }, { value: 'p16', label: '紧凑 16' }, { value: 'p20', label: '适中 20' },
     { value: 'p24', label: '标准 24' }, { value: 'p28', label: '舒展 28', qx: true }, { value: 'p32', label: '宽松 32' }],
@@ -127,9 +130,9 @@ export const EXT_AXES = [
     { value: 'standard', label: '标准 32×18.4' }, { value: 'compact', label: '紧凑 28×16.6' }, { value: 'wide', label: '宽体 44×20' },
     { value: 'tall', label: '加高 32×20' }, { value: 'square', label: '方形 33×18' }],
     defaults: S('standard', 'standard', 'standard', 'standard', 'compact', 'wide', 'square', 'tall') },
-  { key: 'sliderLook', param: 'slider', label: '滑块外观', group: 'parts', options: [
+  { key: 'sliderLook', param: 'slider', label: '滑轨粗细', group: 'parts', options: [
     { value: 't2', label: '细线 2' }, { value: 't4', label: '纤细 4' }, { value: 't6', label: '标准 6' },
-    { value: 't8', label: '粗 8' }, { value: 't12', label: '胶囊 12' }],
+    { value: 't8', label: '粗 8' }, { value: 't12', label: '超粗 12' }],
     defaults: S('t6', 't4', 't12', 't4', 't4', 't8', 't2', 't4') },
   { key: 'sections', param: 'sections', label: '表面分区', group: 'surface', options: [
     { value: 'none', label: '无分区' }, { value: 'divider', label: '仅分隔线' }, { value: 'muted', label: '灰底分区' }],
@@ -143,7 +146,7 @@ export const EXT_AXES = [
     { value: 'none', label: '无描边', qx: true }, { value: 'faint', label: '淡描边' }, { value: 'clear', label: '清晰描边' },
     { value: 'strong', label: '强描边', qx: true }],
     defaults: S('clear', 'clear', 'clear', 'clear', 'clear', 'faint', 'faint', 'faint') },
-  // Seven independent Hover/Focus axes. An absent override always means follow Style.
+  // Nine independent Hover/Focus axes (including opaque pointer/keyboard tonal strength). Absent override follows Style.
   { key: 'hoverStyle', param: 'hover-style', label: 'Hover 样式', group: 'focus', options: [
     { value: 'border', label: '边框' }, { value: 'background', label: '背景' },
     { value: 'both', label: '边框 + 背景' }, { value: 'none', label: '无' }],
@@ -157,12 +160,18 @@ export const EXT_AXES = [
   { key: 'keyboardFocusColor', param: 'kfocus-color', label: '键盘 Focus 颜色', group: 'focus', options: [
     { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
     defaults: S(...Array(8).fill('black-white')) },
+  { key: 'keyboardFocusSaturation', param: 'kfocus-saturation', label: '键盘 Focus 饱和度 / 深浅', group: 'focus', options: [
+    { value: 'light', label: '浅色' }, { value: 'normal', label: '标准' }, { value: 'deep', label: '深色' }],
+    defaults: S(...Array(8).fill('normal')) },
   { key: 'pointerFocus', param: 'pfocus', label: '鼠标 Focus 样式', group: 'focus', followLabel: '跟随风格（QX Border）', options: [
     { value: 'border', label: '边框' }, { value: 'ring', label: '光环' }, { value: 'outline', label: '外轮廓' }],
     defaults: S(...Array(8).fill('border')) },
   { key: 'pointerFocusColor', param: 'pfocus-color', label: '鼠标 Focus 颜色', group: 'focus', options: [
     { value: 'neutral', label: '中性色' }, { value: 'theme', label: '主题色' }, { value: 'black-white', label: '黑白' }],
     defaults: S(...Array(8).fill('black-white')) },
+  { key: 'pointerFocusSaturation', param: 'pfocus-saturation', label: '鼠标 Focus 饱和度 / 深浅', group: 'focus', options: [
+    { value: 'light', label: '浅色' }, { value: 'normal', label: '标准' }, { value: 'deep', label: '深色' }],
+    defaults: S(...Array(8).fill('normal')) },
   { key: 'focusBackground', param: 'focus-bg', label: 'Focus 背景', group: 'focus', options: [
     { value: 'keep', label: '保持当前背景' }, { value: 'parent-surface', label: '父级表面' }],
     defaults: S(...Array(8).fill('keep')) },
@@ -188,7 +197,7 @@ export const SHAPE_AXES = [
   { key: 'shapeSwitch', param: 'shape-switch', label: '开关', options: CONTROL_SHAPES, defaults: S('pill', 'pill', 'pill', 'pill', 'pill', 'pill', 'square', 'radius') },
   // shadcn: Rhea radio is rounded-2xl; Maia / Lyra / Mira / Rhea thumbs follow the radius, Sera's is square.
   { key: 'shapeRadio', param: 'shape-radio', label: '单选框', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'circle', 'radius') },
-  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄', options: ROUND_SHAPES, defaults: S('circle', 'circle', 'radius', 'radius', 'radius', 'circle', 'square', 'radius') },
+  { key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状', options: [...ROUND_SHAPES, { value: 'pill', label: '胶囊形' }], defaults: S('circle', 'circle', 'radius', 'radius', 'radius', 'pill', 'square', 'radius') },
   { key: 'shapeAvatar', param: 'shape-avatar', label: '头像', options: ROUND_SHAPES, defaults: S(...Array(8).fill('circle')) },
   { key: 'shapeContainer', param: 'shape-container', label: '容器', options: [{ value: 'radius', label: '跟随圆角' }, { value: 'square', label: '直角' }], defaults: S(...Array(8).fill('radius')) }
 ];

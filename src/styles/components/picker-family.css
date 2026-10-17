@@ -1,9 +1,114 @@
 .qxframe9a7c2-calendar{--_qxframe9a7c2-calendar-focus-shadow:none;--_qxframe9a7c2-calendar-opacity:1;--_qxframe9a7c2-date-panel-radius:var(--qxframe9a7c2-calendar-radius,var(--_qxframe9a7c2-popup-radius));box-shadow:var(--_qxframe9a7c2-calendar-focus-shadow);outline:0 solid transparent;outline-offset:var(--_qxframe9a7c2-focus-visible-offset);opacity:var(--_qxframe9a7c2-calendar-opacity);user-select:none}
 .qxframe9a7c2-calendar:focus-visible{--_qxframe9a7c2-calendar-focus-shadow:none;outline:none}
-.qxframe9a7c2-calendar-weekdays,.qxframe9a7c2-calendar-grid{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-1)}
-.qxframe9a7c2-calendar-weekday,.qxframe9a7c2-calendar-cell{box-sizing:border-box;flex:0 0 calc((100% - 0.75rem)/7);min-width:0}
+/* Default six-week Calendar: one weekday row + six equal date rows.
+   Opt-in adaptive-month remains independent for source-style preview cards. */
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period){
+  --_qxframe9a7c2-calendar-cell-size:var(--qxframe9a7c2-calendar-cell-size,var(--_qxframe9a7c2-calendar-default-cell-size,2rem));
+  --_qxframe9a7c2-calendar-horizontal-padding:var(--qxframe9a7c2-calendar-padding,.3125rem);
+  box-sizing:border-box;flex:0 0 auto;min-width:0;max-width:none;
+  width:calc(7 * var(--_qxframe9a7c2-calendar-cell-size) + 2 * var(--_qxframe9a7c2-calendar-horizontal-padding));
+  padding:0 var(--_qxframe9a7c2-calendar-horizontal-padding)
+}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period)>.qxframe9a7c2-calendar-header{
+  box-sizing:border-box;flex:0 0 auto;min-height:0;
+  height:calc(var(--_qxframe9a7c2-calendar-cell-size) + .5rem);
+  margin:0
+}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-nav{
+  box-sizing:border-box;flex:0 0 1.5rem;
+  width:1.5rem;
+  height:var(--_qxframe9a7c2-calendar-cell-size)
+}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period)>.qxframe9a7c2-calendar-weekdays{
+  box-sizing:border-box;flex:0 0 var(--_qxframe9a7c2-calendar-cell-size);
+  height:var(--_qxframe9a7c2-calendar-cell-size);margin:0
+}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-weekday{
+  height:var(--_qxframe9a7c2-calendar-cell-size);padding:0;
+  line-height:var(--_qxframe9a7c2-calendar-cell-size)
+}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period)>.qxframe9a7c2-calendar-grid{flex:0 0 auto;margin:0;gap:0}
+.qxframe9a7c2-calendar:not(.is-adaptive-month):not(.is-period) .qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell{
+  min-height:0;height:var(--_qxframe9a7c2-calendar-cell-size);aspect-ratio:1/1
+}
+.qxframe9a7c2-calendar-weekdays,.qxframe9a7c2-calendar-grid{display:flex;flex-wrap:wrap;gap:0}
+.qxframe9a7c2-calendar-weekday,.qxframe9a7c2-calendar-cell{box-sizing:border-box;flex:0 0 calc(100% / 7);min-width:0}
 .qxframe9a7c2-calendar-weekday{padding-block:var(--_qxframe9a7c2-fixed-space-1);text-align:center;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:.82em}
-.qxframe9a7c2-calendar-cell{aspect-ratio:1/1}
+/* Calendar is the only date-cell layout/paint owner, for standalone Calendar,
+   single/dual DatePicker and Calendar+TimePanel. Grid gap is always zero.
+   Cell button retains all interaction and private-value ownership.
+   Cell ::before alone owns the range strip (no range span/div).
+   View centers a square inner day; vertical padding separates week rows. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell{
+  --_qxframe9a7c2-calendar-cell-space:var(--_qxframe9a7c2-fixed-space-1);
+  position:relative;isolation:isolate;box-sizing:border-box;aspect-ratio:1/1;
+  display:flex;align-items:stretch;justify-content:center;
+  min-width:0;margin:0;padding:var(--_qxframe9a7c2-calendar-cell-space) 0;
+  background:transparent;border:0;border-radius:0;color:inherit;
+}
+.qxframe9a7c2-calendar-cell-view{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;min-width:0;min-height:0;pointer-events:none
+}
+.qxframe9a7c2-calendar-cell-inner{
+  position:relative;z-index:2;box-sizing:border-box;
+  display:flex;align-items:center;justify-content:center;
+  height:100%;width:auto;max-width:100%;aspect-ratio:1/1;
+  border:1px solid var(--_qxframe9a7c2-date-panel-cell-border);
+  border-radius:var(--_qxframe9a7c2-date-panel-cell-radius);
+  background:var(--_qxframe9a7c2-date-panel-cell-bg);
+  color:var(--_qxframe9a7c2-date-panel-cell-text);
+  font:inherit;line-height:inherit
+}
+/* This pseudo-element occupies only the view's vertical band, connecting
+   adjacent columns without filling the actual inter-row padding. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range::before{
+  content:"";position:absolute;z-index:1;pointer-events:none;
+  top:var(--_qxframe9a7c2-calendar-cell-space);
+  bottom:var(--_qxframe9a7c2-calendar-cell-space);
+  left:0;width:100%;
+  background:var(--_qxframe9a7c2-menu-selected-soft,color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent))
+}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-start:not(.is-range-end)::before{left:50%;width:50%}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-end:not(.is-range-start)::before{left:0;width:50%}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-range-start.is-range-end::before{content:none}
+/* Nonselected middle dates show only the continuous strip; selection endpoint
+   paint stays on the raised square and may use the standard Theme radius. */
+.qxframe9a7c2-calendar-cell.is-in-range:not(.is-selected):not(.is-range-start):not(.is-range-end)>.qxframe9a7c2-calendar-cell-view>.qxframe9a7c2-calendar-cell-inner{
+  background:transparent;border-color:transparent
+}
+/* A month-panel visual cut has the Theme radius but does not change the
+   committed selection or draw a false opaque endpoint. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-clip-start::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-clip-end::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+/* Endpoints MUST be opaque. The half-width range ::before strip sits below
+   the raised square and otherwise shows through a translucent endpoint. */
+.qxframe9a7c2-calendar-cell.is-in-range.is-range-start .qxframe9a7c2-calendar-cell-inner,
+.qxframe9a7c2-calendar-cell.is-in-range.is-range-end .qxframe9a7c2-calendar-cell-inner{
+  background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary));
+  color:var(--_qxframe9a7c2-menu-primary-foreground,var(--qxframe9a7c2-theme-primary-foreground));
+  border-color:transparent
+}
+/* Week hover covers seven consecutive dates, connected with the Range strip.
+   Endpoints need opaque pixels so the half-width ::before cannot bleed through. */
+.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-start .qxframe9a7c2-calendar-cell-inner,
+.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected).is-range-end .qxframe9a7c2-calendar-cell-inner{
+  background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,var(--_qxframe9a7c2-semantic-surface-raised));
+  color:var(--_qxframe9a7c2-semantic-text);border-color:transparent
+}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-week-hover:not(.is-week-selected)::before{
+  background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 14%,var(--_qxframe9a7c2-semantic-surface-raised))
+}
+/* Calendar's today indicator is inside the inner square, not at the bottom
+   of the padded outer button. PeriodPanel keeps its existing ::after painter. */
+.qxframe9a7c2-calendar-cell.is-today:not(.is-selected):not(:disabled) .qxframe9a7c2-calendar-cell-inner::after,
+.qxframe9a7c2-calendar-cell.is-current:not(.is-selected):not(:disabled) .qxframe9a7c2-calendar-cell-inner::after{
+  content:"";position:absolute;inset-inline-start:50%;bottom:0.1875rem;
+  width:0.25rem;height:0.25rem;border-radius:100rem;
+  transform:translateX(-50%);background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary));
+  pointer-events:none
+}
+/* Period units use the same Calendar range ::before painter and cell DOM. */
 .qxframe9a7c2-calendar-cell.is-outside:not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled);color:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar-cell.is-outside:hover:not(:disabled):not(.is-selected):not(.is-in-range),.qxframe9a7c2-calendar-cell.is-outside.is-hover:not(:disabled):not(.is-selected):not(.is-in-range){--_qxframe9a7c2-date-panel-cell-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-date-panel-cell-text:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-calendar.is-disabled{--_qxframe9a7c2-calendar-focus-shadow:none;--_qxframe9a7c2-calendar-opacity:.62}
@@ -14,6 +119,9 @@
   --_qxframe9a7c2-calendar-adaptive-cell:var(--qxframe9a7c2-calendar-cell-size,2rem);
   --_qxframe9a7c2-calendar-adaptive-padding:var(--qxframe9a7c2-calendar-padding,var(--qxframe9a7c2-theme-calendar-padding,.5rem));
   box-sizing:border-box;flex:0 0 auto;min-width:0;max-width:none;
+  /* Shared Calendar height across standalone, range and DateTime hosts:
+     no component-specific Calendar cell/height override in DatePicker. */
+  min-height:calc(9 * var(--_qxframe9a7c2-control-height));
   width:calc(7 * var(--_qxframe9a7c2-calendar-adaptive-cell) + 2 * var(--_qxframe9a7c2-calendar-adaptive-padding));
   padding:var(--_qxframe9a7c2-calendar-adaptive-padding);
   border:0;background:transparent
@@ -37,13 +145,13 @@
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{gap:0}
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday,
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
-  box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0;padding:0
+  box-sizing:border-box;flex:0 0 calc(100% / 7);width:calc(100% / 7);min-width:0
 }
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-weekday{
-  font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
+  padding:0;font-size:.8rem;line-height:var(--qxframe9a7c2-theme-calendar-weekday-leading,var(--qxframe9a7c2-theme-text-leading));font-weight:400
 }
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid{
-  margin-top:.5rem;row-gap:.5rem
+  margin-top:.5rem
 }
 .qxframe9a7c2-calendar.is-adaptive-month .qxframe9a7c2-calendar-cell{
   /* Exact adaptive day-box dimension; generic date controls may set a taller min-height. */
@@ -54,29 +162,35 @@
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(29).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+29),
 .qxframe9a7c2-calendar.is-adaptive-month>.qxframe9a7c2-calendar-grid:has(>.qxframe9a7c2-calendar-cell:nth-child(36).is-outside)>.qxframe9a7c2-calendar-cell:nth-child(n+36){display:none}
 
-.qxframe9a7c2-period-panel{--_qxframe9a7c2-period-panel-min-width:var(--qxframe9a7c2-period-panel-min-width,calc(16rem + 1.5rem));--_qxframe9a7c2-period-panel-bg:var(--qxframe9a7c2-period-panel-bg,var(--_qxframe9a7c2-semantic-surface));--_qxframe9a7c2-period-panel-border:var(--qxframe9a7c2-period-panel-border,var(--_qxframe9a7c2-semantic-border));--_qxframe9a7c2-period-panel-text:var(--qxframe9a7c2-period-panel-text,var(--_qxframe9a7c2-semantic-text));--_qxframe9a7c2-period-panel-divider:var(--qxframe9a7c2-period-panel-divider,var(--_qxframe9a7c2-semantic-border-subtle));--_qxframe9a7c2-period-panel-hover-bg:var(--qxframe9a7c2-period-panel-hover-bg,var(--_qxframe9a7c2-navigation-hover-bg));--_qxframe9a7c2-period-panel-selected-bg:var(--qxframe9a7c2-period-panel-selected-bg,var(--qxframe9a7c2-theme-primary));--_qxframe9a7c2-period-panel-selected-text:var(--qxframe9a7c2-period-panel-selected-text,var(--_qxframe9a7c2-semantic-on-accent));--_qxframe9a7c2-period-panel-range-bg:var(--qxframe9a7c2-period-panel-range-bg,var(--_qxframe9a7c2-data-selected-bg));--_qxframe9a7c2-period-panel-radius:var(--qxframe9a7c2-period-panel-radius,var(--_qxframe9a7c2-popup-radius));--_qxframe9a7c2-period-panel-item-radius:var(--qxframe9a7c2-period-panel-item-radius,var(--_qxframe9a7c2-action-radius));--_qxframe9a7c2-date-panel-min-width:var(--_qxframe9a7c2-period-panel-min-width);--_qxframe9a7c2-date-panel-bg:var(--_qxframe9a7c2-period-panel-bg);--_qxframe9a7c2-date-panel-border:var(--_qxframe9a7c2-period-panel-border);--_qxframe9a7c2-date-panel-text:var(--_qxframe9a7c2-period-panel-text);--_qxframe9a7c2-date-panel-radius:var(--_qxframe9a7c2-period-panel-radius)}
-.qxframe9a7c2-period-panel-grid{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-2)}
-.qxframe9a7c2-period-panel-cell{--_qxframe9a7c2-date-panel-cell-radius:var(--_qxframe9a7c2-period-panel-item-radius);position:relative;min-height:var(--_qxframe9a7c2-control-height);flex:0 0 calc(25% - (var(--_qxframe9a7c2-fixed-space-2) * .75));padding:var(--_qxframe9a7c2-control-gap)}
-.qxframe9a7c2-period-panel.is-disabled{opacity:.62}
+/* One Calendar structure for day/week and month/quarter/year. */
+.qxframe9a7c2-calendar.is-period>.qxframe9a7c2-calendar-weekdays{display:none}
+.qxframe9a7c2-calendar.is-period>.qxframe9a7c2-calendar-grid{column-gap:0;row-gap:0}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-cell{--_qxframe9a7c2-calendar-cell-space:var(--_qxframe9a7c2-control-gap);flex:0 0 25%;aspect-ratio:auto;min-height:var(--_qxframe9a7c2-control-height);padding:var(--_qxframe9a7c2-calendar-cell-space) 0}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-cell-view{height:auto;min-height:var(--_qxframe9a7c2-control-height)}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-cell-inner{height:var(--_qxframe9a7c2-control-height);width:100%;aspect-ratio:auto}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-month{display:none}
 
 .qxframe9a7c2-wheel-picker-popup{min-width:15rem}
 .qxframe9a7c2-wheel-panel{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .qxframe9a7c2-wheel-panel:focus-visible{outline:none}
-.qxframe9a7c2-wheel-panel-columns{display:flex;align-items:stretch;min-width:0;gap:0}
+.qxframe9a7c2-wheel-panel-columns{position:relative;z-index:var(--qxframe9a7c2-z-local-above);display:flex;align-items:stretch;min-width:0;gap:0}
 .qxframe9a7c2-wheel-panel-column{position:relative;display:flex;flex:1 1 0;min-width:0;flex-direction:column}
-.qxframe9a7c2-wheel-panel-column-title{flex:0 0 auto;padding:calc(var(--_qxframe9a7c2-control-gap) * .75) var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);font-weight:600;color:var(--_qxframe9a7c2-semantic-text-secondary);text-align:center}
+.qxframe9a7c2-wheel-panel-column-title{box-sizing:border-box;flex:0 0 auto;display:flex;align-items:center;justify-content:center;height:calc(var(--qxframe9a7c2-wheel-item-height,2rem) + .5rem);min-height:0;padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);font-weight:600;color:var(--_qxframe9a7c2-semantic-text-secondary);text-align:center}
 .qxframe9a7c2-wheel-panel-scroll{position:relative;min-width:0;overflow:hidden}
+/* Scroll and center-guide are siblings created by WheelPanel. Layer the transparent
+   scroll content above the guide; the guide remains the only selection backdrop. */
+.qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll{z-index:var(--qxframe9a7c2-z-local-above)}
 .qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll,.qxframe9a7c2-wheel-panel-scroll .qxframe9a7c2-scroll-viewport{height:100%}
 .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:pointer;--_qxframe9a7c2-wheel-item-opacity:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:0;padding:0 var(--_qxframe9a7c2-fixed-space-5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:var(--_qxframe9a7c2-wheel-item-cursor);user-select:none;color:var(--_qxframe9a7c2-wheel-item-text);font-weight:var(--_qxframe9a7c2-wheel-item-weight);opacity:var(--_qxframe9a7c2-wheel-item-opacity)}
-.qxframe9a7c2-wheel-panel-item.is-selected{--_qxframe9a7c2-wheel-item-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-wheel-item-weight:600}
+.qxframe9a7c2-wheel-panel-item.is-selected{--_qxframe9a7c2-wheel-item-text:var(--qxframe9a7c2-time-panel-selected-text,var(--qxframe9a7c2-theme-menu-accent-foreground));--_qxframe9a7c2-wheel-item-weight:600}
 .qxframe9a7c2-wheel-panel-item.is-keyboard-focus{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset);position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
 .qxframe9a7c2-picker-field-panel .qxframe9a7c2-wheel-panel-item.is-keyboard-focus{outline-offset:calc(var(--_qxframe9a7c2-focus-visible-width) * -1)}
 .qxframe9a7c2-wheel-panel.is-readonly .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-cursor:default}
 .qxframe9a7c2-wheel-panel-item.is-disabled,.qxframe9a7c2-wheel-panel.is-disabled .qxframe9a7c2-wheel-panel-item{--_qxframe9a7c2-wheel-item-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-wheel-item-weight:400;--_qxframe9a7c2-wheel-item-cursor:not-allowed;--_qxframe9a7c2-wheel-item-opacity:.5}
 .qxframe9a7c2-wheel-panel-pad{flex:0 0 auto;pointer-events:none}
-.qxframe9a7c2-wheel-panel-center-guide{position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0;top:50%;height:var(--qxframe9a7c2-wheel-item-height,2.25rem);transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--_qxframe9a7c2-semantic-accent-border);background:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
+.qxframe9a7c2-wheel-panel-center-guide{box-sizing:border-box;position:absolute;z-index:var(--qxframe9a7c2-z-local-raised);inset-inline:0;top:50%;height:var(--qxframe9a7c2-wheel-item-height,2rem);transform:translateY(-50%);pointer-events:none;border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)}
 
-.qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border)}
+.qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--qxframe9a7c2-theme-field-border)}
 
 .qxframe9a7c2-time-panel-root{--_qxframe9a7c2-time-panel-min-width:var(--qxframe9a7c2-time-panel-min-width,15rem);--_qxframe9a7c2-time-panel-bg:var(--qxframe9a7c2-time-panel-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-time-panel-border:var(--qxframe9a7c2-time-panel-border,var(--_qxframe9a7c2-popup-border));box-sizing:border-box;display:flex;min-width:var(--_qxframe9a7c2-time-panel-min-width);max-width:100%;border:1px solid var(--_qxframe9a7c2-time-panel-border);border-radius:var(--qxframe9a7c2-time-panel-radius,var(--_qxframe9a7c2-popup-radius));background:var(--_qxframe9a7c2-time-panel-bg);overflow:hidden}
 .qxframe9a7c2-time-panel-root:focus-visible{outline:none}
@@ -84,7 +198,7 @@
 .qxframe9a7c2-time-panel-wrapper>.qxframe9a7c2-wheel-panel{width:100%}
 .qxframe9a7c2-time-panel-root.is-disabled{opacity:.62}
 
-.qxframe9a7c2-color-panel{--_qxframe9a7c2-color-panel-width:var(--qxframe9a7c2-component-color-panel-width,calc(16rem + 1.5rem));--_qxframe9a7c2-color-panel-padding:var(--qxframe9a7c2-component-color-panel-padding,var(--_qxframe9a7c2-control-gap));--_qxframe9a7c2-color-panel-field-bg:var(--qxframe9a7c2-component-color-panel-field-bg,var(--_qxframe9a7c2-control-bg));--_qxframe9a7c2-color-panel-field-border:var(--qxframe9a7c2-component-color-panel-field-border,var(--_qxframe9a7c2-control-border));--_qxframe9a7c2-color-panel-field-text:var(--qxframe9a7c2-component-color-panel-field-text,var(--_qxframe9a7c2-control-text));box-sizing:border-box;width:var(--_qxframe9a7c2-color-panel-width);max-width:100%;padding:var(--_qxframe9a7c2-color-panel-padding);color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size);user-select:none}
+.qxframe9a7c2-color-panel{--_qxframe9a7c2-color-panel-width:var(--qxframe9a7c2-component-color-panel-width,calc(16rem + 1.5rem));--_qxframe9a7c2-color-panel-padding:var(--qxframe9a7c2-component-color-panel-padding,var(--_qxframe9a7c2-control-gap));--_qxframe9a7c2-color-panel-field-bg:var(--qxframe9a7c2-component-color-panel-field-bg,var(--_qxframe9a7c2-control-bg));--_qxframe9a7c2-color-panel-field-border:var(--qxframe9a7c2-component-color-panel-field-border,var(--_qxframe9a7c2-semantic-border));--_qxframe9a7c2-color-panel-field-text:var(--qxframe9a7c2-component-color-panel-field-text,var(--_qxframe9a7c2-control-text));box-sizing:border-box;width:var(--_qxframe9a7c2-color-panel-width);max-width:100%;padding:var(--_qxframe9a7c2-color-panel-padding);color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size);user-select:none}
 .qxframe9a7c2-color-panel-saturation{position:relative;height:calc(10rem + 0.625rem);overflow:hidden;border-radius:var(--qxframe9a7c2-component-color-panel-radius,var(--_qxframe9a7c2-surface-radius));background:#1677ff;cursor:crosshair;touch-action:none;outline:none}
 .qxframe9a7c2-color-panel-saturation:focus-visible,.qxframe9a7c2-color-panel-saturation.is-keyboard-focus{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-color-panel-saturation-white,.qxframe9a7c2-color-panel-saturation-black{position:absolute;inset:0;pointer-events:none}
@@ -92,13 +206,22 @@
 .qxframe9a7c2-color-panel-saturation-black{background:linear-gradient(0deg,#000,rgba(0,0,0,0))}
 .qxframe9a7c2-color-panel-thumb{position:absolute;width:0.75rem;height:0.75rem;margin:calc(0.375rem * -1) 0 0 calc(0.375rem * -1);border:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #fff;border-radius:50%;outline:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #111;outline-offset:0;box-shadow:0 var(--_qxframe9a7c2-fixed-color-panel-shadow-y) 0.5rem rgba(0,0,0,.42);pointer-events:none}
 .qxframe9a7c2-color-panel-controls{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap)}
-.qxframe9a7c2-color-panel-preview{width:var(--_qxframe9a7c2-control-height);height:var(--_qxframe9a7c2-control-height);flex:0 0 var(--_qxframe9a7c2-control-height);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:50%;background-color:transparent;background-image:linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%),linear-gradient(-45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%);background-size:0.5rem 0.5rem;background-position:0 0,0 0.25rem,0.25rem calc(0.25rem * -1),calc(0.25rem * -1) 0}
+.qxframe9a7c2-color-panel-preview{width:var(--_qxframe9a7c2-control-height);height:var(--_qxframe9a7c2-control-height);flex:0 0 var(--_qxframe9a7c2-control-height);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);background-color:transparent;background-image:linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%),linear-gradient(-45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%);background-size:0.5rem 0.5rem;background-position:0 0,0 0.25rem,0.25rem calc(0.25rem * -1),calc(0.25rem * -1) 0}
 .qxframe9a7c2-color-panel-sliders{min-width:0;flex:1;display:flex;flex-direction:column;gap:calc(var(--_qxframe9a7c2-control-gap) * .75)}
-.qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha{width:100%;height:0.875rem;margin:0;padding:0;appearance:none;border:0;border-radius:100rem;outline:none;cursor:pointer}
-.qxframe9a7c2-color-panel-hue{background:linear-gradient(90deg,#f5222d,#fadb14,#52c41a,#13c2c2,#1677ff,#722ed1,#f5222d)}
-.qxframe9a7c2-color-panel-alpha{background-color:var(--_qxframe9a7c2-semantic-surface);background-image:linear-gradient(90deg,transparent,var(--qxframe9a7c2-component-color-panel-alpha-color,#1677ff)),linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%),linear-gradient(-45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%);background-size:auto,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem}
-.qxframe9a7c2-color-panel-hue::-webkit-slider-thumb,.qxframe9a7c2-color-panel-alpha::-webkit-slider-thumb{width:1.125rem;height:1.125rem;appearance:none;box-sizing:border-box;border:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #fff;border-radius:50%;background:#fff;outline:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #111;outline-offset:0;box-shadow:0 var(--_qxframe9a7c2-fixed-color-panel-shadow-y) 0.5rem rgba(0,0,0,.42);cursor:pointer}
-.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{width:1.125rem;height:1.125rem;box-sizing:border-box;border:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #fff;border-radius:50%;background:#fff;outline:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid #111;outline-offset:0;box-shadow:0 var(--_qxframe9a7c2-fixed-color-panel-shadow-y) 0.5rem rgba(0,0,0,.42);cursor:pointer}
+/* Two native rails and their gap match the adjacent preview height. */
+.qxframe9a7c2-color-panel-sliders:has(>.qxframe9a7c2-color-panel-hue):has(>.qxframe9a7c2-color-panel-alpha){--_qxframe9a7c2-color-panel-slider-height:calc((var(--_qxframe9a7c2-control-height) - var(--_qxframe9a7c2-control-gap) * .75) / 2)}
+/* Native hue/alpha inputs consume Slider's size, track, thumb and Shape
+   contracts; the track's spectrum/checker gradient is ColorPanel content. */
+.qxframe9a7c2-color-panel-hue,.qxframe9a7c2-color-panel-alpha{width:100%;height:var(--_qxframe9a7c2-color-panel-slider-height,var(--qxframe9a7c2-slider-height,var(--_qxframe9a7c2-control-height)));margin:0;padding:0;appearance:none;border:0;border-radius:var(--_qxframe9a7c2-slider-rail-radius,var(--qxframe9a7c2-slider-rail-radius,100rem));background:transparent;outline:none;cursor:pointer}
+.qxframe9a7c2-color-panel-hue::-webkit-slider-runnable-track,.qxframe9a7c2-color-panel-alpha::-webkit-slider-runnable-track{box-sizing:border-box;height:var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem));border:0;border-radius:var(--_qxframe9a7c2-slider-rail-radius,var(--qxframe9a7c2-slider-rail-radius,100rem))}
+.qxframe9a7c2-color-panel-hue::-moz-range-track,.qxframe9a7c2-color-panel-alpha::-moz-range-track{box-sizing:border-box;height:var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem));border:0;border-radius:var(--_qxframe9a7c2-slider-rail-radius,var(--qxframe9a7c2-slider-rail-radius,100rem))}
+.qxframe9a7c2-color-panel-hue::-webkit-slider-runnable-track{background:linear-gradient(90deg,#f5222d,#fadb14,#52c41a,#13c2c2,#1677ff,#722ed1,#f5222d)}
+.qxframe9a7c2-color-panel-hue::-moz-range-track{background:linear-gradient(90deg,#f5222d,#fadb14,#52c41a,#13c2c2,#1677ff,#722ed1,#f5222d)}
+.qxframe9a7c2-color-panel-alpha::-webkit-slider-runnable-track{background-color:var(--_qxframe9a7c2-semantic-surface);background-image:linear-gradient(90deg,transparent,var(--qxframe9a7c2-component-color-panel-alpha-color,#1677ff)),linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%),linear-gradient(-45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%);background-size:auto,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem}
+.qxframe9a7c2-color-panel-alpha::-moz-range-track{background-color:var(--_qxframe9a7c2-semantic-surface);background-image:linear-gradient(90deg,transparent,var(--qxframe9a7c2-component-color-panel-alpha-color,#1677ff)),linear-gradient(45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(-45deg,var(--_qxframe9a7c2-semantic-surface-muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%),linear-gradient(-45deg,transparent 75%,var(--_qxframe9a7c2-semantic-surface-muted) 75%);background-size:auto,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem,0.5rem 0.5rem}
+.qxframe9a7c2-color-panel-hue::-webkit-slider-thumb,.qxframe9a7c2-color-panel-alpha::-webkit-slider-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-width-md,1rem))));height:var(--_qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-height-md,1rem))));appearance:none;border:1px solid var(--qxframe9a7c2-slider-handle-border-color,var(--qxframe9a7c2-theme-thumb-border,var(--qxframe9a7c2-theme-primary)));border-radius:var(--_qxframe9a7c2-slider-handle-radius,var(--qxframe9a7c2-slider-handle-radius,50%));background:var(--qxframe9a7c2-slider-handle-background,var(--qxframe9a7c2-theme-thumb,var(--_qxframe9a7c2-semantic-surface)));box-shadow:var(--_qxframe9a7c2-slider-handle-shadow,0 1px 0.25rem rgb(0 0 0 / .18));cursor:grab}
+.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle-width,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-width-md,1rem))));height:var(--_qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-height-md,1rem))));appearance:none;border:1px solid var(--qxframe9a7c2-slider-handle-border-color,var(--qxframe9a7c2-theme-thumb-border,var(--qxframe9a7c2-theme-primary)));border-radius:var(--_qxframe9a7c2-slider-handle-radius,var(--qxframe9a7c2-slider-handle-radius,50%));background:var(--qxframe9a7c2-slider-handle-background,var(--qxframe9a7c2-theme-thumb,var(--_qxframe9a7c2-semantic-surface)));box-shadow:var(--_qxframe9a7c2-slider-handle-shadow,0 1px 0.25rem rgb(0 0 0 / .18));cursor:grab}
+.qxframe9a7c2-color-panel-hue::-webkit-slider-thumb,.qxframe9a7c2-color-panel-alpha::-webkit-slider-thumb{margin-top:calc((var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem)) - var(--_qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle-height,var(--qxframe9a7c2-slider-handle,var(--qxframe9a7c2-slider-handle-height-md,1rem))))) / 2)}
 .qxframe9a7c2-color-panel-hue:focus-visible,.qxframe9a7c2-color-panel-alpha:focus-visible{box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-color-panel-fields{display:flex;align-items:stretch;gap:calc(var(--_qxframe9a7c2-control-gap) * .75);margin-top:var(--_qxframe9a7c2-fixed-space-5)}
 .qxframe9a7c2-color-panel-format,.qxframe9a7c2-color-panel-eye,.qxframe9a7c2-color-panel-input{box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);border:1px solid var(--_qxframe9a7c2-color-panel-field-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-color-panel-field-bg);color:var(--_qxframe9a7c2-color-panel-field-text);font:inherit}
@@ -109,7 +232,8 @@
 .qxframe9a7c2-color-panel-format:hover:not(:disabled),.qxframe9a7c2-color-panel-eye:hover:not(:disabled){background:var(--_qxframe9a7c2-semantic-surface-muted)}
 .qxframe9a7c2-color-panel-presets{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap)}
 .qxframe9a7c2-color-panel-preset{box-sizing:border-box;width:max(1.125rem,calc(var(--_qxframe9a7c2-control-height) * .75));height:max(1.125rem,calc(var(--_qxframe9a7c2-control-height) * .75));padding:0;border:var(--_qxframe9a7c2-fixed-color-panel-control-border) solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);box-shadow:none;cursor:pointer}
-.qxframe9a7c2-color-panel-preset:hover:not(:disabled),.qxframe9a7c2-color-panel-preset.is-active{border-color:var(--qxframe9a7c2-theme-primary);box-shadow:none}
+.qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),.qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active){border-color:var(--_qxframe9a7c2-semantic-border);box-shadow:none}
+.qxframe9a7c2-color-panel-preset.is-active{border-color:var(--qxframe9a7c2-theme-primary);box-shadow:none}
 .qxframe9a7c2-color-panel-preset:focus-visible:not(:disabled),.qxframe9a7c2-color-panel-preset.is-keyboard-focus:not(:disabled){border-color:var(--qxframe9a7c2-theme-primary);box-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-color-panel.is-disabled,.qxframe9a7c2-color-panel.is-readonly{opacity:.62}
 .qxframe9a7c2-color-panel.is-disabled .qxframe9a7c2-color-panel-saturation,.qxframe9a7c2-color-panel.is-readonly .qxframe9a7c2-color-panel-saturation,.qxframe9a7c2-color-panel.is-disabled input,.qxframe9a7c2-color-panel.is-readonly input,.qxframe9a7c2-color-panel.is-disabled button,.qxframe9a7c2-color-panel.is-readonly button{cursor:not-allowed}
@@ -129,7 +253,7 @@
 .qxframe9a7c2-picker-field-footer-end{display:flex;align-items:center;gap:var(--_qxframe9a7c2-fixed-space-2);min-width:0}
 
 
-.qxframe9a7c2-tooltip-root{--_qxframe9a7c2-tooltip-bg:var(--qxframe9a7c2-tooltip-bg,var(--_qxframe9a7c2-semantic-text));--_qxframe9a7c2-tooltip-text:var(--qxframe9a7c2-tooltip-text,var(--_qxframe9a7c2-semantic-bg));max-width:min(calc(16rem + 8rem),calc(100% - 2rem));pointer-events:none}
+.qxframe9a7c2-tooltip-root{--_qxframe9a7c2-tooltip-bg:var(--qxframe9a7c2-tooltip-bg,var(--qxframe9a7c2-theme-foreground));--_qxframe9a7c2-tooltip-text:var(--qxframe9a7c2-tooltip-text,var(--qxframe9a7c2-theme-background));max-width:min(calc(16rem + 8rem),calc(100% - 2rem));pointer-events:none}
 .qxframe9a7c2-tooltip-root[hidden]{display:none}
 
 .qxframe9a7c2-tooltip-container{--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-tooltip-bg);--_qxframe9a7c2-popup-surface-border:transparent;--_qxframe9a7c2-popup-surface-border-width:0px;--_qxframe9a7c2-popup-surface-text:var(--_qxframe9a7c2-tooltip-text);--_qxframe9a7c2-popup-surface-radius:var(--qxframe9a7c2-tooltip-radius,var(--_qxframe9a7c2-popup-radius));padding:0.375rem 0.5rem;font-size:var(--_qxframe9a7c2-control-font-size);line-height:1.4}
@@ -139,31 +263,35 @@
 .qxframe9a7c2-tooltip-root.is-lg .qxframe9a7c2-tooltip-container{font-size:1rem;padding:0.375rem 0.625rem}
 .qxframe9a7c2-tooltip-root.is-xl .qxframe9a7c2-tooltip-container{font-size:1rem;padding:0.5rem 0.75rem}
 
-.qxframe9a7c2-tooltip-arrow{width:0.5rem;height:0.5rem;background:var(--_qxframe9a7c2-tooltip-bg)}
+/* Popconfirm consumes Popover's arrow. Tooltip uses the SAME rotated square,
+ * same size, offsets and four edge geometries, with its own surface color.
+ * No clip-path (which clipped the arrow and changed alpha). */
+.qxframe9a7c2-tooltip-root{--_qxframe9a7c2-popover-arrow-size:var(--qxframe9a7c2-popover-arrow-size,0.625rem);--_qxframe9a7c2-popover-arrow-half:calc(var(--_qxframe9a7c2-popover-arrow-size) * -.5)}
+.qxframe9a7c2-tooltip-arrow{width:var(--_qxframe9a7c2-popover-arrow-size);height:var(--_qxframe9a7c2-popover-arrow-size);transform:rotate(45deg);transform-origin:center;background:var(--_qxframe9a7c2-tooltip-bg);border:1px solid transparent;box-sizing:border-box;z-index:var(--qxframe9a7c2-z-local-base);pointer-events:none}
 .qxframe9a7c2-tooltip-arrow[hidden]{display:none}
-.qxframe9a7c2-tooltip-root[data-placement^="top"] .qxframe9a7c2-tooltip-arrow{left:50%;bottom:calc(0.5rem * -.5);margin-left:calc(0.5rem * -.5)}
-.qxframe9a7c2-tooltip-root[data-placement^="bottom"] .qxframe9a7c2-tooltip-arrow{left:50%;top:calc(0.5rem * -.5);margin-left:calc(0.5rem * -.5)}
-.qxframe9a7c2-tooltip-root[data-placement^="left"] .qxframe9a7c2-tooltip-arrow{right:calc(0.5rem * -.5);top:50%;margin-top:calc(0.5rem * -.5)}
-.qxframe9a7c2-tooltip-root[data-placement^="right"] .qxframe9a7c2-tooltip-arrow{left:calc(0.5rem * -.5);top:50%;margin-top:calc(0.5rem * -.5)}
+.qxframe9a7c2-tooltip-root[data-placement^="top"] .qxframe9a7c2-tooltip-arrow{left:50%;bottom:var(--_qxframe9a7c2-popover-arrow-half);margin-left:var(--_qxframe9a7c2-popover-arrow-half);border-left:0;border-top:0}
+.qxframe9a7c2-tooltip-root[data-placement^="bottom"] .qxframe9a7c2-tooltip-arrow{left:50%;top:var(--_qxframe9a7c2-popover-arrow-half);margin-left:var(--_qxframe9a7c2-popover-arrow-half);border-right:0;border-bottom:0}
+.qxframe9a7c2-tooltip-root[data-placement^="left"] .qxframe9a7c2-tooltip-arrow{right:var(--_qxframe9a7c2-popover-arrow-half);top:50%;margin-top:var(--_qxframe9a7c2-popover-arrow-half);border-left:0;border-bottom:0}
+.qxframe9a7c2-tooltip-root[data-placement^="right"] .qxframe9a7c2-tooltip-arrow{left:var(--_qxframe9a7c2-popover-arrow-half);top:50%;margin-top:var(--_qxframe9a7c2-popover-arrow-half);border-right:0;border-top:0}
 .qxframe9a7c2-tooltip-root[data-placement^="top"]{transform-origin:50% 100%}
 .qxframe9a7c2-tooltip-root[data-placement^="bottom"]{transform-origin:50% 0}
 .qxframe9a7c2-tooltip-root[data-placement^="left"]{transform-origin:100% 50%}
 .qxframe9a7c2-tooltip-root[data-placement^="right"]{transform-origin:0 50%}
 
-.qxframe9a7c2-popconfirm-root{--_qxframe9a7c2-popconfirm-accent:var(--qxframe9a7c2-popconfirm-accent,var(--qxframe9a7c2-theme-warning));--_qxframe9a7c2-popconfirm-soft:var(--qxframe9a7c2-popconfirm-soft,color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 10%, transparent));box-sizing:border-box;min-width:calc(13rem + 0.75rem);max-width:min(calc(16rem + 12rem),calc(100% - 3rem));color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size)}
+.qxframe9a7c2-popconfirm-root{--_qxframe9a7c2-popconfirm-accent:var(--qxframe9a7c2-popconfirm-accent,var(--qxframe9a7c2-theme-warning));--_qxframe9a7c2-popconfirm-soft:var(--qxframe9a7c2-popconfirm-soft,color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 10%, transparent));box-sizing:border-box;width:100%;min-width:0;max-width:none;color:var(--_qxframe9a7c2-semantic-text);font-size:var(--_qxframe9a7c2-control-font-size)}
 .qxframe9a7c2-popconfirm-wrapper{display:flex;align-items:flex-start;gap:var(--_qxframe9a7c2-control-gap)}
-.qxframe9a7c2-popconfirm-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);border-radius:50%;background:var(--_qxframe9a7c2-popconfirm-soft);color:var(--_qxframe9a7c2-popconfirm-accent);font-weight:700}
+.qxframe9a7c2-popconfirm-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-block-start:max(0rem,calc((var(--_qxframe9a7c2-control-font-size) * 1.4 - var(--_qxframe9a7c2-control-icon-size)) / 2));width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);border-radius:50%;background:var(--_qxframe9a7c2-popconfirm-soft);color:var(--_qxframe9a7c2-popconfirm-accent);font-weight:700}
 .qxframe9a7c2-popconfirm-root.is-danger{--_qxframe9a7c2-popconfirm-accent:var(--qxframe9a7c2-theme-destructive);--_qxframe9a7c2-popconfirm-soft:color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent)}
 .qxframe9a7c2-popconfirm-section{min-width:0;flex:1 1 auto}
 .qxframe9a7c2-popconfirm-title{font-weight:700;line-height:1.4}
 .qxframe9a7c2-popconfirm-title[hidden],.qxframe9a7c2-popconfirm-content[hidden],.qxframe9a7c2-popconfirm-icon[hidden]{display:none}
 .qxframe9a7c2-popconfirm-content{margin-top:var(--_qxframe9a7c2-fixed-space-1);color:var(--_qxframe9a7c2-semantic-text-secondary);line-height:1.5}
 .qxframe9a7c2-popconfirm-actions{display:flex;justify-content:flex-end;gap:var(--_qxframe9a7c2-control-gap);margin-top:calc(var(--_qxframe9a7c2-control-gap) * 1.5)}
-.qxframe9a7c2-popconfirm-actions .qxframe9a7c2-button{min-height:var(--_qxframe9a7c2-control-height);padding-inline:var(--_qxframe9a7c2-control-padding-inline)}
-.qxframe9a7c2-popconfirm-root.is-xs{min-width:calc(11rem + 0.25rem);font-size:0.75rem}
-.qxframe9a7c2-popconfirm-root.is-sm{min-width:calc(12rem + 0.5rem);font-size:0.875rem}
-.qxframe9a7c2-popconfirm-root.is-lg{min-width:15rem;font-size:1rem}
-.qxframe9a7c2-popconfirm-root.is-xl{min-width:calc(16rem + 0.25rem);font-size:1rem}
+/* Popconfirm uses Button.is-sm's size system; no duplicate height/padding owner. */
+.qxframe9a7c2-popconfirm-root.is-xs{font-size:0.75rem}
+.qxframe9a7c2-popconfirm-root.is-sm{font-size:0.875rem}
+.qxframe9a7c2-popconfirm-root.is-lg{font-size:1rem}
+.qxframe9a7c2-popconfirm-root.is-xl{font-size:1rem}
 
 .qxframe9a7c2-dropdown-panel,.qxframe9a7c2-dropdown-submenu-panel{--_qxframe9a7c2-dropdown-arrow-size:var(--qxframe9a7c2-dropdown-arrow-size,0.625rem);--_qxframe9a7c2-dropdown-arrow-half:calc(var(--_qxframe9a7c2-dropdown-arrow-size) * -.5);--_qxframe9a7c2-dropdown-min-width:var(--qxframe9a7c2-dropdown-min-width,calc(11rem + 0.25rem));--_qxframe9a7c2-dropdown-max-width:var(--qxframe9a7c2-dropdown-max-width,min(calc(16rem * 2),calc(100% - 2rem)));--_qxframe9a7c2-dropdown-bg:var(--qxframe9a7c2-dropdown-bg,var(--_qxframe9a7c2-popup-bg));--_qxframe9a7c2-dropdown-border:var(--qxframe9a7c2-dropdown-border,var(--_qxframe9a7c2-popup-border));--_qxframe9a7c2-dropdown-shadow:var(--qxframe9a7c2-dropdown-shadow,var(--qxframe9a7c2-theme-shadow-popup));--_qxframe9a7c2-dropdown-z:var(--qxframe9a7c2-dropdown-z,1000);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-dropdown-bg);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-dropdown-border);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-dropdown-shadow);position:absolute;min-width:var(--_qxframe9a7c2-dropdown-min-width);max-width:var(--_qxframe9a7c2-dropdown-max-width);z-index:var(--_qxframe9a7c2-dropdown-z)}
 .qxframe9a7c2-dropdown-panel[hidden],.qxframe9a7c2-dropdown-submenu-panel[hidden]{display:none}
@@ -191,12 +319,12 @@
 
 .qxframe9a7c2-cascader{--_qxframe9a7c2-cascader-arrow-transform:none;min-width:0;max-width:100%}
 .qxframe9a7c2-cascader-control{width:100%}
-.qxframe9a7c2-cascader-panel{--_qxframe9a7c2-cascader-panel-border:var(--_qxframe9a7c2-popup-border);--_qxframe9a7c2-cascader-panel-bg:var(--_qxframe9a7c2-popup-bg);--_qxframe9a7c2-cascader-panel-shadow:var(--qxframe9a7c2-theme-shadow-popup);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-cascader-panel-border);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-cascader-panel-bg);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-cascader-panel-shadow);position:absolute;max-width:min(calc(16rem * 3 + 4rem),calc(100% - 2rem));overflow:hidden;}
+.qxframe9a7c2-cascader-panel{--_qxframe9a7c2-cascader-panel-border:var(--_qxframe9a7c2-popup-border);--_qxframe9a7c2-cascader-panel-bg:var(--_qxframe9a7c2-popup-bg);--_qxframe9a7c2-cascader-panel-shadow:var(--qxframe9a7c2-theme-shadow-popup);--_qxframe9a7c2-popup-surface-border:var(--_qxframe9a7c2-cascader-panel-border);--_qxframe9a7c2-popup-surface-bg:var(--_qxframe9a7c2-cascader-panel-bg);--_qxframe9a7c2-popup-surface-shadow:var(--_qxframe9a7c2-cascader-panel-shadow);position:absolute;width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem),calc(100% - 1rem));min-width:min(11rem,100%);max-width:100%;overflow:hidden;}
 .qxframe9a7c2-cascader-panel[hidden]{display:none}
-.qxframe9a7c2-cascader-popup-content.qxframe9a7c2-scroll{width:100%;height:auto;min-width:0;max-width:inherit}
-.qxframe9a7c2-cascader-columns{display:flex;align-items:stretch;max-width:inherit;overflow-x:auto}
-.qxframe9a7c2-cascader-columns.qxframe9a7c2-scroll-viewport{width:100%;height:auto;min-width:0;min-height:0}
-.qxframe9a7c2-cascader-column{--_qxframe9a7c2-cascader-column-border:var(--_qxframe9a7c2-semantic-border);box-sizing:border-box;flex:0 0 13rem;min-width:13rem;max-width:calc(16rem + 2rem);border-inline-end:1px solid var(--_qxframe9a7c2-cascader-column-border)}
+.qxframe9a7c2-cascader-popup-content.qxframe9a7c2-scroll{box-sizing:border-box;display:block;width:100%;height:auto;min-width:0;min-height:0;max-width:100%;overflow:hidden}
+.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;flex-wrap:nowrap;width:100%;min-width:0;align-items:stretch;overflow:hidden}
+.qxframe9a7c2-cascader-columns.qxframe9a7c2-scroll-viewport{box-sizing:border-box;display:flex;flex-wrap:nowrap;width:100%;height:auto;min-width:0;min-height:0;overflow:hidden}
+.qxframe9a7c2-cascader-column{box-sizing:border-box;flex:1 1 0%;min-width:0;max-width:100%;padding:var(--_qxframe9a7c2-fixed-space-2);border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)}
 .qxframe9a7c2-cascader-column:last-child{border-inline-end:0}
 .qxframe9a7c2-cascader-column .qxframe9a7c2-item-collection,.qxframe9a7c2-cascader-search-results .qxframe9a7c2-item-collection{min-width:0;background:transparent}
 .qxframe9a7c2-cascader-option-label{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -209,7 +337,7 @@
 .qxframe9a7c2-cascader-panel:focus{outline:0}
 .qxframe9a7c2-cascader.has-rich-path:not(.is-multiple) .qxframe9a7c2-cascader-values{display:flex;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .qxframe9a7c2-cascader.has-rich-path:not(.is-open) .qxframe9a7c2-input-control{min-width:1px;width:1px;flex:0 1 1px;padding-inline:0;opacity:0}
-.qxframe9a7c2-cascader-search-results{box-sizing:border-box;min-width:calc(16rem + 2rem);max-width:min(calc(16rem * 2),calc(100% - 2rem))}
+.qxframe9a7c2-cascader-search-results{box-sizing:border-box;width:100%;min-width:0;max-width:100%}
 
 .qxframe9a7c2-tree-select{min-width:0}
 .qxframe9a7c2-tree-select-values{display:flex;align-items:center;flex-wrap:wrap;gap:var(--_qxframe9a7c2-fixed-space-2);min-width:0}
@@ -224,31 +352,32 @@
 .qxframe9a7c2-tree-select-panel[hidden]{display:none}
 .qxframe9a7c2-tree-select-tree-host>.qxframe9a7c2-item-collection{background:transparent}
 
-.qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active),.qxframe9a7c2-date-picker-drill-panel:not(.is-date-picker-active){display:none!important}
-.qxframe9a7c2-date-picker-panel{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 2.5rem);--_qxframe9a7c2-date-picker-time-width:15rem;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height)}
-.qxframe9a7c2-date-picker-panel.is-xs{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 1.5rem);--_qxframe9a7c2-date-picker-time-width:14rem}
-.qxframe9a7c2-date-picker-panel.is-sm{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 2rem);--_qxframe9a7c2-date-picker-time-width:calc(14rem + 0.5rem)}
-.qxframe9a7c2-date-picker-panel.is-lg{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3rem);--_qxframe9a7c2-date-picker-time-width:calc(15rem + 0.5rem)}
-.qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-calendar-width:calc(16rem + 3.5rem);--_qxframe9a7c2-date-picker-time-width:16rem}
+.qxframe9a7c2-date-picker-calendar-group:not(.is-date-picker-active),.qxframe9a7c2-date-picker-calendar-panel:not(.is-date-picker-active){display:none!important}
+/* Hosted Calendar width = seven date cells + two real horizontal padding insets. */
+.qxframe9a7c2-date-picker-panel{--_qxframe9a7c2-date-picker-day-size:var(--qxframe9a7c2-calendar-cell-size,var(--_qxframe9a7c2-date-picker-default-cell-size,2rem));--_qxframe9a7c2-date-picker-calendar-width:calc(7 * var(--_qxframe9a7c2-date-picker-day-size) + 2 * var(--qxframe9a7c2-calendar-padding,.3125rem));--_qxframe9a7c2-date-picker-time-width:15rem;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);font-size:var(--_qxframe9a7c2-control-font-size);line-height:var(--_qxframe9a7c2-control-line-height)}
+.qxframe9a7c2-date-picker-panel.is-xs{--_qxframe9a7c2-date-picker-time-width:14rem}
+.qxframe9a7c2-date-picker-panel.is-sm{--_qxframe9a7c2-date-picker-time-width:calc(14rem + 0.5rem)}
+.qxframe9a7c2-date-picker-panel.is-lg{--_qxframe9a7c2-date-picker-time-width:calc(15rem + 0.5rem)}
+.qxframe9a7c2-date-picker-panel.is-xl{--_qxframe9a7c2-date-picker-time-width:16rem}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar{border:0;box-shadow:none;background:transparent}
-.qxframe9a7c2-date-picker-composite{display:flex;align-items:stretch;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:min(calc(16rem * 4),calc(100% - 2rem))}
-.qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:1 1 auto;align-self:stretch}
+.qxframe9a7c2-date-picker-composite{display:flex;align-items:stretch;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:min(calc(16rem * 4),100%)}
+.qxframe9a7c2-date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto;align-self:stretch}
 .qxframe9a7c2-date-picker-selection-panel{display:flex;align-self:stretch;flex:1 1 auto;min-width:0;overflow:hidden}
 .qxframe9a7c2-date-picker-selection-scroll>.qxframe9a7c2-date-picker-selection-panel.qxframe9a7c2-scroll-viewport{width:100%;height:100%;min-width:0}
-.qxframe9a7c2-date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:1 1 auto;min-width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:100%}
-.qxframe9a7c2-date-picker-calendar-host{box-sizing:border-box;display:flex;flex:0 0 var(--_qxframe9a7c2-date-picker-calendar-width);min-width:var(--_qxframe9a7c2-date-picker-calendar-width)}
-.qxframe9a7c2-date-picker-calendar-host>.qxframe9a7c2-calendar{height:100%;flex:1 1 auto}
-.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:calc(var(--_qxframe9a7c2-date-picker-calendar-width) + var(--_qxframe9a7c2-date-picker-calendar-width))}
-.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
-.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:var(--_qxframe9a7c2-date-picker-calendar-width);max-width:none}
-.qxframe9a7c2-date-picker-dual-inner-nav{visibility:hidden;pointer-events:none}
-.qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
-.qxframe9a7c2-date-picker-panel .qxframe9a7c2-period-panel,.qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
+.qxframe9a7c2-date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto;min-width:0;max-width:none}
+.qxframe9a7c2-date-picker-calendar-host{box-sizing:border-box;display:flex;flex:0 0 var(--_qxframe9a7c2-date-picker-calendar-width);min-width:0}
+.qxframe9a7c2-date-picker-calendar-host>.qxframe9a7c2-calendar{--_qxframe9a7c2-date-panel-width:var(--_qxframe9a7c2-date-picker-calendar-width);height:100%;width:100%;min-width:0;max-width:none;flex:1 1 auto}
+.qxframe9a7c2-date-picker-calendar-group.is-dual{min-width:0;gap:var(--qxframe9a7c2-date-picker-dual-gap,1rem)}
+.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-date-picker-calendar-host+.qxframe9a7c2-date-picker-calendar-host{box-shadow:none}
+.qxframe9a7c2-date-picker-calendar-group.is-dual .qxframe9a7c2-calendar{width:100%;max-width:none}
+.qxframe9a7c2-date-picker-calendar-group .qxframe9a7c2-date-picker-dual-inner-nav{display:none}
+.qxframe9a7c2-date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid var(--qxframe9a7c2-theme-field-border)}
+.qxframe9a7c2-date-picker-panel .qxframe9a7c2-calendar.is-period,.qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
 .qxframe9a7c2-date-picker-panel .qxframe9a7c2-time-panel-root{height:100%;flex:1 1 auto}
 @media (max-width:760px){.qxframe9a7c2-date-picker-selection-panel{overflow-x:auto}.qxframe9a7c2-date-picker-composite.has-time{flex-direction:column}.qxframe9a7c2-date-picker-time-panel{border-inline-start:0;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}}
 
-.qxframe9a7c2-date-picker-presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto}
-.qxframe9a7c2-date-picker-presets{display:flex;flex:0 0 auto;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);max-width:11rem;padding:var(--_qxframe9a7c2-control-gap);border-inline-end:1px solid var(--_qxframe9a7c2-semantic-border-subtle)}
+.qxframe9a7c2-date-picker-presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto;border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)}
+.qxframe9a7c2-date-picker-presets{display:flex;flex:0 0 auto;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);max-width:11rem;padding:var(--_qxframe9a7c2-control-gap);border-inline-end:0}
 .qxframe9a7c2-date-picker-presets-scroll>.qxframe9a7c2-date-picker-presets.qxframe9a7c2-scroll-viewport{width:auto;height:auto}
 .qxframe9a7c2-date-picker-presets:empty{display:none}
 .qxframe9a7c2-date-picker-presets.is-virtual-focus-owner:focus-visible{outline:none}
@@ -262,7 +391,7 @@
 .qxframe9a7c2-time-picker-panel{min-width:calc(16rem + 3rem)}
 .qxframe9a7c2-time-picker-panel .qxframe9a7c2-time-panel-root{border:0;border-radius:0;box-shadow:none;background:transparent}
 
-.qxframe9a7c2-time-picker-now{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-time-picker-now-focus-shadow:none;--_qxframe9a7c2-time-picker-now-cursor:pointer;--_qxframe9a7c2-time-picker-now-opacity:1;display:block;width:100%;appearance:none;border:0;border-top:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-time-picker-now-bg);color:var(--_qxframe9a7c2-time-picker-now-text);box-shadow:var(--_qxframe9a7c2-time-picker-now-focus-shadow);opacity:var(--_qxframe9a7c2-time-picker-now-opacity);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:center;cursor:var(--_qxframe9a7c2-time-picker-now-cursor);outline:0}
+.qxframe9a7c2-time-picker-now{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-text:var(--qxframe9a7c2-theme-primary);--_qxframe9a7c2-time-picker-now-focus-shadow:none;--_qxframe9a7c2-time-picker-now-cursor:pointer;--_qxframe9a7c2-time-picker-now-opacity:1;display:block;width:100%;appearance:none;border:0;border-top:1px solid var(--qxframe9a7c2-theme-field-border);background:var(--_qxframe9a7c2-time-picker-now-bg);color:var(--_qxframe9a7c2-time-picker-now-text);box-shadow:var(--_qxframe9a7c2-time-picker-now-focus-shadow);opacity:var(--_qxframe9a7c2-time-picker-now-opacity);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);font-size:var(--_qxframe9a7c2-control-font-size);text-align:center;cursor:var(--_qxframe9a7c2-time-picker-now-cursor);outline:0}
 .qxframe9a7c2-time-picker-now:hover:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-time-picker-now:focus-visible:not(:disabled){--_qxframe9a7c2-time-picker-now-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-time-picker-now-focus-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-time-picker-now:disabled{--_qxframe9a7c2-time-picker-now-bg:transparent;--_qxframe9a7c2-time-picker-now-focus-shadow:none;--_qxframe9a7c2-time-picker-now-cursor:not-allowed;--_qxframe9a7c2-time-picker-now-opacity:.45}
@@ -289,7 +418,7 @@
 .qxframe9a7c2-color-picker-gradient{display:flex;flex-wrap:wrap;gap:var(--_qxframe9a7c2-control-gap);align-items:center;padding:var(--_qxframe9a7c2-control-gap) var(--_qxframe9a7c2-control-padding-inline);border-bottom:1px solid var(--_qxframe9a7c2-semantic-border-subtle);background:var(--_qxframe9a7c2-semantic-surface)}
 .qxframe9a7c2-color-picker-gradient[hidden]{display:none}
 .qxframe9a7c2-color-picker-gradient-hint{width:100%;flex:1 0 100%;color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:0.75rem;line-height:1.4}
-.qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;width:100%;flex:1 0 100%;height:calc(var(--_qxframe9a7c2-control-icon-size) + 0.25rem);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:100rem;box-shadow:none;cursor:crosshair}
+.qxframe9a7c2-color-picker-gradient-track{position:relative;box-sizing:border-box;width:100%;flex:1 0 100%;height:calc(var(--_qxframe9a7c2-control-icon-size) + 0.25rem);border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--qxframe9a7c2-color-picker-gradient-track-radius,var(--qxframe9a7c2-theme-radius-track));box-shadow:none;cursor:crosshair}
 .qxframe9a7c2-color-picker-gradient-stops{position:absolute;inset:0 calc(var(--_qxframe9a7c2-control-icon-size) / 2 + 1px)}
 .qxframe9a7c2-color-picker-gradient-stop{position:absolute;inset-inline-start:var(--qxframe9a7c2-gradient-stop-offset);top:50%;width:calc(var(--_qxframe9a7c2-control-icon-size) + var(--_qxframe9a7c2-fixed-color-picker-icon-delta));height:calc(var(--_qxframe9a7c2-control-icon-size) + var(--_qxframe9a7c2-fixed-color-picker-icon-delta));padding:0;border:0.25rem solid var(--_qxframe9a7c2-semantic-surface);border-radius:50%;outline:none;box-shadow:0 var(--_qxframe9a7c2-fixed-color-picker-shadow-y) 0.5rem rgba(0,0,0,.4);transform:translate(-50%,-50%);cursor:grab;touch-action:none}
 .qxframe9a7c2-color-picker-gradient-stop:active{cursor:grabbing}
@@ -302,3 +431,15 @@
 .qxframe9a7c2-color-picker-gradient-add:focus-visible:not(:disabled),.qxframe9a7c2-color-picker-gradient-remove:focus-visible:not(:disabled){--_qxframe9a7c2-color-picker-action-bg:var(--_qxframe9a7c2-semantic-subtle-hover);--_qxframe9a7c2-color-picker-action-focus-shadow:none;outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-color-picker-gradient-add:disabled,.qxframe9a7c2-color-picker-gradient-remove:disabled{--_qxframe9a7c2-color-picker-action-bg:var(--_qxframe9a7c2-semantic-bg);--_qxframe9a7c2-color-picker-action-text:var(--_qxframe9a7c2-semantic-text-disabled);--_qxframe9a7c2-color-picker-action-focus-shadow:none;--_qxframe9a7c2-color-picker-action-cursor:not-allowed;--_qxframe9a7c2-color-picker-action-opacity:.45}
 
+
+/* S5 source-like date bands: each displayed week begins and ends with a rounded cap. */
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range:nth-child(7n+1)::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range:nth-child(7n)::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-start::before{border-start-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-start-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-grid>.qxframe9a7c2-calendar-cell.is-in-range.is-range-end::before{border-start-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius);border-end-end-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-cell.is-range-start .qxframe9a7c2-calendar-cell-inner,.qxframe9a7c2-calendar-cell.is-range-end .qxframe9a7c2-calendar-cell-inner{border-radius:var(--_qxframe9a7c2-date-panel-cell-radius)}
+.qxframe9a7c2-calendar-year-nav{padding:0}
+.qxframe9a7c2-calendar.is-period .qxframe9a7c2-calendar-year-nav{display:none}
+.qxframe9a7c2-date-picker-composite.has-time{column-gap:var(--qxframe9a7c2-date-picker-time-gap,.75rem)}
+
+.qxframe9a7c2-calendar-year-nav .qxframe9a7c2-icon+.qxframe9a7c2-icon{margin-inline-start:-.625rem}

@@ -114,9 +114,11 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 
 
 /* Compound control geometry: the same owner serves TagInput and Multiple Select. */
-.qxframe9a7c2-input.is-tags{--_qxframe9a7c2-compound-inset:var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-fixed-space-1));padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)}
-.qxframe9a7c2-input.is-tags .qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:calc(var(--_qxframe9a7c2-control-local-height) - var(--_qxframe9a7c2-compound-inset)*2 - var(--_qxframe9a7c2-control-border-width)*2);--_qxframe9a7c2-compound-item-inset:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset) - 1px)}
-.qxframe9a7c2-input.is-tags:not(.has-value) .qxframe9a7c2-tags-input{padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) - var(--_qxframe9a7c2-compound-inset))}
+/* One height/inset owner for TagInput and Multiple Select: single row matches Input;
+   additional rows may grow without clipping tags or the editable field. */
+.qxframe9a7c2-input.is-tags,.qxframe9a7c2-select.is-multiple{--_qxframe9a7c2-compound-inset:var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-control-padding-block));--_qxframe9a7c2-compound-item-height:calc(var(--_qxframe9a7c2-control-local-height) - var(--_qxframe9a7c2-compound-inset)*2 - var(--_qxframe9a7c2-control-border-width)*2);padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)}
+.qxframe9a7c2-input.is-tags .qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:inherit;--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}
+.qxframe9a7c2-input.is-tags:not(.has-value) .qxframe9a7c2-tags-input{padding-inline-start:0}
 
 /* The JS Input shell is the sole focus-shadow owner (internal editor is not).
  * Normal/hover/pressed remain on existing Control border and background roles. */
@@ -143,3 +145,9 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.q
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-input.is-focused:not(.is-disabled):not(.is-focus-outline-disabled):not(.is-readonly){
   outline:none
 }
+
+/* Joined InputGroup is the single focus owner; additions only tune authored chrome. */
+.qxframe9a7c2-input-group.is-soft{--_qxframe9a7c2-control-bg:var(--qxframe9a7c2-theme-muted)}
+.qxframe9a7c2-input-group.is-compact{--_qxframe9a7c2-control-padding-block:.25rem;--_qxframe9a7c2-control-padding-inline:.5rem}
+.qxframe9a7c2-input-group-addon.is-text{color:var(--qxframe9a7c2-theme-muted-foreground);white-space:nowrap}
+.qxframe9a7c2-input-group-addon.is-icon{display:inline-flex;align-items:center;justify-content:center;min-width:var(--_qxframe9a7c2-control-height);color:var(--qxframe9a7c2-theme-muted-foreground)}

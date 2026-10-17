@@ -409,14 +409,24 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input-group-field:focus-wi
   flex:1 1 auto;min-width:0
 }
 
-/* Static keyboard hint (Kbd) shares field shape and muted surface. */
-.qxframe9a7c2-kbd {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-  min-width: 1.25rem; height: 1.25rem; padding: 0 0.25rem;
-  border-radius: calc(var(--qxframe9a7c2-theme-radius-field, 0.5rem) * 0.5);
-  background: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground);
-  font: 500 0.75rem/1 var(--qxframe9a7c2-theme-font-sans, inherit);
+/* One Kbd owner, reused by Theme-native keycap size and appearance variants. */
+.qxframe9a7c2-kbd{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:.25rem;
+  min-width:1.5rem;min-height:1.5rem;padding:.125rem .375rem;
+  border:1px solid var(--qxframe9a7c2-theme-border);border-bottom-width:.125rem;
+  border-radius:var(--qxframe9a7c2-theme-radius-item);
+  background:var(--qxframe9a7c2-theme-muted);color:var(--qxframe9a7c2-theme-muted-foreground);
+  font:500 .75rem/1.25 ui-monospace,SFMono-Regular,Consolas,monospace;
+  white-space:nowrap;vertical-align:middle;box-shadow:var(--qxframe9a7c2-theme-shadow-control)
 }
+.qxframe9a7c2-kbd.is-xs{min-width:1.125rem;min-height:1.125rem;padding:0 .25rem;font-size:.625rem}
+.qxframe9a7c2-kbd.is-sm{min-width:1.25rem;min-height:1.25rem;padding:.125rem .25rem;font-size:.625rem}
+.qxframe9a7c2-kbd.is-lg{min-width:1.875rem;min-height:1.875rem;padding:.25rem .5rem;font-size:.875rem}
+.qxframe9a7c2-kbd.is-xl{min-width:2.25rem;min-height:2.25rem;padding:.375rem .625rem;font-size:1rem}
+.qxframe9a7c2-kbd.is-outline{background:transparent}
+.qxframe9a7c2-kbd.is-primary{border-color:var(--qxframe9a7c2-theme-primary);color:var(--qxframe9a7c2-theme-primary);background:color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 9%,var(--qxframe9a7c2-theme-card))}
+.qxframe9a7c2-kbd-group{display:inline-flex;flex-wrap:wrap;align-items:center;gap:var(--qxframe9a7c2-kbd-gap,.25rem)}
+.qxframe9a7c2-kbd-group>.qxframe9a7c2-kbd{flex:0 0 auto}
 
 /* Mixed connected InputGroup protocol:
  * PREFIX | [FIELD: addon + input + addon] | SUFFIX

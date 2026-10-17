@@ -1,7 +1,8 @@
 import { PickerComponent, pickerHooks, createPickerProfile } from './picker.js';
 import { PickerField } from './picker-field.js';
 import { Calendar } from './calendar.js';
-import { PeriodPanel } from './period-panel.js';
+import { WheelMetrics } from '../utils/wheelMetrics.js';
+
 import { TimePanel } from './time-panel.js';
 import { Control } from './control.js';
 import { componentHooks } from '../core/componentHooks.js';
@@ -23,7 +24,7 @@ const DATE_PICKER_DEFAULTS = Object.freeze({
   selection:'single', unit:'date', time:false, clearable:true, needConfirm:false, showCancel:false, closeOnSelect:true,
   commitInputOnBlur:true, preserveInvalidOnBlur:false, disabled:false, readOnly:false, size:'md', placement:'bottom-start',
   trigger:'click', open:false, placeholder:'选择日期', rangeSeparator:' ~ ', multipleSeparator:', ', order:true, panelCount:1,
-  presets:[], previewValue:'hover', panelRender:null, weekStartsOn:1, rangeControl:'single', rangePlaceholders:['开始日期','结束日期']
+  presets:[], previewValue:'hover', panelRender:null, weekStartsOn:1, allowYearView:true, allowMonthView:true, rangeControl:'single', rangePlaceholders:['开始日期','结束日期']
 });
 const DATE_PICKER_IMMUTABLE = Object.freeze(['target','container','formField','reference','triggerTarget','valueTarget','draftValueTarget','inputTarget','formTarget','renderControl','headless','selection','unit','panelCount','rangeControl','rangePlaceholders']);
 
@@ -126,6 +127,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     previewValue:'hover',
     panelRender:null,
     weekStartsOn:1,
+    allowYearView:true,allowMonthView:true,
     rangeControl:rangeControl,
     rangePlaceholders:['开始日期','结束日期']
   }, sourceOptions);
@@ -144,8 +146,6 @@ function setupDatePickerRuntime(instance, fieldInit) {
   var calendarPrimaryHost = null;
   var calendarSecondaryHost = null;
   var periodPanel = null;
-  var yearPanel = null;
-  var monthPanel = null;
   var calendarPanelMode = 'date';
   var timePanel = null;
   var panelShell = null;
@@ -448,9 +448,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
     return field && field.getState().open ? draft.draftValue : draft.value;
   }
   function stateForDate(date, info) {
-    if (info && info.entry && info.entry.outside === true) return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
+    // Keep full seven-day strips across month boundaries in week mode.
+    // Ordinary date ranges remain clipped to each visible month panel.
+    if (info && info.entry && info.entry.outside === true && unit !== 'week')
+      return { selected: false, inRange: false, rangeStart: false, rangeEnd: false };
     var selectedValue = selectionVisualValue();
-    if (selection === 'single') return { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
+    if (selection === 'single') return unit === 'week' ? {} : { selected: DateUnit.same(date, selectedValue, unit, opts.weekStartsOn) };
     if (selection === 'multiple') return { selected: (selectedValue || []).some(function (entry) { return DateUnit.same(date, entry, unit, opts.weekStartsOn); }) };
 
     // The stable range comes from draft/committed value, but an active range edit owns
@@ -468,8 +471,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (opts.order !== false && visualStart && visualEnd && compareChronological(visualStart, visualEnd) > 0) {
       var visualSwap = visualStart; visualStart = visualEnd; visualEnd = visualSwap;
     }
-    var rangeStart = !!visualStart && DateUnit.same(date, visualStart, unit, opts.weekStartsOn);
-    var rangeEnd = !!visualEnd && DateUnit.same(date, visualEnd, unit, opts.weekStartsOn);
+    // Week values and range drafts are owned here; the Calendar's one painter
+    // receives exact first/last dates of the selected whole-week interval.
+    var weekStart = unit === 'week' && visualStart ? DateUnit.start(visualStart,'week',opts.weekStartsOn,false) : null;
+    var weekEnd = unit === 'week' && visualEnd ? DateUnit.start(visualEnd,'week',opts.weekStartsOn,false) : null;
+    if (weekEnd) weekEnd.setDate(weekEnd.getDate()+6);
+    var rangeStart = !!visualStart && (unit === 'week' ? DateUnit.same(date,weekStart,'date',opts.weekStartsOn) : DateUnit.same(date,visualStart,unit,opts.weekStartsOn));
+    var rangeEnd = !!visualEnd && (unit === 'week' ? DateUnit.same(date,weekEnd,'date',opts.weekStartsOn) : DateUnit.same(date,visualEnd,unit,opts.weekStartsOn));
 
     var rangeValue = previewRange || selectedValue;
     var low = rangeValue && rangeValue[0];
@@ -655,10 +663,15 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (calendar) calendar.setViewValue(controlled, { silent: true, source: 'controlled', reason: 'picker-value' });
     if (calendarSecondary) syncCalendarPair(controlled, { source: 'controlled', reason: 'picker-value-secondary' });
     if (periodPanel) periodPanel.setViewValue(controlled, { silent: true, source: 'controlled', reason: 'picker-value' });
-    if (yearPanel) yearPanel.setViewValue(controlled, { silent: true, source: 'controlled', reason: 'picker-value' });
-    if (monthPanel) monthPanel.setViewValue(controlled, { silent: true, source: 'controlled', reason: 'picker-value' });
   }
   function handlePanelViewChange(value, detail, mode) {
+    if(calendar&&calendarPanelMode!=='date'&&detail&&detail.calendar){
+      var bounded=clampPanelValue(value);
+      if(DateUnit.compare(bounded,value,'month',opts.weekStartsOn)!==0)detail.calendar.setViewValue(bounded,{silent:true,source:'bounds'});
+      emitPanelChange(bounded,detail,calendarPanelMode);
+      restoreControlledPanelValue();
+      return true;
+    }
     var fromSecondary = !!(calendarSecondary && detail && detail.calendar === calendarSecondary);
     var requested = fromSecondary ? addMonths(value, -1) : value;
     var bounded = dualCalendarEnabled() ? dualPrimaryView(requested) : clampPanelValue(requested);
@@ -685,7 +698,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var rawViewAnchor = controlledView || (syncView === true ? anchor : null) || normalizeOne(opts.defaultPickerValue) || anchor;
     var viewAnchor = dualCalendarEnabled() ? dualPrimaryView(rawViewAnchor) : clampPanelValue(rawViewAnchor);
     if (calendar) {
-      calendar.updateOptions({
+      calendar.updateOptions({ allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false,
         disabledDate: disabledSelectionDate,
         renderCell: opts.renderCell,
         getCellState: stateForDate,
@@ -694,7 +707,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         readOnly: opts.readOnly === true,
         weekStartsOn: opts.weekStartsOn
       });
-      if (calendarSecondary) calendarSecondary.updateOptions({
+      if (calendarSecondary) calendarSecondary.updateOptions({ allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false,
         disabledDate: disabledSelectionDate,
         renderCell: opts.renderCell,
         getCellState: stateForDate,
@@ -704,7 +717,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
         weekStartsOn: opts.weekStartsOn
       });
       if (anchor) {
-        calendar.setValue(anchor, { silent: true, source: 'sync', reason: 'picker-sync', syncView: controlledView ? false : syncView !== false });
+        calendar.setValue(selection === 'range' && unit === 'week' ? null : anchor, { silent: true, source: 'sync', reason: 'picker-sync', syncView: controlledView ? false : syncView !== false });
         if (syncView === true || controlledView) {
           calendar.setViewValue(viewAnchor, { silent: true, source: 'sync', reason: controlledView ? 'controlled-picker-view' : 'picker-view' });
           syncCalendarPair(viewAnchor, { source: 'sync', reason: controlledView ? 'controlled-picker-view-secondary' : 'picker-view-secondary' });
@@ -730,42 +743,30 @@ function setupDatePickerRuntime(instance, fieldInit) {
       } else periodPanel.clear({ silent: true, source: 'sync', reason: 'picker-clear' });
       periodPanel.refresh();
     }
-    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (controlledView) restoreControlledPanelValue();
   }
   function setCalendarPanelMode(mode, anchorValue, meta) {
-    if (!calendar) return false;
-    var nextMode = mode === 'year' || mode === 'month' ? mode : 'date';
-    var previousMode = calendarPanelMode;
-    var activeCalendar = calendarSecondary && activeCalendarPanel === 'secondary' ? calendarSecondary : calendar;
-    var rawView = cloneDate(anchorValue) || cloneDate(activeCalendar && activeCalendar.getState().viewValue) || new Date();
-    // Year/month drill panels describe the physical panel that initiated the drill.
-    // Only the date-mode pair needs the left-panel primary anchor normalization.
-    var view = nextMode === 'date' && dualCalendarEnabled() ? dualPrimaryView(rawView) : clampPanelValue(rawView);
-    calendarPanelMode = nextMode;
-    if (calendarGroup) calendarGroup.classList.toggle('is-date-picker-active', nextMode === 'date');
-    if (calendar.getRootElement()) calendar.getRootElement().classList.toggle('is-date-picker-active', nextMode === 'date');
-    if (calendarSecondary && calendarSecondary.getRootElement()) calendarSecondary.getRootElement().classList.toggle('is-date-picker-active', nextMode === 'date');
-    if (yearPanel && yearPanel.getRootElement()) yearPanel.getRootElement().classList.toggle('is-date-picker-active', nextMode === 'year');
-    if (monthPanel && monthPanel.getRootElement()) monthPanel.getRootElement().classList.toggle('is-date-picker-active', nextMode === 'month');
-    if (yearPanel) {
-      yearPanel.setViewValue(view, { silent: true, source: 'date-picker', reason: 'header-year-view' });
-      yearPanel.setValue(view, { silent: true, source: 'date-picker', reason: 'header-year-value', syncView: false });
+    if(!calendar)return false;
+    var nextMode=mode==='year'||mode==='month'?mode:'date',previousMode=calendarPanelMode;
+    var owner=calendarSecondary&&drillCalendarPanel==='secondary'?calendarSecondary:calendar;
+    var raw=cloneDate(anchorValue)||cloneDate(owner.getState().viewValue)||new Date();
+    var view=nextMode==='date'&&dualCalendarEnabled()?dualPrimaryView(raw):clampPanelValue(raw);
+    calendarPanelMode=nextMode;
+    if(calendarGroup)calendarGroup.classList.add('is-date-picker-active');
+    [calendar,calendarSecondary].forEach(function(panel){
+      if(!panel)return;
+      panel.getRootElement().classList.toggle('is-date-picker-active',nextMode==='date'||panel===owner);
+      panel.setViewMode(nextMode==='date'?'date':panel===owner?nextMode:'date',{silent:true,source:'date-picker'});
+    });
+    if(nextMode!=='date')owner.setViewValue(view,{silent:true,source:'date-picker'});
+    else if(calendarSecondary)syncCalendarPair(view,{source:'date-picker',reason:'panel-mode-secondary'});
+    var source=meta&&meta.source||'api',event=meta&&meta.originalEvent||null;
+    var nav=field&&field.getKeyboardNavigation?field.getKeyboardNavigation():null;
+    if(field&&field.getState().open&&nav&&nav.virtualFocus){
+      if(source==='keyboard')activateCurrentPanelVirtualFocus('mode-change');
+      else if(source==='pointer'||source==='mouse'||source==='touch'||/^(pointer|mouse|click|touch)/.test(String(event&&event.type||'').toLowerCase()))nav.virtualFocus.pointer();
     }
-    if (calendarSecondary && nextMode === 'date') syncCalendarPair(view, { source: 'date-picker', reason: 'panel-mode-secondary' });
-    if (monthPanel) {
-      monthPanel.setViewValue(view, { silent: true, source: 'date-picker', reason: 'header-month-view' });
-      monthPanel.setValue(view, { silent: true, source: 'date-picker', reason: 'header-month-value', syncView: false });
-    }
-    var modeSource = meta && meta.source || 'api';
-    var modeEvent = meta && meta.originalEvent || null;
-    var modeNavigation = field && field.getKeyboardNavigation ? field.getKeyboardNavigation() : null;
-    if (field && field.getState().open && modeNavigation && modeNavigation.virtualFocus) {
-      if (modeSource === 'keyboard') activateCurrentPanelVirtualFocus('mode-change');
-      else if (modeSource === 'pointer' || modeSource === 'mouse' || modeSource === 'touch' || /^(pointer|mouse|click|touch)/.test(String(modeEvent && modeEvent.type || '').toLowerCase())) modeNavigation.virtualFocus.pointer();
-    }
-    if (previousMode !== nextMode) emitPanelChange(view, { source: modeSource, reason: 'mode-change', originalEvent: modeEvent }, nextMode);
+    if(previousMode!==nextMode)emitPanelChange(view,{source:source,reason:'mode-change',originalEvent:event},nextMode);
     restoreControlledPanelValue();
     return true;
   }
@@ -863,6 +864,9 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (changed && detail && detail.source === 'keyboard') focusFieldHost();
     return changed;
   }
+  function handleCalendarDrillSelect(selected,detail){
+    return detail&&['year','decade'].includes(detail.viewMode)?handleYearDrillSelect(selected,detail):handleMonthDrillSelect(selected,detail);
+  }
   function handleYearDrillSelect(selected, detail) {
     if (!calendar || !selected) return;
     var owner = calendarSecondary && drillCalendarPanel === 'secondary' ? calendarSecondary : calendar;
@@ -909,6 +913,8 @@ function setupDatePickerRuntime(instance, fieldInit) {
   function resolvedTimeOptions(anchor, partIndex) {
     var resolved = Utils.mergeOwn( timeOptions || {});
     resolved.size = opts.size;
+    // Default to seven visible items; WheelPanel alone derives its scroll, guide and pads.
+    if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 7;
     if (Utils.isFunction(opts.disabledTime)) {
       var extra = opts.disabledTime(cloneDate(anchor), Object.freeze({ selection: selection, activeRangePart: selection === 'range' ? (partIndex === 0 || partIndex === 1 ? partIndex : activeRangePart) : null, unit: unit, datePicker: api })) || {};
       if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
@@ -1038,8 +1044,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
 
   function currentSelectionKeyboardPanel() {
     if (calendar) {
-      if (calendarPanelMode === 'year' && yearPanel) return yearPanel;
-      if (calendarPanelMode === 'month' && monthPanel) return monthPanel;
+      if(calendarPanelMode!=='date')return calendarSecondary&&drillCalendarPanel==='secondary'?calendarSecondary:calendar;
       if (calendarSecondary && activeCalendarPanel === 'secondary') return calendarSecondary;
       return calendar;
     }
@@ -1129,7 +1134,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     var keyboard = field.getKeyboardNavigation();
     var controller = keyboard && keyboard.virtualFocus;
     if (!controller) return false;
-    [calendar, calendarSecondary, yearPanel, monthPanel, periodPanel].forEach(function (panel) {
+    [calendar, calendarSecondary, periodPanel].forEach(function (panel) {
       if (panel && panel.bindVirtualFocus) panel.bindVirtualFocus(controller, true);
     });
     if (tagNavigation) { tagNavigation.destroy(); tagNavigation = null; }
@@ -1323,6 +1328,16 @@ function setupDatePickerRuntime(instance, fieldInit) {
   instance.adoptPickerField(field);
   var popupFrame = field.getPopupFrame ? field.getPopupFrame() : null;
   if (!popupFrame) throw new Error('[QXFRAME9A7C2] DatePicker requires PickerField PopupFrame ownership.');
+  function syncCalendarWheelSize() {
+    // One shared Size for Calendar's seven date columns/rows and TimePanel's
+    // seven real items. No DatePicker override of WheelPanel's scroll geometry.
+    var shared = timeOptions && own(timeOptions,'itemHeight') ? Number(timeOptions.itemHeight) : WheelMetrics.itemHeight(opts.size);
+    if (!Number.isFinite(shared) || shared <= 0) throw new TypeError('[QXFRAME9A7C2] DatePicker time.itemHeight must be a positive number.');
+    var panel = field.getPanelElement();
+    if (panel) panel.style.setProperty('--_qxframe9a7c2-date-picker-default-cell-size', String(shared) + 'px');
+    return shared;
+  }
+  syncCalendarWheelSize();
 
   var doc = opts.document || globalThis.document;
   panelShell = doc.createElement('div');
@@ -1370,9 +1385,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
       : clampPanelValue(pickerPanelValue() || selectionAnchor(draft.draftValue) || opts.defaultPickerValue);
     calendar = Calendar.create({
       container: calendarPrimaryHost,
-      value: selectionAnchor(draft.draftValue),
+      unit:unit,
+      value: selection === 'range' && unit === 'week' ? null : selectionAnchor(draft.draftValue),
       viewValue: initialPrimaryView,
       weekStartsOn: opts.weekStartsOn,
+      size: opts.size,
+      cellSize: syncCalendarWheelSize(),
       disabledDate: disabledSelectionDate,
       renderCell: opts.renderCell,
       getCellState: stateForDate,
@@ -1380,8 +1398,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
       disabled: opts.disabled === true,
       readOnly: opts.readOnly === true,
       loading: opts.loading === true || opts.busy === true,
+      allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false,
       onYearRequest: requestCalendarYear,
       onMonthRequest: requestCalendarMonth,
+      onDrillSelect:handleCalendarDrillSelect,
       onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'date'); },
       onSelect: handlePanelSelect
     });
@@ -1389,9 +1409,12 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (calendarSecondaryHost) {
       calendarSecondary = Calendar.create({
         container: calendarSecondaryHost,
+        unit:unit,
         value: null,
         viewValue: dualSecondaryView(initialPrimaryView),
         weekStartsOn: opts.weekStartsOn,
+        size: opts.size,
+        cellSize: syncCalendarWheelSize(),
         disabledDate: disabledSelectionDate,
         renderCell: opts.renderCell,
         getCellState: stateForDate,
@@ -1399,8 +1422,10 @@ function setupDatePickerRuntime(instance, fieldInit) {
         disabled: opts.disabled === true,
         readOnly: opts.readOnly === true,
         loading: opts.loading === true || opts.busy === true,
+        allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false,
         onYearRequest: requestCalendarYear,
         onMonthRequest: requestCalendarMonth,
+        onDrillSelect:handleCalendarDrillSelect,
         onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'date'); },
         onSelect: handlePanelSelect
       });
@@ -1408,40 +1433,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
       var primaryRefs = calendar.getRefs ? calendar.getRefs() : null;
       var secondaryRefs = calendarSecondary.getRefs ? calendarSecondary.getRefs() : null;
       if (primaryRefs && primaryRefs.next) primaryRefs.next.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
+       if (primaryRefs && primaryRefs.nextYear) primaryRefs.nextYear.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
       if (secondaryRefs && secondaryRefs.prev) secondaryRefs.prev.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
+       if (secondaryRefs && secondaryRefs.prevYear) secondaryRefs.prevYear.classList.add('qxframe9a7c2-date-picker-dual-inner-nav');
     }
-    yearPanel = PeriodPanel.create({
-      container: selectionHost,
-      unit: 'year',
-      value: selectionAnchor(draft.draftValue),
-      viewValue: clampPanelValue(pickerPanelValue() || selectionAnchor(draft.draftValue) || opts.defaultPickerValue),
-      disabledValue: disabledSelectionDate,
-      onHoverChange: handlePanelHover,
-      disabled: opts.disabled === true,
-      readOnly: opts.readOnly === true,
-      loading: opts.loading === true || opts.busy === true,
-      onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'year'); },
-      onSelect: handleYearDrillSelect
-    });
-    yearPanel.getRootElement().classList.add('qxframe9a7c2-date-picker-drill-panel');
-    monthPanel = PeriodPanel.create({
-      container: selectionHost,
-      unit: 'month',
-      value: selectionAnchor(draft.draftValue),
-      viewValue: clampPanelValue(pickerPanelValue() || selectionAnchor(draft.draftValue) || opts.defaultPickerValue),
-      disabledValue: disabledSelectionDate,
-      onHoverChange: handlePanelHover,
-      disabled: opts.disabled === true,
-      readOnly: opts.readOnly === true,
-      loading: opts.loading === true || opts.busy === true,
-      onViewChange: function (value, detail) { handlePanelViewChange(value, detail, 'month'); },
-      onTitleRequest: function (viewValue, detail) { var changed = setCalendarPanelMode('year', viewValue, detail); if (changed && detail && detail.source === 'keyboard') focusFieldHost(); },
-      onSelect: handleMonthDrillSelect
-    });
-    monthPanel.getRootElement().classList.add('qxframe9a7c2-date-picker-drill-panel');
     setCalendarPanelMode('date', selectionAnchor(draft.draftValue) || opts.defaultPickerValue || new Date());
   } else {
-    periodPanel = PeriodPanel.create({
+    periodPanel = Calendar.create({
       container: selectionHost,
       unit: unit,
       value: selectionAnchor(draft.draftValue),
@@ -1684,12 +1682,11 @@ function setupDatePickerRuntime(instance, fieldInit) {
       throw error;
     }
     if (pendingTimeOptions !== null) timeOptions = pendingTimeOptions;
+    syncCalendarWheelSize();
     field.updateOptions({ size: opts.size, variant: opts.variant, focusOutline: opts.focusOutline, class: opts.class, style: opts.style, status: opts.status, prefix: opts.prefix, suffix: opts.suffix, required: opts.required === true, name: opts.name, busy: opts.busy === true, disabled: opts.disabled, readOnly: opts.readOnly, clearable: opts.clearable, placeholder: opts.placeholder, rangeSeparator:opts.rangeSeparator, placement: opts.placement, trigger: opts.trigger, openDelay: opts.openDelay, closeDelay: opts.closeDelay, destroyOnClose: opts.destroyOnClose !== false });
-    if (calendar) calendar.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (calendarSecondary) calendarSecondary.updateOptions({ weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (calendar) calendar.updateOptions({ size:opts.size, cellSize:syncCalendarWheelSize(), allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
+    if (calendarSecondary) calendarSecondary.updateOptions({ size:opts.size, cellSize:syncCalendarWheelSize(), allowYearView:opts.allowYearView!==false,allowMonthView:opts.allowMonthView!==false, weekStartsOn: opts.weekStartsOn, disabledDate: disabledSelectionDate, renderCell: opts.renderCell, getCellState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (periodPanel) periodPanel.updateOptions({ disabledValue: disabledSelectionDate, getItemState: stateForDate, onHoverChange: handlePanelHover, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (yearPanel) yearPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
-    if (monthPanel) monthPanel.updateOptions({ disabledValue: disabledSelectionDate, disabled: opts.disabled === true, readOnly: opts.readOnly === true, loading: opts.loading === true || opts.busy === true });
     if (own(next, 'value')) setValue(next.value, { silent: true, source: 'options', reason: 'controlled' });
     if (opts.previewValue === false) draft.clearPreview({ silent:true, source:'options', reason:'preview-disabled' });
     if (own(next, 'panelRender')) syncPanelProjection();
@@ -1747,15 +1744,13 @@ function setupDatePickerRuntime(instance, fieldInit) {
     if (calendarSecondary) calendarSecondary.destroy(destroyReason);
     if (calendar) calendar.destroy(destroyReason);
     if (periodPanel) periodPanel.destroy(destroyReason);
-    if (yearPanel) yearPanel.destroy(destroyReason);
-    if (monthPanel) monthPanel.destroy(destroyReason);
     // PickerField owns PopupFrame and destroys all popup Scroll surfaces.
     presetsScroll = null;
     selectionScroll = null;
     popupFrame = null;
     draft.destroy();
   
-    timePanel = calendarSecondary = calendar = periodPanel = yearPanel = monthPanel = field = panelShell = selectionHost = selectionScrollShell = timeHost = presetsHost = presetsScrollShell = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;
+    timePanel = calendarSecondary = calendar = periodPanel = field = panelShell = selectionHost = selectionScrollShell = timeHost = presetsHost = presetsScrollShell = panelProjection = calendarGroup = calendarPrimaryHost = calendarSecondaryHost = null;
     return true;
   }
 
@@ -1767,7 +1762,7 @@ function setupDatePickerRuntime(instance, fieldInit) {
     draft.setRawInput(formatSelection(draft.value), { silent:true, active:false, source:'form', reason:'reset-raw-input' }); syncField(false); syncSelectionPanel(false); syncTimePanel();
   });
   if (opts.open === true) field.open('initial');
-  return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(), field:field, calendar:calendar, calendarSecondary:calendarSecondary, periodPanel:periodPanel, yearPanel:yearPanel, monthPanel:monthPanel, timePanel:timePanel, panelShell:panelShell, presetsHost:presetsHost, clear:clear, setValue:setValue, setPickerValue:setPickerValue, setPanelValue:setPanelValue, applyOptions:applyOptions, getState:getState, dispose:disposeRuntime });
+  return Object.freeze({ root:field.getRootElement(), panel:field.getPanelElement(), field:field, calendar:calendar, calendarSecondary:calendarSecondary, periodPanel:periodPanel, timePanel:timePanel, panelShell:panelShell, presetsHost:presetsHost, clear:clear, setValue:setValue, setPickerValue:setPickerValue, setPanelValue:setPanelValue, applyOptions:applyOptions, getState:getState, dispose:disposeRuntime });
 }
 
 
@@ -1831,8 +1826,6 @@ export class DatePicker extends PickerComponent {
   getCalendars() { const r=runtimeState.get(this).runtime; return r ? [r.calendar,r.calendarSecondary].filter(Boolean) : []; }
   getSecondaryCalendar() { const r=runtimeState.get(this).runtime; return r ? r.calendarSecondary : null; }
   getPeriodPanel() { const r=runtimeState.get(this).runtime; return r ? r.periodPanel : null; }
-  getYearPanel() { const r=runtimeState.get(this).runtime; return r ? r.yearPanel : null; }
-  getMonthPanel() { const r=runtimeState.get(this).runtime; return r ? r.monthPanel : null; }
   getTimePanel() { const r=runtimeState.get(this).runtime; return r ? r.timePanel : null; }
   getSelectionPanel() { const r=runtimeState.get(this).runtime; return r ? (r.calendar || r.periodPanel) : null; }
   getPanelOriginElement() { const r=runtimeState.get(this).runtime; return r ? r.panelShell : null; }

@@ -32,15 +32,25 @@ for (const style of STYLES) {
   assert.equal(first.css, second.css, 'Compilation must be deterministic: ' + style);
   const check = checkThemeFile(first.body);
   assert.deepEqual(check.errors, [], 'Invalid compiled theme for ' + style);
-  if (check.warn) console.log('::warning::' + style + ' theme file ' + check.bytes + ' bytes exceeds ' + THEME_FILE_WARN_BYTES + 'B advisory threshold (v3 §5.12); full .dark token inventory is required.');
+  if (check.warn) console.log('::warning::' + style + ' theme file ' + check.bytes + ' bytes exceeds ' + THEME_FILE_WARN_BYTES + 'B advisory threshold (v3 §5.12); single-owner light-dark() output remains required.');
   const back = model.parseThemeHeader(first.css);
   assert.ok(back.ok, 'Header must round-trip: ' + style);
   assert.equal(model.serializeConfig(back.config), model.serializeConfig(config));
   themes[style] = first.body;
 }
-// The default block inside qxframe.css is the Nova + neutral compiler output.
+// Framework CSS default is owner-selected Vega + Mist + Blue. Create editor Reset
+// deliberately remains Nova + Neutral; the two independent defaults must not alias.
 const shipped = fs.readFileSync(path.join(root, 'src/styles/main/theme.css'), 'utf8');
-assert.ok(shipped.includes(model.compileTheme(model.defaultConfig()).body), 'theme.css must equal the default compiler output.');
+const builtInConfig=model.normalizeConfig({
+  style:'vega',baseColor:'mist',theme:'blue',chartColor:'blue',font:'sans',fontHeading:'inherit',
+  radius:'default',menuColor:'default',menuAccent:'subtle',
+  ext:{menuInset:'block',switchLook:'wide',shadow:'medium',pointerFocus:'outline',
+       pointerFocusColor:'theme',shapeThumb:'pill'}
+});
+const expectedDefault=model.compileTheme(builtInConfig).body;
+assert.equal(shipped.slice(shipped.indexOf(':root {')),expectedDefault,
+  'built-in CSS must exactly equal all 220 owner-provided Vega + Mist + Blue compiler tokens.');
+assert.equal(model.defaultConfig().style,'nova','Create editor Reset retains independent v3 default');
 
 const report = { ok: true, contract: 'createapp-v3-theme', styles: STYLES.length, sourceLockedFormulas: verified.expressions.length };
 

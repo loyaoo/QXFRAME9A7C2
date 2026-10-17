@@ -81,6 +81,8 @@
     background-color var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1),
     box-shadow var(--_qxframe9a7c2-fixed-motion-duration-1) cubic-bezier(.2,0,0,1)
 }
+/* Keep inline Choice indicators aligned with Form text without owning inner Layout. */
+.qxframe9a7c2-selectgroup-label>.qxframe9a7c2-selectgroup-indicator:not(.is-floating),.qxframe9a7c2-selectgroup-label>.qxframe9a7c2-form-label{align-self:center}
 .qxframe9a7c2-selectgroup{--_qxframe9a7c2-layout-gap:var(--qxframe9a7c2-theme-field-gap,.75rem)}
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label{
   --_qxframe9a7c2-choice-border:var(--qxframe9a7c2-theme-border);
@@ -250,7 +252,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size])::picker(select)
   border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--qxframe9a7c2-theme-popup-edge);
   border-radius:var(--qxframe9a7c2-theme-radius-popup);
   box-shadow:var(--qxframe9a7c2-theme-shadow-popup);
-  padding:var(--_qxframe9a7c2-fixed-space-1,0.25rem);
+  padding:var(--qxframe9a7c2-theme-list-padding-y,0.375rem) var(--qxframe9a7c2-theme-list-padding-x,0.375rem);
   max-height:20rem;
 }
 .qxframe9a7c2-form-select:not([multiple]):not([size])::picker-icon,
@@ -264,7 +266,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) option{
   box-sizing:border-box;
   min-width:0;
   padding:0.5rem var(--_qxframe9a7c2-control-padding-inline);
-  border-radius:var(--qxframe9a7c2-theme-radius-item,var(--_qxframe9a7c2-navigation-radius));
+  border-radius:min(var(--qxframe9a7c2-theme-radius-item,var(--_qxframe9a7c2-navigation-radius)),calc(var(--qxframe9a7c2-theme-list-padding-x,0.375rem) * 100));
   color:var(--qxframe9a7c2-theme-menu-foreground);
   background:transparent;
   font:inherit;
@@ -305,35 +307,26 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 }
 /* Non-customizable native menu color still follows the page color scheme.
  * A dark .dark subtree must not show white OS options with white text. */
-.qxframe9a7c2-form-select:not([multiple]):not([size]),
-.qxframe9a7c2-native-form select:not([multiple]):not([size]),
-select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
-  color-scheme:light;
-}
-.dark .qxframe9a7c2-form-select:not([multiple]):not([size]),
-.dark .qxframe9a7c2-native-form select:not([multiple]):not([size]),
-.dark select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
-  color-scheme:dark;
-}
+/* Native select inherits the computed Theme color-scheme from its ancestor.
+ * Do not force page-light colors inside dark/local-inverse popups. */
 
-/* Native Select: match the JS Select chevron-down SVG geometry (24px
- * viewBox, m6 9 6 6 6-6, round 2px stroke), not CSS triangles.
- * Encoded external SVG cannot inherit currentColor, so use explicit
- * light/dark neutral strokes and allow Theme to replace the image token. */
+/* Native Select chevron: CSS-drawn two-stroke V.
+ * Unlike a data: SVG (whose paint cannot inherit host currentColor), both
+ * gradient stops resolve from the same light-dark() Theme COLOR token as JS
+ * controls in a local color-scheme subtree. Two 0.25rem segments occupy the
+ * same 0.5rem path width as the previous scaled 24px SVG (m6 9 6 6 6-6).
+ * A custom arrow image may also supply --qxframe9a7c2-form-select-arrow-size. */
 .qxframe9a7c2-form-select,.qxframe9a7c2-native-form select{
   appearance:none;
   cursor:pointer;
   padding-inline-end:max(1.75rem,calc(var(--_qxframe9a7c2-control-padding-inline) + 1rem));
-  --_qxframe9a7c2-native-select-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --_qxframe9a7c2-native-select-chevron:
+    linear-gradient(45deg,transparent 37%,var(--qxframe9a7c2-theme-muted-foreground) 38% 62%,transparent 63%),
+    linear-gradient(135deg,transparent 37%,var(--qxframe9a7c2-theme-muted-foreground) 38% 62%,transparent 63%);
   background-image:var(--qxframe9a7c2-form-select-arrow-image,var(--_qxframe9a7c2-native-select-chevron));
   background-repeat:no-repeat;
-  background-position:right var(--_qxframe9a7c2-control-padding-inline) center;
-  background-size:1rem 1rem
-}
-/* url() is not a color, so light-dark(url(),url()) is invalid CSS.
- * Set the default encoded SVG for each theme boundary instead. */
-.dark .qxframe9a7c2-form-select,.dark .qxframe9a7c2-native-form select{
-  --_qxframe9a7c2-native-select-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+  background-position:right calc(var(--_qxframe9a7c2-control-padding-inline) + 0.25rem) center,right var(--_qxframe9a7c2-control-padding-inline) center;
+  background-size:var(--qxframe9a7c2-form-select-arrow-size,0.25rem 0.25rem),var(--qxframe9a7c2-form-select-arrow-size,0.25rem 0.25rem);
 }
 .qxframe9a7c2-form-input:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-form-select:hover:not(:disabled):not([readonly]):not(:focus),
@@ -515,3 +508,11 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]){
 .qxframe9a7c2-selectgroup:not(.is-outline):not(.is-muted) .qxframe9a7c2-selectgroup-input:focus-visible+.qxframe9a7c2-selectgroup-label{--_qxframe9a7c2-choice-outline:0 solid transparent;--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent}
 .qxframe9a7c2-selectgroup.is-outline .qxframe9a7c2-selectgroup-label,
 .qxframe9a7c2-selectgroup.is-muted .qxframe9a7c2-selectgroup-label{box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-choice-focus-shadow)}
+
+/* Native form text helpers use the Theme text/status roles. */
+.qxframe9a7c2-form-help{display:block;min-width:0;line-height:1.5}
+.qxframe9a7c2-form-hint{display:flex;align-items:center;justify-content:space-between;gap:.5rem;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem;line-height:1.5}
+.qxframe9a7c2-form-hint.is-error{color:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-form-hint.is-success{color:var(--qxframe9a7c2-theme-success)}
+.qxframe9a7c2-form-field.is-stacked{display:flex;flex-direction:column;align-items:stretch;gap:var(--_qxframe9a7c2-form-field-gap)}
+.qxframe9a7c2-form-input-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--qxframe9a7c2-theme-muted-foreground)}

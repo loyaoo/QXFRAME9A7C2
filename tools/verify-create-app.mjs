@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { checkThemeFile, readRegistry } from './css-gates.mjs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -12,7 +13,227 @@ const ONLINE_JS = 'https://loyaoo.github.io/QXFRAME9A7C2/dist/qxframe9a7c2.js';
 const checks = [];
 const check = (name, fn) => { fn(); checks.push(name); };
 
-const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview.css', 'preview.js', 'preview-cards.js'];
+const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
+
+check('Opaque independent mouse/keyboard Focus saturation and soft halo geometry',()=>{
+ const data=read('data.js'),compiler=read('compiler.js');
+ for(const [key,param] of [['keyboardFocusSaturation','kfocus-saturation'],['pointerFocusSaturation','pfocus-saturation']]){
+  assert.match(data,new RegExp("key: '"+key+"', param: '"+param+"'"),key+' gets an independent URL/Theme axis');
+  assert.match(data,new RegExp("key: '"+key+"'[^\\n]*options: \\[[\\s\\S]*?value: 'light'[\\s\\S]*?value: 'normal'[\\s\\S]*?value: 'deep'"),key+' has shallow, normal and deep opaque options');
+ }
+ assert.match(compiler,/focusTone\('focus', ext\.keyboardFocusSaturation\)/,'keyboard Focus color is toned independently');
+ assert.match(compiler,/focusTone\('pointer-focus', ext\.pointerFocusSaturation\)/,'pointer Focus color is toned independently');
+ assert.match(compiler,/target\[name\] = `oklch\(/,'saturated Focus output is a literal opaque OKLCH color');
+ assert.doesNotMatch(compiler.match(/const focusTone = \(name, strength\) => \{[\s\S]*?\n  \};/)[0],/\balpha\(|transparent/,'tonal saturation never changes alpha');
+ for(const name of ['focus','pointer-focus']){
+  assert.ok(compiler.includes("'0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-"+name+") 20%,transparent)'"),'halo '+name+' is blurred, soft and 20%-alpha');
+ }
+});
+check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchronized leave',()=>{
+ const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+ const preview=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ const imageCSS=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ assert.match(modal,/animation !== 'zoom' && animation !== 'zoom-origin'/,'default zoom must retain trigger origin');
+ assert.match(modal,/--_qxframe9a7c2-modal-motion-x/,'Modal keeps the same entry/exit point');
+ assert.match(modal,/translate3d\(var\(--_qxframe9a7c2-modal-motion-x[^\n]+scale\(var\(--_qxframe9a7c2-modal-motion-scale/,'Modal preserves real scale combined with origin travel');
+ assert.match(preview,/is-chrome-leaving/,'preview chrome participates in leave lifecycle');
+ assert.match(preview,/onActive: function \(context\)/,'preview chrome must start and leave on the exact image MotionCore active frame');
+ assert.match(imageCSS,/--_qxframe9a7c2-image-preview-chrome-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'chrome leave matches image duration');
+ assert.match(imageCSS,/mask\.qxframe9a7c2-motion-fade-leave-active\{transition-duration:var\(--qxframe9a7c2-motion-image-preview-trajectory-leave-duration\)/,'mask leave matches image duration');
+ for(const type of ['modal','drawer']){
+  const css=fs.readFileSync(path.join(root,'src/styles/components/'+type+'.css'),'utf8');
+  assert.match(css,/padding-block-end:min\(var\(--qxframe9a7c2-theme-dialog-padding-y/,'header bottom padding derives from divider width for '+type);
+  assert.match(css,/padding-block-start:var\(--qxframe9a7c2-theme-dialog-padding-y/,'footer retains action spacing without divider for '+type);
+  assert.match(css,/@container qxframe9a7c2-\w+-divider style\(--qxframe9a7c2-theme-dialog-divider-width: 0px\)/,'section background tracks divider token for '+type);
+ }
+});
+check('Stage5 Preview04 directly reuses full Theme Playground and dark Alert shadow',()=>{
+ const index=read('index.html'),model=read('model.js'),html=fs.readFileSync(path.join(root,'docs/theme-playground.html'),'utf8');
+ const gallery=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ assert.match(index,/data-create-item="04"/,'fourth preview switch');
+ assert.match(model,/'04': '\.\.\/theme-playground\.html'/,'Preview04 canonical route not a copy');
+ assert.match(html,/src="create\/preview\.js"/,'single Create Theme injection owner');
+ assert.match(html,/data-create-preview="04"/,'offline QA recognizes Preview04');
+ assert.match(gallery,/function selectedLatestSpecs\(_rec,specs\)\{return specs;\}/,'all demos shown on initial mount');
+ assert.doesNotMatch(gallery,/data-qxframe9a7c2-card-toggle/,'no collapsed examples control');
+ assert.match(gallery,/pendingMounts=pendingMounts\.filter\(function\(rec\)/,'filtered-out Gallery demos release idle queue slots');
+ assert.match(gallery,/rec\.meta\.name\.toLowerCase\(\)===q\|\|rec\.meta\.slug===q/,'searched component is prioritized for lazy mount');
+ assert.match(gallery,/dataset\.search=\[meta\.name,meta\.slug,meta\.cn/,'the canonical gallery search index includes hyphenated component slugs');
+ assert.match(alert,/is-shadow\{--_qxframe9a7c2-alert-shadow:0 \.25rem \.75rem color-mix\(in oklab,var\(--qxframe9a7c2-theme-palette-black\) 15%,transparent\)\}/,'dark Alert shadow uses the existing palette-black Theme role');
+});
+check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
+ const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
+ const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ assert.match(badge,/border-radius:var\(--qxframe9a7c2-badge-radius,var\(--qxframe9a7c2-theme-radius-badge\)\)/,'Badge consumes Theme radius-badge');
+ assert.doesNotMatch(recipe,/\.qxframe9a7c2-badge,\.qxframe9a7c2-tabs-tab/,'compact shape visual recipe must not replace Badge Theme radius');
+ assert.doesNotMatch(consumers,/\.qxframe9a7c2-badge\[class\]/,'Badge Theme owner must not be hidden in a second tabs selector');
+ assert.ok(tags.includes('var(--qxframe9a7c2-theme-radius-badge,'),'Tags and input share Theme radius-badge with Badge');
+});
+check('Stage5 acceptance inventory covers every component export without false visual-signoff claims',()=>{
+ const inventory=JSON.parse(read('preview-03-coverage.json'));
+ const a=inventory.stage5Acceptance;
+ assert.equal(a.status,'in-progress','Stage5 cannot claim completion from Preview03 alone');
+ assert.equal(a.previewFamilies.length,65,'record each distinct Preview03 family');
+ assert.equal(a.additionalExports.length,10,'record every additionally exported public/shared component');
+ const expectedGallery=[...new Set(inventory.coverage.map(row=>row.component))].sort();
+ const actualGallery=a.previewFamilies.map(row=>row.component).sort();
+ assert.deepEqual(actualGallery,expectedGallery,'all Preview03 families have explicit statuses');
+ const galleryIds=new Set(inventory.coverage.map(row=>row.card));
+ const presentCards=new Set([...read('preview-03.html').matchAll(/data-card="([^"]+)"/g)].map(m=>m[1]));
+ const exportNames=[...fs.readFileSync(path.join(root,'src/components/index.js'),'utf8').matchAll(/export\s+\{[^\n}]+\}\s+from\s+['"]\.\/([^'"]+)\.js['"]/g)].map(m=>m[1]).sort();
+ assert.ok(exportNames.length>=50,'source barrel exports must be detected, not an empty regex match');
+ const coverageNames=new Set([...a.previewFamilies,...a.additionalExports].map(x=>x.component));
+ assert.equal(coverageNames.size,a.previewFamilies.length+a.additionalExports.length,'no duplicate family/export identity');
+ for(const name of exportNames)assert.ok(coverageNames.has(name),'public export must be classified: '+name);
+ for(const row of [...a.previewFamilies,...a.additionalExports]){
+   assert.ok(galleryIds.has(row.representedBy),'every acceptance row references an actual tracked gallery Card: '+row.component);
+   assert.ok(presentCards.has(row.representedBy),'every acceptance row references a real DOM Card: '+row.component);
+   assert.equal(row.ownerVisual,'pending-owner-signoff','automated source coverage is not human visual acceptance');
+   assert.ok(['pending-individual-review','not-applicable-shared-surface'].includes(row.shadcnAlignment),'no unverified shadcn pixel alignment claims');
+   assert.ok(['targeted-browser-evidence','individual-theme-matrix-pending','inherited-through-owner-not-independently-certified'].includes(row.themeIntegration),'theme status must distinguish source from evidence');
+   if(row.browserEvidence)assert.ok(fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8').includes(row.browserEvidence),'named browser evidence must be present: '+row.component);
+ }
+ assert.equal(a.additionalExports.filter(row=>!exportNames.includes(row.component)).length,0,'additional rows must be actual module exports');
+ assert.ok(fs.readFileSync(path.join(root,'docs/create/STAGE5-COMPONENT-ACCEPTANCE-2026-10-16.md'),'utf8').includes('66 张卡片覆盖 65 种'),'final status document explains gallery-vs-export distinction');
+});
+
+check('Theme controls shared list surface padding; JS inset paths are absent',()=>{
+ const data=fs.readFileSync(path.join(root,'docs/create/data.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const frame=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const dropdown=fs.readFileSync(path.join(root,'src/components/dropdown.js'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/components/select.js'),'utf8');
+ const list=fs.readFileSync(path.join(root,'src/components/list.js'),'utf8');
+ const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
+ assert.ok(native.includes('padding:var(--qxframe9a7c2-theme-list-padding-y,0.375rem) var(--qxframe9a7c2-theme-list-padding-x,0.375rem)'),'native customizable select popup shares CSS x/y');
+ assert.ok(native.includes('calc(var(--qxframe9a7c2-theme-list-padding-x,0.375rem) * 100)'),'native select options flatten with zero x');
+ assert.match(data,/key: 'menuInset'/,'createApp has one Style-following menu spacing axis');
+ for(const token of ['list-padding-x','list-padding-y']){
+   assert.ok(compiler.includes("root['"+token+"']"),'compiler owns '+token);
+   assert.ok(frame.includes('theme-'+token),'ListFrame reads '+token);
+ }
+ assert.match(frame,/padding:var\(--_qxframe9a7c2-list-frame-padding-y\) var\(--_qxframe9a7c2-list-frame-padding-x\)/,'one shared CSS shorthand owns frame x/y');
+ assert.doesNotMatch(dropdown,/function normalizeFrameInset|syncFrameInset|inset:'all'/,'Dropdown does not compute inset in JS');
+ assert.doesNotMatch(select,/qxframe9a7c2-list-frame is-inset/,'Select does not pin an inset mode');
+ assert.doesNotMatch(list,/classList\.toggle\('is-inset'/,'List does not pin an inset mode');
+});
+check('Stage5 Mist neutral roles, tinted shadows and independent Slider track/handle shape',()=>{
+ const config=fs.readFileSync(path.join(root,'docs/create/data.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.match(config,/key: 'sliderLook', param: 'slider', label: '滑轨粗细'/,'track thickness axis is unambiguously labeled');
+ assert.match(config,/key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状'/,'handle shape is separately labeled');
+ assert.match(config,/value: 'pill', label: '胶囊形'/,'explicit Slider handle pill shape option');
+ assert.match(compiler,/roundShape\('shapeThumb'\) === 'pill' \? SLIDER_THUMB\[style\] \* 1\.5/,'pill changes actual handle width, not rail');
+ assert.match(config,/defaults: S\('circle', 'circle', 'radius', 'radius', 'radius', 'pill', 'square', 'radius'\)/,'Luma default pill retains source-sized 24×16 handle; explicit circle is square-sized');
+ assert.match(compiler,/root\['slider-track'\] = rem\(SLIDER\[ext\.sliderLook\]\)/,'track keeps distinct thickness axis');
+ assert.match(compiler,/oklch\(from var\(--qxframe9a7c2-theme-muted-foreground\) 0\.12 c h\)/,'shadow ink inherits base hue/chroma at dark-safe fixed lightness');
+ assert.doesNotMatch(compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0],/light-dark\(/,'shadow-valued Theme token cannot nest light-dark');
+ const shadow=compiler.match(/const SHADOWS = \{[\s\S]*?\n\};/)[0];
+ assert.doesNotMatch(shadow,/oklch\(0 0 0 \/ /,'no fixed grayscale elevation in compiler');
+ assert.match(consumers,/--_qxframe9a7c2-item-hover: color-mix\(in oklab, var\(--qxframe9a7c2-theme-muted\) 78%, var\(--qxframe9a7c2-theme-muted-foreground\)\)/,'shared hover follows neutral base roles');
+ assert.match(consumers,/--_qxframe9a7c2-menu-hover-soft: color-mix\(in oklab, color-mix\(in oklab, var\(--qxframe9a7c2-theme-muted\) 78%, var\(--qxframe9a7c2-theme-muted-foreground\)\) 70%, transparent\)/,'popup neutral hover follows the same base-color tint with alpha');
+});
+check('Stage5 gallery lazy mounts defer heavy demo work outside scroll observer frames',()=>{
+ const playground=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ assert.ok(playground.includes('function enqueueMount(rec)'), 'gallery queues visible demo mounts instead of synchronous fanout');
+ assert.ok(playground.includes("requestIdleCallback(run,{timeout:250})"),'Chromium idle scheduling preserves animation frames');
+ assert.ok(playground.includes('if(!record.mounted&&record.card.isConnected)mountRecord(record)'), 'each idle slot mounts one live demo');
+ assert.doesNotMatch(playground,/if\(entry\.isIntersecting\)\{var rec=[^}]+mountRecord\(rec\)/,'no eager synchronous mount inside IntersectionObserver');
+});
+check('Stage5 screenshot defects map to canonical DatePicker, Image and visible theme demos',()=>{
+ const dp=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ const imageCss=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const demo=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-component-demo-supplements.js'),'utf8');
+ const theme=fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8');
+ assert.ok(dp.includes('container: calendarPrimaryHost,\\n      unit:unit,')===false,'no string-escaped fake source');
+ assert.ok(dp.includes('container: calendarPrimaryHost,\n      unit:unit,'),'primary Calendar receives week unit');
+ assert.ok(dp.includes('container: calendarSecondaryHost,\n        unit:unit,'),'secondary Calendar receives week unit');
+ assert.ok(image.includes('download: false, trajectory:false'),'default Image preview independently scales from center');
+ assert.ok(image.includes("if (cfg('trajectory',false) === true) root.classList.add('is-preview-source-hidden')"),'source opacity handoff is opt-in only');
+ assert.ok(imageCss.includes('image-preview-nav .qxframe9a7c2-icon{color:inherit}'),'navigation inherits preview white foreground');
+ assert.ok(picker.includes('date-picker-time-panel{display:flex;align-self:stretch;flex:0 0 auto;min-width:var(--_qxframe9a7c2-date-picker-time-width);border-inline-start:1px solid'),'DateTime boundary uses Theme border');
+ for(const label of ['Alert：语义 × 外观 × 阴影','Alert 叠加外观','Kbd 命令键组合','周选择与 Calendar 共用 Range Painter','日期时间 Theme 分隔线'])assert.ok(demo.includes(label),'public canonical demo '+label);
+ assert.ok(theme.includes('selectedLatestSpecs(rec,specs)'),'new component variants are visible without expanding all');
+});
+check('Stage5 Tags input and Tag share one radius owner across all Theme shapes',()=>{
+ const tag=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
+ const radius='var(--qxframe9a7c2-tag-radius,var(--qxframe9a7c2-theme-radius-badge,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius))))';
+ assert.equal(tag.split('border-radius:'+radius).length-1,4,'Tag surface, Add focus shell, editable input and edit-state input all share Tag/compact/control fallback');
+ assert.ok(!recipe.includes('.qxframe9a7c2-tag,.qxframe9a7c2-badge,.qxframe9a7c2-tabs-tab'),'visual recipe must not override canonical Tag radius owner');
+ const styleConsumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ assert.ok(!styleConsumers.includes('.qxframe9a7c2-tag[class]{border-radius:'),'late Theme Style consumer may not reintroduce an independent Tag-only radius owner');
+});
+check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
+  const html=read('preview-03.html'),js=read('preview-03.js'),css=read('preview-03.css'),model=read('model.js'),index=read('index.html');
+  const ids=["platform-tree","workforce-access","onboarding-flow","service-health","brand-studio","plan-governance","release-planner","order-routing","finance-approval","customer-quality","inventory-control","data-inspector","marketing-creative","identity-otp","support-triage","usage-meter","rules-automation","incident-response"];
+  assert.match(index,/data-create-item="03"/,'Create switcher has third Preview');
+  assert.match(model,/'03': '\.\/preview-03\.html'/,'model routes item=03');
+  assert.deepEqual([...html.matchAll(/<!-- @card ([a-z0-9-]+) -->/g)].map(m=>m[1]),ids,'18 independently addressable original Cards');
+  for(const id of ids)assert.ok(html.includes('data-card="'+id+'"'),'QX commercial Card '+id);
+  assert.match(js,/QXFRAME9A7C2_PREVIEW3/,'JS exports live runtime diagnostics');
+  assert.match(js,/Factory\.create/,'Original 18 Cards mount a public QX constructor');
+  assert.match(html,/preview-03\.css/);
+  assert.ok(css.includes('.pv3-hero h1{font-family:var(--qxframe9a7c2-theme-font-heading,inherit)'),'Preview03 hero follows heading font');
+  assert.ok(css.includes('.pv3x-section-heading h2{font-family:var(--qxframe9a7c2-theme-font-heading,inherit)'),'Preview03 second section follows heading font');
+  assert.match(css,/\.pv3x-event-list>div\{[^}]*transition:opacity var\(--qxframe9a7c2-theme-duration-sm\) ease,transform var\(--qxframe9a7c2-theme-duration-sm\) ease/,'Event motion maps to Theme');
+  assert.match(css,/\.pv3x-process-chip\{[^}]*transition:background-color var\(--qxframe9a7c2-theme-duration-md\) ease/,'Process motion maps to Theme');
+  assert.doesNotMatch(css,/transition:[^;}]*\b(?:\.16s|\.2s)\b/,'Preview03 no hard-coded transition durations');
+  assert.match(html,/preview-03\.js/);
+  assert.doesNotMatch(css,/display\s*:\s*grid|@layer|:is\(|:where\(|\bvw\b|\bvh\b|\bfr\b/,'Preview03 authors Flex-only page layout');
+  assert.match(read('offline-qa-changes.mjs'),/group\[3\]==='03'/,'offline QA locator handles third page');
+  const inventory=JSON.parse(read('preview-03-coverage.json'));
+  assert.equal(inventory.totalCards,66,'full commercial gallery count');
+  assert.equal(inventory.addedCards,48,'this batch adds 48');
+  assert.equal(inventory.coverage.length,66,'every documented family mapped');
+  assert.equal(new Set(inventory.coverage.map(x=>x.component)).size,65,'Calendar date/period share one documented framework component while gallery keeps 66 cards');
+  assert.equal(inventory.coverage.filter(x=>x.component==='calendar').length,2,'both Calendar day and quarter demos use the unified Calendar');
+  assert.equal(new Set(inventory.added.map(x=>x.id)).size,48,'new Card ids distinct');
+  for(const entry of inventory.added) assert.ok(html.includes('data-card="'+entry.id+'"'),'additional Card '+entry.id);
+  assert.equal((html.match(/data-card="/g)||[]).length,66,'exactly 66 Preview03 Card containers');
+  assert.match(html,/preview-03-extra\.js/,'extra-QX runtime script wired');
+  const extra=read('preview-03-extra.js');
+  assert.match(extra,/Factory\.create\(config\)/,'Additional 48 Cards mount through QX runtime constructors');
+  assert.match(extra,/QXFRAME9A7C2_PREVIEW3/,'expanded script shares diagnostics with baseline');
+
+});
+
+check('Stage5 shared navigation/data radii do not inherit fixed 4px',()=>{
+  const css=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+  for(const role of ['navigation','data']) {
+    const expected='--_qxframe9a7c2-'+role+'-radius: var(--_qxframe9a7c2-family-'+role+'-radius, var(--qxframe9a7c2-theme-radius-item));';
+    assert.ok(css.includes(expected),role+' consumes unified Theme item radius');
+  }
+});
+
+check('Stage5 QX-only public components consume Theme corner roles',()=>{
+  for(const part of ['menu','list','steps','carousel','progress','image','badge','card','slider','tabs','picker-family']){
+    const css=fs.readFileSync(path.join(root,'src/styles/components',part+'.css'),'utf8');
+    assert.match(css,/--qxframe9a7c2-theme-radius-(?:item|button|track|thumb|popup|badge)/,part+' Theme corner role');
+  }
+  assert.match(read('preview-03.css'),/\.pv3x-avatars \.qxframe9a7c2-avatar[^}]*border-radius:var\(--qxframe9a7c2-theme-radius-avatar\)/,'Preview03 Avatar is not hard-coded pill');
+});
+
+check('menu-inverted Picker descendants consume matched Menu surface roles',()=>{
+  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const menuScope='qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)';
+  assert.ok(v2.includes(menuScope+':not(.qxframe9a7c2-tooltip-container)'),'Menu semantics exclude Tooltip surface');
+  for(const role of ['semantic-text','semantic-text-secondary','semantic-text-disabled','semantic-text-placeholder',
+    'semantic-surface','semantic-border-subtle','navigation-bg','control-bg','control-text','control-border'])
+    assert.match(v2,new RegExp('--_qxframe9a7c2-'+role+':'),'nested popup semantic role '+role);
+  for(const component of ['item-surface.is-selected','date-panel-cell.is-selected','date-panel-cell.is-today',
+    'date-picker-preset','color-panel'])
+    assert.ok(v2.includes('qxframe9a7c2-'+component),'nested Picker state '+component);
+  assert.ok(v2.includes('qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container'),'Popover stays on non-menu surface');
+  assert.doesNotMatch(v2,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-item\.is-selected/,'TimePicker must not paint a second TimePanel selected skin');
+});
+
 check('all CSS private Focus shadows use focus, not ring terminology',()=>{
   const dirs=['src/styles/components','src/styles/main'];
   const found=[];
@@ -52,6 +273,47 @@ check('Chromium acceptance module must parse before any heavy browser workflow',
   execFileSync(process.execPath,['--check',path.join(root,'tools/verify-create-app-browser.mjs')],{stdio:'pipe'});
 });
 
+check('font-mono and Alert radius consume registered Theme mapping',()=>{
+ const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style.css'),'utf8');
+ assert.ok(json.includes('font-family:var(--qxframe9a7c2-font-mono,var(--_qxframe9a7c2-fixed-font-family-mono,'),'JSON must preserve public font-mono override then shared theme-mono mapping');
+ assert.match(v2,/--_qxframe9a7c2-fixed-font-family-mono:\s*var\(--qxframe9a7c2-theme-font-mono\)/,'Theme V2 maps registered mono font to consumers');
+ assert.ok(alert.includes('border-radius:var(--qxframe9a7c2-alert-radius,var(--_qxframe9a7c2-surface-radius))'),'Alert radius already follows public and shared Theme radius; no fixed 14px');
+});
+
+
+check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=>{
+ const compiler=read('compiler.js');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
+ const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
+ assert.match(defaults,/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(oklch\(0\.148 0\.004 228\.8\), oklch\(0\.987 0\.002 197\.1\)\)/,'embedded Mist Menu ink supports light and dark');
+ assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent-foreground: light-dark\(/g)||[]).length,1,'one COLOR owner for both modes');
+ for(const component of ['notice-slot','message-root','notification-root'])
+   assert.ok(theme.includes('.qxframe9a7c2-'+component+'[class]'),'real Notice surface '+component+' resolves Theme geometry');
+ for(const part of ['message-root','notification-root','notice-slot'])
+   assert.ok(notice.includes('border-radius:var(--qxframe9a7c2-'+(part==='message-root'?'message':part==='notification-root'?'notification':'notice')+'-radius,var(--_qxframe9a7c2-surface-radius))'),'Notice '+part+' uses surface mapping');
+ assert.ok(notice.includes('transition:box-shadow var(--qxframe9a7c2-theme-duration-md) ease'),'Notice transition maps to motion duration');
+});
+
+check('Card Skeleton preserves shimmer but follows shared Skeleton disable',()=>{
+ const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+ const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
+ assert.ok(card.includes('animation:qxframe9a7c2-card-skeleton 1.3s ease-in-out infinite'),'Card keeps its distinct shimmer animation');
+ assert.ok(card.includes('@container style(--qxframe9a7c2-theme-skeleton-animation: none){'),'inherited Theme token controls Card animation shutdown');
+ assert.ok(card.includes('.qxframe9a7c2-card-skeleton-line{animation:none}'),'Card must disable shimmer on shared none');
+ assert.ok(tokens.includes("L('skeleton-animation'"),'shared Skeleton name remains registered Theme input');
+});
+
+check('offline QA annotation module must parse before packaging',()=>{
+ const modulePath=path.join(root,'docs/create/offline-qa-changes.mjs');
+ execFileSync(process.execPath,['--check',modulePath],{stdio:'pipe'});
+ const source=fs.readFileSync(modulePath,'utf8');
+ assert.match(source,/<\/p><\/div>'/,'QA caption must close both paragraph and container');
+});
+
 check('offline changes ledger and packaging are opt-in and do not contaminate production Create HTML', () => {
   const ledger=read('offline-qa-changes.mjs');
   const overlay=read('offline-qa-changes.css');
@@ -59,10 +321,14 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   const preview=read('preview-01.html');
   const preview02=read('preview-02.html');
   assert.match(preview02,/preview-stage4-actions\.js/,'current action wiring loads on Preview02');
-  const current={"invoice":["[data-pv-action=\"invoice-pdf\"]","[data-pv-action=\"invoice-pay\"]"],"environment-variables":["[data-pv-action=\"env-edit\"]","[data-pv-action=\"env-deploy\"]"],"activate-agent-dialog":["[data-pv-action=\"agent-cancel\"]","[data-pv-action=\"agent-enable\"]"],"observability-card":["[data-pv-action=\"obs-query\"]"],"anomaly-alert":["[data-pv-action=\"anomaly-upgrade\"]"],"bar-chart-card":["[data-pv-action=\"traffic-report\"]"],"sleep-report":["[data-pv-action=\"sleep-detail\"]"],"weekly-fitness-summary":["[data-pv-action=\"fitness-detail\"]"],"analytics-card":["[data-pv-action=\"analytics-detail\"]"],"not-found":["[data-pv-local-search]","[data-pv-action=\"notfound-home\"]"]}; // Stage4 ten actual Preview02 action fixes
+  // The current batch changes the single global CSS default; no individual
+  // Preview Card source is edited. Remove every earlier local QA highlight.
+  const current={};
+  assert.match(ledger,/const groups = \[\];/,'global default Theme batch does not inherit any old Card highlight');
+  for(const old of ['slider','calendar','dropdown','card'])assert.ok(!ledger.includes("['"+old+"'"),'previous batch QA highlight removed: '+old);
   let count=0;
   for(const [id,selectors] of Object.entries(current)){
-    assert.ok(preview02.includes('data-card="'+id+'"'),'current Preview 02 Card '+id);
+    assert.ok(['slider','calendar','dropdown','card'].includes(id)?fs.readFileSync(path.join(root,'docs/assets/qxframe9a7c2-theme-playground.js'),'utf8').includes("card.id='component-'+meta.slug"):id==='static-recipes'?read('preview-03.html').includes('data-pv3-static-recipes='):read('preview-03.html').includes('data-card="'+id+'"'),'current Preview Card or canonical playground '+id);
     assert.ok(ledger.includes("['"+id+"'"),'active QA group '+id);
     for(const selector of selectors){assert.ok(ledger.includes("'"+selector+"'"),'changed child '+selector);count++;}
   }
@@ -70,11 +336,17 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   for(const [id] of Object.entries(current)) {
     assert.ok(ledger.includes("['"+id+"'"),'current-round composition card '+id);
   }
-  for(const previous of ['sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
+  for(const previous of ['capacity-calendar','release-planner','platform-tree','quick-action-menu','brand-studio','dial-settings','identity-otp','feature-flags','navigation-workspace','activity-timeline','onboarding-flow','org-hierarchy','marketing-creative','service-health','asset-preview','stakeholder-roster','compliance-flags','revenue-surfaces','usage-meter','segmented-console',
+    'sidebar-nav','dividend-income','savings-targets','receiving-method','payout-threshold','faq','preferences','recent-transactions','transfer-funds','claimable-balance','front-door',
     'release-catalog','upcoming-payments','qr-connect','cover-art','new-milestone','social-links'])
-    assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
-  assert.equal(count,14,'only current Stage4 ten cards/fourteen regions are highlighted');
-  assert.match(ledger,/const groups = \[/,'live Control/Choice ledger exists');
+    if(!Object.prototype.hasOwnProperty.call(current,previous))assert.ok(!ledger.includes("['"+previous+"'"),'old highlight absent '+previous);
+  assert.equal(count,0,'global CSS Theme batch has zero misleading card-specific visual highlights');
+  const feature=read('preview-03.html').split('data-card="feature-flags"')[1]?.split('</article>')[0] || '';
+  assert.ok(feature,'feature-flags Card content must be present');
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-input"/g)||[]).length,3,'Preview03 must use three real QX Switch inputs');
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-track"/g)||[]).length,3,'each real QX Switch input has its track');
+  assert.equal((feature.match(/class="qxframe9a7c2-switch-thumb"/g)||[]).length,3,'each real QX Switch track has its thumb');
+  assert.match(ledger,/const groups = \[/,'the same QA ledger exists for zero or positive change counts');
   assert.equal((ledger.match(/__QA_BUNDLE_HEAD__/g)||[]).length,count,'exactly one marker per current changed region');
   assert.match(overlay,/\.qa-changed-region/,'inner changed regions need visible highlight');
   assert.match(ledger,/markedRegions=groups\.reduce/,'offline QA badge count must be derived from live ledger');
@@ -83,9 +355,13 @@ check('offline changes ledger and packaging are opt-in and do not contaminate pr
   assert.match(ledger,/data-qa-toggle/,'offline QA must support original clean view');
   assert.match(packager,/offline-qa-changes\.mjs/,'packager must inject the QA module into local copies');
   assert.match(packager,/offline-qa-changes\.css/,'packager must inject the QA stylesheet into local copies');
+  assert.match(packager,/playground_file = work \/ 'docs\/theme-playground\.html'/,'local package must also annotate canonical Preview04');
+  assert.match(packager,/href="create\/offline-qa-changes\.css"/,'Preview04 uses docs/ relative QA stylesheet');
+  assert.match(packager,/src="create\/offline-qa-changes\.mjs"/,'Preview04 uses docs/ relative QA module');
+  assert.doesNotMatch(fs.readFileSync(path.join(root,'docs/theme-playground.html'),'utf8'),/offline-qa-changes/,'published Preview04 must not load offline annotations');
   assert.match(packager,/31 张 Preview 02 卡片已经用户人工验收通过/,'offline bundle must reflect Stage4 owner acceptance');
   assert.doesNotMatch(packager,/尚待人工验收/,'do not ship stale pending Stage4 copy after owner acceptance');
-  for(const page of ['index.html','preview-01.html','preview-02.html'])
+  for(const page of ['index.html','preview-01.html','preview-02.html','preview-03.html'])
     assert.doesNotMatch(read(page),/offline-qa-changes/,
       'QA visuals are forbidden in source / online Create HTML: '+page);
 });
@@ -126,8 +402,10 @@ check('normal Control Shadow is shared and separate from pointer/keyboard focus'
   const native=source('src/styles/components/native-input.css'),form=source('src/styles/components/form-native.css');
   const button=source('src/styles/components/button.css'),theme=source('src/styles/main/theme.css');
   assert.ok(compiler.includes("root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs"));
-  for(const suffix of ['shadow-control','focus-shadow','pointer-shadow'])assert.ok(
-    theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'default transparent shadow is visually off and composition-safe: '+suffix);
+  assert.match(theme,/--qxframe9a7c2-theme-shadow-control: 0 0\.0625rem 0\.125rem 0 color-mix\(/,
+    'owner Vega Theme enables shared normal control elevation without conflating focus');
+  for(const suffix of ['focus-shadow','pointer-shadow'])assert.ok(
+    theme.includes('--qxframe9a7c2-theme-'+suffix+': 0 0 0 0 transparent;'),'owner Vega outlines never add a duplicate focus box-shadow: '+suffix);
   assert.ok(native.includes('--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent'),'JS Input never invalidates normal shadow with comma+none');
   assert.ok(form.includes('--_qxframe9a7c2-choice-focus-shadow:0 0 0 0 transparent'),'SelectGroup never invalidates normal shadow with comma+none');
   assert.ok(native.includes('box-shadow:var(--qxframe9a7c2-theme-shadow-control,0 0 0 0 transparent),var(--_qxframe9a7c2-state-focus-shadow)'),'JS Input retains normal-state elevation');
@@ -212,8 +490,8 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
  const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
- assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
- assert.match(consumer,/--_qxframe9a7c2-v2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
+ assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-focus-shadow,none\)/,'keyboard JS surface shadow');
  assert.match(native,/\.qxframe9a7c2-field\.is-valid \.qxframe9a7c2-form-input:not\(:disabled\)/,'native Field success feedback');
@@ -229,8 +507,8 @@ check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
     assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
   }
-  assert.match(consumer,/--_qxframe9a7c2-v2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\)/,'native and JS Hover must update V2 physical border owner');
-  assert.match(consumer,/--_qxframe9a7c2-v2-control-bg:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field\)/,'native and JS Hover must update V2 physical background owner');
+  assert.match(consumer,/--_qxframe9a7c2-control-border:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field-border\)/,'native and JS Hover must update V2 physical border owner');
+  assert.match(consumer,/--_qxframe9a7c2-control-bg:color-mix\(in oklab,var\(--qxframe9a7c2-theme-field\)/,'native and JS Hover must update V2 physical background owner');
   assert.match(style,/\.qxframe9a7c2-field\.is-warning \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'warning feedback wins on hover');
   assert.match(style,/\.qxframe9a7c2-field\.is-invalid \.qxframe9a7c2-form-input:hover:not\(:disabled\)/,'invalid feedback wins on hover');
   assert.match(structure,/is-connected\.is-outline>\.qxframe9a7c2-flex>\.qxframe9a7c2-selectgroup-item:first-child/,'horizontal corners scoped to Flex');
@@ -296,9 +574,11 @@ check('Owner feedback batch: density, Tabs, sidebar, popup, native Select and gr
   assert.match(css('tabs'),/\.qxframe9a7c2-tabs-scroll\{width:100%;height:var\(--_qxframe9a7c2-tabs-height\)/,'horizontal Tabs root uses shared tab height');
   assert.match(css('tabs'),/is-segmented:not\(\.is-vertical\) \.qxframe9a7c2-tabs-scroll\{height:calc\(var\(--_qxframe9a7c2-tabs-height\) \+ \.5rem\)/,'segmented Scroll adds the full vertical 8px rail budget');
   assert.match(css('tabs'),/\.qxframe9a7c2-scroll-viewport\{box-sizing:border-box;padding:0\.25rem;/,'viewport 4px vertical padding restored without overflow');
-  assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select arrow uses a theme-overridable SVG image slot');
-  assert.match(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'dark SVG must use theme boundary (light-dark does not accept URLs)');
-  assert.match(css('form-native'),/m6 9 6 6 6-6/,'native SVG chevron follows JS icon path');
+  assert.match(css('form-native'),/form-select-arrow-image,var\(--_qxframe9a7c2-native-select-chevron\)/,'native Select keeps optional custom image slot');
+  assert.match(css('form-native'),/linear-gradient\(45deg,transparent 37%,var\(--qxframe9a7c2-theme-muted-foreground\)/,'native chevron consumes mode-aware Theme color');
+  assert.match(css('form-native'),/linear-gradient\(135deg,transparent 37%,var\(--qxframe9a7c2-theme-muted-foreground\)/,'both native chevron strokes share one color');
+  assert.doesNotMatch(css('form-native'),/\.dark \.qxframe9a7c2-form-select,\.dark \.qxframe9a7c2-native-form select\{/,'native arrow cannot remain tied to page .dark when Popup scheme inverts');
+  assert.doesNotMatch(css('form-native'),/data:image\/svg\+xml/,'no hardcoded image paint for the Select chevron');
   assert.match(css('composition'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-input-group-field:has\(>\.qxframe9a7c2-form-input:focus-visible\)[^\{]*\{[^}]*theme-pointer-width/,'InputGroup mouse focus consumes Theme pointer token and is restricted to pointer origin');
   assert.match(css('motion'),/motion-popup-placement-appear-from[^\{]*\{[^}]*scaleY\(\.88\)/,'vertical anchored expansion');
   assert.match(css('motion'),/\[data-placement\^="right"\][^\{]*\{[^}]*scaleX\(\.88\)/,'horizontal anchored expansion');
@@ -320,7 +600,7 @@ check('small Button typography consumes one source-mapped Theme token', () => {
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   assert.match(tokens,/L\('button-sm-font-size'/,'closed theme schema');
   const defaultTheme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
-  assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,2,'default Nova light/dark token symmetry');
+  assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,1,'default Nova geometry has one invariant Theme owner');
   assert.match(compiler,/root\['button-sm-font-size'\]/,'compiler emits independent style recipe');
   assert.match(v2,/\.qxframe9a7c2-button\.is-sm\{\s*font-size:var\(--qxframe9a7c2-theme-button-sm-font-size/,'V2 actual shared geometry owner consumes source Button type');
   assert.match(v2,/\.qxframe9a7c2-button\.is-sm\.is-square,[\s\S]*?font-size:var\(--qxframe9a7c2-theme-control-font-size/,'icon-sm retains source 14px Nova body/control type');
@@ -376,6 +656,98 @@ check('Empty: shared QX composition replaces preview-private geometry', () => {
 const model = await import(pathToFileURL(path.join(dir, 'model.js')).href);
 const data = await import(pathToFileURL(path.join(dir, 'data.js')).href);
 
+check('Stage5 cross-month caps and dialog style tokens keep shared owners',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const datepicker=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
+ const modal=fs.readFileSync(path.join(root,'src/styles/components/modal.css'),'utf8');
+ const drawer=fs.readFileSync(path.join(root,'src/styles/components/drawer.css'),'utf8');
+ assert.ok(calendar.includes('is-range-clip-start')&&calendar.includes('is-range-clip-end'),'Calendar owns visible month cuts');
+ assert.ok(datepicker.includes("outside === true && unit !== 'week'"),'only ordinary dates clip outside month');
+ assert.ok(picker.includes(':not(.is-selected):not(.is-range-start):not(.is-range-end)'),'range transparent middle excludes real endpoints');
+ for(const token of ['dialog-padding-x','dialog-padding-y','dialog-body-padding-y','dialog-divider-width'])
+   assert.ok(compiler.includes("root['"+token+"']"),'Theme compiler emits '+token);
+ assert.ok(!compiler.includes("root['dialog-mask-blur'] = translucent"),'dialog blur must not inherit menu translucent switch');
+ for(const css of [modal,drawer]){
+   assert.ok(css.includes('theme-dialog-padding-x'),'dialog section horizontal inset is Theme driven');
+   assert.ok(css.includes('theme-shadow-dialog'),'dialog surface resolves the high-elevation Dialog Theme role');
+   assert.ok(!css.includes('var(--qxframe9a7c2-theme-shadow-popup)'),'dialog never silently falls back to Popup shadow');
+   assert.ok(css.includes('theme-dialog-divider-width'),'section dividers follow sections style');
+   assert.ok(css.includes('theme-card-section'),'dialog uses shared Card section color');
+ }
+ const make=(style,shadow,sections,menuColor)=>model.compileTheme(model.normalizeConfig({style,menuColor,ext:{shadow,sections}}),{generatedAt:''}).body;
+ const token=(css,name)=>new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);').exec(css)?.[1];
+ for(const style of data.STYLES.map(s=>s.value)){
+   const blurs=['default','default-translucent'].map(menu=>token(make(style,'medium','divider',menu),'dialog-mask-blur'));
+   assert.equal(blurs[0],blurs[1],'menu color must not change dialog blur for '+style);
+   assert.equal(token(make(style,'none','none','default'),'shadow-popup'),'none','zero surface strength means popup none');
+   assert.equal(token(make(style,'none','none','default'),'shadow-dialog'),'none','zero surface strength means dialog none');
+   const tiers=['none','light','medium','strong','heavy'].map(t=>token(make(style,t,'divider','default'),'shadow-dialog'));
+   assert.equal(new Set(tiers).size,5,'distinct dialog elevation grades for '+style);
+   assert.equal(token(make(style,'light','none','default'),'dialog-divider-width'),'0px','no-section has no line');
+   assert.equal(token(make(style,'light','muted','default'),'dialog-divider-width'),'0px','muted section has no redundant line');
+   assert.equal(token(make(style,'light','divider','default'),'dialog-divider-width'),'1px','divider section uses line');
+ }
+});
+check('Eight Style presets drive Menu padding mode through theme x/y and round-trip overrides',()=>{
+ const axis=data.EXT_AXES.find(x=>x.key==='menuInset');
+ assert.ok(axis,'Menu spacing is one createApp Style extension axis');
+ assert.deepEqual(axis.options.map(x=>x.value),['all','block'],'Menu includes all-around and vertical-only choices');
+ const expected={vega:'all',nova:'block',maia:'all',lyra:'block',mira:'block',luma:'all',sera:'block',rhea:'block'};
+ assert.deepEqual(axis.defaults,expected,'exactly eight Style defaults own Menu padding types');
+ const token=(css,name)=>new RegExp('--qxframe9a7c2-theme-'+name+':\\s*([^;]+);').exec(css)?.[1];
+ for(const [style,mode] of Object.entries(expected)){
+  const config=model.normalizeConfig({style});
+  const resolved=model.resolveConfig(config);
+  assert.equal(resolved.ext.menuInset,mode,style+' uses its Style-specific Menu mode');
+  const css=model.compileTheme(config,{generatedAt:''}).body;
+  assert.equal(token(css,'list-padding-x'),mode==='all'?'0.375rem':'0rem',style+' has correct Menu inline gutter');
+  assert.equal(token(css,'list-padding-y'),'0.375rem',style+' retains independent top/bottom gutter');
+  const flipped=mode==='all'?'block':'all';
+  const override=model.normalizeConfig({style,ext:{menuInset:flipped}});
+  assert.equal(model.resolveConfig(override).ext.menuInset,flipped,style+' explicit choice overrides Style');
+  const roundTrip=model.parseConfig(model.serializeConfig(override)).config;
+  assert.equal(roundTrip.ext.menuInset,flipped,style+' URL configuration preserves Menu spacing choice');
+  const overridden=model.compileTheme(roundTrip,{generatedAt:''}).body;
+  assert.equal(token(overridden,'list-padding-x'),flipped==='all'?'0.375rem':'0rem',style+' overridden Theme CSS');
+ }
+});
+
+check('All 78 COLOR Theme tokens have a single light-dark owner, with scheme-only dark boundary',()=>{
+  const registry=read('tokens.js');
+  const colors=[...registry.matchAll(/\bC\('([a-z0-9-]+)'/g)].map(m=>m[1]);
+  assert.equal(colors.length,78,'closed COLOR inventory must not change');
+  for(const style of data.STYLES.map(s=>s.value)){
+    const body=model.compileTheme(model.normalizeConfig({style})).body;
+    const darkStart=body.indexOf('\n.dark {');
+    assert.ok(body.startsWith(':root {\n  color-scheme: light;\n')&&darkStart>0,style+' scheme boundaries');
+    const root=body.slice(0,darkStart),dark=body.slice(darkStart);
+    for(const name of colors){
+      const exp='--qxframe9a7c2-theme-'+name+': light-dark(';
+      assert.equal(body.split(exp).length-1,1,style+'/'+name+' single COLOR owner');
+      assert.ok(root.includes(exp),style+'/'+name+' root owns COLOR');
+      assert.ok(!dark.includes(exp),style+'/'+name+' .dark must never repeat COLOR');
+    }
+    assert.match(root,/--qxframe9a7c2-theme-color-scheme: light;/);
+    assert.match(dark,/\.dark \{\n  color-scheme: dark;\n  --qxframe9a7c2-theme-color-scheme: dark;\n\}/);
+    const darkTokens=[...dark.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m=>m[0]);
+    assert.deepEqual(darkTokens,['--qxframe9a7c2-theme-color-scheme'],style+' only keyword exception in dark');
+  }
+  const values=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+  assert.doesNotMatch(values,/color-scheme:\s*var\(--qxframe9a7c2-theme-color-scheme\)/,'fixed aliases cannot override local Popup color-scheme');
+});
+
+
+check('Create shell and three Preview canvases consume light-dark without mode-specific paint duplicates',()=>{
+  for(const file of ['app.css','preview.css','preview-03.css']){
+    const css=read(file);
+    assert.doesNotMatch(css,/:root\.dark\s+(?:\.create-|body\.create-preview-body|\.pv3-body)|html:root\.dark\s*\{/,
+      file+' cannot fork surface colors by page class');
+  }
+  assert.match(read('app.css'),/background: light-dark\(rgb\(10 10 10 \/ 0\.8\), rgb\(38 38 38 \/ 0\.9\)\)/);
+  assert.match(read('preview-03.css'),/background:light-dark\(var\(--qxframe9a7c2-theme-muted\),var\(--qxframe9a7c2-theme-background\)\)/);
+});
 
 check('Control Shadow and Card Shadow independently switch and round-trip without new Theme tokens',()=>{
  const control=data.EXT_AXES.find(a=>a.key==='controlShadow'),surface=data.EXT_AXES.find(a=>a.key==='shadow');
@@ -409,7 +781,7 @@ check('inverted Popup ItemCollection and Select idle text use menu foreground',(
  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-collection\s*\{\s*color:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\s*\{\s*--_qxframe9a7c2-item-text:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
- assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
+ assert.match(css,/\.qxframe9a7c2-popup-surface:not\(\.qxframe9a7c2-popover-container\):not\(\.qxframe9a7c2-tooltip-container\) \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
  const result=model.compileTheme(model.normalizeConfig({menuColor:'inverted'}),{generatedAt:''}).body;
  assert.match(result,/--qxframe9a7c2-theme-menu-foreground:/);
 });
@@ -426,8 +798,8 @@ check('Chromium native select picker inherits Menu colors and Popup geometry wit
   }
   for(const token of ['menu','menu-foreground','menu-accent','menu-accent-foreground','radius-popup','shadow-popup','popup-edge'])
     assert.ok(css.includes('--qxframe9a7c2-theme-'+token),'picker uses shared Theme token '+token);
-  assert.match(css,/\.dark \.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:dark;/,'OS fallback uses dark color-scheme');
-  assert.match(css,/\.qxframe9a7c2-form-select:not\(\[multiple\]\):not\(\[size\]\)[\s\S]*?color-scheme:light;/,'OS fallback light');
+  assert.doesNotMatch(css,/color-scheme:\\s*(?:light|dark);/,'Native Select must inherit global/local color-scheme rather than pinning the page mode');
+  assert.ok(css.includes('Native select inherits the computed Theme color-scheme'),'Native controls share the Theme scheme owner');
 });
 
 
@@ -868,7 +1240,7 @@ check('FieldContent gap and Item text clamps preserve pinned visual hierarchy', 
   const compos=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   assert.match(compos,/\.qxframe9a7c2-field-content\{[^}]*theme-field-content-gap/);
-  assert.match(item,/flex-wrap:wrap;align-items:center;width:100%/);
+  assert.match(item,/flex-wrap:nowrap;align-items:center;width:100%/,'Item leading media and content must remain one row; text wraps internally');
   assert.match(item,/\.qxframe9a7c2-item-title\{[^}]*-webkit-line-clamp:1/);
   assert.match(item,/\.qxframe9a7c2-item-desc\{[^}]*-webkit-line-clamp:2/);
   const html=read('preview-01.html');
@@ -992,6 +1364,29 @@ check('option tables match v3 §4', () => {
   for (const axis of data.EXT_AXES) {
     for (const [style, value] of Object.entries(axis.defaults)) assert.ok(axis.options.some(o => o.value === value), `${axis.key}.${style} default ${value} is not an option`);
   }
+});
+
+check('owner Vega Mist Blue embedded CSS default and public schema remain the one compiler output',()=>{
+ const embedded=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const builder=fs.readFileSync(path.join(root,'tools/build-theme.mjs'),'utf8');
+ const registry=JSON.parse(fs.readFileSync(path.join(root,'docs/generated/theme-public-schema.json'),'utf8'));
+ const config=model.normalizeConfig({
+  style:'vega',baseColor:'mist',theme:'blue',chartColor:'blue',font:'sans',
+  fontHeading:'inherit',radius:'default',menuColor:'default',menuAccent:'subtle',
+  ext:{menuInset:'block',switchLook:'wide',shadow:'medium',pointerFocus:'outline',pointerFocusColor:'theme',shapeThumb:'pill'}
+ });
+ const body=model.compileTheme(config).body;
+ assert.equal(embedded.slice(embedded.indexOf(':root {')),body,'built-in source equals Create generated CSS byte-for-byte');
+ assert.match(builder,/model\.compileTheme\(embeddedTheme\)/,'default CSS generated from explicit owner preset');
+ assert.match(embedded,/--qxframe9a7c2-theme-slider-thumb-width: 1\.5rem;/,'pill Thumb');
+ assert.match(embedded,/--qxframe9a7c2-theme-slider-track: 0\.375rem;/,'6px rail unaffected by Thumb');
+ assert.match(embedded,/--qxframe9a7c2-theme-switch-width: 2\.75rem;/,'wide Switch');
+ assert.match(embedded,/--qxframe9a7c2-theme-list-padding-x: 0rem;/,'block menu inset');
+ const vars=new Map([...embedded.split('.dark {')[0].matchAll(/(--qxframe9a7c2-theme-[a-z0-9-]+):\s*([^;]+);/g)].map(m=>[m[1],m[2]]));
+ assert.equal(vars.size,220,'exact closed Theme registry');
+ assert.equal(registry.tokens.length,220,'schema registry count');
+ for(const token of registry.tokens)assert.equal(token.defaultRoot,vars.get(token.name),'schema default mirror '+token.name);
+ assert.equal(model.defaultConfig().style,'nova','Create reset stays separately owned');
 });
 
 check('default configuration is Nova + neutral (v3 §5.10)', () => {
@@ -1122,6 +1517,107 @@ check('audit #18: shuffle/reset respect locked theme and chart colors under base
   assert.equal(reset.baseColor, 'neutral', 'reset cannot select incompatible taupe base');
 });
 
+check('No public unused mode-specific shadow palette remains: Popup consumes registered Theme shadow',()=>{
+ const source=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const canonical=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ assert.ok(!source.includes('--qxframe9a7c2-shadow-popup:'),'retired output-only unused shadow-palette override');
+ assert.ok(canonical.includes('--qxframe9a7c2-theme-shadow-popup:'),'Popup shadows are owned by registered Theme tokens');
+ assert.ok(!/\\.dark\\s*\\{[^}]*--qxframe9a7c2-shadow-popup/.test(source),'never reintroduce manual dark shadow slots');
+});
+
+check('Canonical public Theme Schema mirrors all live registry tokens, no historical 105 v2 pilot fields',()=>{
+ const old=path.join(root,'docs/generated/theme-public-schema-v2.json');
+ const canonical=path.join(root,'docs/generated/theme-public-schema.json');
+ assert.ok(!fs.existsSync(old),'obsolete pilot Schema must be retired, not coexist with a second Theme registry');
+ const data=JSON.parse(fs.readFileSync(canonical,'utf8'));
+ 
+ assert.equal(data.schema,3,'canonical schema version is metadata, not a Token name');
+ assert.equal(data.status,'CANONICAL_REGISTRY_MIRROR');
+ assert.equal(data.tokenCount,data.tokens.length);
+ assert.equal(data.geometryInputs.length,23);
+ assert.deepEqual([...new Set(data.tokens.map(x=>x.name))].sort(),readRegistry().tokens.map(x=>x.name).sort(),'JSON Theme token catalog equals live compiler registry');
+ for(const token of data.tokens)assert.ok(!/--qxframe9a7c2-theme-v[123]-/.test(token.name),'no v1/v2/v3 Theme Token names');
+ const canonicalCss=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const firstRoot=canonicalCss.split('.dark {')[0];
+ for(const token of data.tokens){
+   const row=firstRoot.split('\n').map(x=>x.trim()).find(x=>x.startsWith(token.name+':'));
+   assert.ok(row,'default Theme contains '+token.name);
+   const actual=row.slice(row.indexOf(':')+1).trim().replace(/;$/,'');
+   assert.equal(token.defaultRoot,actual,'schema must mirror the actual :root value of '+token.name);
+   if(token.kind==='color')assert.ok(token.defaultRoot.startsWith('light-dark('),'every COLOR is a light-dark single owner');
+ }
+ assert.equal(data.tokens.find(x=>x.name==='--qxframe9a7c2-theme-color-scheme').defaultRoot,'light','root keyword exception is light');
+});
+
+check('Legacy v2 collision resolved through existing semantic owners, not a new recipe namespace',()=>{
+  const full=fs.readFileSync(path.join(root,'dist/qxframe9a7c2.css'),'utf8');
+  const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  for(const source of [full,visual]){
+    assert.doesNotMatch(source,/--_qxframe9a7c2-(?:v[123]|recipe)-/,'no historic or recipe-prefixed private Theme Tokens');
+  }
+  for(const slot of ['action-bg','action-border','card-shadow','control-bg','control-border','popup-bg','popup-border','popup-shadow','popup-text']){
+    assert.ok(full.includes('--_qxframe9a7c2-'+slot+':'),'canonical slot must have a real definition: '+slot);
+  }
+  assert.ok(full.includes('--_qxframe9a7c2-menu-item-bg:'),'Menu item uses established item channel, not navigation surface name');
+  assert.ok(full.includes('--_qxframe9a7c2-check-indicator-bg:'),'checkbox and radio check indicator has a separate semantic owner');
+  assert.ok(full.includes('--_qxframe9a7c2-check-indicator-border:'),'check indicator edge has a separate semantic owner');
+  assert.ok(visual.includes('.qxframe9a7c2-menu .qxframe9a7c2-menu-item'),'Menu item state remains component-owned');
+  assert.ok(!visual.includes('--_qxframe9a7c2-popup-bg: var(--_qxframe9a7c2-popup-bg)'),'no self-referential Popup aliases');
+  assert.ok(!visual.includes('--_qxframe9a7c2-menu-item-bg: var(--_qxframe9a7c2-menu-item-bg)'),'no self-referential MenuItem state aliases');
+  assert.ok(!visual.includes('--_qxframe9a7c2-card-explicit-shadow'),'no redundant Card shadow facade');
+  const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  assert.ok(card.includes('--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Card single paint owner consumes Theme shadow');
+  assert.match(card,/\.qxframe9a7c2-card-grid-item:hover\{[^}]*box-shadow:var\(--qxframe9a7c2-card-shadow,var\(--qxframe9a7c2-theme-shadow-card\)\)/,'Card Grid Hover must share Card Theme elevation with public override');
+  const table=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
+  assert.ok(table.includes('--_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Table is-shadow uses Surface Theme strength rather than an always-on neutral elevation');
+  assert.match(table,/\.qxframe9a7c2-table \.is-fixed-start\.is-last::after\{[^}]*rgb\(0 0 0 \/ \.24\)/,'fixed-column edge shadow remains black in both schemes');
+  const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
+  for(const [prop,role] of [['background','bg'],['color','text'],['box-shadow','shadow']])
+    assert.ok(button.includes(prop+':var(--_qxframe9a7c2-state-'+role+')'),'Button owns '+prop+' through its state resolver');
+  assert.doesNotMatch(visual,/background-color:\s*var\(--_qxframe9a7c2-action-current\)/,'No late duplicate Button painter');
+  assert.doesNotMatch(visual,/--_qxframe9a7c2-action-current/,'No second Button state resolver');
+  assert.doesNotMatch(visual,/--_qxframe9a7c2-action-shadow:\s*none\s*;/,'A Button variant cannot compose a none shadow with the pointer/keyboard halo');
+  assert.match(visual,/--_qxframe9a7c2-action-shadow:\s*0 0 0 0 transparent/,'unraised Button variant uses composable zero-length shadow');
+  assert.ok(visual.includes('--_qxframe9a7c2-button-bg: var(--_qxframe9a7c2-action-bg)'),'Theme feeds original Button state');
+
+});
+
+check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(!visual.includes('.qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {'),'never override the complete family surface');
+ assert.ok(!visual.includes('.qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg:'),'public Popover color retains its local owner');
+ assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-popup-bg)'),'generic surface background cannot override families');
+ assert.ok(visual.includes('.qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {'),'navigation panels retain Menu paint');
+});
+
+check('CSS-only inverse Menu changes local color-scheme, never redeclares Theme tokens',()=>{
+  for (const style of data.STYLES.map(s=>s.value)) for(const mode of ['default','default-translucent','inverted','inverted-translucent']){
+    const body=model.compileTheme(model.normalizeConfig({style,menuColor:mode})).body;
+    const inverse=mode.startsWith('inverted');
+    assert.ok(body.startsWith(':root {\n  color-scheme: light;'),'single root Theme');
+    assert.ok(body.includes('.dark {\n  color-scheme: dark;'),'dark only toggles scheme');
+    assert.equal((body.match(/--qxframe9a7c2-theme-background:/g)||[]).length,1,'exactly one COLOR owner');
+    for(const name of ['popup-surface:not(.qxframe9a7c2-popover-container)','menu-submenu-panel','menu-overflow-panel'])
+      assert.equal(body.includes('qxframe9a7c2-'+name),inverse,'inverse selectors match only selected Menu mode');
+    assert.equal(body.includes('qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container)'),inverse,'inverse Menu excludes Tooltip');
+    if(inverse){
+      assert.ok(body.includes('color-scheme: light;\n}\n:root:not(.dark)'),'dark page Popup selects light');
+      assert.ok(body.includes('color-scheme: dark;\n}'),'light page Popup selects dark');
+    }
+    assert.equal(body.includes('::picker(select)'),inverse,'only inverse Menu adds native picker scheme boundary');
+    if(inverse){
+      const schemes=body.split('::picker(select)');
+      assert.equal(schemes.length,3,'paired native picker color-scheme selectors');
+      const darkPicker=body.split('.dark select:not([multiple]):not([size])::picker(select)')[1]?.split('}')[0];
+      const lightPicker=body.split(':root:not(.dark) select:not([multiple]):not([size]):not(.dark *)::picker(select)')[1]?.split('}')[0];
+      assert.equal(darkPicker,' {\n  color-scheme: light;\n','native top layer scheme only on dark page');
+      assert.equal(lightPicker,' {\n  color-scheme: dark;\n','native top layer scheme only on light page');
+    }
+    assert.doesNotMatch(body,/data-qxframe9a7c2-scheme|data-qxframe9a7c2-theme/);
+    assert.deepEqual(checkThemeFile(body).errors,[],style+'/'+mode+' exact owner/schema');
+  }
+});
+
 check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode inventory', () => {
   const token = (css, key) => css.match(new RegExp('--qxframe9a7c2-theme-' + key + ':\\s*([^;]+);'))?.[1];
   for (const style of data.STYLES.map(s => s.value)) {
@@ -1132,9 +1628,9 @@ check('audit #6/#7/#15/#21: shape and switch recipes plus full dual-mode invento
     }
     const body = model.compileTheme(model.normalizeConfig({style})).body;
     const blocks = body.match(/^:root \{([\s\S]*?)\}\n\.dark \{([\s\S]*?)\}\n$/);
-    assert.ok(blocks, style + ' light/dark blocks');
+    assert.ok(blocks, style + ' root registry + dark scheme boundary');
     const names = s => [...s.matchAll(/--qxframe9a7c2-theme-[a-z0-9-]+(?=:)/g)].map(m => m[0]);
-    assert.deepEqual(names(blocks[2]), names(blocks[1]), style + ' .dark must contain full ordered token registry');
+    assert.deepEqual(names(blocks[2]), ['--qxframe9a7c2-theme-color-scheme'], style + ' .dark only overrides non-COLOR scheme keyword');
     for (const alloc of ['standard','balanced','rounded','compact','soft','smooth']) {
       const shape = model.compileTheme(model.normalizeConfig({ style, radius:'xl', ext:{radiusAlloc:alloc}})).body;
       assert.ok(parseFloat(token(shape,'radius-card')) * 16 <= 24.0001, style+'/'+alloc+' Card cap');
@@ -1504,7 +2000,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
   assert.match(button,/--_qxframe9a7c2-button-text:var\(--_qxframe9a7c2-button-on-accent\)/);
   const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   assert.match(v2,/\.qxframe9a7c2-button\.is-secondary\s*\{/,'v2 has secondary axis');
-  assert.match(v2,/--_qxframe9a7c2-v2-type: var\(--qxframe9a7c2-theme-secondary\)/);
+  assert.match(v2,/--_qxframe9a7c2-type: var\(--qxframe9a7c2-theme-secondary\)/);
   assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-text:var\(--qxframe9a7c2-theme-foreground\)/);
   assert.match(tabs,/\.qxframe9a7c2-tabs\.is-segmented \.qxframe9a7c2-tabs-tab\.is-active\{[^}]*--_qxframe9a7c2-tabs-tab-weight:var\(--qxframe9a7c2-theme-control-weight,500\)/);
@@ -1545,7 +2041,7 @@ check('CardFooter peer Button equal-width semantic only when editorial',()=>{
   assert.ok(compiler.includes("root['card-footer-peer-flex'] = editorial ? '1 1 0%' : '0 1 auto'"));
   assert.match(html,/data-card="social-links"[\s\S]*?card-footer pv-justify-end pv-gap-2 is-source-peer-actions/);
   const themeDefault=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
-  assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,2);
+  assert.equal((themeDefault.match(/--qxframe9a7c2-theme-card-footer-peer-flex: 0 1 auto;/g)||[]).length,1,'invariant Card footer role has one Theme owner');
   for(const style of ['vega','nova','maia','lyra','mira','luma','sera','rhea']){
     const theme=model.compileTheme(model.normalizeConfig({style})).body;
     assert.match(theme,new RegExp('--qxframe9a7c2-theme-card-footer-peer-flex: '+(style==='sera'?'1 1 0%':'0 1 auto')+';'),'theme peer action role '+style);
@@ -1569,4 +2065,476 @@ check('Stage4 local-only forms use real labels, validation, QX Select and action
   assert.match(js,/Feedback validated locally; not submitted to a server/,'feedback result cannot fake submission');
 });
 
+check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contract',()=>{
+  const table=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
+  const runtime=fs.readFileSync(path.join(root,'src/components/table.js'),'utf8');
+  const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
+  const json=fs.readFileSync(path.join(root,'src/styles/components/json.css'),'utf8');
+  for(const marker of ['.qxframe9a7c2-table-filter-option.is-selected,.qxframe9a7c2-table-filter-option:has(>input:checked){background:var(--_qxframe9a7c2-semantic-subtle-active)',
+    '.qxframe9a7c2-table-filter-option.is-disabled,.qxframe9a7c2-table-filter-option:has(>input:disabled){color:var(--_qxframe9a7c2-semantic-text-disabled)',
+    'color:var(--_qxframe9a7c2-popup-text);outline:0'])assert.ok(table.includes(marker),marker);
+  assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:checked)'),'Table native selected state does not require JS changes');
+  assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:disabled)'),'Table native disabled state does not require JS changes');
+  assert.ok(runtime.includes("input.checked = filterDraftValues.some("),'original Table draft projection remains');
+  assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'));
+  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  assert.ok(v2.includes('.qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }'),'Transfer Theme paint must preserve public border and disabled text');
+  assert.ok(transfer.includes('--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled);color:var(--_qxframe9a7c2-semantic-text-disabled)'));
+  for(const state of ['is-disabled','is-status-error','is-status-warning'])
+    assert.ok(transfer.includes('.qxframe9a7c2-transfer.'+state+'{--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'),'explicit Transfer border must survive '+state);
+  assert.ok(json.includes('font-size:var(--qxframe9a7c2-json-font-size,var(--_qxframe9a7c2-control-font-size))'));
+  assert.ok(json.includes('caret-color:currentColor'));
+});
+check('Calendar header allowed view controls are typed in the closed DatePicker contract',()=>{
+ const source=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
+ assert.match(source,/'allowYearView','allowMonthView'/,'only existing DatePicker contract owns title flags');
+});
+check('CALENDAR-UNIT-OWNER-001 one runtime, one DOM and five data units',()=>{
+ const cal=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const alias=fs.readFileSync(path.join(root,'src/components/period-panel.js'),'utf8');
+ const date=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const css=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.match(alias,/export \{ Calendar as PeriodPanel \} from '\.\/calendar\.js'/,'PeriodPanel cannot implement a second component');
+ assert.ok(cal.includes("['date','week','month','quarter','year']"),'one Calendar supports date/week/month/quarter/year');
+ assert.ok(cal.includes("classList.toggle('is-period',isPeriod)"),'period units are one CSS variant on shared root');
+ assert.ok(cal.includes("cellInner = button.firstElementChild.firstElementChild"),'same view/inner DOM for every unit');
+ assert.ok(cal.includes("columns:isPeriod?4:7"),'one keyboard handler switches grid columns, not controllers');
+ assert.ok(cal.includes("requestTitle(titleUnit,event,'keyboard')"),'all Calendar title keyboard activation shares one capability decision');
+ assert.equal((date.match(/Calendar\.create\(/g)||[]).length,3,'DatePicker only creates primary, secondary, or period Calendar');
+  assert.ok(!date.includes('yearPanel = Calendar.create')&&!date.includes('monthPanel = Calendar.create'),'no detached drill calendars');
+  assert.doesNotMatch(fs.readFileSync(path.join(root,'tools/verify-browser-smoke.html'),'utf8'),/drillPicker\.get(?:Year|Month)Panel\(/,'dual drill Chrome regression only uses actual physical Calendar roots');
+  assert.match(cal,/setViewMode: setViewMode/,'Calendar owns viewMode separately from unit');
+ assert.doesNotMatch(date,/PeriodPanel\.create\(/,'no second period runtime');
+ assert.match(css,/\.qxframe9a7c2-calendar\.is-period \.qxframe9a7c2-calendar-cell-inner\{/,'unified inner painter for period data');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-period-panel-grid\{/,'no second period grid DOM paint');
+});
+check('CALENDAR-RANGE-VISUAL-001 shared Calendar owns two styling layers and CSS-only range',()=>{
+ const source=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const fixed=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const authorized=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ assert.match(source,/cell\.className='qxframe9a7c2-calendar-cell'/,'old button stays Calendar state/action owner');
+ assert.match(source,/view\.className='qxframe9a7c2-calendar-cell-view'/,'view is style-only');
+ assert.match(source,/inner\.className='qxframe9a7c2-calendar-cell-inner'/,'inner is style-only');
+ assert.match(source,/view\.appendChild\(inner\);[\s\S]*cell\.appendChild\(view\)/,'exact two style wrappers');
+ assert.match(source,/Renderer\.append\(cellInner, cellOutput\)/,'custom date renderer targets inner square');
+ assert.match(source,/DOM\.setPrivate\(button, 'calendarDate', entry\.key\)/,'Calendar event private owner unchanged');
+ assert.match(source,/delegation\.on\('click', DOM\.privateMatcher\('calendarDate'\)/,'existing date event delegation unchanged');
+ assert.match(picker,/\.qxframe9a7c2-calendar-grid>\.qxframe9a7c2-calendar-cell\.is-in-range::before\{/,'range painted by cell pseudo only');
+ assert.match(picker,/\.is-in-range\.is-range-start:not\(\.is-range-end\)::before\{left:50%;width:50%\}/,'range begins in right half');
+ assert.match(picker,/\.is-in-range\.is-range-end:not\(\.is-range-start\)::before\{left:0;width:50%\}/,'range ends in left half');
+ assert.ok(!source.includes('calendar-cell-range'),'no JS range backing DOM');
+ assert.match(picker,/\.qxframe9a7c2-calendar-weekdays,\.qxframe9a7c2-calendar-grid\{display:flex;flex-wrap:wrap;gap:0\}/,'Calendar grid has no gap');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell-inner\{[^}]*aspect-ratio:1\/1/,'inner day renders 1:1');
+ assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'Calendar visual dimensions independent of DateTime consumers');
+ assert.ok(!visual.includes('.qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled),'),'no second Calendar selected painter');
+ assert.ok(fixed.includes('.qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today'),'Calendar today dot belongs to inner');
+ assert.ok(authorized.includes("'src/components/calendar.js'"),'the owner-authorized Calendar DOM change in reproducible JS build set');
+});
+check('Stage5 calendar range strip zero gap and Menu body has no default paint',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
+ assert.match(css,/\.qxframe9a7c2-calendar-weekdays,\.qxframe9a7c2-calendar-grid\{display:flex;flex-wrap:wrap;gap:0\}/);
+ assert.match(css,/\.qxframe9a7c2-calendar-weekday,\.qxframe9a7c2-calendar-cell\{[^}]*flex:0 0 calc\(100% \/ 7\)/);
+ assert.doesNotMatch(css,/\.qxframe9a7c2-calendar\.is-adaptive-month>\.qxframe9a7c2-calendar-grid\{[^}]*row-gap:/);
+ assert.match(css,/\.qxframe9a7c2-calendar\.is-period>\.qxframe9a7c2-calendar-grid\{[^}]*column-gap:0/);
+ assert.match(menu,/\.qxframe9a7c2-menu\{[\s\S]*?background:var\(--_qxframe9a7c2-menu-context-background,transparent\)/);
+});
+check('Stage5 configured Mask Style defaults and Image Preview chroma are consistent',()=>{
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+ const compiler=read('compiler.js'),v=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const alpha=[...compiler.matchAll(/overlay:\s*(\d+), switchTrack/g)].map(m=>Number(m[1]));
+ assert.equal(alpha.length,8,'eight Style mask defaults');
+ assert.ok(alpha.every(x=>x>=50),'default overlay >=50, without runtime clamping public overrides');
+ assert.match(theme,/--qxframe9a7c2-theme-overlay: light-dark\(oklch\(0 0 0 \/ 0\.6\), oklch\(0 0 0 \/ 0\.6\)\)/,'default Nova mask matches compiler');
+ assert.ok(image.includes('--_qxframe9a7c2-image-preview-mask:var(--qxframe9a7c2-image-preview-mask-color,var(--qxframe9a7c2-theme-palette-black))'),'separate opaque Image Preview mask uses registered palette black');
+ assert.doesNotMatch(v,/\.qxframe9a7c2-image-preview-mask\[class\] \{ background-color:/,'no alpha-overlay multipainter on Image Preview');
+ assert.ok(image.includes('--_qxframe9a7c2-image-preview-hover:color-mix(in oklab,var(--qxframe9a7c2-theme-palette-white) 14%,transparent)'),'hover derives Theme white palette without hardcoded colors');
+ assert.ok((image.match(/background:var\(--_qxframe9a7c2-image-preview-hover\)/g)||[]).length===2,'toolbar and close/nav share one hover paint');
+});
+check('Stage5 Alert and semantic Badge retain component paint',()=>{
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
+ const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(alert.includes('border:1px solid var(--_qxframe9a7c2-alert-border)'),'Alert surface border derives from one semantic Appearance owner');
+ assert.ok(alert.includes('box-shadow:var(--qxframe9a7c2-alert-shadow,var(--_qxframe9a7c2-alert-shadow))'),'Alert supports opt-in shadow Appearance without a duplicated painter');
+ assert.ok(!visual.includes('.qxframe9a7c2-alert-root { box-shadow: none; }'),'Alert shadow may not be disabled downstream');
+ assert.ok(badge.includes('--_qxframe9a7c2-badge-bg:var(--_qxframe9a7c2-accent-soft)'),'Badge semantic statuses consume accent fill');
+ assert.ok(!visual.includes('.qxframe9a7c2-tag, .qxframe9a7c2-badge {'),'Late Tag painter does not reset Badge status colors');
+});
+check('Stage5 Steps connector not over title, Item media fixed, Tags add inherits theme',()=>{
+ const steps=fs.readFileSync(path.join(root,'src/styles/components/steps.css'),'utf8');
+ const item=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+ const list=fs.readFileSync(path.join(root,'src/styles/components/list.css'),'utf8');
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ assert.ok(steps.includes('steps-connector{position:static;inset:auto;'),'horizontal connector cannot overlay step text');
+ assert.ok(item.includes('display:flex;flex-wrap:nowrap;align-items:center;width:100%'),'Item media/text remain on one line');
+ assert.ok(list.includes('list-content-slot{flex:1 1 0;min-width:0;white-space:normal}'),'List text wraps within its own slot');
+ const addStyle=tags.split('.qxframe9a7c2-tags-add{')[1]?.split('}')[0]||'';
+ assert.ok(addStyle.includes('height:var(--_qxframe9a7c2-tag-height)'),'Add Tag shares canonical Tag height');
+ assert.doesNotMatch(addStyle,/--_qxframe9a7c2-tag-(bg|border|text)|border-style/,'Add must never replace the canonical Tag surface painter');
+ assert.doesNotMatch(tags,/\.qxframe9a7c2-tags-add:hover:not\(:disabled\)/,'Add hover must use the canonical Tag hover painter');
+ assert.ok(tags.includes('.qxframe9a7c2-tags.is-variant-outlined{--_qxframe9a7c2-tags-variant-input-bg:transparent;')&&tags.includes('.qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus{'),'only outlined Tags editor is intentionally transparent; standalone Add editor follows canonical Theme focus');
+ assert.ok(tags.includes('html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-tags:not(.is-hosted).is-adding .qxframe9a7c2-tags-input:focus-visible{'),'Tag editor keyboard outline comes from Theme keyboard focus');
+ assert.ok(fs.readFileSync(path.join(root,'src/components/tags.js'),'utf8').includes("addTrigger.className='qxframe9a7c2-tag qxframe9a7c2-tags-add'"),'Tag Add consumes the canonical Tag painter');
+ assert.ok(read('preview-03.js').includes("checkable:true,closable:false,editable:true"),'Support Triage exposes the actual Add Tag in the offline owner QA sample');
+});
+check('Stage5 Dropdown/Cascader empty checkbox is not black, group header not an option',()=>{
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const collection=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ assert.ok(choice.includes('.qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate'),'branch intermediate state has own contrast');
+ assert.ok(!choice.includes('.is-open:not(.is-selected) .qxframe9a7c2-item-selection-indicator.is-checkbox,'),'unchecked open parent no longer receives a colored filled box');
+ assert.ok(collection.includes('.qxframe9a7c2-item-collection-group{box-sizing:border-box;min-height:0;'),'group label is not rendered as an option-size item');
+ assert.ok(collection.includes('background:transparent;font-size:0.875rem;line-height:1.25;font-weight:600'),'group label neutral, compact and unselectable');
+});
+check('Stage5 DatePicker width and preset scroll border are owner-aligned',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('max-width:min(calc(16rem * 4),100%)'),'No DatePicker trailing two-rem blank');
+ assert.ok(picker.includes('date-picker-selection-scroll.qxframe9a7c2-scroll{width:auto;height:auto;min-width:0;flex:0 1 auto'),'Selection scroll may shrink');
+ assert.ok(picker.includes('date-picker-calendar-group{display:flex;align-items:stretch;height:100%;flex:0 0 auto'),'Calendar group does not stretch');
+ assert.ok(picker.includes('presets-scroll.qxframe9a7c2-scroll{width:auto;height:auto;max-width:11rem;flex:0 0 auto;border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)'),'Presets scroll shell owns border');
+});
+check('CALENDAR-WHEEL-GEOMETRY-001 7-row Wheel and one Calendar dimension owner',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const js=fs.readFileSync(path.join(root,'src/components/date-picker.js'),'utf8');
+ const build=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ assert.ok(js.includes("if (!own(resolved, 'visibleItemCount')) resolved.visibleItemCount = 7;"),'DatePicker defaults to seven items; explicit consumer count survives');
+ assert.ok(picker.includes('calc(7 * var(--_qxframe9a7c2-date-picker-day-size) + 2 * var(--qxframe9a7c2-calendar-padding,.3125rem))'),'host width derives from seven cells plus both 5px insets');
+ assert.match(picker,/--_qxframe9a7c2-date-panel-width:var\(--_qxframe9a7c2-date-picker-calendar-width\)/,'host and Calendar share width');
+ assert.match(picker,/date-picker-calendar-host\{[^}]*min-width:0/,'host min-width 0');
+ assert.match(picker,/date-picker-calendar-group\{[^}]*min-width:0/,'group min-width 0');
+ assert.ok(!picker.includes('wheel-guide-trim'),'WheelPanel Guide inherits actual item height, no DatePicker trim');
+ assert.match(picker,/wheel-panel-center-guide\{box-sizing:border-box/,'Guide border and item share a single physical height');
+  const metrics=fs.readFileSync(path.join(root,'src/utils/wheelMetrics.js'),'utf8');
+  const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+  assert.ok(metrics.includes('xs:28, sm:32, md:36, lg:40, xl:44'),'single five-size WheelMetrics projection');
+  assert.ok(calendar.includes("root.style.setProperty('--qxframe9a7c2-calendar-cell-size'"),'Calendar exposes numeric cellSize');
+  assert.ok(picker.includes('height:calc(var(--qxframe9a7c2-wheel-item-height,2rem) + .5rem)'),'Wheel title matches Calendar Header formula');
+  assert.ok(picker.includes('height:calc(var(--_qxframe9a7c2-calendar-cell-size) + .5rem)'),'Calendar Header matches Wheel title formula');
+  assert.ok(picker.includes('height:var(--_qxframe9a7c2-calendar-cell-size);padding:0;'),'weekday row consumes exactly one CellSize');
+  assert.ok(picker.includes('height:var(--_qxframe9a7c2-calendar-cell-size);aspect-ratio:1/1'),'day cells stay square');
+ assert.ok(!picker.includes('.qxframe9a7c2-date-picker-composite.has-time .qxframe9a7c2-calendar'),'DatePicker may not duplicate Calendar cell/size ownership');
+ assert.doesNotMatch(picker,/\.qxframe9a7c2-date-picker-composite\.has-time\{[^}]*--_qxframe9a7c2-(?:calendar|date-picker-calendar)/,'DateTime host must not override Calendar size; responsive flex-direction may remain');
+ assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
+});
+check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-format,.qxframe9a7c2-color-panel-eye,.qxframe9a7c2-color-panel-input{box-sizing:border-box;'),'ColorPanel source must paint all three fields together');
+ assert.ok(picker.includes('appearance:none;border:0;border-radius:var(--_qxframe9a7c2-slider-rail-radius,'),'native ColorPanel range outer box must respect Theme Slider track radius, including radius none');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-webkit-slider-runnable-track,.qxframe9a7c2-color-panel-alpha::-webkit-slider-runnable-track{box-sizing:border-box;height:var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem));'),'WebKit native range track must consume Slider rail size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-track,.qxframe9a7c2-color-panel-alpha::-moz-range-track{box-sizing:border-box;height:var(--_qxframe9a7c2-slider-rail,var(--qxframe9a7c2-slider-rail,0.25rem));'),'Gecko native range track must consume Slider rail size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-webkit-slider-thumb,.qxframe9a7c2-color-panel-alpha::-webkit-slider-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,'),'WebKit native range thumb must consume Slider thumb size');
+ assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,'),'Gecko native range thumb must consume Slider thumb size');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-color-panel-input\[class\]/,'Theme V2 must not duplicate ColorPanel leaf field skin');
+ assert.ok(css.includes('.qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {'),'Slider and ColorPanel must share Theme-derived rail/thumb density roles');
+ const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ assert.ok(appearance.includes('.qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{'),'Slider and ColorPanel must share Style-derived rail/thumb Shape Policy');
+ assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
+ for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected)',
+   '.qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator',
+   '.qxframe9a7c2-date-panel-cell.is-selected',
+   '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%'])
+   assert.ok(css.includes(marker),'Popup Theme consumer '+marker);
+ assert.ok(picker.includes('width:min(calc(var(--qxframe9a7c2-cascader-column-count,1) * 11rem)'), 'Cascader popup follows rendered column count');
+});
+
+check('Stage5 popup state color pairs are explicit source consumers',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ for(const marker of [
+   '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
+   'background: var(--_qxframe9a7c2-menu-selected-soft)',
+   'color: var(--qxframe9a7c2-theme-menu-accent-foreground)',
+   '.qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator',
+   '.qxframe9a7c2-item-surface.is-hover:not(.is-selected)',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%',
+   '--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)',
+   '--_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%'
+ ])assert.ok(css.includes(marker),'popup role '+marker);
+});
+
+
+check('Stage5 compound Input geometry and no horizontal Cascader overflow',()=>{
+ const native=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(native.includes('.qxframe9a7c2-input.is-tags,.qxframe9a7c2-select.is-multiple{'),'TagInput and Select multiple share one sizing owner');
+ assert.ok(native.includes('padding-inline:var(--_qxframe9a7c2-compound-inset);padding-block:var(--_qxframe9a7c2-compound-inset)'),'compound shell horizontal and vertical padding must match');
+ assert.ok(select.includes('.qxframe9a7c2-select.is-multiple>.qxframe9a7c2-input-control{height:var(--_qxframe9a7c2-compound-item-height)}'),'Select multiple editor cannot expand single-line Input height');
+ assert.ok(select.includes('min-height:var(--_qxframe9a7c2-compound-item-height,'),'Select chips follow available inner row height');
+ assert.ok(native.includes('var(--qxframe9a7c2-compound-control-inset,var(--_qxframe9a7c2-control-padding-block))'),'compound inset must follow Input padding-block for all sizes');
+ assert.ok(native.includes('.qxframe9a7c2-tags.is-hosted{--_qxframe9a7c2-compound-item-height:inherit;'),'hosted Tags must inherit parent Control size, not reset to default md');
+ assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}'),'hosted Tag chip must retain positive left/right padding independent of compound shell padding');
+ assert.doesNotMatch(native,/--_qxframe9a7c2-compound-item-inset:\s*0(?:px|rem)?(?:;|})/,'hosted Tag chip padding must never be reset to zero');
+ assert.ok(select.includes('.qxframe9a7c2-select.is-multiple .qxframe9a7c2-tag{font-size:inherit;line-height:1}'),'Multiple Select chip typography follows the input size');
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ assert.ok(tags.includes('font-size:inherit;line-height:1}'),'hosted Tags chips and editor stay within Control inner height');
+ assert.ok(tags.includes('padding-inline:var(--_qxframe9a7c2-compound-item-inset, var(--_qxframe9a7c2-control-padding-inline))'),'hosted Tag consumes its own chip inset without modifying outer Input padding');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-column{') && picker.includes('flex:1 1 0%;min-width:0;max-width:100%'),'Cascader columns shrink within available width');
+ assert.ok(picker.includes('.qxframe9a7c2-cascader-columns{box-sizing:border-box;display:flex;flex-wrap:nowrap;width:100%;min-width:0;align-items:stretch;overflow:hidden}'),'Cascader does not expose horizontal scrollbar');
+ assert.doesNotMatch(picker,/\.qxframe9a7c2-cascader-columns\{[^}]*overflow-x:auto/,'Cascader cannot revert to horizontal scrolling');
+});
+
+check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
+ const compiler=read('compiler.js');
+ const native=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+ const cascader=fs.readFileSync(path.join(root,'src/components/cascader.js'),'utf8');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
+ assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'Menu subtle/bold uses existing accent channel');
+ assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}'),'hosted Tag chip inset must be independent of outer Input shell padding and match Select chips');
+ assert.ok(cascader.includes("var columnsScroll = popupFrame.attachViewport({"),'Cascader keeps PopupFrame scroll ownership');
+ assert.ok(cascader.includes("axis: 'y', wheelAxis: 'y', wheelPropagation: true, scrollbarVisibility: 'hidden'"),'Cascader hides Scroll decoration and never activates horizontal axis');
+ const jsParity=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
+ assert.ok(jsParity.includes("'src/components/cascader.js'"),'Stage5 authorized Cascader runtime deviation must be guarded by its PopupFrame/vertical-only assertions');
+ assert.ok(jsParity.includes("unauthorized=sourceChanges.filter(x=>!AUTHORIZED.has(x)&&!(x==='src/core/scrollLock.js'&&approvedScrollLock))"),'JS parity permits only guarded Stage5 ScrollLock and rejects Tree, TreeSelect and other core changes');
+ assert.ok(jsParity.includes("approvedScrollLock=[")&&jsParity.includes("record.projection.destroy()"),'the single ScrollLock allowance is conditional on stable gutter and restoration semantics');
+ assert.ok(jsParity.includes('src/components/cascader.js'),'JS parity remains strict on unrelated sources');
+ assert.ok(cascader.includes("panel.style.setProperty('--qxframe9a7c2-cascader-column-count'"),'Cascader levels own width');
+ const browser=fs.readFileSync(path.join(root,'tools/verify-create-app-browser.mjs'),'utf8');
+ assert.ok(browser.includes('Stage5 real Cascader PopupFrame opens and expands three contiguous columns by item click'),'Cascader real Popup pointer-expansion Chromium guard must remain');
+ assert.doesNotMatch(cascader,/axis:\s*'x',\s*wheelAxis:\s*'x'/,'Cascader cannot restore horizontal scroll');
+ assert.ok(theme.includes('--_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);'),'open Item consumes Menu accent not Hover');
+ const menu=fs.readFileSync(path.join(root,'src/styles/components/menu.css'),'utf8');
+ assert.ok(menu.includes('--_qxframe9a7c2-menu-item-bg:var(--qxframe9a7c2-theme-menu-accent)'), 'Menu Open must consume the compiled Menu accent, not the hover or legacy expanded recipe');
+ assert.ok(menu.includes('--_qxframe9a7c2-menu-item-text:var(--qxframe9a7c2-theme-menu-accent-foreground)'), 'Menu Open must pair theme accent background and ink');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-background: color-mix(in oklab,var(--qxframe9a7c2-theme-primary) 10%,transparent);'),'root Navigation Menu Open uses its own translucent Primary highlight, not inverted popup accent');
+ assert.ok(theme.includes('--_qxframe9a7c2-menu-render-text: var(--qxframe9a7c2-theme-sidebar-foreground);'),'root Navigation Menu text follows Sidebar foreground independent of portalled popup');
+ assert.doesNotMatch(theme,/--_qxframe9a7c2-menu-render-background:\s*var\(--_qxframe9a7c2-menu-recipe-expanded/,'legacy static expanded recipes cannot override the dynamic Menu accent');
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ assert.ok(choice.includes('background-color:var(--qxframe9a7c2-theme-menu-accent-foreground);'),'Choice owns inverse Checkbox background on colored open row');
+ assert.ok(choice.includes('color:var(--qxframe9a7c2-theme-menu-accent-contrast)'),'Choice owns contrasting Checkbox mark in both Menu modes');
+ assert.ok(compiler.includes("target['menu-accent-contrast'] = resolved.menuAccent === 'bold' ? src.primary : src.popover"),'compiler must invert Choice mark role across soft/bold menus');
+ assert.doesNotMatch(choice,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-item\.is-open[^\n]*\.qxframe9a7c2-tree-check-indicator/,'Tree Open cannot invert global Checkbox');
+ assert.ok(!choice.includes('.is-open:not(.is-selected):not(.qxframe9a7c2-tree-item) .qxframe9a7c2-tree-check-indicator'),'Popup Item Checkbox must not override Tree or TreeSelect Choice');
+ assert.ok(choice.includes('.qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked'),'Only checked Choice may use inverse Popup paint');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-popup-surface[^\n]*\.qxframe9a7c2-tree-check/,'Menu never repaints Tree checkboxes');
+});
+
+
+check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
+  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
+  assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
+  assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
+  assert.ok(defaults.includes('--qxframe9a7c2-theme-menu-accent: light-dark(oklch(0.488 0.243 264.376 / 0.28), oklch(0.424 0.199 265.638 / 0.28))'),'embedded Blue Menu accent derives both modes');
+  assert.equal((defaults.match(/--qxframe9a7c2-theme-menu-accent: light-dark\(/g)||[]).length,1,'Menu accent is declared once for both modes');
+  for(const name of ['date-panel-cell.is-today','date-panel-cell.is-current','scroll-thumb:hover'])assert.ok(theme.includes('qxframe9a7c2-'+name),'inverted Menu '+name+' is explicitly painted');
+  assert.ok(theme.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today marker must retain the Menu Primary chroma');
+  assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
+  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+  assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Single canonical WheelPanel guide paints Menu accent in both bold and subtle modes');
+  assert.ok(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8').includes('--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)'),'Menu passive separators share the actual Control field border');
+  assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No second context-specific guide painter');
+});
+check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
+  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+  const transfer=fs.readFileSync(path.join(root,'src/styles/components/transfer.css'),'utf8');
+  const upload=fs.readFileSync(path.join(root,'src/styles/components/upload.css'),'utf8');
+  const tabsCSS=fs.readFileSync(path.join(root,'src/styles/components/tabs.css'),'utf8');
+  const tabsJS=fs.readFileSync(path.join(root,'src/components/tabs.js'),'utf8');
+  const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+  assert.ok(picker.includes('max-width:100%;padding:var(--_qxframe9a7c2-fixed-space-2);border-inline-end'),'Cascader gets column inset');
+  assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-radius:var(--qxframe9a7c2-transfer-panel-radius,var(--qxframe9a7c2-theme-radius-item))'),'Transfer uses nested radius');
+  assert.ok(upload.includes('border-radius:var(--qxframe9a7c2-upload-dropzone-radius,var(--qxframe9a7c2-upload-radius,var(--qxframe9a7c2-theme-radius-item)))'),'Upload dropzone uses nested radius');
+  assert.ok(tabsCSS.includes('height:100%;padding:var(--_qxframe9a7c2-fixed-space-1) var(--_qxframe9a7c2-tabs-pad-x)'),'Tabs action vertical inset restored');
+  assert.ok(tabsJS.includes("placement: 'top', type: 'segmented', activationMode: 'auto'"),'Tabs segmented is default');
+  assert.ok(modal.includes('recentPointer.time <= 2500')&&modal.includes('focusedRect.width > 0 && focusedRect.height > 0'),'Modal delayed click/focused trigger origin');
+});
+check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection are unified',()=>{
+ const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ assert.ok(css.includes('oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)'),'Picker derives opaque Menu Primary without new Theme inputs');
+ assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today retains hue from Menu Primary');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Wheel guide consumes one accent paint in every host');
+ assert.ok(picker.includes('--_qxframe9a7c2-wheel-item-text:var(--qxframe9a7c2-time-panel-selected-text,var(--qxframe9a7c2-theme-menu-accent-foreground))'),'Selected Wheel item uses matched accent foreground');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No late Theme Wheel guide repaint');
+ assert.ok(css.includes('--_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);'),'ColorPicker keyboard outline visible against inverted popup');
+ assert.ok(css.includes('--_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);'),'ColorPicker pointer focus retains Menu color');
+ assert.ok(!css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator'),'Popup must not override shared indeterminate Choice');
+ assert.ok(!css.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator'),'Popup must not override shared checked Choice');
+ assert.ok(css.includes('.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {\n    --_qxframe9a7c2-menu-primary-solid:'),'Menu solid color belongs to Menu Popup, never Tooltip');
+ assert.doesNotMatch(css,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-tree-check/,'do not repeat unreachable synthetic PickerField Tree selectors');
+ assert.doesNotMatch(css,/:is\(|:where\(|@layer/,'No disallowed selectors or layers');
+});
+check('Stage5 WheelPanel selection/dividers and Preview03 overview Cards have one visual owner',()=>{
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const runtime=fs.readFileSync(path.join(root,'src/components/wheel-panel.js'),'utf8');
+ assert.ok(runtime.includes('scrollMount.appendChild(guide)'),'Guide shares scrollMount with Scroll.create output');
+ assert.ok(runtime.includes('container: scrollMount,'),'Wheel Scroll is mounted in the same parent as its guide');
+ assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll{z-index:var(--qxframe9a7c2-z-local-above)}'),'Scroll receives a local layer above guide, without 999 or a global Scroll override');
+ assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-center-guide{box-sizing:border-box;position:absolute;z-index:var(--qxframe9a7c2-z-local-raised)'),'Guide includes border within its 32px box and stays under scroll content');
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const html=read('preview-03.html'),css=read('preview-03.css');
+ assert.match(picker,/\.qxframe9a7c2-wheel-panel-center-guide\{[^}]*border-block:1px solid var\(--qxframe9a7c2-theme-menu-accent\);background:var\(--qxframe9a7c2-theme-menu-accent\)/,'WheelPanel owns bold/subtle guide');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'TimePicker/Picker cannot repaint WheelPanel guide');
+ assert.match(picker,/\.qxframe9a7c2-wheel-panel-item\.is-selected\{[^}]*var\(--qxframe9a7c2-theme-menu-accent-foreground\)/,'Wheel selected foreground pairs with Menu accent');
+ for(const marker of [
+   '.qxframe9a7c2-wheel-panel-column+.qxframe9a7c2-wheel-panel-column{border-inline-start:1px solid var(--qxframe9a7c2-theme-field-border)',
+   'border-inline-end:1px solid var(--qxframe9a7c2-theme-field-border)',
+   'border-top:1px solid var(--qxframe9a7c2-theme-field-border)'])
+   assert.ok(picker.includes(marker),'Wheel/Time/Cascader separator consumes one field border role: '+marker);
+ const overview=html.split('<section class="pv3-overview">')[1]?.split('</section>\n<div class="pv3-columns">')[0]||'';
+ assert.equal((overview.match(/class="qxframe9a7c2-card"/g)||[]).length,4,'Four overview metrics are real QX Cards');
+ assert.equal((overview.match(/class="qxframe9a7c2-card-content pv3-metric"/g)||[]).length,4,'CardContent owns spacing of every overview metric');
+ assert.doesNotMatch(css,/\.pv3-overview>\.pv3-metric\{[^}]*background:/,'No preview-owned imitation Card paint');
+ assert.equal((html.match(/data-card="/g)||[]).length,66,'Commercial gallery 66 Cards remain stable');
+});
+
+check('Stage5 TreeSelect uses canonical Tree DOM and matches Tree visual demo options',()=>{
+  const js=read('preview-03.js');
+  const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
+  const treeCSS=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
+  const previewCSS=read('preview-03.css');
+  assert.match(select,/import \{ Tree \} from '\.\/tree\.js'/,'TreeSelect imports canonical Tree');
+  assert.match(select,/tree = Tree\.create\(\{/,'TreeSelect renders the canonical Tree runtime');
+  assert.match(select,/showLine: opts\.showLine/,'TreeSelect forwards shared Tree line policy');
+  assert.match(tree,/root\.classList\.toggle\('is-show-line', opts\.showLine === true\)/,'Tree owns the line DOM state');
+  const direct=js.match(/mount\('workspace-tree','Tree',\{[^\n]*\}\);/)?.[0]||'';
+  const nested=js.match(/mount\('workspace-tree-select','TreeSelect',\{[^\n]*\}\);/)?.[0]||'';
+  assert.ok(direct.includes('showLine:true') && nested.includes('showLine:true'),'both commercial examples use the same Tree line option');
+  assert.match(treeCSS,/\.qxframe9a7c2-tree \.qxframe9a7c2-tree-check-indicator/,'one Tree checkbox CSS owner');
+  assert.doesNotMatch(previewCSS,/\.qxframe9a7c2-tree-(?:item|check|toggle|label|line-unit)\b/,'Preview03 cannot fake another Tree visual skin');
+});
+
+
+check('Stage5 Tree uses official main API, not experimental edits or paging',()=>{
+ const tree=fs.readFileSync(path.join(root,'src/components/tree.js'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
+ const schema=fs.readFileSync(path.join(root,'src/core/componentContracts.js'),'utf8');
+ assert.match(tree,/static options = Object\.freeze/,'original Tree definition');
+ assert.doesNotMatch(tree,/loadNextPage:appendPage|retryLoad:retryLoad|finishRename\(true,event\)/,'experimental APIs removed');
+ assert.doesNotMatch(select,/lazy:opts\.lazy===true|loadMore:opts\.loadMore|onOperate:opts\.onOperate/,'TreeSelect restored');
+ const line=schema.split('\n').find(x=>x.includes('"TreeSelect": Object.freeze({ schema: schema(['))||'';
+ for(const field of ['"beforeOperate"','"loadMore"','"onOperate"','"pageSize"'])assert.ok(!line.includes(field),'no non-main TreeSelect API '+field);
+ const qa=fs.readFileSync(path.join(root,'docs/qa/tree-large-data.html'),'utf8');
+ assert.ok(qa.includes('3000')&&qa.includes('virtual:true'),'official Tree still stresses 3000 nodes');
+});
+check('Stage5 TreeSelect state remains native, Picker visual projection uses Menu roles',()=>{
+ const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
+ const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
+ const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');
+ assert.ok(!theme.includes('.qxframe9a7c2-tree-select-panel .qxframe9a7c2-tree-check-indicator {'),'TreeSelect portal must not own Checkbox paint');
+ assert.ok(!theme.includes('--_qxframe9a7c2-check-indicator-bg: var(--_qxframe9a7c2-menu-primary-solid);'),'TreeSelect checked mark uses shared Choice Type, not Menu background');
+ assert.match(choice,/\.qxframe9a7c2-tree-check:checked\+\.qxframe9a7c2-tree-check-indicator/,'global checked Choice');
+ assert.match(choice,/\.qxframe9a7c2-tree-check:indeterminate\+\.qxframe9a7c2-tree-check-indicator/,'global mixed Choice');
+ assert.match(theme,/\.qxframe9a7c2-tree-check:checked \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 checked Choice');
+ assert.match(theme,/\.qxframe9a7c2-tree-check:indeterminate \+ \.qxframe9a7c2-tree-check-indicator/,'shared V2 mixed Choice');
+ assert.match(select,/tree = Tree\.create\(\{/,'TreeSelect shares the Tree renderer');
+ assert.doesNotMatch(tree,/theme-menu(?:-accent|-foreground)?/,'Tree itself cannot own Menu palette');
+});
+
+
+check('Stage5 neutral List/Tree, OTP container, Badge static and shared TimePanel',()=>{
+ const source=p=>fs.readFileSync(path.join(root,p),'utf8');
+ const list=source('src/styles/components/list.css'),v2=source('src/styles/main/theme-visual-v2.css');
+ const otp=source('src/components/input-otp.js'),badge=source('src/styles/components/badge.css');
+ const tags=source('src/styles/components/tags.css');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color:/,'parent controls list/tree surface');
+ assert.doesNotMatch(list,/max-width:100%;color:var\(--_qxframe9a7c2-semantic-text\);background:/,'list is not a painted card');
+ assert.match(otp,/otpRoot\.classList\.remove\('qxframe9a7c2-input'\)/,'OTP container must not carry Input root class');
+ assert.match(badge,/border:1px solid transparent/,'outlined badge owns border geometry');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-badge\.is-outlined:hover/,'Badge is static');
+ assert.match(tags,/--qxframe9a7c2-tag-close-icon-size,0\.625rem/,'Tag icon uses smaller scale');
+ assert.doesNotMatch(v2,/\.qxframe9a7c2-tooltip-container, \.qxframe9a7c2-tooltip-arrow/,'Arrow consumes Tooltip root');
+});
+
+
+check('Stage5 static Outline Badge alias and inherited List radius',()=>{
+ const css=p=>fs.readFileSync(path.join(root,p),'utf8');
+ const badge=css('src/styles/components/badge.css'),list=css('src/styles/components/list.css'),theme=css('src/styles/main/theme-visual-v2.css');
+ assert.match(badge,/\.qxframe9a7c2-badge\.is-outlined,\.qxframe9a7c2-badge\.is-outline/,'Badge supports both outline spellings in existing demos');
+ assert.match(theme,/\.qxframe9a7c2-badge\.is-outline \{ background-color: transparent/,'Theme Outline Badge retains visible border');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-badge\.is-outline:hover/,'Badge does not implement control hover');
+ assert.match(list,/border-radius:var\(--_qxframe9a7c2-list-radius\)/,'List keeps Shape Policy geometry while being unpainted');
+ assert.doesNotMatch(theme,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color/,'List and Tree inherit container colors');
+});
+
+check('Stage5 Tags variant editor uses the same Theme appearance contract as Tag',()=>{
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ for(const cls of ['is-variant-outlined','is-variant-solid'])
+   assert.ok(tags.includes('.qxframe9a7c2-tags.'+cls+'{--_qxframe9a7c2-tags-variant-input-bg:'),'Tag editor variant '+cls+' must have its private Theme-derived field source');
+ assert.ok(tags.includes('--_qxframe9a7c2-tags-input-text:var(--qxframe9a7c2-tag-input-text,'),'editor foreground resolves the appearance token');
+ assert.doesNotMatch(tags,/\.qxframe9a7c2-tags\.is-variant-(?:solid|outlined)\{--qxframe9a7c2-/,'component variants may not redeclare public Theme token names');
+});
+check('Stage5 Tags edit, ScrollLock and Overlay motion share Theme and compositor owners',()=>{
+ const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
+ const lock=fs.readFileSync(path.join(root,'src/core/scrollLock.js'),'utf8');
+ const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
+ const modalCss=fs.readFileSync(path.join(root,'src/styles/components/modal.css'),'utf8');
+ const drawerCss=fs.readFileSync(path.join(root,'src/styles/components/drawer.css'),'utf8');
+ const imageCss=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ assert.ok(tags.includes('border:var(--_qxframe9a7c2-control-border-width,1px) solid var(--_qxframe9a7c2-tags-input-border)'),'Tags editor border consumes the Theme control width');
+ assert.ok(tags.includes('border-radius:var(--qxframe9a7c2-tag-radius,var(--qxframe9a7c2-theme-radius-badge,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius))))'),'Tags editor consumes the same canonical Tag/Theme Badge/Compact Shape/Control radius');
+ assert.doesNotMatch(tags,/is-adding \.qxframe9a7c2-tags-input\{[^}]*border:1px solid transparent/,'standalone editor may not hardcode a transparent border');
+ assert.ok(lock.includes("win.CSS.supports('scrollbar-gutter', 'stable')"),'root scrollbar-gutter stability is feature checked');
+ assert.ok(modal.includes("animation:'zoom'")&&!modal.includes('measureSurfaceRect(ctx)'),'Modal center zoom has no forced preanimation measure');
+ for(const css of [modalCss,drawerCss]){assert.doesNotMatch(css,/backdrop-filter:brightness\(/,'fullscreen mask avoids brightness filter');assert.ok(css.includes('will-change:transform,opacity'),'overlay motion is compositor-promoted');}
+ assert.ok(imageCss.includes('.qxframe9a7c2-image-preview-root.is-center-zoom .qxframe9a7c2-image-preview-motion{will-change:transform,opacity}'),'independent preview image uses composited transform and opacity');
+});
+check('Stage5 owner corrections: week strip, Alert Appearance, Dropdown headings, Tag Add and Image Preview leave',()=>{
+ const calendar=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
+ const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
+ const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
+ const collection=fs.readFileSync(path.join(root,'src/styles/components/collection-select.css'),'utf8');
+ const image=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
+ const imageJs=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');
+ assert.ok(calendar.includes('var selectedWeek = unit === \'week\' ? weekBounds(valueState.value) : null;'),'one Calendar week selection projection');
+ assert.ok(calendar.includes('nodes[i].classList.toggle(\'is-week-hover\', weekHovered);'),'whole-week Hover projects to each Cell');
+ assert.ok(calendar.includes('state.inRange === true || weekSelected || weekHovered'),'whole-week Range strip reuses Calendar selection painter');
+ assert.ok(picker.includes('.qxframe9a7c2-calendar-cell.is-in-range.is-range-start .qxframe9a7c2-calendar-cell-inner,'),'range-start/end have opaque raised background');
+ assert.ok(picker.includes('background:var(--_qxframe9a7c2-menu-primary-solid,var(--qxframe9a7c2-theme-primary))'),'opaque Range endpoint does not expose half-width ::before');
+ for(const role of ['is-muted','is-outline','is-shadow','is-success','is-error','is-warning','is-info'])assert.ok(alert.includes('.qxframe9a7c2-alert-root.'+role),'Alert owns '+role+' Appearance');
+ assert.ok(collection.includes('.qxframe9a7c2-dropdown-panel .qxframe9a7c2-item-collection-group'),'Dropdown group title consumes canonical ItemCollection typography');
+ assert.ok(collection.includes('font-size:var(--_qxframe9a7c2-item-collection-title-size,.75rem);'),'Dropdown heading shares canonical ItemCollection title font sizing');
+ assert.ok(image.includes('color:var(--_qxframe9a7c2-image-preview-text);box-shadow:'),'Image Preview chrome uses explicit white-compatible foreground');
+ const landed=imageJs.indexOf("if (previewMotion) previewMotion.style.visibility = 'hidden';");
+ const sourceReturn=imageJs.indexOf("root.classList.remove('is-preview-source-hidden');",landed);
+ const done=imageJs.indexOf('leaveContentDone = true;',landed);
+ assert.ok(landed>=0&&sourceReturn>landed&&done>sourceReturn,'Image Preview hides landed copy before atomic source handoff; no duplicate/blank frame');
+ assert.ok(imageJs.includes('!leaveMaskDone || !leaveContentDone'),'final portal teardown still waits for mask and content');
+ assert.ok(imageJs.includes('if (imagePreviewActive()) resetTransform(\'preview-close-complete\');'),'media transforms reset only after hiding leave copy');
+ assert.ok(imageJs.includes("root.classList.add('is-preview-source-handoff');") && imageJs.includes('void image.offsetWidth;'),'Image Preview handoff forces opaque source paint before copy teardown');
+ assert.ok(image.includes('.qxframe9a7c2-image.is-preview-source-handoff .qxframe9a7c2-image-img{transition:none}'),'Image Preview source handoff suppresses opacity flash without disabling normal Image transition');
+});
+
+check('Stage5 Calendar year nav + range week caps and Tabler-inspired static Theme variants',()=>{
+ const css=filePath=>fs.readFileSync(path.join(root,filePath),'utf8');
+ const picker=css('src/styles/components/picker-family.css');
+ const calendar=css('src/components/calendar.js');
+ const html=read('preview-03.html');
+ const manifest=JSON.parse(css('tools/manifests/css-order.json'));
+ assert.match(calendar,/data-qxframe9a7c2-ref="prev-year"/,'Calendar includes previous year');
+ assert.match(calendar,/data-qxframe9a7c2-ref="next-year"/,'Calendar includes next year');
+ assert.match(calendar,/DOM\.setPrivate\(domBinding\.refs\.prevYear,'calendarNav','-12'\)/,'Year nav uses canonical Calendar delegated controller');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell\.is-in-range:nth-child\(7n\+1\)::before/,'range left cap each week');
+ assert.match(picker,/\.qxframe9a7c2-calendar-cell\.is-in-range:nth-child\(7n\)::before/,'range right cap each week');
+ assert.match(picker,/\.qxframe9a7c2-date-picker-calendar-group\.is-dual\{min-width:0;gap:/,'dual Calendar gap');
+ assert.match(picker,/calendar-host\+\.qxframe9a7c2-date-picker-calendar-host\{box-shadow:none\}/,'no central divider');
+ assert.match(picker,/calendar-group \.qxframe9a7c2-date-picker-dual-inner-nav\{display:none\}/,'no empty inner nav slots');
+ for(const [path,sels]of Object.entries({
+  'src/styles/components/card.css':['.qxframe9a7c2-card.is-stacked','.qxframe9a7c2-card-stamp','.qxframe9a7c2-card-deck'],
+  'src/styles/components/badge.css':['.qxframe9a7c2-badge.is-soft','.qxframe9a7c2-badge-status-label'],
+  'src/styles/components/avatar.css':['.qxframe9a7c2-avatar.is-primary','.qxframe9a7c2-avatar-status.is-online'],
+  'src/styles/components/alert.css':['.qxframe9a7c2-alert-root.is-compact'],
+  'src/styles/components/progress.css':['.qxframe9a7c2-progress.is-striped','.qxframe9a7c2-progress-steps-labels'],
+  'src/styles/components/tabs.css':['.qxframe9a7c2-tabs.is-pills','.qxframe9a7c2-tabs.is-soft'],
+  'src/styles/components/tags.css':['.qxframe9a7c2-tag.is-muted','.qxframe9a7c2-tag.is-outline'],
+  'src/styles/components/form-native.css':['.qxframe9a7c2-form-help','.qxframe9a7c2-form-hint'],
+  'src/styles/components/native-input.css':['.qxframe9a7c2-input-group.is-soft'],
+  'src/styles/components/composition.css':['.qxframe9a7c2-kbd{','.qxframe9a7c2-kbd-group']
+ })){
+  const source=css(path);
+  for(const selector of sels)assert.ok(source.includes(selector),path+' missing '+selector);
+ }
+ assert.ok(manifest.sourceModules.includes('src/styles/components/composition.css'),'Kbd stays in the existing Composition CSS owner');
+ assert.ok(!manifest.sourceModules.includes('src/styles/components/kbd.css'),'Kbd must not have a parallel component CSS module');
+ assert.match(html,/data-pv3-static-recipes="tabler-theme"/,'Preview03 includes rendered static variants');
+ assert.equal((html.match(/data-card="/g)||[]).length,66,'static showcase does not duplicate commercial Cards');
+});
 console.log(JSON.stringify({ ok: true, checks: checks.length, names: checks }));

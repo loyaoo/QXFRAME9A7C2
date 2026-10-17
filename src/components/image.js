@@ -26,7 +26,7 @@ const IMAGE_DEFAULTS = Object.freeze({
   keyboard: true, wheelZoom: true, doubleClickZoom: true, draggable: true, destroyOnClose: true, minScale: 0.2, maxScale: 5,
   scaleStep: 0.25, rotateStep: 90, showToolbar: true, showNavigation: true, showClose: true,
   showTitle: true, showCounter: true, showZoom: true, showRotate: true, showFlip: true, showReset: true,
-  download: false
+  download: false, trajectory:false
 });
 const imageState = new WeakMap();
 
@@ -36,15 +36,15 @@ var REMOVED_PREVIEW_ITEM_FIELDS = Object.freeze(['url', 'name']);
 var PREVIEW_TRANSITION = Object.freeze({
   enter: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) }),
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))', opacity:'0' }) }),
     active: 'qxframe9a7c2-image-preview-trajectory-enter-active',
-    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) })
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)', opacity:'1' }) })
   }),
   leave: Object.freeze({
     type: 'transition',
-    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)' }) }),
+    from: Object.freeze({ style: Object.freeze({ transform: 'translate3d(0,0,0) scale(1,1)', opacity:'1' }) }),
     active: 'qxframe9a7c2-image-preview-trajectory-leave-active',
-    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))' }) })
+    to: Object.freeze({ style: Object.freeze({ transform: 'translate3d(var(--_qxframe9a7c2-image-preview-origin-x,0px),var(--_qxframe9a7c2-image-preview-origin-y,0px),0) scale(var(--_qxframe9a7c2-image-preview-origin-scale-x,.94),var(--_qxframe9a7c2-image-preview-origin-scale-y,.94))', opacity:'0' }) })
   })
 });
 var own = Utils.own;
@@ -165,6 +165,20 @@ function setupImage(instance) {
   var pendingCloseDetail = null;
   var leaveMaskDone = true;
   var leaveContentDone = true;
+  var previewDebugStart = 0;
+  /* Opt-in, zero-console-cost by default. Enable in the preview owner's window:
+     preview document debug flag: QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG = true */
+  function tracePreviewLeave(phase){
+    var view=doc && doc.defaultView;
+    if (!view || view.QXFRAME9A7C2_IMAGE_PREVIEW_DEBUG !== true || !view.console) return;
+    var time=view.performance && view.performance.now ? view.performance.now() : Date.now();
+    if(phase==='close-request')previewDebugStart=time;
+    view.console.debug('[QXFRAME ImagePreview]',phase,{
+      elapsedMs:Math.round(time-previewDebugStart),maskDone:leaveMaskDone,copyDone:leaveContentDone,
+      previewOpen:previewOpen,sourceOpacity:image && view.getComputedStyle(image).opacity,
+      copyVisibility:previewMotion && view.getComputedStyle(previewMotion).visibility
+    });
+  }
   var previewRoot = null;
   var previewMask = null;
   var previewStage = null;
@@ -595,7 +609,7 @@ function setupImage(instance) {
     return { width: nw, height: nh };
   }
   function lockPreviewTrajectoryGeometry(mode) {
-    if (!previewMotion || !previewImage || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
+    if (!previewMotion || !previewImage || !imagePreviewActive() || cfg('trajectory', false) === false) return false;
     var width = 0, height = 0;
     if (mode === 'current' && previewMotion.getBoundingClientRect) {
       var painted = previewMotion.getBoundingClientRect();
@@ -627,7 +641,7 @@ function setupImage(instance) {
     reconcilePreviewTransform(reason || 'motion-complete');
   }
   function preparePreviewTrajectory(mode) {
-    if (!previewMotion || !root || !previewRoot || previewRoot.hidden || !imagePreviewActive() || cfg('trajectory', true) === false) return false;
+    if (!previewMotion || !root || !previewRoot || previewRoot.hidden || !imagePreviewActive() || cfg('trajectory', false) === false) return false;
     lockPreviewTrajectoryGeometry(mode === 'leave' ? 'current' : 'canonical');
     var sourceRect = image && image.getBoundingClientRect ? image.getBoundingClientRect() : root.getBoundingClientRect();
     var targetRect = previewMotion.getBoundingClientRect();
@@ -659,6 +673,7 @@ function setupImage(instance) {
   function finalizePreviewLeave(context) {
     if (previewOpen || destroyed || !leaveMaskDone || !leaveContentDone || !pendingCloseDetail) return false;
     var detail = pendingCloseDetail || previewDetail(context && context.reason || 'close', context && context.originalEvent || null);
+    tracePreviewLeave('finalize-start');
     pendingCloseDetail = null;
     drag = null;
     previewStage.classList.remove('is-dragging');
@@ -668,10 +683,16 @@ function setupImage(instance) {
     // Releasing width/height/transform while the surface is still paintable lets the
     // copy snap back to its centered resting geometry for one frame at the end of leave.
     surface.hide(detail);
-    root.classList.remove('is-previewing');
-    root.classList.remove('is-preview-source-hidden');
+    if (previewRoot) previewRoot.classList.remove('is-chrome-leaving');
+    // Once hidden, it is safe to reset transformed media and unlock geometry.
+    // Do not reveal the source until BOTH content and mask have left.
+    if (imagePreviewActive()) resetTransform('preview-close-complete');
     releasePreviewTrajectoryGeometry('leave-complete');
     overlay.deactivate(detail);
+    root.classList.remove('is-previewing');
+    root.classList.remove('is-preview-source-hidden');
+    root.classList.remove('is-preview-source-handoff');
+    tracePreviewLeave('finalize-end');
     call(cfg('onVisibleChange', opts.onPreviewVisibleChange), false, Object.freeze({ source: detail.source || 'api', reason: detail.reason, event: detail.originalEvent, index: previewIndex, item: currentPreviewItem(), instance: api }));
     return true;
   }
@@ -684,18 +705,19 @@ function setupImage(instance) {
     pendingCloseDetail = previewDetail(reason || 'api', event || null);
     leaveMaskDone = false;
     leaveContentDone = false;
+    tracePreviewLeave('close-request');
     // Return any user zoom/pan/rotate/flip to the canonical preview geometry while
     // the outer trajectory travels back to the authored source. Keeping those transforms
     // alive would make the return copy miss the source bounds even when the trajectory itself
     // is correct.
-    if (imagePreviewActive()) resetTransform('preview-close');
     preparePreviewTrajectory('leave');
     // Keep the authored source hidden for the entire leave trajectory. Ownership only returns
     // in finalizePreviewLeave(), after the physical preview copy has reached the source bounds;
     // showing it here creates the two-image ghost visible in the old close animation.
     // Preview chrome leaves on the same lifecycle clock as mask/trajectory. The root remains
     // mounted until both presence owners complete, so title/toolbar/close never disappear early.
-    if (previewRoot) previewRoot.classList.remove('is-chrome-visible');
+    // Chrome leaves when the media trajectory begins (onActive), not one
+    // scheduler frame early; both share the same exact transition clock.
     // The public reason is metadata, not teardown authority. Actual destroy owns its
     // own direct presence/overlay teardown below, so closePreview('destroy') must not
     // be able to impersonate an immediate structural destroy.
@@ -880,6 +902,7 @@ function setupImage(instance) {
       },
       onAfterLeave: function (context) {
         leaveMaskDone = true;
+        tracePreviewLeave('mask-leave-done');
         finalizePreviewLeave(context);
       }
     });
@@ -887,6 +910,16 @@ function setupImage(instance) {
       element: previewMotion,
       transition: PREVIEW_TRANSITION,
       visible: false,
+      onActive: function (context) {
+        if (!previewRoot) return;
+        if (context.status === 'enter' && previewOpen) {
+          previewRoot.classList.remove('is-chrome-leaving');
+          previewRoot.classList.add('is-chrome-visible');
+        } else if (context.status === 'leave' && !previewOpen) {
+          previewRoot.classList.add('is-chrome-leaving');
+          previewRoot.classList.remove('is-chrome-visible');
+        }
+      },
       appear: false,
       reducedMotion: function () { return Config.resolve('motion', undefined, root) === false ? true : undefined; },
       onAfterEnter: function (context) {
@@ -899,8 +932,19 @@ function setupImage(instance) {
         // while the mask is still fading it snaps back to its centered resting geometry.
         // Hide the landed copy first, then hand visual ownership back to the source.
         if (previewMotion) previewMotion.style.visibility = 'hidden';
-        root.classList.remove('is-preview-source-hidden');
+        // Source and copy have one paint owner. The authored image normally
+        // transitions opacity; do not animate opacity during this handoff or
+        // the source stays invisible after the preview copy disappears.
+        if (cfg('trajectory',false) === true) {
+          root.classList.add('is-preview-source-handoff');
+          root.classList.remove('is-preview-source-hidden');
+        }
+        // Flush the now-opaque source while handoff disables the fade, before
+        // final mask teardown can remove the temporary handoff class.
+        // Default center zoom has no source-handoff read dependency.
+        if (cfg('trajectory',false) === true) void image.offsetWidth;
         leaveContentDone = true;
+        tracePreviewLeave('image-trajectory-done');
         finalizePreviewLeave(context);
       }
     });
@@ -930,14 +974,18 @@ function setupImage(instance) {
     // Commit the newly mounted portal before starting presence motion. Without this
     // boundary Chromium can coalesce the mask/chrome `from` and `to` values into the first
     // painted frame, making the fade visually disappear even though Transition runs.
-    previewRoot.classList.remove('is-chrome-visible');
+    root.classList.remove('is-preview-source-handoff');
+    previewRoot.classList.remove('is-chrome-visible', 'is-chrome-leaving');
+    previewRoot.classList.toggle('is-center-zoom',cfg('trajectory',false)!==true);
     void previewRoot.offsetWidth;
-    previewRoot.classList.add('is-chrome-visible');
+    // MotionCore onActive starts chrome with the image; avoid its old
+    // pre-motion early start even when the portal has already been painted.
     preparePreviewTrajectory();
     // Hide the authored source while the physical preview copy owns the trajectory.
     // This prevents the two-image ghosting visible during open/close handoff.
     root.classList.add('is-previewing');
-    root.classList.add('is-preview-source-hidden');
+    if (cfg('trajectory',false) === true) root.classList.add('is-preview-source-hidden');
+    else root.classList.remove('is-preview-source-hidden');
     if (!overlay.getState().active) overlay.activate(pendingOpenDetail);
     maskPresence.setVisible(true, { reason: pendingOpenDetail.reason, originalEvent: pendingOpenDetail.originalEvent });
     presence.setVisible(true, { reason: pendingOpenDetail.reason, originalEvent: pendingOpenDetail.originalEvent });

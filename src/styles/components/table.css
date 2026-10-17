@@ -1,7 +1,7 @@
 .qxframe9a7c2-table-wrap{
   --_qxframe9a7c2-table-head-bg:var(--qxframe9a7c2-table-head-bg,var(--_qxframe9a7c2-data-header-bg));
   --_qxframe9a7c2-table-row-hover:var(--qxframe9a7c2-table-row-hover,var(--_qxframe9a7c2-semantic-subtle-hover));
-  --_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,0 1px var(--_qxframe9a7c2-fixed-table-shadow-blur-sm) rgb(0 0 0 / .06),0 0.375rem 1.125rem rgb(0 0 0 / .05));
+  --_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,var(--qxframe9a7c2-theme-shadow-card));
   --_qxframe9a7c2-table-wrap-opacity:1;
   --_qxframe9a7c2-table-radius:var(--qxframe9a7c2-table-radius,var(--_qxframe9a7c2-data-radius));
   --_qxframe9a7c2-table-fixed-head-z:calc(var(--qxframe9a7c2-z-local-active) + 1);
@@ -152,11 +152,16 @@
 .qxframe9a7c2-table-filter-scroll>.qxframe9a7c2-table-filter-options.qxframe9a7c2-scroll-viewport{height:auto;max-height:16rem}
 .qxframe9a7c2-table-filter-options{display:flex;flex-direction:column;gap:var(--_qxframe9a7c2-fixed-space-1);max-height:16rem;overflow-y:auto;overflow-x:hidden}
 .qxframe9a7c2-table-filter-option{display:flex;align-items:center;gap:var(--_qxframe9a7c2-control-gap);min-height:var(--_qxframe9a7c2-control-height);padding:0 var(--_qxframe9a7c2-control-padding-inline);border-radius:var(--_qxframe9a7c2-action-radius);cursor:pointer}
-.qxframe9a7c2-table-filter-option:hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}
+.qxframe9a7c2-table-filter-option:not(.is-disabled):not(:has(>input:disabled)):hover{background:var(--_qxframe9a7c2-semantic-subtle-hover)}
+.qxframe9a7c2-table-filter-option.is-selected,.qxframe9a7c2-table-filter-option:has(>input:checked){background:var(--_qxframe9a7c2-semantic-subtle-active)}
+.qxframe9a7c2-table-filter-option.is-selected:not(.is-disabled):hover,.qxframe9a7c2-table-filter-option:has(>input:checked):not(:has(>input:disabled)):hover{background:var(--_qxframe9a7c2-semantic-subtle-active)}
+.qxframe9a7c2-table-filter-option.is-disabled,.qxframe9a7c2-table-filter-option:has(>input:disabled){color:var(--_qxframe9a7c2-semantic-text-disabled);cursor:not-allowed}
+.qxframe9a7c2-table-filter-option>input[type="checkbox"],.qxframe9a7c2-table-filter-option>input[type="radio"]{flex:0 0 auto;width:var(--_qxframe9a7c2-control-icon-size);height:var(--_qxframe9a7c2-control-icon-size);margin:0;accent-color:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-table-filter-actions{display:flex;justify-content:space-between;gap:var(--_qxframe9a7c2-control-gap);margin-top:var(--_qxframe9a7c2-control-gap);padding-top:var(--_qxframe9a7c2-control-gap);border-top:1px solid var(--_qxframe9a7c2-semantic-border)}
 .qxframe9a7c2-table-filter-search{margin-bottom:0.375rem}
-.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control{box-sizing:border-box;width:100%;min-height:var(--_qxframe9a7c2-control-height);padding:var(--_qxframe9a7c2-fixed-space-2) 0.5rem;border:1px solid var(--_qxframe9a7c2-semantic-border);border-radius:var(--_qxframe9a7c2-action-radius);background:var(--_qxframe9a7c2-semantic-surface);color:var(--_qxframe9a7c2-semantic-text);outline:0}
-.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus{border-color:var(--qxframe9a7c2-theme-primary);box-shadow:none}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control{box-sizing:border-box;width:100%;min-height:var(--_qxframe9a7c2-control-height);padding:var(--_qxframe9a7c2-fixed-space-2) var(--_qxframe9a7c2-control-padding-inline);border:1px solid var(--_qxframe9a7c2-popup-border);border-radius:var(--_qxframe9a7c2-control-radius);background:var(--_qxframe9a7c2-popup-bg);color:var(--_qxframe9a7c2-popup-text);outline:0}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}
+.qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control:focus{border-color:var(--qxframe9a7c2-theme-pointer-focus);box-shadow:none}
 .qxframe9a7c2-table-filter-search .qxframe9a7c2-input-control.is-keyboard-focus{outline:var(--_qxframe9a7c2-focus-visible-outline);outline-offset:var(--_qxframe9a7c2-focus-visible-offset)}
 .qxframe9a7c2-table-filter-options.is-tree .qxframe9a7c2-table-filter-option{padding-inline-start:calc(0.375rem + var(--qxframe9a7c2-table-filter-depth,0) * 1rem)}
 .qxframe9a7c2-table-filter-option.has-children > span:last-child{font-weight:600}

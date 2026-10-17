@@ -18,7 +18,7 @@
 .qxframe9a7c2-progress-info{display:inline-flex;min-width:2.75rem;flex:none;align-items:center;justify-content:center;color:var(--_qxframe9a7c2-progress-info-text);text-align:center}
 .qxframe9a7c2-progress.is-success,.qxframe9a7c2-progress.is-exception{--_qxframe9a7c2-progress-primary:var(--_qxframe9a7c2-accent);--_qxframe9a7c2-progress-info-text:var(--_qxframe9a7c2-accent)}
 .qxframe9a7c2-progress-inner.is-steps{display:flex;overflow:visible;border-radius:0;background:transparent}
-.qxframe9a7c2-progress-step{height:100%;min-width:var(--_qxframe9a7c2-fixed-progress-step-size);flex:1;border-radius:0.25rem;background:var(--_qxframe9a7c2-semantic-subtle);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
+.qxframe9a7c2-progress-step{height:100%;min-width:var(--_qxframe9a7c2-fixed-progress-step-size);flex:1;border-radius:var(--qxframe9a7c2-progress-step-radius,var(--qxframe9a7c2-theme-radius-track));background:var(--_qxframe9a7c2-semantic-subtle);transition:background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),opacity var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),transform var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-progress-step.is-active{background:var(--_qxframe9a7c2-progress-primary)}
 .qxframe9a7c2-progress-step.is-success{background:var(--_qxframe9a7c2-progress-success)}
 .qxframe9a7c2-progress-outer.is-vertical{width:auto;height:10rem}
@@ -38,3 +38,16 @@
 .qxframe9a7c2-progress.is-chart-3{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-chart-3)}
 
 .qxframe9a7c2-progress.is-full{display:flex;width:100%}
+
+/* Progress skins reuse one existing rail/bar state owner. */
+.qxframe9a7c2-progress.is-striped .qxframe9a7c2-progress-primary{background-image:repeating-linear-gradient(135deg,transparent 0,transparent .375rem,color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 12%,transparent) .375rem,color-mix(in oklab,var(--qxframe9a7c2-theme-foreground) 12%,transparent) .75rem)}
+.qxframe9a7c2-progress.is-striped.is-active .qxframe9a7c2-progress-primary{background-size:1.5rem 1.5rem;animation:qxframe9a7c2-progress-stripes 1.5s linear infinite}
+@keyframes qxframe9a7c2-progress-stripes{to{background-position:1.5rem 0}}
+.qxframe9a7c2-progress.is-muted{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-muted-foreground)}
+.qxframe9a7c2-progress.is-warning{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-progress.is-error{--_qxframe9a7c2-progress-primary:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-progress-step.is-current{background:var(--_qxframe9a7c2-progress-primary)}
+.qxframe9a7c2-progress-step.is-error{background:var(--qxframe9a7c2-theme-destructive)}
+.qxframe9a7c2-progress-step.is-warning{background:var(--qxframe9a7c2-theme-warning)}
+.qxframe9a7c2-progress-steps-labels{display:flex;align-items:center;justify-content:space-between;gap:.5rem;color:var(--qxframe9a7c2-theme-muted-foreground);font-size:.75rem}
+.qxframe9a7c2-progress-steps-labels>.is-current{color:var(--qxframe9a7c2-theme-primary);font-weight:600}

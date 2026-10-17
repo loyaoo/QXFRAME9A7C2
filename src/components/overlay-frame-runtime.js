@@ -242,6 +242,8 @@ function create(config = {}) {
     pendingLeaveDetail = { reason:reason || 'close', originalEvent:event || null };
     leaveMaskDone = false;
     leaveSurfaceDone = false;
+    // Begin both exit motions in the same rendering turn. The shared motion
+    // styles hold mask opacity until the panel has exited; no second-stage flash.
     maskTransition.setVisible(false, Utils.assignOwn({ reason:reason || 'close', originalEvent:event || null }, presenceOptions('mask', false, reason, event)));
     surfaceTransition.setVisible(false, Utils.assignOwn({ reason:reason || 'close', originalEvent:event || null }, presenceOptions('surface', false, reason, event)));
     return controller;
