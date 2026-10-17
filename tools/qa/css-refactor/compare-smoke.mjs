@@ -106,13 +106,28 @@ async function sample(which,mode,route='synthetic') {
   await s('Page.navigate',{url: actualDoc ? origin+'/docs/components/card.html' : origin+'/fixture?which='+which+'&mode='+mode});
   if (actualDoc) {
     await waitFor('document.readyState==="complete" && document.body.dataset.qxframe9a7c2Component==="Card" && document.querySelectorAll(".qxframe9a7c2-card").length>=1','real Card docs mount');
-    // Both sides get the identical modifier after product JS has initialized.
-    await evalJs("document.documentElement.classList.toggle('dark',"+JSON.stringify(mode==='dark')+");true");
-    await sleep(350);
+    // Use the docs site's own mode API. Merely adding .dark leaves its
+    // qxframe9a7c2-theme-light class and data-theme="light" contradictory.
+    const applied=await evalJs("(() => { const api=window.QXFRAME9A7C2_DOCS_THEME; if(!api)throw Error('Docs Theme runtime missing'); const state=api.setState({mode:"+JSON.stringify(mode)+"},{persist:false,emit:true}); const root=document.documentElement; return {mode:state.effectiveMode,dark:root.classList.contains('dark'),themeDark:root.classList.contains('qxframe9a7c2-theme-dark'),attr:root.getAttribute('data-theme')}; })()");
+    if(applied.mode!==mode || applied.dark!==(mode==='dark') || applied.themeDark!==(mode==='dark') || applied.attr!==mode)
+      throw Error('Docs Theme mode not applied: '+JSON.stringify(applied));
+    await sleep(200);
   } else {
     await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
   }
   await evalJs('document.fonts.ready.then(()=>true)');
+  // Capture at an identical animation timeline, without changing the source
+  // CSS animation-name/duration/keyframes or suppressing animation assertions.
+  // WAAPI freezing at time 0 avoids Card Skeleton background-position drift.
+  // This is a deterministic snapshot mode, NOT motion playback acceptance.
+  const animationEvidence=await evalJs(`(() => {
+    const all=document.getAnimations({subtree:true});
+    const initial=all.map(a=>({id:a.id,effect:a.effect?.getKeyframes()?.length ?? 0,
+      name:a.effect?.target?.className?.toString?.()||'',state:a.playState}));
+    for(const a of all){a.pause();a.currentTime=0;}
+    return {count:all.length,initial};
+  })()`);
+  await sleep(40);
   const snapshot = await evalJs(`(() => {
     const rows=[];
     const realDoc=!!document.body.dataset.qxframe9a7c2Component;
@@ -145,7 +160,7 @@ async function sample(which,mode,route='synthetic') {
     throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
   const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
   const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
-  return {snapshot,errors,http,image};
+  return {snapshot,errors,http,image,animationEvidence};
 
 }
 function compare(a,b,label) {
@@ -164,7 +179,7 @@ function compare(a,b,label) {
   if (a.snapshot.rows.length!==b.snapshot.rows.length) out.push({label,reason:'element-count',baseline:a.snapshot.rows.length,candidate:b.snapshot.rows.length});
   return out;
 }
-const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Card docs screenshot/DOM baseline is an L1 sentinel, not a full 112-config, interaction, overlay or portal acceptance.']};
+const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML, native docs Theme state API, deterministic WAAPI t=0 sampling and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Card docs screenshot/DOM baseline is an L1 sentinel, not a full 112-config, interaction, overlay or portal acceptance.']};
 try {
   if (!bin) throw new Error('Chromium is required; set CHROMIUM_BIN');
   child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
@@ -208,6 +223,7 @@ try {
     const imageHashes={baseline:pngHash(base.image),self:pngHash(again.image),negative:pngHash(mutant.image),candidate:pngHash(head.image)};
     const errors=[...base.errors,...again.errors,...mutant.errors,...head.errors,...base.http,...again.http,...mutant.http,...head.http];
     const record={mode,elements:base.snapshot.rows.length,cssSheets:base.snapshot.styleSheets,
+      animationEvidence:{baseline:base.animationEvidence,candidate:head.animationEvidence},
       selfDiffs:self.length,negativeDiffs:neg.length,candidateDiffs:cand.length,
       imageHashes,selfPixelsEqual:imageHashes.baseline===imageHashes.self,
       negativePixelsDetected:imageHashes.baseline!==imageHashes.negative,
