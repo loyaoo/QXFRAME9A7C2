@@ -3349,7 +3349,7 @@ try {
     await waitFor('document.querySelector("[data-create-frame]").src.endsWith("preview-02.html")','restore Preview02',15000);
     // src changes before the new iframe's scripts have executed; the following
     // compositor diagnostic requires the actual local QX runtime and live Theme.
-    await waitFor('!!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2?.Components?.Modal && document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")?.textContent.length>100','Preview02 runtime and Theme restored after Preview04',25000);
+    await waitFor('document.querySelector("[data-create-frame]").contentDocument.body?.dataset.createPreview === "02" && !!document.querySelector("[data-create-frame]").contentDocument.defaultView.QXFRAME9A7C2?.Components?.Modal && document.querySelector("[data-create-frame]").contentDocument.getElementById("qxframe9a7c2-create-theme")?.textContent.length>100','Preview02 body, runtime and Theme restored after Preview04',25000);
   });
 
   await step('Stage5 overlay compositor frame timings (diagnostic, not a visual signoff)',async()=>{

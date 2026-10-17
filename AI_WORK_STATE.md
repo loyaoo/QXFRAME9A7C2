@@ -1,3 +1,8 @@
+## CURRENT — 2026-10-17 Stage5 PREVIEW04-RETURN-READY-001 (CI pending)
+- Focus saturation new Chromium test PASSED in exact-head CSS Schema #38986750179 (its passed list includes `Focus saturation deep/light is opaque and the two halo modes use blurred 20-percent alpha`). The run failed LATER at the overlay compositor diagnostic because the Preview04→02 transition's existing wait accepted the old iframe document before the new Preview02 DOM had a `body`; `d.body.append` then threw. This is a real asynchronous navigation readiness race, not an invalid Focus implementation.
+- Strengthened the preceding real Chromium readiness assertion to require `document.body.dataset.createPreview==='02'` AND the actual QX Modal runtime AND injected Theme. No diagnostic or test removed/relaxed, and the production Focus implementation is unchanged.
+- New exact-head CI and Windows offline QA zip pending. PR #267 Draft, main unchanged.
+
 ## CURRENT — 2026-10-17 FOCUS-SATURATION-TEST-REGEX-001 (CI pending)
 - Corrected new static Focus saturation audit to reject actual alpha-conversion calls / transparent values, not the slash in source comments. Original opaque color assertions and real Chromium tests remain active. QXFRAME/CSS CI must be checked against the newest commit; previous default-theme green runs do not authorize new change completion.
 
