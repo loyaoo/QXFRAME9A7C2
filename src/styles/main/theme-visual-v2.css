@@ -589,6 +589,10 @@
     background: transparent;
     color: var(--qxframe9a7c2-theme-menu-foreground);
   }
+}
+/* R5-01: the 50 succeeding component state rules are unscoped while
+ * retaining the exact source order and original selector specificity.
+ * Their component ownership migration remains a separate closure. */
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
   .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
     background: var(--_qxframe9a7c2-menu-hover-soft);
@@ -789,5 +793,3 @@
     color:var(--qxframe9a7c2-theme-foreground);
     border-color:var(--qxframe9a7c2-theme-border);
   }
-}
-
