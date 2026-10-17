@@ -25,7 +25,8 @@ if (b0Digest !== expected) throw new Error('B0 CSS bytes do not match exact-tree
 const css = {
   baseline,
   candidate,
-  mutant: baseline + '\nhtml,body { background-color: rgb(13, 79, 211) !important; } .qxframe9a7c2-card { background-color: rgb(13, 79, 211) !important; box-shadow: 0 0 0 30px rgb(13, 79, 211) !important; }\n'
+  mutant: baseline + '\nhtml,body { background-color: rgb(13, 79, 211) !important; } .qxframe9a7c2-card { background-color: rgb(13, 79, 211) !important; box-shadow: 0 0 0 30px rgb(13, 79, 211) !important; }\n',
+  mutantHover: baseline + '\n.qxframe9a7c2-card-action:hover,.qxframe9a7c2-card-action-item:hover{background-color:rgb(255,0,174)!important;color:rgb(12,250,23)!important}\n'
 };
 const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'dark':''}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -132,7 +133,7 @@ async function waitFor(expression,label) {
   }
   throw new Error('Timed out: '+label);
 }
-async function sample(which,mode,route='synthetic') {
+async function sample(which,mode,route='synthetic',hoverId=null) {
   const errorsStart=runtimeErrors.length, networkStart=httpErrors.length;
   activeVariant=which;
   const actualDoc=route==='card-doc';
@@ -149,6 +150,17 @@ async function sample(which,mode,route='synthetic') {
     await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
   }
   await evalJs('document.fonts.ready.then(()=>true)');
+  if(hoverId){
+    if(actualDoc)throw Error('Hover fixture requires synthetic Card page');
+    const selector='#'+hoverId;
+    await evalJs("(() => { const el=document.querySelector("+JSON.stringify(selector)+"); if(!el)throw Error('Missing action fixture'); el.scrollIntoView({block:'center',inline:'nearest'}); return true; })()");
+    await sleep(80);
+    const target=await evalJs("(() => { const box=document.querySelector("+JSON.stringify(selector)+").getBoundingClientRect(); return {x:box.x+box.width/2,y:box.y+box.height/2}; })()");
+    await s('Input.dispatchMouseEvent',{type:'mouseMoved',x:target.x,y:target.y});
+    await waitFor("document.querySelector("+JSON.stringify(selector)+").matches(':hover')",'native pointer hover '+selector);
+  }else{
+    await s('Input.dispatchMouseEvent',{type:'mouseMoved',x:1430,y:15});
+  }
   // Capture at an identical animation timeline, without changing the source
   // CSS animation-name/duration/keyframes or suppressing animation assertions.
   // WAAPI freezing at time 0 avoids Card Skeleton background-position drift.
@@ -266,11 +278,27 @@ try {
     if(artifactDir){for(const [key,object] of Object.entries({baseline:base,negative:mutant,candidate:head}))fs.writeFileSync(path.join(artifactDir,'card-'+mode+'-'+key+'.png'),object.image);}
     report.realDocs.push(record);
   }
+  // G06: native browser pointer hover, for BOTH aliases, with deliberate
+  // hover-only poison and direct B0/candidate computed + geometry checks.
+  report.actionHover=[];
+  for(const mode of ['light','dark'])for(const hoverId of ['card-action-standard','card-action-item']){
+    const first=await sample('baseline',mode,'synthetic',hoverId);
+    const second=await sample('baseline',mode,'synthetic',hoverId);
+    const mutant=await sample('mutantHover',mode,'synthetic',hoverId);
+    const candidate=await sample('candidate',mode,'synthetic',hoverId);
+    const self=compare(first,second,'hover-self'),broken=compare(first,mutant,'hover-mutation'),actual=compare(first,candidate,'hover-candidate');
+    const errs=[...first.errors,...second.errors,...mutant.errors,...candidate.errors,...first.http,...second.http,...mutant.http,...candidate.http];
+    report.actionHover.push({mode,hoverId,selfDifferences:self.length,negativeDifferences:broken.length,
+      candidateDifferences:actual.length,errors:errs,
+      negativeSamples:broken.filter(x=>x.node.includes('card-actions-matrix')||x.property==='color'||x.property==='background-color').slice(0,3),
+      actualSamples:actual.slice(0,10)});
+  }
+  report.actionHoverPassed=report.actionHover.every(r=>r.selfDifferences===0 && r.negativeDifferences>0 && r.candidateDifferences===0 && r.errors.length===0);
   report.selfPassed=report.cases.every(x=>x.selfDiffCount===0 && x.errors.length===0);
   report.negativePassed=report.cases.every(x=>x.negativeDiffCount>0);
   report.realCandidatePassed=report.cases.every(x=>x.candidateDiffCount===0);
   report.realDocsPassed=report.realDocs.every(r=>r.elements>=25 && r.errors.length===0 && r.selfDiffs===0 && r.negativeDiffs>0 && r.candidateDiffs===0 && r.selfPixelsEqual && r.negativePixelsDetected && r.candidatePixelsEqual);
-  report.ok=report.selfPassed&&report.negativePassed&&report.realCandidatePassed&&report.realDocsPassed;
+  report.ok=report.selfPassed&&report.negativePassed&&report.realCandidatePassed&&report.realDocsPassed&&report.actionHoverPassed;
 }catch(e){report.ok=false;report.errors.push(String(e.stack||e));}
 finally{
   if(socket)socket.close();
