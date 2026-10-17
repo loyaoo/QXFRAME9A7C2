@@ -1567,6 +1567,10 @@ check('Legacy v2 collision resolved through existing semantic owners, not a new 
   assert.ok(!visual.includes('--_qxframe9a7c2-card-explicit-shadow'),'no redundant Card shadow facade');
   const card=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
   assert.ok(card.includes('--_qxframe9a7c2-card-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Card single paint owner consumes Theme shadow');
+  assert.match(card,/\.qxframe9a7c2-card-grid-item:hover\{[^}]*box-shadow:var\(--qxframe9a7c2-card-shadow,var\(--qxframe9a7c2-theme-shadow-card\)\)/,'Card Grid Hover must share Card Theme elevation with public override');
+  const table=fs.readFileSync(path.join(root,'src/styles/components/table.css'),'utf8');
+  assert.ok(table.includes('--_qxframe9a7c2-table-shadow:var(--qxframe9a7c2-table-shadow,var(--qxframe9a7c2-theme-shadow-card))'),'Table is-shadow uses Surface Theme strength rather than an always-on neutral elevation');
+  assert.match(table,/\.qxframe9a7c2-table \.is-fixed-start\.is-last::after\{[^}]*rgb\(0 0 0 \/ \.24\)/,'fixed-column edge shadow remains black in both schemes');
   const button=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
   for(const [prop,role] of [['background','bg'],['color','text'],['box-shadow','shadow']])
     assert.ok(button.includes(prop+':var(--_qxframe9a7c2-state-'+role+')'),'Button owns '+prop+' through its state resolver');

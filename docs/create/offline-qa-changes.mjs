@@ -1,6 +1,7 @@
-/** STAGE5-EMBEDDED-DEFAULT-VEGA-MIST-BLUE-20261016: global CSS default Theme only. */
-/** Global Token changes affect the entire framework. No single Preview Card is
- *  marked; previous localized Slider/Calendar/Dropdown/Card labels are cleared. */
+/** STAGE5-SURFACE-ELEVATION-CONSUMERS-20261017: Card Grid hover and Table is-shadow. */
+/** These two narrow states have no validated corresponding child fixture in the
+ *  canonical Preview04 Card/Table demo. Do not falsely mark unrelated regions;
+ *  old Slider/Calendar/Dropdown/Card marks remain cleared. */
 const groups = [];
 const key='qxframe9a7c2-qa-show', foldkey='qxframe9a7c2-qa-fold';
 let visible=true, folded=false;
@@ -63,7 +64,7 @@ function mount(){
   panel.innerHTML='<div class="qa-toolbar-header"><strong>验收标注 · 离线专用</strong><span>'+(markedRegions?'Preview '+(document.body.dataset.createPreview || (document.querySelector('[data-card="book-appointment"]')?'02':'01'))+' · '+markedRegions+' 处':'本轮无 Preview 卡片高亮')+'</span></div>'+
     '<div class="qa-toolbar-buttons"><button type="button" data-qa-toggle></button><button type="button" data-qa-fold></button></div>'+
     '<div class="qa-toolbar-content"><p>橙色实线框是改动卡片；虚线框是具体改动区域。点击条目直接定位。</p><div data-qa-list></div>'+
-    '<p class="qa-toolbar-caption">仅标注本轮 Slider、Calendar、Dropdown 与 Card 的基础色中性视觉修复。</p></div>';
+    '<p class="qa-toolbar-caption">本轮修复 Card Grid 悬停与 Table 阴影 Token 消费链；无可精准定位的 Preview 局部，故不标黄色区域。</p></div>';
   document.body.append(panel);
   const list=panel.querySelector('[data-qa-list]');
   for(const group of groups){
