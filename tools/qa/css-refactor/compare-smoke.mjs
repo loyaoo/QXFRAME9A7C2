@@ -58,6 +58,18 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
   <div id="card-divided" class="qxframe9a7c2-card is-divided"><div class="qxframe9a7c2-card-header">Divided</div><div class="qxframe9a7c2-card-content">Content</div><div class="qxframe9a7c2-card-footer">Footer</div></div>
   <div id="card-grid" class="qxframe9a7c2-card"><div class="qxframe9a7c2-card-grid"><div class="qxframe9a7c2-card-grid-item">Cell 1</div><div class="qxframe9a7c2-card-grid-item">Cell 2</div></div></div>
 </div>
+<div id="card-actions-matrix" class="qxframe9a7c2-card">
+  <div class="qxframe9a7c2-card-actions">
+    <button id="card-action-standard" class="qxframe9a7c2-card-action" type="button">Standard</button>
+    <button id="card-action-item" class="qxframe9a7c2-card-action-item" type="button">Item</button>
+    <button id="card-action-disabled" class="qxframe9a7c2-card-action" type="button" disabled>Disabled</button>
+    <button id="card-action-item-disabled" class="qxframe9a7c2-card-action-item" type="button" disabled>Item disabled</button>
+  </div>
+  <div class="qxframe9a7c2-card-actions">
+    <a id="card-link-standard" class="qxframe9a7c2-card-action" href="#card-action-standard">Link</a>
+    <a id="card-link-item" class="qxframe9a7c2-card-action-item" href="#card-action-item">Last link</a>
+  </div>
+</div>
 <div id="card-ancestor-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-card-padding:1.25rem;--qxframe9a7c2-card-border-color:rgb(123,45,67)">
   <div id="card-inherited" class="qxframe9a7c2-card is-sm"><h3 class="qxframe9a7c2-card-title">Ancestor override</h3><div class="qxframe9a7c2-card-description">Description</div></div>
   <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
