@@ -1,0 +1,71 @@
+name: CSS Refactor Fast Evidence
+
+on:
+  pull_request:
+    branches: [baseline/post-main-cleanup-css-readable-62d9a840]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: css-refactor-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  b0-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Checkout immutable B0
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 62d9a8402c19460ced37265acc6d110ae2cfda76
+          path: .qxframe-baseline
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and build both frozen JS and candidate CSS
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts
+          npm run build
+          (cd .qxframe-baseline && npm ci --ignore-scripts && node tools/build-release.mjs)
+      - name: Verify frozen public Theme and app JS
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp .qxframe-baseline/src/styles/main/theme.css src/styles/main/theme.css
+          diff -u <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort) <(find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+          while IFS= read -r p; do
+            cmp ".qxframe-baseline/$p" "$p"
+          done < <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+          node tools/verify-js-build-matches-main.mjs --reference=.qxframe-baseline/dist
+      - name: Deterministic source/Theme manifest
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node tools/qa/css-refactor/token-usage.mjs --out=artifacts/css-refactor-token-usage.json
+          node tools/qa/css-refactor/theme-case-manifest.mjs --baseline=.qxframe-baseline/src/styles/main/theme.css --out=artifacts/css-refactor-theme-cases.json
+      - name: Real Chromium B0 self/mutant/Card and candidate
+        run: |
+          set -euo pipefail
+          node --check tools/qa/css-refactor/compare-smoke.mjs
+          node tools/qa/css-refactor/compare-smoke.mjs --baseline=.qxframe-baseline/dist/qxframe9a7c2.css --candidate=dist/qxframe9a7c2.css --out=artifacts/css-refactor-smoke.json
+      - name: Upload reports and Card screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: css-refactor-fast-${{ github.sha }}
+          path: |
+            artifacts/css-refactor-*.json
+            artifacts/css-refactor-card-screenshots/
+          if-no-files-found: warn
+          retention-days: 30
