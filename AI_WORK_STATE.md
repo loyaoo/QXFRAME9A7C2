@@ -1,3 +1,9 @@
+## CURRENT — 2026-10-17 MAIN-CSS-HISTORY-CLEANUP-001 (post PR #267)
+- Owner authorized targeted main cleanup. Baseline commit 5602a04ef38cca27fccb3c46b9cd7afad7f73df0; exact-head main CI #39001652215 success prior to cleanup. Saved immutable baseline/post-pr267-css-readable-5602a04e and pre-merge backup branches.
+- Deleted only orphan historical root handoff/change-log notes and comment-only src/styles/components/compatibility.css; synchronized css-order.json. Removed redundant blank lines and obsolete version labels in comments within foundation.css and fixed-values.css; functional declarations untouched.
+- Retained production theme-visual-v2*.css and used test fixtures: names are historical but CSS active. Independent zero-visual-change architecture refactor must move their rules to valid shared/individual component owners and update references/CI before deletion; no shadow implementation or filename-only disguises.
+- Retained Stage5 pending human-acceptance checklist as a future independent task. Next: verify cleanup HEAD build/CI; keep main stable until evidence. This checkpoint is factual; no Stage5 completion claim.
+
 ## CURRENT — 2026-10-17 Stage5 SURFACE-SHADOW-REAL-MIST-CONFIG-001 (CI pending)
 - Corrected new Chromium Surface Shadow matrix to use real `baseColor:'mist'`, not ignored `base:'mist'`. The 8 Styles x light/dark x none/heavy matrix now explicitly tests the owner's Mist base. Production CSS unchanged by this follow-up. Latest HEAD requires its own double green CI and exact-tree artifact. PR Draft; main unchanged.
 
