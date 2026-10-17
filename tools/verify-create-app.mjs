@@ -2439,7 +2439,7 @@ check('Stage5 TreeSelect state remains native, Picker visual projection uses Men
 
 check('Stage5 neutral List/Tree, OTP container, Badge static and shared TimePanel',()=>{
  const source=p=>fs.readFileSync(path.join(root,p),'utf8');
- const list=source('src/styles/components/list.css'),v2=source('src/styles/main/theme-visual-v2.css');
+ const list=source('src/styles/components/list.css'),v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(source).join('\n');
  const otp=source('src/components/input-otp.js'),badge=source('src/styles/components/badge.css');
  const tags=source('src/styles/components/tags.css');
  assert.doesNotMatch(v2,/\.qxframe9a7c2-list, \.qxframe9a7c2-tree \{ background-color:/,'parent controls list/tree surface');
@@ -2454,7 +2454,7 @@ check('Stage5 neutral List/Tree, OTP container, Badge static and shared TimePane
 
 check('Stage5 static Outline Badge alias and inherited List radius',()=>{
  const css=p=>fs.readFileSync(path.join(root,p),'utf8');
- const badge=css('src/styles/components/badge.css'),list=css('src/styles/components/list.css'),theme=css('src/styles/main/theme-visual-v2.css');
+ const badge=css('src/styles/components/badge.css'),list=css('src/styles/components/list.css'),theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(css).join('\n');
  assert.match(badge,/\.qxframe9a7c2-badge\.is-outlined,\.qxframe9a7c2-badge\.is-outline/,'Badge supports both outline spellings in existing demos');
  assert.match(theme,/\.qxframe9a7c2-badge\.is-outline \{ background-color: transparent/,'Theme Outline Badge retains visible border');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-badge\.is-outline:hover/,'Badge does not implement control hover');
