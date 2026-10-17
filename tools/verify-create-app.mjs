@@ -65,7 +65,7 @@ check('Stage5 Preview04 directly reuses full Theme Playground and dark Alert sha
 check('Stage5 Badge radius has one Theme authority; Tags editor shares Badge role',()=>{
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
  const recipe=fs.readFileSync(path.join(root,'src/styles/components/visual-recipe.css'),'utf8');
- const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const consumers=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  const tags=fs.readFileSync(path.join(root,'src/styles/components/tags.css'),'utf8');
  assert.match(badge,/border-radius:var\(--qxframe9a7c2-badge-radius,var\(--qxframe9a7c2-theme-radius-badge\)\)/,'Badge consumes Theme radius-badge');
  assert.doesNotMatch(recipe,/\.qxframe9a7c2-badge,\.qxframe9a7c2-tabs-tab/,'compact shape visual recipe must not replace Badge Theme radius');
@@ -167,7 +167,7 @@ check('Stage5 Tags input and Tag share one radius owner across all Theme shapes'
  const radius='var(--qxframe9a7c2-tag-radius,var(--qxframe9a7c2-theme-radius-badge,var(--_qxframe9a7c2-compact-shape-radius,var(--_qxframe9a7c2-control-radius))))';
  assert.equal(tag.split('border-radius:'+radius).length-1,4,'Tag surface, Add focus shell, editable input and edit-state input all share Tag/compact/control fallback');
  assert.ok(!recipe.includes('.qxframe9a7c2-tag,.qxframe9a7c2-badge,.qxframe9a7c2-tabs-tab'),'visual recipe must not override canonical Tag radius owner');
- const styleConsumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const styleConsumers=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.ok(!styleConsumers.includes('.qxframe9a7c2-tag[class]{border-radius:'),'late Theme Style consumer may not reintroduce an independent Tag-only radius owner');
 });
 check('Stage5 Preview03 QX native commercial compositions (18 cards, 3 preview routes)',()=>{
@@ -466,7 +466,7 @@ check('Maia and Rhea Tabs radius allocation follows source while Shape override 
   assert.ok(compiler.includes("ext.radiusAlloc === 'rounded' ? px(basePx * 1.6)"),'Maia rounded Tabs list alloc');
   assert.ok(compiler.includes("ext.radiusAlloc === 'smooth' ? px(basePx * 2)"),'Rhea smooth Tabs list alloc');
   assert.ok(compiler.includes("shapeRadius(ext.shapeTabs, tabsListRadius, controlShape)"),'Tabs Shape override retained');
-  const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  const css=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
   assert.ok(css.includes("calc(var(--_qxframe9a7c2-tabs-radius) - .125rem)"),'shared trigger radius inset remains 2px');
 });
 
@@ -489,7 +489,7 @@ check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>
 check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Field success stays distinct',()=>{
  const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
- const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const style=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-focus\)/,'keyboard V2 physical border');
  assert.match(consumer,/--_qxframe9a7c2-state-focus-shadow:var\(--qxframe9a7c2-theme-pointer-shadow,none\)/,'pointer JS surface shadow');
@@ -502,7 +502,7 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
 
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
   const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
-  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+  const style=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
   const structure=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
     assert.ok(consumer.includes('--qxframe9a7c2-theme-'+name),'real Theme Hover token '+name);
@@ -2230,7 +2230,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
  assert.ok(picker.includes('.qxframe9a7c2-color-panel-hue::-moz-range-thumb,.qxframe9a7c2-color-panel-alpha::-moz-range-thumb{box-sizing:border-box;width:var(--_qxframe9a7c2-slider-handle-width,'),'Gecko native range thumb must consume Slider thumb size');
  assert.doesNotMatch(css,/\.qxframe9a7c2-color-panel-input\[class\]/,'Theme V2 must not duplicate ColorPanel leaf field skin');
  assert.ok(css.includes('.qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {'),'Slider and ColorPanel must share Theme-derived rail/thumb density roles');
- const appearance=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
+ const appearance=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
  assert.ok(appearance.includes('.qxframe9a7c2-slider[class],.qxframe9a7c2-color-panel[class]{'),'Slider and ColorPanel must share Style-derived rail/thumb Shape Policy');
  assert.doesNotMatch(appearance,/\.qxframe9a7c2-color-panel-input(?:\[class\]|:focus|\.is-focused|:disabled|\.is-disabled)/,'Shared Control Appearance must not override ColorPanel input alone; ColorPanel source owns input/format/eye together');
  for(const marker of ['.qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected)', '.qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected)',

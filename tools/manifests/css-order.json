@@ -19,7 +19,7 @@
     "late-focus-feedback",
     "late-control-interaction",
     "main-theme-visual-v2-style",
-    "main-theme-visual-v2-style-consumers"
+    "late-component-appearance"
   ],
   "conceptualOrder": [
     "foundation",
@@ -95,6 +95,6 @@
     "src/styles/components/focus-feedback.css",
     "src/styles/components/control-interaction.css",
     "src/styles/main/semantic-inputs.css",
-    "src/styles/main/theme-visual-v2-style-consumers.css"
+    "src/styles/components/component-appearance.css"
   ]
 }

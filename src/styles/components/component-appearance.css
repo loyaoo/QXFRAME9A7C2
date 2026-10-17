@@ -1,4 +1,6 @@
-/* Theme bridge: non-color theme inputs -> actual paint/geometry owners (no style selectors). */
+/* Component appearance projection: typography, shape, control paint and
+ * validation precedence. Kept in its original late source-order position.
+ * Root scope is intentional until the competing owners are de-duplicated. */
 @scope (:root) {
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-input[class],.qxframe9a7c2-text-field[class],
@@ -56,7 +58,7 @@
     background-color:var(--_qxframe9a7c2-control-bg);
   }
 
-  /* Field status wins over keyboard/pointer focus in the one V2 border owner.
+  /* Field status wins over keyboard/pointer focus in the one Control border owner.
    * The Field parent owns warning/error, not native Control focus. */
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:focus:not(:disabled):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -76,7 +78,7 @@
   }
 
 
-  /* Field feedback remains higher priority than shared V2 Hover, for all
+  /* Field feedback remains higher priority than shared shared Hover, for all
    * native inputs with valid focus, pointer, or neutral state. */
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-input:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
   .qxframe9a7c2-field.is-invalid .qxframe9a7c2-form-select:hover:not(:disabled):not(:focus):not([readonly]):not(.is-invalid):not(.is-error):not(.is-warning),
@@ -95,7 +97,7 @@
     --_qxframe9a7c2-control-border:var(--qxframe9a7c2-theme-warning)
   }
 
-  /* Field validity applies to JS Input's shared V2 physical border slot, too.
+  /* Field validity applies to JS Input's shared shared physical border slot, too.
    * Explicit child feedback remains authoritative, independent of FocusOrigin. */
   /* A focused valid Field must defeat the high-specificity FocusOrigin color
    * projection without introducing a second physical border painter. */
