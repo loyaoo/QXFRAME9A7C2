@@ -11,3 +11,11 @@
 - **L0/L1:** Native Chromium synthetic source matrix light/dark, Card docs page light/dark, B0 self→self, B0→candidate, deliberate background/box-shadow mutant and Action hover-specific color mutant. Compare all computed properties, pseudo and precise geometry; Card docs screenshots pixel hash.
 - **Rollback:** immutable baseline B0 for golden; prior comparator-accepted source `3615189da0499114c50aae20691b742d6a038c10` for per-batch code diff.
 - **Acceptance:** `pending` until current HEAD's Fast, QXFRAME and Schema fully pass. The broader R3-01/Card all-state context is still not accepted; @scope & four historical CSS files remain untouched.
+
+## Test-shape migration: old → new
+
+- Legacy `verify-css-grid-lowrisk-closeout-4.mjs` checked the literal source fragment `.qxframe9a7c2-card-action{display:flex;...`. After grouping aliases it fails even when the CSS declaration output is semantically unchanged.
+- New test parses canonical component selectors, verifies each public Card Action alias has exactly one owning rule, checks the full declarations are identical for base/last-child/hover/disabled and keeps its existing min-height/flex assertion. It rejects a missing alias, changed geometry or unmatched state.
+- Native Chromium hover-specific fault injection is run separately in `compare-smoke.mjs`; L0 AST rules and G06 interactions are independent, not substitutes for each other.
+- Source file exceptions: this batch modifies the existing QA test only to remove the shape coupling, not production geometry expectations.
+- Previous full QXFRAME CI `39014588863` failed due that legacy textual regex. Until new HEAD completes, batch status stays pending.
