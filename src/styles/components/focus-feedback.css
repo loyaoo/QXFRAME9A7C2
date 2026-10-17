@@ -1,7 +1,7 @@
-/* Shared FocusOrigin width/offset and feedback-state consumers.
- * These rules retain their prior canonical late source-order position.
- * The root-scope-free part is limited to this formerly scoped rule group. */
-
+/* FocusOrigin and feedback state projections.
+ * Preserves the original root-scoped cascade, including pointer focus
+ * precedence and the Image Mask public override boundary. */
+@scope (:root) {
   /* Keyboard focus remains the framework-wide 2px light/dark black-white
      rule. Re-resolve it inside the v2 scope so no inherited legacy color is
      captured before a local theme boundary is applied. */
@@ -61,3 +61,4 @@
   .qxframe9a7c2-selectgroup-indicator.is-radio.is-overlay {
     box-shadow: none;
   }
+}

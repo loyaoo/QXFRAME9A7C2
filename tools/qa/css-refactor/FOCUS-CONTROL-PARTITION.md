@@ -4,9 +4,9 @@
 - Immutable B0: `62d9a8402c19460ced37265acc6d110ae2cfda76`.
 - Last accepted branch head: `dd841d3931702f3722a9ec3edb2097e0c08e8d38` (QXFRAME, CSS Schema and Fast all success).
 - Deletes `src/styles/main/theme-visual-v2-consumers.css` and replaces its actual 10,146-byte rules in **two semantically named component-family modules** at exactly the previous CSS source-order position.
-- `src/styles/components/focus-feedback.css`: first 8-rule root-scope group (shared keyboard/pointer focus roles, result statuses, image masking and overlay SelectGroup indicators). This set has no `@scope` wrapper.
+- `src/styles/components/focus-feedback.css`: first 8-rule root-scope group (shared keyboard/pointer focus roles, result statuses, image masking and overlay SelectGroup indicators). It retains exactly one `@scope` wrapper.
 - `src/styles/components/control-interaction.css`: second 2-rule scoped hover block plus the unscoped pointer/keyboard/Field status projections, preserving original selectors, values and order.
-- `@scope` total decreases **4 → 3**. Versioned production source file count decreases **3 → 2**. The new modules have no historical version suffix.
+- `@scope` total remains **4 → 4** pending exact ownership de-duplication. Versioned production source file count decreases **3 → 2**. The new modules have no historical version suffix.
 - `tools/manifests/css-order.json`, the Schema-1 exclusion list in `tools/style-source.mjs`, and all three QA references in `tools/verify-create-app.mjs` are updated atomically. No new Theme input, alternate patch layer, public variable or JS behavior.
 
 ## Explicit limits and counterexamples
@@ -19,3 +19,6 @@
 ## Verification and rollback
 - Fail closed on source-owner duplicates, computed/geometry differences, screenshots, or extra custom tokens; restore this split from the last green HEAD instead of relaxing QA baselines.
 - Branch: `refactor/css-readable-token-chain-postcleanup-20261017`; PR #268 must remain Draft. No main merge.
+
+## Correction — owner gate is authoritative
+The first flattened eight-rule block led to four genuine duplicate-owner records in `components/focus-feedback`: native Form input/select/textarea `:focus-visible` outline plus Image mask private slot. Full QXFRAME [#39023311360](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39023311360) rejected it. This fixes the production CSS by restoring the **original** `@scope(:root)` on that block, not by raising any baseline or weakening visual gates. Original declarations are byte-preserved; it is still split into two readable component-family files and the legacy v2 consumer file remains deleted. Fast [#39023311353](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39023311353) failed *before comparison* due to Chromium CDP startup failure, which is **not** computed evidence; current HEAD must be retested.

@@ -17,3 +17,5 @@ Removed six duplicate early private roles from fixed-values.css, preserving the 
 ### R5 focus / control consumer partition (dd841d3931702f3722a9ec3edb2097e0c08e8d38)
 
 Legacy `src/styles/main/theme-visual-v2-consumers.css` is deleted and its entire 10KB of actual rule declarations are preserved at the original cascade position in `src/styles/components/focus-feedback.css` (feedback/focus base) and `src/styles/components/control-interaction.css` (Input/Form/SelectGroup states), except that the first 8-rule `@scope (:root)` group is now ordinary CSS. Second scoped hover group is deliberately retained pending cascade ownership work. CSS source order, JS/DOM and public Theme contract unchanged. CI acceptance pending new exact HEAD; no merge authorization.
+
+Correction: the extracted feedback-focus rules retain original @scope(:root), because unscoping created four duplicate owners and was rejected by QXFRAME CI. Still eliminates the versioned consumer module, partitions 10KB into two components, and preserves original cascade. Current exact-head triple gates required.
