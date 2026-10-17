@@ -22,15 +22,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.qxframe9a7c2-icon:before {
-    content: var(--icon-line-round-3);
-}
-
-.qxframe9a7c2-icon.is-line::before {
-    content: var(--icon-line-round-3);
-}
-
-.qxframe9a7c2-icon.is-line.is-round::before {
+.qxframe9a7c2-icon:before,.qxframe9a7c2-icon.is-line::before,.qxframe9a7c2-icon.is-line.is-round::before{
     content: var(--icon-line-round-3);
 }
 
@@ -86,11 +78,7 @@
     content: var(--icon-line-round-4);
 }
 
-.qxframe9a7c2-icon.is-fill::before {
-    content: var(--icon-fill-round-3);
-}
-
-.qxframe9a7c2-icon.is-fill.is-round::before {
+.qxframe9a7c2-icon.is-fill::before,.qxframe9a7c2-icon.is-fill.is-round::before{
     content: var(--icon-fill-round-3);
 }
 
@@ -130,11 +118,7 @@
     content: var(--icon-fill-sharp-4);
 }
 
-.qxframe9a7c2-icon.is-fill.is-stroke-1::before {
-    content: var(--icon-fill-round-1);
-}
-
-.qxframe9a7c2-icon.is-fill.is-stroke-2::before {
+.qxframe9a7c2-icon.is-fill.is-stroke-1::before,.qxframe9a7c2-icon.is-fill.is-stroke-2::before{
     content: var(--icon-fill-round-1);
 }
 

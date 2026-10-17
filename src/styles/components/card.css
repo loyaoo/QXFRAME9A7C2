@@ -81,12 +81,10 @@
 .qxframe9a7c2-card-header-action,.qxframe9a7c2-card-extra{min-width:0;flex:0 0 auto;align-self:flex-start;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 
 .qxframe9a7c2-card-body,.qxframe9a7c2-card-content{min-width:0;padding:calc(var(--_qxframe9a7c2-card-padding) / 2) var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding)}
-.qxframe9a7c2-card>.qxframe9a7c2-card-body:first-child,.qxframe9a7c2-card>.qxframe9a7c2-card-content:first-child{padding-top:var(--_qxframe9a7c2-card-padding)}
-.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-body,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-content,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-body,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-content{padding-top:var(--_qxframe9a7c2-card-padding)}
+.qxframe9a7c2-card>.qxframe9a7c2-card-body:first-child,.qxframe9a7c2-card>.qxframe9a7c2-card-content:first-child,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-body,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-content,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-body,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-content{padding-top:var(--_qxframe9a7c2-card-padding)}
 .qxframe9a7c2-card-body.is-flush,.qxframe9a7c2-card-content.is-flush{padding:0}
 
-.qxframe9a7c2-card-body+.qxframe9a7c2-card-body,.qxframe9a7c2-card-content+.qxframe9a7c2-card-content,.qxframe9a7c2-card-body+.qxframe9a7c2-card-content,.qxframe9a7c2-card-content+.qxframe9a7c2-card-body{padding-top:0}
-.qxframe9a7c2-card-body+.qxframe9a7c2-card-header,.qxframe9a7c2-card-content+.qxframe9a7c2-card-header{padding-top:0}
+.qxframe9a7c2-card-body+.qxframe9a7c2-card-body,.qxframe9a7c2-card-content+.qxframe9a7c2-card-content,.qxframe9a7c2-card-body+.qxframe9a7c2-card-content,.qxframe9a7c2-card-content+.qxframe9a7c2-card-body,.qxframe9a7c2-card-body+.qxframe9a7c2-card-header,.qxframe9a7c2-card-content+.qxframe9a7c2-card-header{padding-top:0}
 .qxframe9a7c2-card-header+.qxframe9a7c2-card-footer{margin-top:calc(var(--_qxframe9a7c2-card-padding) / 2)}
 
 /* Lightweight sections avoid nesting full Card surfaces just to create hierarchy. */

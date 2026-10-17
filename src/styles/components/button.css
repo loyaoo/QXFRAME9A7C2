@@ -240,17 +240,7 @@
 }
 
 /* Optional elevation only. Real borders remain the edge owner. */
-.qxframe9a7c2-button.is-shadow{
-  --_qxframe9a7c2-button-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
-  --_qxframe9a7c2-button-hover-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
-  --_qxframe9a7c2-button-active-shadow:0 1px 1px 0 transparent;
-}
-.qxframe9a7c2-button.is-shadow.is-solid{
-  --_qxframe9a7c2-button-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
-  --_qxframe9a7c2-button-hover-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
-  --_qxframe9a7c2-button-active-shadow:0 1px 1px 0 transparent;
-}
-.qxframe9a7c2-button.is-shadow.is-dashed{
+.qxframe9a7c2-button.is-shadow,.qxframe9a7c2-button.is-shadow.is-solid,.qxframe9a7c2-button.is-shadow.is-dashed{
   --_qxframe9a7c2-button-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
   --_qxframe9a7c2-button-hover-shadow:0 1px var(--_qxframe9a7c2-fixed-button-shadow-blur) 0 transparent;
   --_qxframe9a7c2-button-active-shadow:0 1px 1px 0 transparent;
@@ -271,13 +261,7 @@
  * normal < native hover < .is-hover < .is-focus < focus-visible
  *        < native active < .is-active < .is-loading < disabled < .is-disabled
  */
-.qxframe9a7c2-button:hover{
-  --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-hover-bg);
-  --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-hover-border);
-  --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-hover-text);
-  --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-hover-shadow);
-}
-.qxframe9a7c2-button.is-hover{
+.qxframe9a7c2-button:hover,.qxframe9a7c2-button.is-hover{
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-hover-bg);
   --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-hover-border);
   --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-hover-text);
@@ -298,13 +282,7 @@
   outline-offset:var(--_qxframe9a7c2-focus-visible-offset);
   box-shadow:var(--_qxframe9a7c2-state-shadow),var(--qxframe9a7c2-theme-focus-shadow,none);
 }
-.qxframe9a7c2-button:active{
-  --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-active-bg);
-  --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-active-border);
-  --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-active-text);
-  --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-active-shadow);
-}
-.qxframe9a7c2-button.is-active{
+.qxframe9a7c2-button:active,.qxframe9a7c2-button.is-active{
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-active-bg);
   --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-active-border);
   --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-active-text);
@@ -317,14 +295,7 @@
   --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-shadow);
   --_qxframe9a7c2-state-cursor:wait;
 }
-.qxframe9a7c2-button:disabled{
-  --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-disabled-bg);
-  --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-disabled-border);
-  --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-disabled-text);
-  --_qxframe9a7c2-state-shadow:var(--_qxframe9a7c2-button-disabled-shadow);
-  --_qxframe9a7c2-state-cursor:not-allowed;
-}
-.qxframe9a7c2-button.is-disabled{
+.qxframe9a7c2-button:disabled,.qxframe9a7c2-button.is-disabled{
   --_qxframe9a7c2-state-bg:var(--_qxframe9a7c2-button-disabled-bg);
   --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-button-disabled-border);
   --_qxframe9a7c2-state-text:var(--_qxframe9a7c2-button-disabled-text);

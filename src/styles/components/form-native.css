@@ -336,8 +336,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 .qxframe9a7c2-native-form input[type="text"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="search"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="email"]:hover:not(:disabled):not([readonly]):not(:focus),
-.qxframe9a7c2-native-form input[type="password"]:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
-.qxframe9a7c2-native-form input[type="url"]:hover:not(:disabled):not([readonly]):not(:focus),
+.qxframe9a7c2-native-form input[type="password"]:hover:not(:disabled):not([readonly]):not(:focus),.qxframe9a7c2-native-form input[type="url"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="tel"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="number"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="date"]:hover:not(:disabled):not([readonly]):not(:focus),
@@ -345,8 +344,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 .qxframe9a7c2-native-form input[type="time"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="month"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="week"]:hover:not(:disabled):not([readonly]):not(:focus),
-.qxframe9a7c2-native-form select:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
-.qxframe9a7c2-native-form textarea:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
+.qxframe9a7c2-native-form select:hover:not(:disabled):not([readonly]):not(:focus),.qxframe9a7c2-native-form textarea:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
 .qxframe9a7c2-form-input:focus,
 .qxframe9a7c2-form-select:focus,
 .qxframe9a7c2-form-textarea:focus,
@@ -477,14 +475,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 }
 /* Source FieldLabel line-box is unchanged when the label is nested in a
  * sibling Flex row with an action, e.g. AccountAccess password / Forgot?. */
-.qxframe9a7c2-form-field.is-composed .qxframe9a7c2-form-label {
-  font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
-  line-height:var(--qxframe9a7c2-theme-field-label-line-height);
-  font-weight:var(--qxframe9a7c2-theme-text-weight-label);
-  text-transform:var(--qxframe9a7c2-theme-control-transform,none);
-  letter-spacing:var(--qxframe9a7c2-theme-field-label-tracking,normal)
-}
-.qxframe9a7c2-field-label {
+.qxframe9a7c2-form-field.is-composed .qxframe9a7c2-form-label,.qxframe9a7c2-field-label{
   font-size:min(var(--qxframe9a7c2-theme-text-size),var(--qxframe9a7c2-theme-control-font-size));
   line-height:var(--qxframe9a7c2-theme-field-label-line-height);
   font-weight:var(--qxframe9a7c2-theme-text-weight-label);

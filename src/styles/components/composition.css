@@ -362,10 +362,7 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input-group-field:focus-wi
   padding-inline-end:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }
 .qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon:not(:first-child),
-.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon:not(:first-child){
-  padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
-}
-.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon+.qxframe9a7c2-form-input,
+.qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon:not(:first-child),.qxframe9a7c2-input-group:not(.is-separated):not(.is-vertical)>.qxframe9a7c2-input-group-addon+.qxframe9a7c2-form-input,
 .qxframe9a7c2-input-group-field>.qxframe9a7c2-input-group-addon+.qxframe9a7c2-form-input{
   padding-inline-start:calc(var(--_qxframe9a7c2-control-padding-inline) / 2)
 }

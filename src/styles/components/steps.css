@@ -34,8 +34,7 @@ button.qxframe9a7c2-steps-main:focus-visible{border-radius:var(--_qxframe9a7c2-n
 .qxframe9a7c2-steps-item.is-process .qxframe9a7c2-steps-icon{border-color:var(--_qxframe9a7c2-steps-accent);background:var(--_qxframe9a7c2-steps-accent);color:var(--_qxframe9a7c2-semantic-on-accent)}
 .qxframe9a7c2-steps-item.is-error .qxframe9a7c2-steps-icon{border-color:var(--qxframe9a7c2-theme-destructive);color:var(--qxframe9a7c2-theme-destructive)}
 .qxframe9a7c2-steps-item.is-disabled{opacity:.55}
-.qxframe9a7c2-steps-item.is-disabled .qxframe9a7c2-steps-main{cursor:not-allowed}
-.qxframe9a7c2-steps.is-disabled{cursor:not-allowed}
+.qxframe9a7c2-steps-item.is-disabled .qxframe9a7c2-steps-main,.qxframe9a7c2-steps.is-disabled{cursor:not-allowed}
 .qxframe9a7c2-steps-status-icon{display:inline-flex;width:calc(var(--_qxframe9a7c2-steps-height) * .5);height:calc(var(--_qxframe9a7c2-steps-height) * .5);align-items:center;justify-content:center}
 .qxframe9a7c2-steps-status-icon.qxframe9a7c2-icon{--qxframe9a7c2-icon-size:calc(var(--_qxframe9a7c2-steps-height) * .5)}
 .qxframe9a7c2-steps-dot{box-sizing:border-box;width:calc(var(--_qxframe9a7c2-steps-height) * .3125);height:calc(var(--_qxframe9a7c2-steps-height) * .3125);border:var(--_qxframe9a7c2-fixed-steps-indicator-size) solid currentColor;border-radius:var(--qxframe9a7c2-steps-dot-radius,var(--qxframe9a7c2-theme-radius-item));background:var(--_qxframe9a7c2-steps-bg)}
