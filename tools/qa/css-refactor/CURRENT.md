@@ -21,4 +21,4 @@ Legacy `src/styles/main/theme-visual-v2-consumers.css` is deleted and its entire
 Correction: the extracted feedback-focus rules retain original @scope(:root), because unscoping created four duplicate owners and was rejected by QXFRAME CI. Still eliminates the versioned consumer module, partitions 10KB into two components, and preserves original cascade. Current exact-head triple gates required.
 
 
-Component appearance batch pending exact-head CI: old versioned style consumers moved in-place to components/component-appearance.css, and 14 private property names/21 dead declarations removed from main core CSS after conservative source/runtime text screening. Reference: tools/qa/css-refactor/APPEARANCE-PRIVATE-ROLES.md. No new @scope; one large versioned main file remains.
+Component appearance owner batch: historical last-stage 21-rule file moved in-place to components/component-appearance.css. Initial private-variable deletions were REJECTED by full CSSOM comparator and completely reverted; 14 names/21 definitions remain unchanged. 4 @scope wrappers remain; only the one core 81KB version-named file remains. Exact-head triple CI pending.
