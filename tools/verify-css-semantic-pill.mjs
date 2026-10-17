@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {SHAPE_POLICIES,SHAPE_FAMILIES,normalizeStyleConfig} from '../docs/assets/theme-generator/style-engine-v2.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const source=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+const source=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
 
 assert.deepEqual(SHAPE_POLICIES,['follow','intrinsic','square']);
 assert.deepEqual(SHAPE_FAMILIES,['choice','toggle','range','compact','identity']);

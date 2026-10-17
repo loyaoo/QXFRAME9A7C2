@@ -123,7 +123,7 @@ check('Theme controls shared list surface padding; JS inset paths are absent',()
 check('Stage5 Mist neutral roles, tinted shadows and independent Slider track/handle shape',()=>{
  const config=fs.readFileSync(path.join(root,'docs/create/data.js'),'utf8');
  const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
- const consumers=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const consumers=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.match(config,/key: 'sliderLook', param: 'slider', label: '滑轨粗细'/,'track thickness axis is unambiguously labeled');
  assert.match(config,/key: 'shapeThumb', param: 'shape-thumb', label: '滑块手柄形状'/,'handle shape is separately labeled');
  assert.match(config,/value: 'pill', label: '胶囊形'/,'explicit Slider handle pill shape option');
@@ -221,7 +221,7 @@ check('Stage5 QX-only public components consume Theme corner roles',()=>{
 });
 
 check('menu-inverted Picker descendants consume matched Menu surface roles',()=>{
-  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   const menuScope='qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container)';
   assert.ok(v2.includes(menuScope+':not(.qxframe9a7c2-tooltip-container)'),'Menu semantics exclude Tooltip surface');
   for(const role of ['semantic-text','semantic-text-secondary','semantic-text-disabled','semantic-text-placeholder',
@@ -285,7 +285,7 @@ check('font-mono and Alert radius consume registered Theme mapping',()=>{
 
 check('Stage5 P1 Menu subtle ink and Notice shape own closed Theme mappings',()=>{
  const compiler=read('compiler.js');
- const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const notice=fs.readFileSync(path.join(root,'src/styles/components/notice.css'),'utf8');
  const defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
  assert.ok(compiler.includes("target['menu-accent-foreground'] = resolved.menuAccent === 'bold' ? src['primary-foreground'] : src['popover-foreground']"),'subtle ink must be popover foreground');
@@ -436,7 +436,7 @@ check('real Focus outline and common Choice/Slider/Control Surface contracts',()
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const form=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const slider=fs.readFileSync(path.join(root,'src/styles/components/slider.css'),'utf8');
- const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.ok(compiler.includes("root['shadow-control'] = ext.controlShadow === 'off' ? '0 0 0 0 transparent' : SHADOWS.xs"),'normal shadow-control follows Theme Shadow axis');
  assert.ok(compiler.includes("root['pointer-shadow'] = ext.pointerFocus === 'ring'"),'only explicit halo owns focus shadow');
  assert.ok(!compiler.includes("ext.pointerFocus === 'outline'\n      ? '0 0 0"),'no shadow-simulated outline');
@@ -478,7 +478,7 @@ check('segmented Tabs use the pinned source dark active input/30 recipe', () => 
 });
 
 check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>{
-  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   assert.doesNotMatch(theme,/qxframe9a7c2-form-selectgroup/,'no retired form-selectgroup selectors in V2 mapping');
   assert.match(theme,/\.qxframe9a7c2-selectgroup-input:checked \+ \.qxframe9a7c2-selectgroup-label \.qxframe9a7c2-selectgroup-indicator\.is-radio/,'native SelectGroup radio owns checked V2 glyph');
   assert.match(theme,/\.qxframe9a7c2-selectgroup\.is-xs/,'SelectGroup inherits public Theme size mapping');
@@ -597,7 +597,7 @@ check('small Button typography consumes one source-mapped Theme token', () => {
   const compiler=fs.readFileSync(path.join(root,'docs/create/compiler.js'),'utf8');
   const tokens=fs.readFileSync(path.join(root,'docs/create/tokens.js'),'utf8');
   const component=fs.readFileSync(path.join(root,'src/styles/components/button.css'),'utf8');
-  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   assert.match(tokens,/L\('button-sm-font-size'/,'closed theme schema');
   const defaultTheme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
   assert.equal((defaultTheme.match(/--qxframe9a7c2-theme-button-sm-font-size:/g)||[]).length,1,'default Nova geometry has one invariant Theme owner');
@@ -778,7 +778,7 @@ check('Control Shadow and Card Shadow independently switch and round-trip withou
 
 
 check('inverted Popup ItemCollection and Select idle text use menu foreground',()=>{
- const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const css=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-collection\s*\{\s*color:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
  assert.match(css,/\.qxframe9a7c2-popup-surface \.qxframe9a7c2-item-surface\s*\{\s*--_qxframe9a7c2-item-text:\s*var\(--_qxframe9a7c2-popup-surface-text\)/);
  assert.match(css,/\.qxframe9a7c2-popup-surface:not\(\.qxframe9a7c2-popover-container\):not\(\.qxframe9a7c2-tooltip-container\) \.qxframe9a7c2-item-surface\.is-selected[^}]*theme-menu-accent-foreground/);
@@ -1327,7 +1327,7 @@ check('QX shape, Luma switch and shared layout contracts', () => {
   assert.match(lyraDefault, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/, 'source-locked Lyra circle remains by default');
   const explicit = model.compileTheme(model.normalizeConfig({ style: 'nova', radius: 'none', ext: { shapeRadio: 'circle' } })).body;
   assert.match(explicit, /--qxframe9a7c2-theme-radius-radio:\s*62\.5rem;/);
-  const button = file('src/styles/main/theme-visual-v2.css');
+  const button = [ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(file).join('\n');
   assert.doesNotMatch(button, /\.qxframe9a7c2-button\.is-square\s*\{\s*border-radius:\s*0;/);
   const radio = file('src/styles/components/choice-visual.css');
   assert.match(radio, /radio-dot-radius/);
@@ -1551,7 +1551,7 @@ check('Canonical public Theme Schema mirrors all live registry tokens, no histor
 
 check('Legacy v2 collision resolved through existing semantic owners, not a new recipe namespace',()=>{
   const full=fs.readFileSync(path.join(root,'dist/qxframe9a7c2.css'),'utf8');
-  const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const visual=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   for(const source of [full,visual]){
     assert.doesNotMatch(source,/--_qxframe9a7c2-(?:v[123]|recipe)-/,'no historic or recipe-prefixed private Theme Tokens');
   }
@@ -1583,7 +1583,7 @@ check('Legacy v2 collision resolved through existing semantic owners, not a new 
 });
 
 check('Family Popup surface tokens override generic palette without redundant direct paints',()=>{
- const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const visual=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.ok(!visual.includes('.qxframe9a7c2-popup-surface, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-popover-container {'),'never override the complete family surface');
  assert.ok(!visual.includes('.qxframe9a7c2-popover-root { --_qxframe9a7c2-popover-bg:'),'public Popover color retains its local owner');
  assert.ok(!visual.includes('--_qxframe9a7c2-popup-surface-bg: var(--_qxframe9a7c2-popup-bg)'),'generic surface background cannot override families');
@@ -1812,7 +1812,7 @@ check('Loading Card uses shared 8px Flex/Stack gap instead of preview-owned geom
 });
 
 check('multi-line Textarea does not inherit single-line Theme min-height', () => {
-  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   const shared=theme.slice(theme.indexOf('/* Controls and multi-line Textarea share typography'),theme.indexOf('  .qxframe9a7c2-input > .qxframe9a7c2-input-control',theme.indexOf('/* Controls and multi-line Textarea share typography')));
   assert.match(shared,/\.qxframe9a7c2-form-textarea\[class\]/);
   const typography=shared.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\],\s*\.qxframe9a7c2-form-textarea\[class\]\s*\{([^{}]+)\}/);
@@ -2005,7 +2005,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
   assert.match(button,/\.qxframe9a7c2-button\.is-solid\s*\{/);
   assert.match(button,/--_qxframe9a7c2-button-bg:var\(--_qxframe9a7c2-button-accent\)/);
   assert.match(button,/--_qxframe9a7c2-button-text:var\(--_qxframe9a7c2-button-on-accent\)/);
-  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   assert.match(v2,/\.qxframe9a7c2-button\.is-secondary\s*\{/,'v2 has secondary axis');
   assert.match(v2,/--_qxframe9a7c2-type: var\(--qxframe9a7c2-theme-secondary\)/);
   assert.match(v2,/\.qxframe9a7c2-button\.is-solid\s*\{/,'v2 solid consumes type');
@@ -2015,7 +2015,7 @@ check('pinned secondary Buttons and active segmented Tabs use shared Theme recip
 
 check('source pinned Badge roles mapped to QX semantic status-label instead of dead per-card paint',()=>{
   const html=read('preview-01.html');
-  const framework=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const framework=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   const cards=[['claimable-balance','is-outlined',1],['front-door','is-destructive',1],['release-catalog','is-outlined',4],
     ['upcoming-payments','is-secondary',3]];
   for(const [id,role,count] of cards){
@@ -2084,7 +2084,7 @@ check('Stage5 Table filter, Transfer and JSON follow shared Theme consumer contr
   assert.ok(table.includes('.qxframe9a7c2-table-filter-option:has(>input:disabled)'),'Table native disabled state does not require JS changes');
   assert.ok(runtime.includes("input.checked = filterDraftValues.some("),'original Table draft projection remains');
   assert.ok(transfer.includes('--_qxframe9a7c2-transfer-panel-border:var(--qxframe9a7c2-transfer-panel-border,'));
-  const v2=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const v2=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   assert.ok(v2.includes('.qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }'),'Transfer Theme paint must preserve public border and disabled text');
   assert.ok(transfer.includes('--_qxframe9a7c2-transfer-muted-text:var(--_qxframe9a7c2-semantic-text-disabled);color:var(--_qxframe9a7c2-semantic-text-disabled)'));
   for(const state of ['is-disabled','is-status-error','is-status-warning'])
@@ -2119,7 +2119,7 @@ check('CALENDAR-RANGE-VISUAL-001 shared Calendar owns two styling layers and CSS
  const source=fs.readFileSync(path.join(root,'src/components/calendar.js'),'utf8');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  const fixed=fs.readFileSync(path.join(root,'src/styles/main/fixed-values.css'),'utf8');
- const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const visual=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const authorized=fs.readFileSync(path.join(root,'tools/verify-js-build-matches-main.mjs'),'utf8');
  assert.match(source,/cell\.className='qxframe9a7c2-calendar-cell'/,'old button stays Calendar state/action owner');
  assert.match(source,/view\.className='qxframe9a7c2-calendar-cell-view'/,'view is style-only');
@@ -2150,7 +2150,7 @@ check('Stage5 calendar range strip zero gap and Menu body has no default paint',
 });
 check('Stage5 configured Mask Style defaults and Image Preview chroma are consistent',()=>{
  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
- const compiler=read('compiler.js'),v=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const compiler=read('compiler.js'),v=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const image=fs.readFileSync(path.join(root,'src/styles/components/image.css'),'utf8');
  const alpha=[...compiler.matchAll(/overlay:\s*(\d+), switchTrack/g)].map(m=>Number(m[1]));
  assert.equal(alpha.length,8,'eight Style mask defaults');
@@ -2164,7 +2164,7 @@ check('Stage5 configured Mask Style defaults and Image Preview chroma are consis
 check('Stage5 Alert and semantic Badge retain component paint',()=>{
  const alert=fs.readFileSync(path.join(root,'src/styles/components/alert.css'),'utf8');
  const badge=fs.readFileSync(path.join(root,'src/styles/components/badge.css'),'utf8');
- const visual=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const visual=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.ok(alert.includes('border:1px solid var(--_qxframe9a7c2-alert-border)'),'Alert surface border derives from one semantic Appearance owner');
  assert.ok(alert.includes('box-shadow:var(--qxframe9a7c2-alert-shadow,var(--_qxframe9a7c2-alert-shadow))'),'Alert supports opt-in shadow Appearance without a duplicated painter');
  assert.ok(!visual.includes('.qxframe9a7c2-alert-root { box-shadow: none; }'),'Alert shadow may not be disabled downstream');
@@ -2227,7 +2227,7 @@ check('CALENDAR-WHEEL-GEOMETRY-001 7-row Wheel and one Calendar dimension owner'
  assert.ok(build.includes("'src/components/date-picker.js'"),'intentional DatePicker geometry source difference is explicitly audited');
 });
 check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles',()=>{
- const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const css=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
  assert.ok(picker.includes('.qxframe9a7c2-color-panel-format,.qxframe9a7c2-color-panel-eye,.qxframe9a7c2-color-panel-input{box-sizing:border-box;'),'ColorPanel source must paint all three fields together');
  assert.ok(picker.includes('appearance:none;border:0;border-radius:var(--_qxframe9a7c2-slider-rail-radius,'),'native ColorPanel range outer box must respect Theme Slider track radius, including radius none');
@@ -2250,7 +2250,7 @@ check('Stage5 Tree, Cascader, wheel and ColorPanel use paired popup Theme roles'
 });
 
 check('Stage5 popup state color pairs are explicit source consumers',()=>{
- const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const css=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  for(const marker of [
    '.qxframe9a7c2-date-panel-nav:hover:not(:disabled)',
    'background: var(--_qxframe9a7c2-menu-selected-soft)',
@@ -2289,7 +2289,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
  const compiler=read('compiler.js');
  const native=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
  const cascader=fs.readFileSync(path.join(root,'src/components/cascader.js'),'utf8');
- const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  for(const expr of ["outline: { bg: ['transparent', 'transparent']", "tinted: { bg: ['input/35', 'input/35']", "subtle: { bg: ['input/12', 'input/12']"])assert.ok(compiler.includes(expr),'Input background skin '+expr);
  assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'Menu subtle/bold uses existing accent channel');
  assert.ok(native.includes('--_qxframe9a7c2-compound-item-inset:var(--_qxframe9a7c2-fixed-space-2)}'),'hosted Tag chip inset must be independent of outer Input shell padding and match Select chips');
@@ -2323,7 +2323,7 @@ check('Stage5 Input appearance, Menu open and Cascader scroll ownership',()=>{
 
 
 check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
-  const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+  const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
   const compiler=read('compiler.js'),defaults=fs.readFileSync(path.join(root,'src/styles/main/theme.css'),'utf8');
   assert.ok(compiler.includes('const menuSource = palette;'),'Menu tokens retain normal source; CSS-only popup selector chooses opposite full Theme');
   assert.ok(compiler.includes("resolved.menuAccent === 'bold' ? src.primary : alpha(src.primary, 28)"),'subtle selected color gets sufficient contrast');
@@ -2334,7 +2334,7 @@ check('Stage5 owner screenshot dark-inverse Menu contrast roles',()=>{
   assert.ok(theme.includes('--_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%'),'Scroll thumb reads Menu foreground');
   const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
   assert.ok(picker.includes('border-block:1px solid var(--qxframe9a7c2-theme-menu-accent);background:var(--qxframe9a7c2-theme-menu-accent)'),'Single canonical WheelPanel guide paints Menu accent in both bold and subtle modes');
-  assert.ok(fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8').includes('--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)'),'Menu passive separators share the actual Control field border');
+  assert.ok([ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n').includes('--_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border)'),'Menu passive separators share the actual Control field border');
   assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'No second context-specific guide painter');
 });
 check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal behavior',()=>{
@@ -2352,7 +2352,7 @@ check('Stage5 screenshot Cascader inset, radius-item consumers and Tabs/Modal be
   assert.ok(modal.includes('recentPointer.time <= 2500')&&modal.includes('focusedRect.width > 0 && focusedRect.height > 0'),'Modal delayed click/focused trigger origin');
 });
 check('Stage5 Menu Primary, ColorPanel focus and native TreeSelect projection are unified',()=>{
- const css=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const css=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  assert.ok(css.includes('oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1)'),'Picker derives opaque Menu Primary without new Theme inputs');
  assert.ok(css.includes('background: var(--_qxframe9a7c2-menu-primary-solid);'),'Today retains hue from Menu Primary');
  const picker=fs.readFileSync(path.join(root,'src/styles/components/picker-family.css'),'utf8');
@@ -2374,7 +2374,7 @@ check('Stage5 WheelPanel selection/dividers and Preview03 overview Cards have on
  assert.ok(runtime.includes('container: scrollMount,'),'Wheel Scroll is mounted in the same parent as its guide');
  assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-scroll>.qxframe9a7c2-scroll{z-index:var(--qxframe9a7c2-z-local-above)}'),'Scroll receives a local layer above guide, without 999 or a global Scroll override');
  assert.ok(picker.includes('.qxframe9a7c2-wheel-panel-center-guide{box-sizing:border-box;position:absolute;z-index:var(--qxframe9a7c2-z-local-raised)'),'Guide includes border within its 32px box and stays under scroll content');
- const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const html=read('preview-03.html'),css=read('preview-03.css');
  assert.match(picker,/\.qxframe9a7c2-wheel-panel-center-guide\{[^}]*border-block:1px solid var\(--qxframe9a7c2-theme-menu-accent\);background:var\(--qxframe9a7c2-theme-menu-accent\)/,'WheelPanel owns bold/subtle guide');
  assert.doesNotMatch(theme,/\.qxframe9a7c2-picker-field-panel \.qxframe9a7c2-wheel-panel-center-guide/,'TimePicker/Picker cannot repaint WheelPanel guide');
@@ -2422,7 +2422,7 @@ check('Stage5 Tree uses official main API, not experimental edits or paging',()=
  assert.ok(qa.includes('3000')&&qa.includes('virtual:true'),'official Tree still stresses 3000 nodes');
 });
 check('Stage5 TreeSelect state remains native, Picker visual projection uses Menu roles',()=>{
- const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
+ const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
  const choice=fs.readFileSync(path.join(root,'src/styles/components/choice-visual.css'),'utf8');
  const tree=fs.readFileSync(path.join(root,'src/styles/components/tree.css'),'utf8');
  const select=fs.readFileSync(path.join(root,'src/components/tree-select.js'),'utf8');

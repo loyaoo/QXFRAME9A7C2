@@ -7,6 +7,13 @@ const ownRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 export const CANONICAL_STYLE_ENTRY='tools/manifests/css-order.json';
 const SCHEMA1_EXCLUDED_THEME_CONSUMERS=Object.freeze([
   'src/styles/main/theme-visual-v2.css',
+  'src/styles/components/semantic-status-modifiers.css',
+  'src/styles/components/feedback-theme-states.css',
+  'src/styles/components/data-control-states.css',
+  'src/styles/components/input-action-states.css',
+  'src/styles/components/overlay-picker-states.css',
+  'src/styles/components/menu-selection-states.css',
+  'src/styles/components/component-sizing.css',
   'src/styles/components/focus-feedback.css',
   'src/styles/components/control-interaction.css',
   'src/styles/main/semantic-inputs.css',

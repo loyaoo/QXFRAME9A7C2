@@ -3,13 +3,13 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {browserProbes} from './audit-css-schema-acceptance.mjs';
-import {verifySemanticRuleSource,V2_STYLE_MODULE} from './theme-v2-contract.mjs';
+import {verifySemanticRuleSource,V2_STYLE_MODULE,readSemanticRuleSource} from './theme-v2-contract.mjs';
 import {THEME_TOKENS} from '../docs/create/tokens.js';
 const CORE_ROLES=THEME_TOKENS.filter(token=>token.kind==='color').map(token=>token.name);
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const verified=verifySemanticRuleSource(root);
-const source=fs.readFileSync(path.join(root,V2_STYLE_MODULE),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
+const source=readSemanticRuleSource(root).replace(/\/\*[\s\S]*?\*\//g,'');
 
 // v1.5 has one public full-color Theme. There is no Schema1 static palette
 // mirror and no RGB-channel fallback table to preserve.

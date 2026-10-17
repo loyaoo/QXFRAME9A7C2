@@ -1,0 +1,25 @@
+
+  /* Default Badge is a neutral status label; explicit is-* colors still win. */
+  .qxframe9a7c2-badge { --_qxframe9a7c2-default-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-default-foreground: var(--qxframe9a7c2-theme-background); }
+  .qxframe9a7c2-tag.is-colored, .qxframe9a7c2-tag.is-processing,
+  .qxframe9a7c2-badge.is-filled { background-color: var(--_qxframe9a7c2-soft); color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag { background-color: transparent; color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
+  /* Outline Badge is a static label: a visible border, never a hoverable action. */
+  .qxframe9a7c2-badge.is-outlined, .qxframe9a7c2-badge.is-outline { background-color: transparent; color: var(--_qxframe9a7c2-badge-text); border:1px solid var(--qxframe9a7c2-theme-border); }
+  .qxframe9a7c2-tag.is-colored:hover, .qxframe9a7c2-tag.is-colored.is-hover { background-color: color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent); }
+  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag:hover { background-color: var(--_qxframe9a7c2-solid-hover); }
+  .qxframe9a7c2-tags.is-variant-outlined .qxframe9a7c2-tag:hover { background-color: var(--qxframe9a7c2-theme-muted); color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-tag.is-disabled, .qxframe9a7c2-tags.is-disabled .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-disabled { background-color: var(--qxframe9a7c2-theme-secondary); color: var(--qxframe9a7c2-theme-secondary-foreground); opacity: .5; }
+
+  .qxframe9a7c2-tag.is-processing { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+
+  /* Alert owns its Appearance/semantic paint in components/alert.css.
+     This layer only maps Notification; no later Alert background override. */
+  .qxframe9a7c2-notification {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
+    border-color: var(--qxframe9a7c2-theme-border);
+  }
+  .qxframe9a7c2-alert-root.is-default { color: var(--qxframe9a7c2-theme-card-foreground); }
+  .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
+  .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
+  .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }

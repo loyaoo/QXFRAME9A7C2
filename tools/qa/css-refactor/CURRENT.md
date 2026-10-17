@@ -49,3 +49,7 @@ Real scoped rules 34→30 via edits in existing Card/Switch/native-input compone
 
 
 Owner correction: Card Grid Hover public --qxframe9a7c2-card-shadow override must be preserved. Restored original component rule and B0 scoped hover winner; real scoped core 30→31. Current batch valid owner changes are CardTitle, SwitchThumb, Input; exact-head CI must accept before signoff.
+
+
+## Seven component-family modules (exact-head CI pending)
+153 plain consumer rules (54,358 B) have been extracted byte-for-byte from legacy theme-visual-v2.css to seven late component-domain CSS modules. The legacy core now contains 31 scoped rules and root tokens, at 24,856 B. Rule order preserved and canonical source readers updated. See SEMANTIC-CONSUMER-PARTITION.md. No extra @scope; PR remains Draft.

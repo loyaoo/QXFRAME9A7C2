@@ -1,0 +1,28 @@
+
+
+
+/* Root-scope-independent component consumers: 153 B0/CSSOM-reviewed rules. */
+
+  .qxframe9a7c2-tags .qxframe9a7c2-tag { --_qxframe9a7c2-type: inherit; --_qxframe9a7c2-type-foreground: inherit; }
+  [class*="qxframe9a7c2-"].is-success { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground); }
+  [class*="qxframe9a7c2-"].is-warning { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground); }
+  [class*="qxframe9a7c2-"].is-error { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+  [class*="qxframe9a7c2-"].is-info { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground); }
+  [class*="qxframe9a7c2-"].is-secondary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-secondary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-secondary-foreground); }
+  [class*="qxframe9a7c2-"].is-danger, [class*="qxframe9a7c2-"].is-exception { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground); }
+
+  [class*="qxframe9a7c2-"].is-primary { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-primary); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-primary-foreground); }
+  [class*="qxframe9a7c2-"].is-grey, [class*="qxframe9a7c2-"].is-gray { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-grey); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-cyan { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-cyan); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-teal { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-teal); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-green { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-green); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-lime { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-lime); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-yellow { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-yellow); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-orange { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-orange); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-red { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-red); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-pink { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-pink); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-purple { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-purple); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-blue { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-blue); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-azure { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-azure); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-white { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-white); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }
+  [class*="qxframe9a7c2-"].is-black { --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-palette-black); --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-palette-foreground); }

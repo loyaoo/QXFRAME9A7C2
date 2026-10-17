@@ -11,7 +11,7 @@ export const GEOMETRY_TOKENS=['control-height','control-padding','control-gap','
 const STYLES=['vega','nova','maia','lyra','mira','luma','sera','rhea'];
 
 export async function verifyGeometryRuleSource(root,{sourceText=null}={}){
-  const source=(sourceText??fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=(sourceText??[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n')).replace(/\/\*[\s\S]*?\*\//g,'');
   for(const match of source.matchAll(/(-?\d*\.?\d+)(rem|px)\b/g)){
     const px=Math.abs(Number(match[1]))*(match[2]==='rem'?16:1);
     assert.ok(px===1||Number.isInteger(px/2),'geometry must use even reference lengths or 1px borders: '+match[0]);

@@ -4,8 +4,10 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 
 export const V2_STYLE_MODULE = 'src/styles/main/theme-visual-v2.css';
+export const SEMANTIC_RULE_MODULES=Object.freeze([ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ]);
+export function readSemanticRuleSource(root){return SEMANTIC_RULE_MODULES.map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');}
 export function verifySemanticRuleSource(root,{sourceText=null}={}){
-  const source=(sourceText??fs.readFileSync(path.join(root,V2_STYLE_MODULE),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=(sourceText??readSemanticRuleSource(root)).replace(/\/\*[\s\S]*?\*\//g,'');
   const fixture=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/theme-v2/shadcn-source.json'),'utf8'));
   assert.equal(fixture.sha,'295a1f114a138f23b5dfee0e0c6812394dfeb90c');
   assert.match(fixture.bases.button.class,/disabled:opacity-50/);
