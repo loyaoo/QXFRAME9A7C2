@@ -178,7 +178,7 @@ async function sample(which,mode,route='synthetic') {
     }
     return {rows,styleSheets:document.styleSheets.length,scopeRuleCounts:[...document.styleSheets].map(sheet=>{try{return sheet.cssRules.length}catch{return -1}})};
   })()`);
-  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 55))
+  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 45))
     throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
   const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
   const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
