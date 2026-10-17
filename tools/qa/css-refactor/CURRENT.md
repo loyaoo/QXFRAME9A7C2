@@ -25,3 +25,6 @@ Component appearance owner batch: historical last-stage 21-rule file moved in-pl
 
 ## Partial @scope retirement at component-appearance owner
 14/21 qualified rules lifted to plain CSS; 7 priority-sensitive rules remain in the same original root scope. No additional scope blocks; no duplicate-owner ratchet increase. Exact-head three CIs required. CDP fs.rmSync now retries ENOTEMPTY during cleanup instead of terminating successful comparisons. Detailed proof: tools/qa/css-refactor/APPEARANCE-SCOPE-14.md.
+
+## 49-rule scoped-core migration (pending exact-head CI)
+Core theme-v2 main file: scoped rules 200 → 151; 49 plain component state/geometry rules moved to the tail of the same file with selector/declaration multiset preserved. New duplicates: 0; local accepted-head Chromium geometry: 0 differences (448 Light, 890 Dark); source contract B0-approved selector hash pinned. R5/R6 overall remain pending; no new component file or historical alias introduced.
