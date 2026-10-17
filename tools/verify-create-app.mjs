@@ -1815,10 +1815,17 @@ check('multi-line Textarea does not inherit single-line Theme min-height', () =>
   const theme=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2.css'),'utf8');
   const shared=theme.slice(theme.indexOf('/* Controls and multi-line Textarea share typography'),theme.indexOf('  .qxframe9a7c2-input > .qxframe9a7c2-input-control',theme.indexOf('/* Controls and multi-line Textarea share typography')));
   assert.match(shared,/\.qxframe9a7c2-form-textarea\[class\]/);
-  const groups=[...shared.matchAll(/\{([^{}]+)\}/g)].map(x=>x[1]);
-  assert.ok(groups.length>=2,'separate multiline typography and singleline height rules');
-  assert.doesNotMatch(groups[0],/min-height/,'Textareas must never be clamped by Control min-height');
-  assert.match(groups[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
+  const typography=shared.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\],\s*\.qxframe9a7c2-form-textarea\[class\]\s*\{([^{}]+)\}/);
+  assert.ok(typography,'Textarea and single-line controls must keep a shared typography owner');
+  assert.doesNotMatch(typography[1],/min-height/,'Textareas must never be clamped by Control min-height');
+  // The size/height owner is allowed to precede the typography owner now
+  // that scoped core rules are sorted into their actual cascade contexts.
+  // Locate it by the COMPLETE single-line selector group and enforce that
+  // Textarea is excluded rather than relying on adjacent source blocks.
+  const singleLine=theme.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{([^{}]+)\}/);
+  assert.ok(singleLine,'single-line controls require a unique theme-height owner');
+  assert.match(singleLine[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
+  assert.doesNotMatch(singleLine[0],/\.qxframe9a7c2-form-textarea/,'Textarea must not inherit the single-line height owner');
   const forms=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
   assert.match(forms,/\.qxframe9a7c2-form-textarea,\.qxframe9a7c2-native-form textarea\{min-height:5rem/);
 });

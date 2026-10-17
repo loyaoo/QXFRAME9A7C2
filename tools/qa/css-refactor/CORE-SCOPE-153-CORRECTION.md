@@ -21,3 +21,6 @@
 - Must pass **QXFRAME, CSS Schema and Fast Chromium** on the new exact SHA; earlier failed HEAD is explicitly rejected.
 - No Theme/public Token/JS/DOM changes, no relaxed CSSOM or screenshot gate, no main/B0 or PR merge.
 - Full CreateApp 112-case browser matrix, Portal, and Stage5 A01–A06 user signoff still open. R5/R6 overall not closed.
+
+## Full QXFRAME structural test correction
+QXFRAME #39031534039 found an old CreateApp test assumed the shared multiline typography selector group was immediately followed by the single-line height group in source order. B0 scoped+unscoped partition changes the order without removing either rule. The test now independently matches the exact shared typography owner (requiring **no min-height**) and the exact single-line Button/Input/FormInput/FormSelect owner (requiring **min-height: var(--_qxframe9a7c2-control-height)** and excluding Textarea). This does not relax the height requirement; Card real 32px regression was independently fixed by restoring B0 #177/#183 to scope, and the strict Chromium computed+pixel gate remains.
