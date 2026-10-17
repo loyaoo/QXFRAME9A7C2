@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-17 Stage5 SURFACE-SHADOW-REAL-MIST-CONFIG-001 (CI pending)
+- Corrected new Chromium Surface Shadow matrix to use real `baseColor:'mist'`, not ignored `base:'mist'`. The 8 Styles x light/dark x none/heavy matrix now explicitly tests the owner's Mist base. Production CSS unchanged by this follow-up. Latest HEAD requires its own double green CI and exact-tree artifact. PR Draft; main unchanged.
+
 ## CURRENT — 2026-10-17 Stage5 SURFACE-ELEVATION-CONSUMERS-001 (CI pending)
 - Verified new work baseline HEAD `15e8b7e197a1f107f350af970564aaa5d2739732`; PR #267 Draft/Open, QXFRAME #38987328662 and CSS Schema #38987328669 both success. Main untouched.
 - Focused remaining real Theme-token gaps rather than redoing completed Mist, Focus, Slider or Modal work. In Card Grid hover, removed independently hardcoded black elevation and used the existing Card public override → Theme shadow-card chain. In Table `is-shadow`, removed independently hardcoded elevation and used its existing public override → Theme shadow-card chain.
