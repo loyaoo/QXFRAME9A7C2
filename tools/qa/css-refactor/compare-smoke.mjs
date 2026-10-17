@@ -42,6 +42,27 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
 <div id="local-dark" class="dark"><button id="nested-button" class="qxframe9a7c2-button">Nested dark</button></div>
 <div id="public-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-button-radius:0">
 <div id="override-card" class="qxframe9a7c2-card">Local public override</div></div>
+<div id="card-sizes">
+  <div id="card-xs" class="qxframe9a7c2-card is-xs"><div class="qxframe9a7c2-card-header"><h3 class="qxframe9a7c2-card-title">XS</h3></div><div class="qxframe9a7c2-card-description">Small description</div></div>
+  <div id="card-sm" class="qxframe9a7c2-card is-sm"><div class="qxframe9a7c2-card-body">Small</div></div>
+  <div id="card-md" class="qxframe9a7c2-card is-md"><div class="qxframe9a7c2-card-body">Medium</div></div>
+  <div id="card-lg" class="qxframe9a7c2-card is-lg"><div class="qxframe9a7c2-card-body">Large</div></div>
+  <div id="card-xl" class="qxframe9a7c2-card is-xl"><div class="qxframe9a7c2-card-body">Extra large</div></div>
+</div>
+<div id="card-state-matrix">
+  <div id="card-outlined" class="qxframe9a7c2-card is-outlined"><div class="qxframe9a7c2-card-title">Outline</div></div>
+  <div id="card-elevated" class="qxframe9a7c2-card is-elevated">Elevated</div>
+  <div id="card-selected" class="qxframe9a7c2-card is-selected">Selected</div>
+  <div id="card-loading" class="qxframe9a7c2-card is-loading is-hoverable">Loading + hoverable</div>
+  <div id="card-hover" class="qxframe9a7c2-card is-hoverable is-hover-shadow">Hoverable</div>
+  <div id="card-divided" class="qxframe9a7c2-card is-divided"><div class="qxframe9a7c2-card-header">Divided</div><div class="qxframe9a7c2-card-content">Content</div><div class="qxframe9a7c2-card-footer">Footer</div></div>
+  <div id="card-grid" class="qxframe9a7c2-card"><div class="qxframe9a7c2-card-grid"><div class="qxframe9a7c2-card-grid-item">Cell 1</div><div class="qxframe9a7c2-card-grid-item">Cell 2</div></div></div>
+</div>
+<div id="card-ancestor-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-card-padding:1.25rem;--qxframe9a7c2-card-border-color:rgb(123,45,67)">
+  <div id="card-inherited" class="qxframe9a7c2-card is-sm"><h3 class="qxframe9a7c2-card-title">Ancestor override</h3><div class="qxframe9a7c2-card-description">Description</div></div>
+  <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
+</div>
+<div id="card-dark-nested" class="dark"><div id="card-nested-dark" class="qxframe9a7c2-card is-xs">Nested scheme card</div></div>
 </section></body></html>`;
 
 const server = http.createServer((req, res) => {
@@ -157,7 +178,7 @@ async function sample(which,mode,route='synthetic') {
     }
     return {rows,styleSheets:document.styleSheets.length,scopeRuleCounts:[...document.styleSheets].map(sheet=>{try{return sheet.cssRules.length}catch{return -1}})};
   })()`);
-  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 10))
+  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 55))
     throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
   const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
   const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
@@ -180,7 +201,7 @@ function compare(a,b,label) {
   if (a.snapshot.rows.length!==b.snapshot.rows.length) out.push({label,reason:'element-count',baseline:a.snapshot.rows.length,candidate:b.snapshot.rows.length});
   return out;
 }
-const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML, native docs Theme state API, deterministic WAAPI t=0 sampling and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Card docs screenshot/DOM baseline is an L1 sentinel, not a full 112-config, interaction, overlay or portal acceptance.']};
+const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML, native docs Theme state API, deterministic WAAPI t=0 sampling and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Expanded synthetic fixture covers Card size xs–xl, states, public ancestor/root overrides and local dark, but is not a replacement for pointer-hover/keyboard/112-config/portal acceptance.']};
 try {
   if (!bin) throw new Error('Chromium is required; set CHROMIUM_BIN');
   child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
