@@ -1,0 +1,88 @@
+{
+  "task": "CSS-READABILITY-TOKEN-CONSOLIDATION-001",
+  "status": "preliminary static-source inventory; R1-03 NOT accepted",
+  "baseline_commit": "62d9a8402c19460ced37265acc6d110ae2cfda76",
+  "source": "Official baseline Actions artifact #12091345100, dist/qxframe9a7c2.css, parsed with tinycss2; source file ownership inferred from compiler begin/end markers. Not a source AST+JS/API audit.",
+  "computed": {
+    "dist_css_utf8_characters": 1105811,
+    "dist_css_bytes": 1114613,
+    "theme_token_names_in_dist": 220,
+    "top_level_css_rules": 3201,
+    "top_level_at_rule_counts": {
+      "media": 36,
+      "keyframes": 22,
+      "scope": 5,
+      "supports": 4,
+      "container": 3,
+      "font-face": 1
+    },
+    "production_scope_nodes": 5,
+    "scope_markers_in_comments_not_actual_at_rules": 2,
+    "layer_at_rules": 0
+  },
+  "scope_inventory": [
+    {
+      "module": "src/styles/main/theme-visual-v2.css",
+      "top_level_scope_count": 1,
+      "scope_root": "(:root)",
+      "scope_inner_rule_nodes": 200,
+      "module_dist_text_characters": 81458,
+      "example_selectors": [
+        "*",
+        ".qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge",
+        "[class*=\"qxframe9a7c2-\"][class]"
+      ],
+      "risk": "Highest-risk shared semantic injector; includes wildcard and artificially increased specificity; must map each role, local variable resolution, public override and closest-scope winner before moving",
+      "decision": "pending"
+    },
+    {
+      "module": "src/styles/main/theme-visual-v2-consumers.css",
+      "top_level_scope_count": 2,
+      "scope_root": "(:root)",
+      "scope_inner_rule_nodes": [
+        8,
+        2
+      ],
+      "module_dist_text_characters": 10147,
+      "example_selectors": [
+        "*",
+        "html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-form-input:focus-visible",
+        ".qxframe9a7c2-input:hover:not(:focus-within)"
+      ],
+      "risk": "State winners, hover/focus collisions and CSS origin; test pre-existing source bugs separately",
+      "decision": "pending"
+    },
+    {
+      "module": "src/styles/main/theme-visual-v2-style.css",
+      "top_level_scope_count": 1,
+      "scope_root": "(:root)",
+      "scope_inner_rule_nodes": 1,
+      "module_dist_text_characters": 2413,
+      "example_selectors": [
+        ":scope,.dark"
+      ],
+      "risk": "Theme context materialization at :root and .dark; cannot blindly hoist per-element resolved vars",
+      "decision": "pending"
+    },
+    {
+      "module": "src/styles/main/theme-visual-v2-style-consumers.css",
+      "top_level_scope_count": 1,
+      "scope_root": "(:root)",
+      "scope_inner_rule_nodes": 21,
+      "module_dist_text_characters": 12947,
+      "example_selectors": [
+        ".qxframe9a7c2-button[class],.qxframe9a7c2-input[class]",
+        ".qxframe9a7c2-input:focus-within"
+      ],
+      "risk": "Scoped component focus, disabled and dynamic consumption; [class] specificity cannot be copied as a compensating hack",
+      "decision": "pending"
+    }
+  ],
+  "notes": [
+    "Top-level parser found five real @scope blocks. Grep reported seven textual occurrences because two reside inside CSS comments (composition.css). Use AST, not grep alone.",
+    "Zero @layer reported for the pinned built CSS, not a statement about every unbuilt fixture.",
+    "Public Theme name count is evidence of names present in CSS, not a complete register/value freeze test.",
+    "A CSS child rule count includes nested at-rule wrappers; selector owners, local cascade layer, pseudo, public overrides and JS dynamic consumer locations remain unknown.",
+    "Do not mark R1 accepted or delete any scope yet. First establish verified self-self runtime and negative comparator, then source/DOM/JS inventories."
+  ]
+}
