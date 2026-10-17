@@ -25,7 +25,7 @@ if (b0Digest !== expected) throw new Error('B0 CSS bytes do not match exact-tree
 const css = {
   baseline,
   candidate,
-  mutant: baseline + '\nhtml,body { background-color: rgb(13, 79, 211) !important; }\n'
+  mutant: baseline + '\nhtml,body { background-color: rgb(13, 79, 211) !important; } .qxframe9a7c2-card { background-color: rgb(13, 79, 211) !important; box-shadow: 0 0 0 30px rgb(13, 79, 211) !important; }\n'
 };
 const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'dark':''}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -122,8 +122,9 @@ async function sample(which,mode,route='synthetic') {
   // This is a deterministic snapshot mode, NOT motion playback acceptance.
   const animationEvidence=await evalJs(`(() => {
     const all=document.getAnimations({subtree:true});
-    const initial=all.map(a=>({id:a.id,effect:a.effect?.getKeyframes()?.length ?? 0,
-      name:a.effect?.target?.className?.toString?.()||'',state:a.playState}));
+    const initial={running:all.filter(a=>a.playState==='running').length,
+      skeleton:all.filter(a=>a.effect?.target?.classList?.contains('qxframe9a7c2-card-skeleton-line')).length,
+      withKeyframes:all.filter(a=>Array.isArray(a.effect?.getKeyframes?.()) && a.effect.getKeyframes().length>0).length};
     for(const a of all){a.pause();a.currentTime=0;}
     return {count:all.length,initial};
   })()`);
