@@ -59,6 +59,8 @@ jobs:
           set -euo pipefail
           node tools/verify-css-grid-card-meta.mjs
           node tools/verify-css-grid-lowrisk-closeout-4.mjs
+          node tools/verify-css-grid-final-closeout.mjs
+          node tools/verify-css-viewport-fixed-roots.mjs
       - name: Real Chromium B0 self/mutant/Card and candidate
         run: |
           set -euo pipefail

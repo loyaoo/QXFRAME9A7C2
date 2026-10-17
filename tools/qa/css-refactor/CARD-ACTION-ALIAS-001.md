@@ -21,3 +21,5 @@
 - Previous full QXFRAME CI `39014588863` failed due that legacy textual regex. Until new HEAD completes, batch status stays pending.
 
 - QXFRAME #39014835846 rejected the old `verify-css-grid-card-meta.mjs` pair of literal same-selector rule shapes, despite Chromium #39014835865 showing 0 visual/computed differences. Replace with one-rule property invariants (Flex, align stretch, row) and preserve existing narrow-screen media test. Both Card structural regressions now preflight in independent Fast CI.
+
+- QXFRAME #39015126173 next reached `verify-css-grid-final-closeout.mjs` and failed a third historical split-rule literal. The replacement asserts Flex, stretch, and row values on the actual Horizontal Card declaration; it preserves the grid/fr closure assertions. Also frontloads CSS final closeout and viewport constraints into fast CI. The previous tests' behaviors are retained.
