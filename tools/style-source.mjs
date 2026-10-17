@@ -5,10 +5,10 @@ import { fileURLToPath } from 'node:url';
 const ownRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
 export const CANONICAL_STYLE_ENTRY='tools/manifests/css-order.json';
-const V2_STYLE_MODULES=Object.freeze([
+const SCHEMA1_EXCLUDED_THEME_CONSUMERS=Object.freeze([
   'src/styles/main/theme-visual-v2.css',
   'src/styles/main/theme-visual-v2-consumers.css',
-  'src/styles/main/theme-visual-v2-style.css',
+  'src/styles/main/semantic-inputs.css',
   'src/styles/main/theme-visual-v2-style-consumers.css'
 ]);
 
@@ -26,7 +26,7 @@ export function getCanonicalStyleModulePaths({root=ownRoot}={}){
 
 export function readCanonicalStyleSource({root=ownRoot,schema=null}={}){
   return getCanonicalStyleModulePaths({root})
-    .filter(rel=>schema!==1||!V2_STYLE_MODULES.includes(rel))
+    .filter(rel=>schema!==1||!SCHEMA1_EXCLUDED_THEME_CONSUMERS.includes(rel))
     .map(rel=>fs.readFileSync(path.join(root,rel),'utf8'))
     .join('');
 }

@@ -16,7 +16,7 @@
       "components/motion": 10,
       "main/fixed-values": 292,
       "main/foundation": 12,
-      "main/theme-visual-v2-style": 26
+      "main/semantic-inputs": 26
     },
     "hardcoded-color": {
       "components/badge": 1,
