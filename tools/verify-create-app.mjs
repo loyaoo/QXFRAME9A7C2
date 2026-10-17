@@ -15,6 +15,20 @@ const check = (name, fn) => { fn(); checks.push(name); };
 
 const FILES = ['index.html', 'app.css', 'app.js', 'model.js', 'data.js', 'themes.js', 'preview-01.html', 'preview-02.html', 'preview-03.html', 'preview-03.css', 'preview-03.js', 'preview-03-extra.js', 'preview-03-coverage.json', 'preview.css', 'preview.js', 'preview-cards.js'];
 
+check('Opaque independent mouse/keyboard Focus saturation and soft halo geometry',()=>{
+ const data=read('data.js'),compiler=read('compiler.js');
+ for(const [key,param] of [['keyboardFocusSaturation','kfocus-saturation'],['pointerFocusSaturation','pfocus-saturation']]){
+  assert.match(data,new RegExp("key: '"+key+"', param: '"+param+"'"),key+' gets an independent URL/Theme axis');
+  assert.match(data,new RegExp("key: '"+key+"'[^\\n]*options: \\[[\\s\\S]*?value: 'light'[\\s\\S]*?value: 'normal'[\\s\\S]*?value: 'deep'"),key+' has shallow, normal and deep opaque options');
+ }
+ assert.match(compiler,/focusTone\('focus', ext\.keyboardFocusSaturation\)/,'keyboard Focus color is toned independently');
+ assert.match(compiler,/focusTone\('pointer-focus', ext\.pointerFocusSaturation\)/,'pointer Focus color is toned independently');
+ assert.match(compiler,/target\[name\] = `oklch\(/,'saturated Focus output is a literal opaque OKLCH color');
+ assert.doesNotMatch(compiler.match(/const focusTone = \(name, strength\) => \{[\s\S]*?\n  \};/)[0],/transparent|\/ [^)]/,'tonal saturation never changes alpha');
+ for(const name of ['focus','pointer-focus']){
+  assert.ok(compiler.includes("'0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-"+name+") 20%,transparent)'"),'halo '+name+' is blurred, soft and 20%-alpha');
+ }
+});
 check('Stage5 Modal pointer-origin, no-divider spacing and ImagePreview synchronized leave',()=>{
  const modal=fs.readFileSync(path.join(root,'src/components/modal.js'),'utf8');
  const preview=fs.readFileSync(path.join(root,'src/components/image.js'),'utf8');

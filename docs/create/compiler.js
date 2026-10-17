@@ -345,6 +345,25 @@ export function themeTokens(resolved) {
   assignInteractionColor('hover-color', ext.hoverColor);
   assignInteractionColor('focus', ext.keyboardFocusColor);
   assignInteractionColor('pointer-focus', ext.pointerFocusColor);
+  // Focus saturation is a separate opaque tonal axis, not an alpha control.
+  // Light moves toward the local surface and reduces OKLCH chroma; deep moves
+  // toward foreground and increases chroma. The base color hue is preserved.
+  // A neutral black/white source naturally keeps c=0, but still gets softer
+  // via its surface-bound lightness. Halo translucency is handled separately.
+  const focusTone = (name, strength) => {
+    if (strength === 'normal') return;
+    for (const mode of ['light', 'dark']) {
+      const target = mode === 'light' ? light : dark;
+      const source = parseOklch(target[name]);
+      const toward = parseOklch(pal[mode][strength === 'light' ? 'background' : 'foreground']);
+      const mix = strength === 'light' ? 0.42 : 0.18;
+      const lightness = Number(source.l) + (Number(toward.l) - Number(source.l)) * mix;
+      const chroma = Math.min(0.4, Number(source.c) * (strength === 'light' ? 0.65 : 1.25));
+      target[name] = `oklch(${round(lightness)} ${round(chroma)} ${source.h})`;
+    }
+  };
+  focusTone('focus', ext.keyboardFocusSaturation);
+  focusTone('pointer-focus', ext.pointerFocusSaturation);
   // Keyboard theme explicitly changes the native focus boundary as before.
   // Pointer color never mutates the keyboard or neutral ring token.
   if (ext.keyboardFocusColor === 'theme') {
@@ -611,7 +630,7 @@ export function themeTokens(resolved) {
   root['shadow-thumb'] = SHADOWS[looks.thumbShadow];
   root['shadow-switch-thumb'] = SHADOWS[looks.switchShadow];
 
-  // The seven independent axes share these few semantic style/paint slots.
+  // Nine independent axes share the same semantic style/paint slots.
   // Border focus keeps the native border; keyboard outline retains 2px/-1px.
   const FOCUS = { border: ['0', '100%', '0'], outline: ['0.125rem', '100%', '-0.0625rem'], ring: ['0', '100%', '0'] };
   const [kWidth, kOpacity, kOffset] = FOCUS[ext.keyboardFocus];
@@ -619,11 +638,11 @@ export function themeTokens(resolved) {
   root['focus-width'] = kWidth; root['focus-opacity'] = kOpacity; root['focus-offset'] = kOffset;
   root['pointer-width'] = pWidth; root['pointer-opacity'] = pOpacity; root['pointer-offset'] = pOffset;
   root['focus-shadow'] = ext.keyboardFocus === 'ring'
-    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 40%,transparent)'
+    ? '0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-focus) 20%,transparent)'
     : '0 0 0 0 transparent';
   // Outline means the actual CSS outline (2px/-1px), not a shadow.
   root['pointer-shadow'] = ext.pointerFocus === 'ring'
-    ? '0 0 0 0.1875rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 40%,transparent)'
+    ? '0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-pointer-focus) 20%,transparent)'
     : '0 0 0 0 transparent';
   root['hover-border-strength'] = ['border', 'both'].includes(ext.hoverStyle) ? '30%' : '0%';
   root['hover-background-strength'] = ['background', 'both'].includes(ext.hoverStyle) ? '15%' : '0%';

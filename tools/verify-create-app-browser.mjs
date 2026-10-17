@@ -2741,6 +2741,43 @@ try {
     assert.equal(result.length,10);
   });
 
+  await step('Focus saturation deep/light is opaque and the two halo modes use blurred 20-percent alpha',async()=>{
+    const samples=await evaluate(`(() => {
+      const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument,w=d.defaultView;
+      const conf=api.state.config,root=d.documentElement,wasDark=root.classList.contains('dark');
+      const sheet=d.createElement('style'),sample=d.createElement('span');sample.style.cssText='position:absolute;left:-5000px;top:0';
+      d.head.append(sheet);d.body.append(sample);
+      const cases=[];
+      try{
+        for(const dark of [false,true])for(const intensity of ['light','normal','deep']){
+          root.classList.toggle('dark',dark);
+          const options={...conf,baseColor:'mist',theme:'blue',ext:{...conf.ext,pointerFocus:'ring',keyboardFocus:'ring',pointerFocusColor:'theme',keyboardFocusColor:'theme',pointerFocusSaturation:intensity,keyboardFocusSaturation:intensity}};
+          sheet.textContent=api.compileTheme(options,{generatedAt:''}).body;
+          const colors={};
+          for(const name of ['pointer-focus','focus']){
+            sample.style.color='var(--qxframe9a7c2-theme-'+name+')';
+            colors[name]=w.getComputedStyle(sample).color;
+          }
+          cases.push({dark,intensity,colors,pointerShadow:w.getComputedStyle(root).getPropertyValue('--qxframe9a7c2-theme-pointer-shadow').trim(),keyboardShadow:w.getComputedStyle(root).getPropertyValue('--qxframe9a7c2-theme-focus-shadow').trim()});
+        }
+      }finally{root.classList.toggle('dark',wasDark);sheet.remove();sample.remove();}
+      return cases;
+    })()`);
+    assert.equal(samples.length,6,'three opaque tonal options in both modes');
+    for(const dark of [false,true]){
+      const roles=samples.filter(x=>x.dark===dark);
+      for(const name of ['focus','pointer-focus']){
+        assert.notEqual(roles[0].colors[name],roles[1].colors[name],name+' lighter tonal option visibly changes the opaque color');
+        assert.notEqual(roles[2].colors[name],roles[1].colors[name],name+' deeper tonal option changes chroma/lightness');
+        for(const v of roles)assert.doesNotMatch(v.colors[name],/\/(?:\s*0\.|\s*0\)|\s*0%)/,name+' color may not be translucent');
+      }
+      for(const v of roles){
+        assert.ok(v.pointerShadow.includes('0 0 0.25rem 0.125rem')&&v.pointerShadow.includes(' 20%,transparent)'), 'pointer halo uses blurred spread with 20% shadow ink');
+        assert.ok(v.keyboardShadow.includes('0 0 0.25rem 0.125rem')&&v.keyboardShadow.includes(' 20%,transparent)'), 'keyboard halo uses same blurred spread');
+      }
+    }
+  });
+
   await step('Seven independent Hover/Focus axes: compiled themes and Chromium Focus Background paint',async()=>{
     const r=await evaluate("(() => {\n const api=window.QXFRAME9A7C2_CREATE,d=document.querySelector('[data-create-frame]').contentDocument;\n const conf={...api.state.config,ext:{...api.state.config.ext,hoverStyle:'both',hoverColor:'theme',keyboardFocus:'ring',keyboardFocusColor:'theme',pointerFocus:'outline',pointerFocusColor:'black-white',focusBackground:'parent-surface'}};\n const style=d.createElement('style');style.textContent=api.compileTheme(conf,{generatedAt:''}).body;d.head.append(style);\n const input=d.createElement('input');input.type='text';input.className='qxframe9a7c2-form-input';input.style.transition='none';d.body.append(input);\n const h=getComputedStyle(d.documentElement),keys=['hover-border-strength','hover-background-strength','focus-background-strength','hover-color','focus','pointer-focus'];\n const values=Object.fromEntries(keys.map(k=>[k,h.getPropertyValue('--qxframe9a7c2-theme-'+k).trim()]));\n const idle=getComputedStyle(input).backgroundImage;input.focus();\n const focused=getComputedStyle(input).backgroundImage;\n const layer=getComputedStyle(input).getPropertyValue('--_qxframe9a7c2-focused-parent-layer').trim();\n input.remove();style.remove();return {values,idle,focused,layer};\n})()");
     assert.equal(r.values['hover-border-strength'],'30%');

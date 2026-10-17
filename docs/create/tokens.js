@@ -232,13 +232,14 @@ export const THEME_TOKENS = [
   L('menu-blur', 'Translucent menu backdrop blur'),
   L('dialog-mask-blur', 'Modal / Drawer backdrop blur, independent of Menu'),
 
-  // Focus (v3 §4.6). Outline-drawn so component shadows survive; ring = wide translucent outline.
+  // Focus (v3 §4.6): opaque color intensity lives in the two focus COLOR roles;
+  // halo is a separate softly blurred 20%-alpha box shadow, never the saturation axis.
   L('focus-width', 'Keyboard focus width (outline 2px, ring 3px)'),
-  L('focus-opacity', 'Keyboard focus color strength (ring 40%)', 'percent'),
+  L('focus-opacity', 'Keyboard focus edge paint strength (opaque for outline/border)', 'percent'),
   L('focus-offset', 'Keyboard focus offset (outline -1px inset, ring 0)'),
   L('focus-shadow', 'Keyboard focus real box-shadow ring; none for outline', 'shadow'),
   L('pointer-width', 'Pointer focus width (0 = QX default: no outline)'),
-  L('pointer-opacity', 'Pointer focus color strength', 'percent'),
+  L('pointer-opacity', 'Pointer focus edge paint strength (opaque for outline/border)', 'percent'),
   L('pointer-offset', 'Pointer focus offset'),
   L('pointer-shadow', 'Pointer focus real box-shadow ring; none for default/outline', 'shadow'),
   L('hover-border-strength', 'Hover border contrast; 0% disables border hover', 'percent'),
