@@ -10,8 +10,8 @@ assert.match(css,/\.qxframe9a7c2-card-actions\{display:flex;/);
 // L0 structural gate for Card Action: inspect each public selector's computed
 // recipe declarations, not the historical one-selector-per-rule source shape.
 // This remains strict for min-height/flex and both action aliases.
-const actionCss=css.replace(/\\/\\*[\\s\\S]*?\\*\\//g,'');
-const actionRules=[...actionCss.matchAll(/([^{}]+)\\{([^{}]*)\\}/g)].map(([,prelude,body])=>({
+const actionCss=css.replace(/\/\*[\s\S]*?\*\//g,'');
+const actionRules=[...actionCss.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([,prelude,body])=>({
   selectors:prelude.split(',').map(v=>v.trim()),body:body.trim()
 }));
 const actionAliases=['.qxframe9a7c2-card-action','.qxframe9a7c2-card-action-item'];
@@ -22,7 +22,7 @@ const matchAction=(selector)=>{
 };
 const actionBase=actionAliases.map(matchAction);
 assert.equal(actionBase[0],actionBase[1],'Both Card Action aliases require identical base declarations');
-assert.match(actionBase[0],/^display:flex;min-width:0;min-height:(?:var\\(--[^)]+\\)|calc\\([^;{}]+\\)|-?\\d*\\.?\\d+rem);flex:1 1 0;/);
+assert.match(actionBase[0],/^display:flex;min-width:0;min-height:(?:var\(--[^)]+\)|calc\([^;{}]+\)|-?\d*\.?\d+rem);flex:1 1 0;/);
 for(const suffix of [':last-child',':hover:not(:disabled)',':disabled']){
   const states=actionAliases.map(name=>matchAction(name+suffix));
   assert.equal(states[0],states[1],'Card Action '+suffix+' declarations must remain identical');
