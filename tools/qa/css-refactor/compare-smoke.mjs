@@ -76,6 +76,19 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
   <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
 </div>
 <div id="card-dark-nested" class="dark"><div id="card-nested-dark" class="qxframe9a7c2-card is-xs">Nested scheme card</div></div>
+<section id="component-owner-closure">
+  <div class="qxframe9a7c2-item-surface is-disabled">Disabled Item</div>
+  <div class="qxframe9a7c2-list is-disabled"><div class="qxframe9a7c2-item-surface">Disabled List child</div></div>
+  <div class="qxframe9a7c2-tree is-disabled"><div class="qxframe9a7c2-item-surface">Disabled Tree child</div></div>
+  <div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-handle"></div></div>
+  <div class="qxframe9a7c2-switch"><input class="qxframe9a7c2-switch-input" type="checkbox" checked /><div class="qxframe9a7c2-switch-track"></div></div>
+  <div class="qxframe9a7c2-switch is-checked"><div class="qxframe9a7c2-switch-track"></div></div>
+  <div class="qxframe9a7c2-carousel"><button type="button" class="qxframe9a7c2-carousel-arrow">Next</button><div class="qxframe9a7c2-carousel-caption">Caption</div></div>
+  <div class="dark" style="--qxframe9a7c2-theme-shadow-thumb:0 0 0 3px rgb(60,110,170);--qxframe9a7c2-theme-background:rgb(10,20,30)">
+    <div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-handle"></div></div>
+    <div class="qxframe9a7c2-carousel"><button type="button" class="qxframe9a7c2-carousel-arrow">Local dark</button><div class="qxframe9a7c2-carousel-caption">Local caption</div></div>
+  </div>
+</section>
 </section></body></html>`;
 
 const server = http.createServer((req, res) => {

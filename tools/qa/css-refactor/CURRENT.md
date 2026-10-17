@@ -39,3 +39,6 @@ The proposed 155-rule migration did not pass the real Card docs gate: #390309819
 
 
 Core component-painter owner consolidation: eight B0 late scoped duplicate visual rules removed from src/styles/main/theme-visual-v2.css; 153 original plain rules retained unchanged, scoped core 47→39, all existing component owner CSS remains as before. Exact-head triple CI acceptance pending. Evidence and rule mapping in tools/qa/css-refactor/CORE-SCOPE-39.md.
+
+## Five real component-owner closures (pending exact-head triple CI)
+Original B0 ids #55 disabled Item, #66 Slider handle, #86/#87 Carousel and #194 Switch checked geometry are incorporated in their existing canonical component CSS. Main core scope 39→34; 153 plain rules remain, 4 scope blocks remain. Chromium preflight 505 Light / 948 Dark synthetic + 125 actual Card doc per mode, full CSSOM & geometry 0 differences. Native owner coverage appended to comparator fixture. Detailed evidence: OWNER-CLOSURE-5.md.
