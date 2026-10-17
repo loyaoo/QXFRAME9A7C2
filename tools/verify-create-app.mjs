@@ -487,7 +487,7 @@ check('Retired form-selectgroup selectors have no Theme V2 paint authority',()=>
 });
 
 check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Field success stays distinct',()=>{
- const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
+ const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
  const native=fs.readFileSync(path.join(root,'src/styles/components/form-native.css'),'utf8');
  const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
  assert.match(consumer,/--_qxframe9a7c2-control-border:var\(--qxframe9a7c2-theme-pointer-focus\)/,'pointer V2 physical border');
@@ -501,7 +501,7 @@ check('V2 JS FocusOrigin draws the final pointer/keyboard border and shadow; Fie
 });
 
 check('Shared seven-axis Hover paints the actual V2 Input/Select owner', () => {
-  const consumer=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-consumers.css'),'utf8');
+  const consumer=fs.readFileSync(path.join(root,'src/styles/components/control-interaction.css'),'utf8');
   const style=fs.readFileSync(path.join(root,'src/styles/main/theme-visual-v2-style-consumers.css'),'utf8');
   const structure=fs.readFileSync(path.join(root,'src/styles/components/composition.css'),'utf8');
   for(const name of ['hover-border-strength','hover-background-strength','hover-color']){
@@ -911,7 +911,7 @@ check('Shared focus ring shadows, theme focus color and State ownership',()=>{
   assert.match(source('src/styles/components/button.css'),/state-shadow\),var\(--qxframe9a7c2-theme-focus-shadow/,'Button preserves elevation plus focus ring');
   assert.match(source('src/styles/components/button.css'),/html:not\(\.qxframe9a7c2-keyboard-focus-origin\) \.qxframe9a7c2-button:focus[^\{]*\{[^}]*theme-pointer-shadow/,'Button pointer focus projects Theme shadow independently of :active');
   assert.match(source('src/styles/components/native-input.css'),/\.qxframe9a7c2-input:hover:not\(:focus-within\)/,'JS Input native hover');
-  assert.match(source('src/styles/main/theme-visual-v2-consumers.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
+  assert.match(source('src/styles/components/control-interaction.css'),/theme-hover-border-strength/,'hover border is resolved from independent style axis');
   assert.match(source('src/styles/components/composition.css'),/input-group-addon\):hover:not\(:focus-within\)[^\{]*\{[^}]*border-color:color-mix/,'connected InputGroup shares hover border step');
 
   const groupCss=source('src/styles/components/composition.css');

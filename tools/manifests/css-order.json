@@ -16,7 +16,8 @@
     "main-fixed-values",
     "components",
     "main-theme-visual-v2",
-    "main-theme-visual-v2-consumers",
+    "late-focus-feedback",
+    "late-control-interaction",
     "main-theme-visual-v2-style",
     "main-theme-visual-v2-style-consumers"
   ],
@@ -91,7 +92,8 @@
     "src/styles/components/focus-closeout.css",
     "src/styles/components/visual-recipe.css",
     "src/styles/main/theme-visual-v2.css",
-    "src/styles/main/theme-visual-v2-consumers.css",
+    "src/styles/components/focus-feedback.css",
+    "src/styles/components/control-interaction.css",
     "src/styles/main/semantic-inputs.css",
     "src/styles/main/theme-visual-v2-style-consumers.css"
   ]
