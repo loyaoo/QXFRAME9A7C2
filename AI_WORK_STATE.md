@@ -1,3 +1,6 @@
+## CURRENT — 2026-10-17 FOCUS-SATURATION-TEST-REGEX-001 (CI pending)
+- Corrected new static Focus saturation audit to reject actual alpha-conversion calls / transparent values, not the slash in source comments. Original opaque color assertions and real Chromium tests remain active. QXFRAME/CSS CI must be checked against the newest commit; previous default-theme green runs do not authorize new change completion.
+
 ## CURRENT — 2026-10-17 Stage5 FOCUS-SATURATION-HALO-001 (exact-head CI pending)
 - Branch baseline `48da0b65e647e4fb23e21fdbc5a61856b514ecbb`; prior HEAD's QXFRAME #38930407282 and CSS Schema #38930407280 were both green. This batch is a NEW owner-requested Focus axis change.
 - Added `keyboardFocusSaturation` (`kfocus-saturation`) and `pointerFocusSaturation` (`pfocus-saturation`), each independent and Style-following by default. Available values: `light / normal / deep` (浅色/标准/深色); defaults `normal` to preserve existing Theme output and the owner-provided embedded Vega+Mist+Blue default CSS.

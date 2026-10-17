@@ -24,7 +24,7 @@ check('Opaque independent mouse/keyboard Focus saturation and soft halo geometry
  assert.match(compiler,/focusTone\('focus', ext\.keyboardFocusSaturation\)/,'keyboard Focus color is toned independently');
  assert.match(compiler,/focusTone\('pointer-focus', ext\.pointerFocusSaturation\)/,'pointer Focus color is toned independently');
  assert.match(compiler,/target\[name\] = `oklch\(/,'saturated Focus output is a literal opaque OKLCH color');
- assert.doesNotMatch(compiler.match(/const focusTone = \(name, strength\) => \{[\s\S]*?\n  \};/)[0],/transparent|\/ [^)]/,'tonal saturation never changes alpha');
+ assert.doesNotMatch(compiler.match(/const focusTone = \(name, strength\) => \{[\s\S]*?\n  \};/)[0],/\balpha\(|transparent/,'tonal saturation never changes alpha');
  for(const name of ['focus','pointer-focus']){
   assert.ok(compiler.includes("'0 0 0.25rem 0.125rem color-mix(in oklab,var(--qxframe9a7c2-theme-"+name+") 20%,transparent)'"),'halo '+name+' is blurred, soft and 20%-alpha');
  }
