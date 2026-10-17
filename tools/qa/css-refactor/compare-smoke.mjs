@@ -145,7 +145,11 @@ async function sample(which,mode,route='synthetic',hoverId=null) {
     const applied=await evalJs("(() => { const api=window.QXFRAME9A7C2_DOCS_THEME; if(!api)throw Error('Docs Theme runtime missing'); const state=api.setState({mode:"+JSON.stringify(mode)+"},{persist:false,emit:true}); const root=document.documentElement; return {mode:state.effectiveMode,dark:root.classList.contains('dark'),themeDark:root.classList.contains('qxframe9a7c2-theme-dark'),attr:root.getAttribute('data-theme')}; })()");
     if(applied.mode!==mode || applied.dark!==(mode==='dark') || applied.themeDark!==(mode==='dark') || applied.attr!==mode)
       throw Error('Docs Theme mode not applied: '+JSON.stringify(applied));
-    await sleep(200);
+    // Docs Theme events update auxiliary site controls asynchronously. Allow
+    // CSS transitions and delayed DOM projections to settle before freezing
+    // the remaining *infinite* Skeleton animation at the same WAAPI time.
+    // Preserve full-page screenshot equality; do NOT mask unrelated pixels.
+    await sleep(800);
   } else {
     await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
   }
