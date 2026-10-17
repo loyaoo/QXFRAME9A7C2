@@ -46,3 +46,6 @@ Original B0 ids #55 disabled Item, #66 Slider handle, #86/#87 Carousel and #194 
 
 ## Four owner closures: Card Grid/title, Switch Thumb, Input placeholder/prefix/suffix
 Real scoped rules 34→30 via edits in existing Card/Switch/native-input component source, no new style layers or version aliases. B0 CSSOM fixture and local static DOM 0 differences; rejected Button Filled move remains scoped. Exact-head CI must still pass. Detailed evidence: tools/qa/css-refactor/OWNER-CLOSURE-4.md.
+
+
+Owner correction: Card Grid Hover public --qxframe9a7c2-card-shadow override must be preserved. Restored original component rule and B0 scoped hover winner; real scoped core 30→31. Current batch valid owner changes are CardTitle, SwitchThumb, Input; exact-head CI must accept before signoff.

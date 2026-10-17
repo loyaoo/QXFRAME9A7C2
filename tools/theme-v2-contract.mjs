@@ -91,7 +91,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,30,'Root-scoped consumers must have 34 declared owners');
+  assert.equal(scopedBodies.length,31,'Root-scoped consumers must have 34 declared owners');
   assert.equal(unscopedPreludes.length,153,'No unexpected or missing B0-approved unscoped rules');
   assert.equal(createHash('sha256').update(unscopedPreludes.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'Unscoped selectors must preserve exact B0-owned list and order');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
