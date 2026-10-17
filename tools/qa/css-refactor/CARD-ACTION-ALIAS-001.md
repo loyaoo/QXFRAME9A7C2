@@ -19,3 +19,5 @@
 - Native Chromium hover-specific fault injection is run separately in `compare-smoke.mjs`; L0 AST rules and G06 interactions are independent, not substitutes for each other.
 - Source file exceptions: this batch modifies the existing QA test only to remove the shape coupling, not production geometry expectations.
 - Previous full QXFRAME CI `39014588863` failed due that legacy textual regex. Until new HEAD completes, batch status stays pending.
+
+- QXFRAME #39014835846 rejected the old `verify-css-grid-card-meta.mjs` pair of literal same-selector rule shapes, despite Chromium #39014835865 showing 0 visual/computed differences. Replace with one-rule property invariants (Flex, align stretch, row) and preserve existing narrow-screen media test. Both Card structural regressions now preflight in independent Fast CI.

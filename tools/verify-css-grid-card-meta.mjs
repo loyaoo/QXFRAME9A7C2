@@ -15,8 +15,14 @@ assert.match(css,/\.qxframe9a7c2-card-footer\.is-divided,[^{]+\{[^}]*border-top-
 assert.match(css,/\.qxframe9a7c2-card-section\.is-muted\{background:/);
 assert.match(css,/\.qxframe9a7c2-card-section\.is-inset\{/);
 assert.match(css,/\.qxframe9a7c2-card-body>\.qxframe9a7c2-card-section\.is-bleed-inline/);
-assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{display:flex;align-items:stretch\}/,'Horizontal Card must preserve its established Flex surface contract.');
-assert.match(css,/\.qxframe9a7c2-card\.is-horizontal\{flex-direction:row\}/,'Horizontal Card must actually project a row layout.');
+// Check declarations on the normal Horizontal Card rule, regardless of whether
+// the three Flex values are authored as one rule or adjacent same-selector rules.
+const horizontal=[...css.matchAll(/\.qxframe9a7c2-card\.is-horizontal\{([^{}]*)\}/g)]
+  .map(([,body])=>body).filter(body=>/display:flex/.test(body));
+assert.equal(horizontal.length,1,'Horizontal Card should have one Flex surface owner.');
+assert.match(horizontal[0],/(?:^|;)display:flex(?:;|$)/,'Horizontal Card must remain Flex.');
+assert.match(horizontal[0],/(?:^|;)align-items:stretch(?:;|$)/,'Horizontal Card must align its items correctly.');
+assert.match(horizontal[0],/(?:^|;)flex-direction:row(?:;|$)/,'Horizontal Card must project a row layout.');
 assert.match(css,/@media \(max-width:38\.75rem\)\{\.qxframe9a7c2-card\.is-horizontal\{flex-direction:column\}/,'Horizontal Card must collapse to column on narrow containers.');
 assert.doesNotMatch(css,/\.qxframe9a7c2-card(?:[-\w.:>, ]*)?\{[^}]*(?:display:grid|grid-template-columns)/,'Card visual recipes must remain Flex-only.');
 console.log(JSON.stringify({ok:true,batch:'card-meta-and-visual-recipe-flex',cardVisualRecipe:true,horizontalFixed:true,convertedRules:2,spacingOwner:'--_qxframe9a7c2-fixed-space-5'}));
