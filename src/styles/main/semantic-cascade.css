@@ -119,16 +119,10 @@
 
   /* Table is a data surface. Its selected background is muted, not Primary. */
   .qxframe9a7c2-table, .qxframe9a7c2-table-wrap { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
-  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row) { --_qxframe9a7c2-table-row-bg: transparent; --_qxframe9a7c2-table-row-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-table-row-bg); }
-  .qxframe9a7c2-table th, .qxframe9a7c2-table td { border-color: var(--qxframe9a7c2-theme-border); color: var(--qxframe9a7c2-theme-foreground); }
 
   /* Selection item paint is source Command/Select highlight, not feedback soft. */
   .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
   .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
-
-  .qxframe9a7c2-progress { --_qxframe9a7c2-progress-rail: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-progress-primary: var(--_qxframe9a7c2-type); --_qxframe9a7c2-progress-success: var(--qxframe9a7c2-theme-success); }
-  /* Shared translucent neutral scrollbar, no opaque theme-border override. */
-  .qxframe9a7c2-scroll { --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-color); --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-color); --_qxframe9a7c2-scroll-edge-shadow: transparent; }
 
   /* Source decoration distribution; inline feedback has no popup shadow. */
   .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
@@ -231,8 +225,7 @@
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
     min-height: var(--_qxframe9a7c2-control-height);
   }
-  .qxframe9a7c2-input.is-textarea { padding: 0; }
-}
+  .qxframe9a7c2-input.is-textarea { padding: 0; }}
 /* Generic type roles apply only to framework descendants, never html. */
 
   /* Resolve current Type locally, including parts that inherit their owner.

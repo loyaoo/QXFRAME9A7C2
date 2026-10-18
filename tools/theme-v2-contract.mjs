@@ -93,7 +93,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,29,'Root-scoped consumers must have 29 declared owners');
+  assert.equal(scopedBodies.length,25,'Root-scoped consumers must have 25 declared owners');
   // Zero-specificity root-excluding projection of the original 62 semantic roles.
   const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
   assert.ok(descendantRoles,'Descendant semantic roles must exist outside root scope');

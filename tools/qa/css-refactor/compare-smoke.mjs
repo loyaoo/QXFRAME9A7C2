@@ -75,6 +75,25 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
   <div id="card-inherited" class="qxframe9a7c2-card is-sm"><h3 class="qxframe9a7c2-card-title">Ancestor override</h3><div class="qxframe9a7c2-card-description">Description</div></div>
   <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
 </div>
+<section id="table-progress-scroll-owner-matrix">
+ <div class="qxframe9a7c2-table-wrap is-bordered">
+  <table class="qxframe9a7c2-table is-striped is-hover" style="--qxframe9a7c2-table-row-hover:rgb(26,87,142)">
+   <thead><tr><th>Owner</th><th>Value</th></tr></thead><tbody>
+    <tr><td>Default</td><td>Row</td></tr>
+    <tr class="is-selected"><td>Selected</td><td>Row</td></tr>
+    <tr class="is-disabled"><td>Disabled</td><td>Row</td></tr>
+    <tr class="is-warning"><td>Warning</td><td>Row</td></tr>
+   </tbody>
+  </table>
+ </div>
+ <div class="qxframe9a7c2-progress is-sm" style="--qxframe9a7c2-progress-rail-color:rgb(3,44,71);--qxframe9a7c2-progress-color:rgb(6,104,83);--qxframe9a7c2-progress-success-color:rgb(201,5,90)">Progress user overrides</div>
+ <div class="qxframe9a7c2-scroll" style="--qxframe9a7c2-scroll-track-bg:rgb(10,40,70);--qxframe9a7c2-scroll-thumb-bg:rgb(11,41,71);--qxframe9a7c2-scroll-edge-shadow:rgb(12,42,72)">Scrollable</div>
+ <div class="dark" style="--qxframe9a7c2-theme-muted:rgb(92,42,108);--qxframe9a7c2-theme-border:rgb(81,20,161)">
+  <table class="qxframe9a7c2-table is-hover"><thead><tr><th>Dark</th></tr></thead><tbody><tr class="is-selected"><td>Nested row</td></tr></tbody></table>
+  <div class="qxframe9a7c2-progress" style="--qxframe9a7c2-progress-rail-color:rgb(25,39,93)">Nested progress</div>
+  <div class="qxframe9a7c2-scroll" style="--qxframe9a7c2-scroll-track-color:rgb(26,40,93)">Nested scroll</div>
+ </div>
+</section>
 <div id="card-dark-nested" class="dark"><div id="card-nested-dark" class="qxframe9a7c2-card is-xs">Nested scheme card</div></div>
 <section id="focus-and-mask-ownership" style="--qxframe9a7c2-theme-pointer-width:3px;--qxframe9a7c2-theme-pointer-offset:-1px;--qxframe9a7c2-theme-pointer-opacity:100%">
   <input id="focus-owner-native" class="qxframe9a7c2-form-input" placeholder="Native pointer focus" />
