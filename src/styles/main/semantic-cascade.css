@@ -7,12 +7,8 @@
  * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
  * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT. */
 :root { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); }
-@scope (:root) {
-
-  /* Existing semantic/family consumer slots remain the component-facing contract.
-     Bind only real shared roles, at each consumer so local Theme changes resolve here.
-     This is not a legacy Palette/state-token translation table. */
-  * {
+/* Semantic roles apply to descendants, not the document root; zero specificity. */
+* * {
     --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-popover);
@@ -77,6 +73,12 @@
     --_qxframe9a7c2-accent: var(--qxframe9a7c2-theme-primary);
     --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-semantic-on-accent);
   }
+@scope (:root) {
+
+  /* Existing semantic/family consumer slots remain the component-facing contract.
+     Bind only real shared roles, at each consumer so local Theme changes resolve here.
+     This is not a legacy Palette/state-token translation table. */
+
   .qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge, .qxframe9a7c2-badge-count, .qxframe9a7c2-badge-ribbon, .qxframe9a7c2-badge-status, .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-message-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root, .qxframe9a7c2-carousel, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root, .qxframe9a7c2-result, .qxframe9a7c2-progress, .qxframe9a7c2-slider, .qxframe9a7c2-rate, .qxframe9a7c2-switch, .qxframe9a7c2-selectgroup, .qxframe9a7c2-form-check-input, .qxframe9a7c2-native-form, .qxframe9a7c2-table, .qxframe9a7c2-item-surface, .qxframe9a7c2-menu, .qxframe9a7c2-tags, .qxframe9a7c2-input, .qxframe9a7c2-loading, .qxframe9a7c2-steps, .qxframe9a7c2-upload, .qxframe9a7c2-pagination, .qxframe9a7c2-tabs, .qxframe9a7c2-tree, .qxframe9a7c2-list, .qxframe9a7c2-transfer, .qxframe9a7c2-avatar, .qxframe9a7c2-card, .qxframe9a7c2-collapse, .qxframe9a7c2-descriptions, .qxframe9a7c2-empty, .qxframe9a7c2-drawer, .qxframe9a7c2-modal-container, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-form-segmented, .qxframe9a7c2-input-otp, .qxframe9a7c2-wheel-panel, .qxframe9a7c2-calendar, .qxframe9a7c2-period-panel, .qxframe9a7c2-time-panel, .qxframe9a7c2-color-panel {
     --_qxframe9a7c2-type: var(--_qxframe9a7c2-default-type, var(--qxframe9a7c2-theme-primary));
     --_qxframe9a7c2-type-foreground: var(--_qxframe9a7c2-default-foreground, var(--qxframe9a7c2-theme-primary-foreground));

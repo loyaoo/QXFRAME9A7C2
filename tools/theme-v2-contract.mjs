@@ -60,7 +60,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   // v3 §5.4: no style selectors at runtime; top-level rules are :root / .dark base rules and one @scope (:root).
   assert.doesNotMatch(source,/data-qxframe9a7c2-style/,'Styles must not appear at runtime');
   const permittedTopLevel=new Set([
-    '@scope (:root)', ':root', '.dark',
+    '@scope (:root)', ':root', '.dark', '* *',
     '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
   ]);
   // R5 scoped-role migration: only these 153 B0-reviewed qualified selectors
@@ -93,7 +93,14 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,31,'Root-scoped consumers must have 34 declared owners');
+  assert.equal(scopedBodies.length,30,'Root-scoped consumers must have 30 declared owners');
+  // Zero-specificity root-excluding projection of the original 62 semantic roles.
+  const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
+  assert.ok(descendantRoles,'Descendant semantic roles must exist outside root scope');
+  assert.equal((descendantRoles[1].match(/--_qxframe9a7c2-[\w-]+\s*:/g)||[]).length,62);
+  assert.equal(createHash('sha256').update(descendantRoles[1].replace(/\s+/g,'')).digest('hex'),
+    'ad84c66458f5556bd0c06394784b40d4d6751b2d93e49a1d72c2538ab8b766c2',
+    'All 62 original semantic role formulae must remain exact');
   assert.equal(unscopedPreludes.length,153,'No unexpected or missing B0-approved unscoped rules');
   assert.equal(createHash('sha256').update(unscopedPreludes.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'Unscoped selectors must preserve exact B0-owned list and order');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');

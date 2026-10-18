@@ -432,7 +432,7 @@ html.qxframe9a7c2-keyboard-focus-origin .qxframe9a7c2-input-group-field:focus-wi
  * both inner and outer segments are present in the same flat DOM. */
 .qxframe9a7c2-input-group-field{
   box-sizing:border-box;display:flex;flex:1 1 0;align-items:stretch;min-width:0;
-  box-sizing:border-box;height:var(--_qxframe9a7c2-control-height);
+  height:var(--_qxframe9a7c2-control-height);
   border:var(--_qxframe9a7c2-control-border-width) solid var(--qxframe9a7c2-theme-field-border);
   border-block-start-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);
   border-inline-color:color-mix(in oklab,var(--qxframe9a7c2-theme-field-border) var(--qxframe9a7c2-theme-field-sides),transparent);

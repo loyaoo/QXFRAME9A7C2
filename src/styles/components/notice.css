@@ -137,11 +137,7 @@
 }
 .qxframe9a7c2-notification-stack.is-collapsed-stack .qxframe9a7c2-notice-slot.is-stack-overflow>.qxframe9a7c2-notification-root,
 .qxframe9a7c2-message-stack.is-collapsed-stack .qxframe9a7c2-notice-slot.is-stack-overflow>.qxframe9a7c2-message-root{
-  box-shadow:none
-}
-.qxframe9a7c2-notification-stack.is-collapsed-stack .qxframe9a7c2-notice-slot.is-stack-overflow>.qxframe9a7c2-notification-root,
-.qxframe9a7c2-message-stack.is-collapsed-stack .qxframe9a7c2-notice-slot.is-stack-overflow>.qxframe9a7c2-message-root{
-  opacity:0
+  box-shadow:none;opacity:0
 }
 
 .qxframe9a7c2-notification-stack.is-expanded-stack .qxframe9a7c2-notice-slot.is-stack-overflow:not(.is-layout-moving)>.qxframe9a7c2-notification-root,
