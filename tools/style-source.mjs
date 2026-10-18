@@ -14,7 +14,6 @@ const SCHEMA1_EXCLUDED_THEME_CONSUMERS=Object.freeze([
   'src/styles/components/overlay-picker-states.css',
   'src/styles/components/menu-selection-states.css',
   'src/styles/components/component-sizing.css',
-  'src/styles/components/focus-feedback.css',
   'src/styles/components/control-interaction.css',
   'src/styles/main/semantic-inputs.css',
   'src/styles/components/component-appearance.css'

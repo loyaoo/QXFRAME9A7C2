@@ -65,3 +65,11 @@ Moves 62 universal roles from scoped `*` into zero-specificity `* *` immediately
 
 ## Seven root-scope rule ownership transfers (pending exact HEAD gates)
 `semantic-cascade.css`: shared generic Type role selector lifted to root-excluded plain `* *[class*]` (29 scoped left). `focus-feedback.css`: transferred descendant FocusOrigin vars into focus-closeout.css, four Result state aliases into result.css, and overlay SelectGroup indicator into collection-select.css (2 scoped left). All transferred values unchanged; no new scope blocks or Theme/JS/DOM changes. Synthetic full CSSOM 68 nodes in each light/dark mode, zero differences for the whole seven-rule batch. Exact-head Fast/Full/Schema mandatory; see FOCUS-TYPE-OWNER-7.md.
+
+
+## Two @scope closures (pending exact-HEAD triple CI) — 2026-10-18
+- Delete the now-redundant source `src/styles/components/focus-feedback.css`. Its Form input/select/textarea pointer :focus-visible outline is already implemented by the canonical focus-closeout.css with the configured Theme pointer width/offset; the Image overlay private mask role moves into the actual image.css owner, with the same Theme overlay formula winning as frozen B0 (including public override precedence).
+- Remove the two-rule `@scope (:root)` wrapper from `components/control-interaction.css` while retaining the exact original selectors, declaration sets and source order for JS/native hover. Drop the superseded earlier JS Input state-border declaration from native-input.css to avoid introducing a second global owner.
+- Update source manifest + Schema-1 exclusion list, and expand Chromium synthetic fixture with actual pointer focus, readonly/disabled native controls, image masks, public overlay override and nested .dark.
+- Local 50-node static Card/Form/Image fixture Light/Dark: complete computed CSSOM & geometry 0 candidate differences in 6 combinations; native pointer hover four input/select/textarea states Light/Dark 0 differences; parsed CSS owner inventory 0 new competing selector/property owners. This local test omits JS dynamic docs mount and other states; mandatory exact-HEAD QXFRAME, CSS Schema, Fast Chromium with negative controls and screenshots.
+- Active source `@scope` block count 4→2. No Theme/JS DOM/runtime change, no increase in owner ratchet. B0/main frozen and PR #268 remains Draft. See TWO-SCOPE-FOCUS-CONTROL.md.

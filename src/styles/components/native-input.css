@@ -47,7 +47,6 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 }
 .qxframe9a7c2-input.is-hovered{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);--_qxframe9a7c2-state-z:2}
 .qxframe9a7c2-input:hover:not(:focus-within):not(.is-focused):not(.is-expanded):not(.is-disabled):not(.is-readonly):not(.is-invalid):not(.is-error):not(.is-warning){
-  --_qxframe9a7c2-state-border:var(--_qxframe9a7c2-control-border-hover);
   --_qxframe9a7c2-state-z:2
 }
 .qxframe9a7c2-input:focus-within:not(.is-disabled):not(.is-readonly),.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded{--_qxframe9a7c2-state-border:var(--_qxframe9a7c2-semantic-focus);--_qxframe9a7c2-state-focus-shadow:0 0 0 0 transparent;--_qxframe9a7c2-state-outline:0 solid transparent;--_qxframe9a7c2-state-z:4}

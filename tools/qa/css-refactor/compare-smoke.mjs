@@ -76,6 +76,19 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
   <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
 </div>
 <div id="card-dark-nested" class="dark"><div id="card-nested-dark" class="qxframe9a7c2-card is-xs">Nested scheme card</div></div>
+<section id="focus-and-mask-ownership" style="--qxframe9a7c2-theme-pointer-width:3px;--qxframe9a7c2-theme-pointer-offset:-1px;--qxframe9a7c2-theme-pointer-opacity:100%">
+  <input id="focus-owner-native" class="qxframe9a7c2-form-input" placeholder="Native pointer focus" />
+  <select class="qxframe9a7c2-form-select"><option>Choice</option></select>
+  <textarea class="qxframe9a7c2-form-textarea">Pointer focus</textarea>
+  <input class="qxframe9a7c2-form-input" readonly value="Readonly" />
+  <input class="qxframe9a7c2-form-input" disabled value="Disabled" />
+  <div id="focus-image-default" class="qxframe9a7c2-image"><div class="qxframe9a7c2-image-mask"></div></div>
+  <div id="focus-image-public-override" class="qxframe9a7c2-image" style="--qxframe9a7c2-image-mask-bg:rgb(50,100,150)"><div class="qxframe9a7c2-image-mask"></div></div>
+  <div class="dark" style="--qxframe9a7c2-theme-overlay:rgb(60,100,140)">
+    <input class="qxframe9a7c2-form-input" placeholder="Nested dark" />
+    <div class="qxframe9a7c2-image"><div class="qxframe9a7c2-image-mask"></div></div>
+  </div>
+</section>
 <section id="component-owner-closure">
   <div class="qxframe9a7c2-item-surface is-disabled">Disabled Item</div>
   <div class="qxframe9a7c2-list is-disabled"><div class="qxframe9a7c2-item-surface">Disabled List child</div></div>
@@ -165,6 +178,9 @@ async function sample(which,mode,route='synthetic',hoverId=null) {
     await sleep(800);
   } else {
     await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
+    // Programmatically focused text field exercises FocusOrigin pointer
+    // outline ownership rather than merely comparing unfocused controls.
+    await evalJs('document.querySelector("#focus-owner-native").focus()');
   }
   await evalJs('document.fonts.ready.then(()=>true)');
   if(hoverId){
