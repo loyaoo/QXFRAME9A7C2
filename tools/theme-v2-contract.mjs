@@ -104,10 +104,10 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   // This is an exact, root-excluding generic Type projection. Require all
   // thirteen original variable formulas rather than treating a new plain
   // selector as an unrestricted source exception.
-  const genericRoles=source.match(/\\* \\*\\[class\\*="qxframe9a7c2-"\\]\\[class\\]\\s*\\{([^{}]+)\\}/);
+  const genericRoles=source.match(/\* \*\[class\*="qxframe9a7c2-"\]\[class\]\s*\{([^{}]+)\}/);
   assert.ok(genericRoles,'Descendant Type mapping requires its exact root-excluding owner');
-  assert.equal((genericRoles[1].match(/--_qxframe9a7c2-[\\w-]+\\s*:/g)||[]).length,13);
-  assert.equal(createHash('sha256').update(genericRoles[1].replace(/\\s+/g,'')).digest('hex'),
+  assert.equal((genericRoles[1].match(/--_qxframe9a7c2-[\w-]+\s*:/g)||[]).length,13);
+  assert.equal(createHash('sha256').update(genericRoles[1].replace(/\s+/g,'')).digest('hex'),
     '1ec4ab33cb54965e45a5ab6eb8057e75d12c64fb9a24f19596f535fa427e4f0f',
     'All thirteen original generic Type formulae must remain exact');
   assert.equal(unscopedPreludes.length,153,'No unexpected or missing B0-approved unscoped rules');
