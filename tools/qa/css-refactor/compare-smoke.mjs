@@ -217,6 +217,11 @@ async function sample(which,mode,route='synthetic',hoverId=null) {
   }else{
     await s('Input.dispatchMouseEvent',{type:'mouseMoved',x:1430,y:15});
   }
+  // Synthetic FocusOrigin and hover CSS may still be interpolating immediately
+  // after native focus()/mouseMoved. Await the *real* transition completion
+  // before pausing animations at t=0. No computed property is excluded:
+  // B0 self, poison and candidate all traverse this identical stable state.
+  if(!actualDoc)await sleep(800);
   // Capture at an identical animation timeline, without changing the source
   // CSS animation-name/duration/keyframes or suppressing animation assertions.
   // WAAPI freezing at time 0 avoids Card Skeleton background-position drift.
