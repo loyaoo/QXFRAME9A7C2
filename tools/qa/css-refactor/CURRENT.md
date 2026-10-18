@@ -73,3 +73,7 @@ Moves 62 universal roles from scoped `*` into zero-specificity `* *` immediately
 - Update source manifest + Schema-1 exclusion list, and expand Chromium synthetic fixture with actual pointer focus, readonly/disabled native controls, image masks, public overlay override and nested .dark.
 - Local 50-node static Card/Form/Image fixture Light/Dark: complete computed CSSOM & geometry 0 candidate differences in 6 combinations; native pointer hover four input/select/textarea states Light/Dark 0 differences; parsed CSS owner inventory 0 new competing selector/property owners. This local test omits JS dynamic docs mount and other states; mandatory exact-HEAD QXFRAME, CSS Schema, Fast Chromium with negative controls and screenshots.
 - Active source `@scope` block count 4→2. No Theme/JS DOM/runtime change, no increase in owner ratchet. B0/main frozen and PR #268 remains Draft. See TWO-SCOPE-FOCUS-CONTROL.md.
+
+
+## Appearance state scope refinement — current HEAD pending full CI
+In component-appearance.css, 3 native/JS focus/validation and disabled rule groups were moved to ordinary selectors at original late file position; 4 still scoped. All seven qualified rules and formulae conserved exactly, no additional owner pair collisions, 2 total production @scope blocks. Fast Chromium fixture now covers actual Control focused/error/warning/disabled and nested dark/public field-sides states. Detailed record: APPEARANCE-FOCUS-STATE-3.md. No R5/R6 full closeout or user Stage5-A acceptance.

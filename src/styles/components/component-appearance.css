@@ -20,6 +20,17 @@
     border-block-start-color:color-mix(in oklab,var(--_qxframe9a7c2-control-border) var(--qxframe9a7c2-theme-field-sides),transparent);
     border-block-end-color:var(--_qxframe9a7c2-control-border);
   }
+
+  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
+  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
+  .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
+  .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
+  .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
+}
+/* Control focus/validation appearance: original late shared owner.
+ * Native/JS Control border topology stays readable without scope proximity;
+ * base Control width, fill and native choice shape still require root scope. */
+
   .qxframe9a7c2-input:focus-within,.qxframe9a7c2-input.is-focused,.qxframe9a7c2-input.is-expanded,.qxframe9a7c2-input.is-error,.qxframe9a7c2-input.is-invalid,.qxframe9a7c2-input.is-warning,
   .qxframe9a7c2-form-input:focus,.qxframe9a7c2-form-input.is-focused,.qxframe9a7c2-form-input.is-invalid,
   .qxframe9a7c2-form-select:focus,.qxframe9a7c2-form-select.is-focused,.qxframe9a7c2-form-select.is-invalid,
@@ -57,13 +68,6 @@
   .qxframe9a7c2-pagination-input:disabled,.qxframe9a7c2-pagination-input.is-disabled{
     background-color:var(--_qxframe9a7c2-control-bg);
   }
-
-  .qxframe9a7c2-native-form input[type="checkbox"],.qxframe9a7c2-form-check-input[type="checkbox"],
-  .qxframe9a7c2-item-selection-indicator.is-checkbox,.qxframe9a7c2-tree-check-indicator,
-  .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
-  .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
-  .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
-}
 /* Unscoped component appearance roles: preserved declarations and original
  * selector specificity. Shared choice radii remain scoped above because
  * ordinary global context already has eight competing radius owners. */

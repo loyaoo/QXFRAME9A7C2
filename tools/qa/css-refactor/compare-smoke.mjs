@@ -89,6 +89,29 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
     <div class="qxframe9a7c2-image"><div class="qxframe9a7c2-image-mask"></div></div>
   </div>
 </section>
+<section id="appearance-control-states" style="--qxframe9a7c2-theme-field-sides:0%;--qxframe9a7c2-theme-pointer-focus:rgb(215,30,30)">
+  <div class="qxframe9a7c2-input is-focused"><input class="qxframe9a7c2-input-control" value="Focused"></div>
+  <div class="qxframe9a7c2-input is-expanded"><input class="qxframe9a7c2-input-control" value="Expanded"></div>
+  <div class="qxframe9a7c2-input is-error"><input class="qxframe9a7c2-input-control" value="Error"></div>
+  <div class="qxframe9a7c2-input is-invalid"><input class="qxframe9a7c2-input-control" value="Invalid"></div>
+  <div class="qxframe9a7c2-input is-warning"><input class="qxframe9a7c2-input-control" value="Warning"></div>
+  <div class="qxframe9a7c2-input is-disabled"><input class="qxframe9a7c2-input-control" disabled value="Disabled"></div>
+  <input class="qxframe9a7c2-form-input is-focused" value="Focus Form">
+  <input class="qxframe9a7c2-form-input is-invalid" value="Invalid Form">
+  <input class="qxframe9a7c2-form-input" disabled value="Disabled Form">
+  <select class="qxframe9a7c2-form-select is-focused"><option>Focused Select</option></select>
+  <select class="qxframe9a7c2-form-select" disabled><option>Disabled Select</option></select>
+  <textarea class="qxframe9a7c2-form-textarea is-invalid">Invalid Textarea</textarea>
+  <textarea class="qxframe9a7c2-form-textarea" disabled>Disabled Textarea</textarea>
+  <input class="qxframe9a7c2-input-otp-segment is-focused" value="1">
+  <input class="qxframe9a7c2-pagination-input is-invalid" value="2">
+  <div class="dark" style="--qxframe9a7c2-theme-field-sides:100%;--qxframe9a7c2-theme-field:rgb(190,235,180)">
+    <div class="qxframe9a7c2-input is-focused"><input class="qxframe9a7c2-input-control" value="Nested dark focus"></div>
+    <input class="qxframe9a7c2-form-input is-invalid" value="Nested dark invalid">
+    <select class="qxframe9a7c2-form-select is-focused"><option>Nested dark select</option></select>
+    <textarea class="qxframe9a7c2-form-textarea is-invalid">Nested dark textarea</textarea>
+  </div>
+</section>
 <section id="component-owner-closure">
   <div class="qxframe9a7c2-item-surface is-disabled">Disabled Item</div>
   <div class="qxframe9a7c2-list is-disabled"><div class="qxframe9a7c2-item-surface">Disabled List child</div></div>
