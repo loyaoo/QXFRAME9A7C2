@@ -115,13 +115,13 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   // framework sizing roots still retain precisely the B0 1px default.
   // This is ONE named and fingerprinted owner, not a general exception.
   const separateDefaultHash='d5d0ff9ea95673a8f5ccc87b7061a568060153e9360150872a6f4142e60ba222';
-  const normalizedPrelude=s=>s.replace(/\\s+/g,'');
+  const normalizedPrelude=s=>s.replace(/\s+/g,'');
   const isSizedDefault=prelude=>createHash('sha256').update(normalizedPrelude(prelude)).digest('hex')===separateDefaultHash;
   const partitioned=unscopedPreludes.filter(isSizedDefault);
   assert.equal(partitioned.length,1,'Exactly one B0-preserving 47-selector default-border-width owner');
   assert.equal(partitioned[0].split(',').length,47,'Only non-Control roots share default border-width');
   const sizingSource=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
-  const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\\{\\s*--_qxframe9a7c2-control-border-width:\\s*1px;\\s*\\}/g)]
+  const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\{\s*--_qxframe9a7c2-control-border-width:\s*1px;\s*\}/g)]
     .filter(x=>isSizedDefault(x[1].trim()));
   assert.equal(onePixelOwners.length,1,'All 47 non-Control defaults must retain the exact 1px declaration');
   const originalConsumers=unscopedPreludes.filter(x=>!isSizedDefault(x));
