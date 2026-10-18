@@ -103,23 +103,6 @@
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-background);
   }
-  /* Resolve current Type locally, including parts that inherit their owner.
-     Specificity prevents legacy .is-color aliases from replacing this chain. */
-  [class*="qxframe9a7c2-"][class] {
-    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
-    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
-    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
-    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-type);
-    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-type-foreground);
-    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
-    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
-    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
-    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
-    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
-    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
-    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
-  }
   /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
   .qxframe9a7c2-tag {
     background-color: var(--qxframe9a7c2-theme-secondary);
@@ -248,4 +231,24 @@
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
     min-height: var(--_qxframe9a7c2-control-height);
   }
-  .qxframe9a7c2-input.is-textarea { padding: 0; }}
+  .qxframe9a7c2-input.is-textarea { padding: 0; }
+}
+/* Generic type roles apply only to framework descendants, never html. */
+
+  /* Resolve current Type locally, including parts that inherit their owner.
+     Specificity prevents legacy .is-color aliases from replacing this chain. */
+  * *[class*="qxframe9a7c2-"][class] {
+    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
+    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
+    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
+    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-type-foreground);
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
+  }

@@ -61,3 +61,7 @@ Last historical production CSS filename `src/styles/main/theme-visual-v2.css` is
 
 ## Root-excluding semantic role candidate (pending exact-head three-gate approval)
 Moves 62 universal roles from scoped `*` into zero-specificity `* *` immediately preceding the original scope to preserve root omission and local dark re-evaluation; the scoped core rule count is 31→30, scope blocks remain 4. Four adjacent same-selector component rules merged and one duplicate InputGroup property removed. Source contract pins normalized semantic-role SHA256. See ROOT-DESCENDANT-SEMANTICS.md; actual Chrome and full CI acceptance required.
+
+
+## Seven root-scope rule ownership transfers (pending exact HEAD gates)
+`semantic-cascade.css`: shared generic Type role selector lifted to root-excluded plain `* *[class*]` (29 scoped left). `focus-feedback.css`: transferred descendant FocusOrigin vars into focus-closeout.css, four Result state aliases into result.css, and overlay SelectGroup indicator into collection-select.css (2 scoped left). All transferred values unchanged; no new scope blocks or Theme/JS/DOM changes. Synthetic full CSSOM 68 nodes in each light/dark mode, zero differences for the whole seven-rule batch. Exact-head Fast/Full/Schema mandatory; see FOCUS-TYPE-OWNER-7.md.

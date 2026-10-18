@@ -114,3 +114,12 @@
 .qxframe9a7c2-select-option-host>.qxframe9a7c2-item-collection{background:transparent}
 .qxframe9a7c2-select.has-rich-value:not(.is-multiple) .qxframe9a7c2-select-values{min-width:0}
 
+/* Floating SelectGroup indicators do not acquire the static focus shadow. */
+
+
+  /* Overlay choice indicators must not retain the legacy overlay-shadow color.
+     Match the legacy selector specificity instead of using priority flags. */
+  .qxframe9a7c2-selectgroup-indicator.is-checkbox.is-overlay,
+  .qxframe9a7c2-selectgroup-indicator.is-radio.is-overlay {
+    box-shadow: none;
+  }
