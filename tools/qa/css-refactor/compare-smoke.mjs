@@ -237,9 +237,27 @@ async function sample(which,mode,route='synthetic',hoverId=null) {
   })()`);
   if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 45))
     throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
+  // The Semantic DOM debugger prints a LIVE pseudo-rule count in the docs UI.
+  // Removing source rules legitimately changes that number (543 -> 540), but
+  // it is not a component pixel or layout regression. Capture its raw value
+  // as an independent source diagnostic BEFORE screenshot sampling, then
+  // normalize ONLY these three numeric glyphs. No rectangle/pixel masking,
+  // threshold increase, stylesheet mutation or skipped rendered components.
+  // All computed properties and bounding boxes above use the unmodified DOM.
+  const semanticDiagnostics=actualDoc ? await evalJs(`(() => {
+    const label=document.querySelector('[data-semantic-stats]');
+    if(!label) throw new Error('Missing mandatory Semantic DOM rule diagnostics');
+    const actual=label.textContent || '';
+    const matched=actual.match(/^(.* · )([0-9]{3}) pseudo rules$/);
+    if(!matched) throw new Error('Unexpected Semantic DOM diagnostic label: '+actual);
+    const rawCount=Number(matched[2]);
+    if(rawCount<100 || rawCount>999)throw new Error('Implausible pseudo rule count '+rawCount);
+    label.textContent=matched[1]+'000 pseudo rules';
+    return {rawCount,display:'000',source:actual};
+  })()`) : null;
   const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
   const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
-  return {snapshot,errors,http,image,animationEvidence};
+  return {snapshot,errors,http,image,animationEvidence,semanticDiagnostics};
 
 }
 function compare(a,b,label) {
