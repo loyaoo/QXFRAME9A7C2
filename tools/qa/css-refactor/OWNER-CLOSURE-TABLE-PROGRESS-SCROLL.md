@@ -20,3 +20,6 @@ Move four source-of-truth consumer definitions out of the **last** production `@
 
 ## Required acceptance
 QXFRAME CI, CSS Schema Acceptance, Fast Chromium B0 self + negative poison + Light/Dark Card screenshot + new Table/Progress/Scroll fixtures all must pass at the **same SHA**. No rollback of B0 or merge of PR #268. No new token/Theme input, CSS history file, extra @scope, @layer, :where, :is, JS/DOM app patch or test relaxation.
+
+## Same-batch production owner fix after exact CI
+QXFRAME CI [#39177038412](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39177038412) correctly rejected a new **duplicate owner** in `components/table.css`: shared Table th/td rule now owns frozen final `color: var(--qxframe9a7c2-theme-foreground)`, but its later standalone `.qxframe9a7c2-table th` rule still authored the superseded muted-secondary `color`. The old late scoped final rule previously overrode that muted declaration. Remove only the superseded header-color declaration; keep distinct header background and font properties. Neither ratchet baseline nor CSSOM/screenshot tolerance changes. The independent Fast workflow now preflights the existing `verify:theme-tokens` owner gate before launching Chromium, to avoid spending full browser CI time on an already detectible source ownership failure.

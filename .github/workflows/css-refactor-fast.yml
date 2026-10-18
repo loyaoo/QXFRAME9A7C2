@@ -54,9 +54,10 @@ jobs:
           mkdir -p artifacts
           node tools/qa/css-refactor/token-usage.mjs --out=artifacts/css-refactor-token-usage.json
           node tools/qa/css-refactor/theme-case-manifest.mjs --baseline=.qxframe-baseline/src/styles/main/theme.css --out=artifacts/css-refactor-theme-cases.json
-      - name: Card contract preflight
+      - name: Token ownership and Card contract preflight
         run: |
           set -euo pipefail
+          npm run verify:theme-tokens
           node tools/verify-css-grid-card-meta.mjs
           node tools/verify-css-grid-lowrisk-closeout-4.mjs
           node tools/verify-css-grid-final-closeout.mjs

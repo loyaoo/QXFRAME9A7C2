@@ -55,7 +55,7 @@
   text-align:start;
   vertical-align:middle;
 }
-.qxframe9a7c2-table th{background:var(--_qxframe9a7c2-table-head-bg);color:var(--_qxframe9a7c2-semantic-text-secondary);font-weight:600;white-space:nowrap}
+.qxframe9a7c2-table th{background:var(--_qxframe9a7c2-table-head-bg);font-weight:600;white-space:nowrap}
 .qxframe9a7c2-table thead tr:first-child>th:first-child{border-start-start-radius:calc(var(--_qxframe9a7c2-table-radius) - 1px)}
 .qxframe9a7c2-table thead tr:first-child>th:last-child{border-start-end-radius:calc(var(--_qxframe9a7c2-table-radius) - 1px)}
 .qxframe9a7c2-table-wrap.has-title .qxframe9a7c2-table thead tr:first-child>th:first-child,
