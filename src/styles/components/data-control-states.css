@@ -13,12 +13,12 @@
   /* Alert keeps source-owned configurable elevation. */
   /* Remaining QX consumers enter existing source responsibilities. Geometry,
      value ownership, native events, focus and popup mounting remain unchanged. */
-  .qxframe9a7c2-form-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-select[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-form-textarea[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
-  .qxframe9a7c2-input-otp-segment[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-select[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-textarea[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-input-otp-segment[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   /* ColorPanel source paints input, format and eye as one field family. */
-  .qxframe9a7c2-pagination-input[class] { background-color: var(--_qxframe9a7c2-control-bg); border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-pagination-input[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
   .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }

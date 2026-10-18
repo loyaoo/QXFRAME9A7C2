@@ -1,7 +1,7 @@
 /* Component appearance projection: typography, shape, control paint and
  * validation precedence. Kept in its original late source-order position.
  * Root scope is intentional until the competing owners are de-duplicated. */
-@scope (:root) {
+
 
   .qxframe9a7c2-button[class],.qxframe9a7c2-input[class],.qxframe9a7c2-text-field[class],
   .qxframe9a7c2-form-input[class],.qxframe9a7c2-form-select[class],.qxframe9a7c2-form-textarea[class],
@@ -26,7 +26,7 @@
   .qxframe9a7c2-selectgroup-indicator.is-checkbox{border-radius:var(--qxframe9a7c2-theme-radius-choice)}
   .qxframe9a7c2-native-form input[type="radio"],.qxframe9a7c2-form-check-input[type="radio"],
   .qxframe9a7c2-selectgroup-indicator.is-radio{border-radius:var(--qxframe9a7c2-theme-radius-radio)}
-}
+
 /* Control focus/validation appearance: original late shared owner.
  * Native/JS Control border topology stays readable without scope proximity;
  * base Control width, fill and native choice shape still require root scope. */

@@ -77,3 +77,7 @@ Moves 62 universal roles from scoped `*` into zero-specificity `* *` immediately
 
 ## Appearance state scope refinement — current HEAD pending full CI
 In component-appearance.css, 3 native/JS focus/validation and disabled rule groups were moved to ordinary selectors at original late file position; 4 still scoped. All seven qualified rules and formulae conserved exactly, no additional owner pair collisions, 2 total production @scope blocks. Fast Chromium fixture now covers actual Control focused/error/warning/disabled and nested dark/public field-sides states. Detailed record: APPEARANCE-FOCUS-STATE-3.md. No R5/R6 full closeout or user Stage5-A acceptance.
+
+
+## Final Appearance scope ownership consolidation — 2026-10-18
+The former 4 qualified rules in components/component-appearance.css are now plain component CSS, removing the full scoped block. Their earlier competing owners are deliberately consolidated: 6 shared Control border-width defaults are separated from 47 non-Control default owners in component-sizing.css; 5 earlier form-control background paints are removed from data-control-states.css; overlapping native/check/radio radius selectors are removed from choice-visual.css while preserving the special unwrapped SelectGroup input radius selectors. Four production modules changed atomically, 2 total @scope blocks → 1, exact-head triple CI pending. See APPEARANCE-SCOPE-CLOSURE.md.
