@@ -81,3 +81,5 @@ In component-appearance.css, 3 native/JS focus/validation and disabled rule grou
 
 ## Final Appearance scope ownership consolidation — 2026-10-18
 The former 4 qualified rules in components/component-appearance.css are now plain component CSS, removing the full scoped block. Their earlier competing owners are deliberately consolidated: 6 shared Control border-width defaults are separated from 47 non-Control default owners in component-sizing.css; 5 earlier form-control background paints are removed from data-control-states.css; overlapping native/check/radio radius selectors are removed from choice-visual.css while preserving the special unwrapped SelectGroup input radius selectors. Four production modules changed atomically, 2 total @scope blocks → 1, exact-head triple CI pending. See APPEARANCE-SCOPE-CLOSURE.md.
+
+Strict source gate closure: Fast #39134378268 passed no-visual CSS, but QXFRAME/Schema rejected intentional new 47-selector border fallback as 154th unscoped rule. Gated exact 47 selectors by SHA256, single 1px declaration, while preserving 153 original selector hash and count. Same-HEAD full CI pending.

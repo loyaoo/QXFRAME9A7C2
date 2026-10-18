@@ -110,8 +110,23 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.equal(createHash('sha256').update(genericRoles[1].replace(/\s+/g,'')).digest('hex'),
     '1ec4ab33cb54965e45a5ab6eb8057e75d12c64fb9a24f19596f535fa427e4f0f',
     'All thirteen original generic Type formulae must remain exact');
-  assert.equal(unscopedPreludes.length,153,'No unexpected or missing B0-approved unscoped rules');
-  assert.equal(createHash('sha256').update(unscopedPreludes.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'Unscoped selectors must preserve exact B0-owned list and order');
+  // Component-sizing now partitions the former shared default declaration:
+  // its six actual Control owners are late Theme-driven, while the OTHER 47
+  // framework sizing roots still retain precisely the B0 1px default.
+  // This is ONE named and fingerprinted owner, not a general exception.
+  const separateDefaultHash='d5d0ff9ea95673a8f5ccc87b7061a568060153e9360150872a6f4142e60ba222';
+  const normalizedPrelude=s=>s.replace(/\\s+/g,'');
+  const isSizedDefault=prelude=>createHash('sha256').update(normalizedPrelude(prelude)).digest('hex')===separateDefaultHash;
+  const partitioned=unscopedPreludes.filter(isSizedDefault);
+  assert.equal(partitioned.length,1,'Exactly one B0-preserving 47-selector default-border-width owner');
+  assert.equal(partitioned[0].split(',').length,47,'Only non-Control roots share default border-width');
+  const sizingSource=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
+  const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\\{\\s*--_qxframe9a7c2-control-border-width:\\s*1px;\\s*\\}/g)]
+    .filter(x=>isSizedDefault(x[1].trim()));
+  assert.equal(onePixelOwners.length,1,'All 47 non-Control defaults must retain the exact 1px declaration');
+  const originalConsumers=unscopedPreludes.filter(x=>!isSizedDefault(x));
+  assert.equal(originalConsumers.length,153,'No unexpected or missing B0-approved unscoped rules');
+  assert.equal(createHash('sha256').update(originalConsumers.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'The original 153 B0-owned selector list and order must stay frozen');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
   return {source,expressions,sourceSha:fixture.sha,canonical:true};
 }

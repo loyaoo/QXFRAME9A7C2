@@ -25,3 +25,9 @@
 - Current batch **implemented, pending exact HEAD all-three success**, not R5/R6 completion.
 - Existing global public Choice radio/checkbox radius and Control width overrides are maintained in original canonical declaration semantics. Additional 112 Theme combinations, portal, density variants, actual nested shadow and user Stage5-A acceptance remain open, and demand later L2 gates.
 - Remaining one scoped semantic cascade must be solved by actual owner closure and fully proven cascade precedence; do not blind flatten.
+
+## Exact-head CI shape dependency and strict correction
+- [Fast #39134378268](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39134378268) **success** at `62052f4c`: synthetic Light/Dark candidate CSSOM 0, real Card 152 nodes/mode CSSOM+geometry 0, Light/Dark full screenshot pixel equality, native Card Action hover 0, negative poison detected.
+- [QXFRAME #39134378211](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39134378211) and [Schema #39134378295](https://github.com/loyaoo/QXFRAME9A7C2/actions/runs/39134378295) failed only the old `theme-v2-contract.mjs` check `154 !== 153` because one *intentional* 47-selector non-Control border-width fallback owner was now in `component-sizing.css`. No browser parity error was reported.
+- New strict contract recognizes **exactly one** extra owner by SHA-256 fingerprint `d5d0ff9ea95673a8f5ccc87b7061a568060153e9360150872a6f4142e60ba222`, **47** selectors, and exactly one `--_qxframe9a7c2-control-border-width:1px` declaration. The **original 153 selector hash and order** are still independently required, and every other extra top-level selector still fails. This is a stricter semantic owner test than a source shape count alone; no threshold or CSSOM exclusion expanded.
+- Latest corrective HEAD requires QXFRAME+Schema+Fast same SHA successes before acceptance.
