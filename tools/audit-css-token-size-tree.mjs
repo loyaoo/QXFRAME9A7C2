@@ -52,7 +52,7 @@ export function generateSizeTreeAudit({rootDir=root}={}){
   // Geometry contract is verified by verify:css-token-size-tree (async createApp compiler check).
   const nodes=sizeTreeNodes();
   const consumers=[];
-  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/main/theme-visual-v2'))){
+  for(const rel of getCanonicalStyleModulePaths({root:rootDir}).filter(rel=>!rel.startsWith('src/styles/main/semantic-cascade'))){
     const lines=fs.readFileSync(path.join(rootDir,rel),'utf8').split(/\r?\n/);
     const layer=rel.includes('/preset/')?'preset':rel.includes('/main/theme-')?'theme':rel.includes('/components/')?'component':'base';
     for(let i=0;i<lines.length;i++){

@@ -15,7 +15,7 @@
     "main-foundation",
     "main-fixed-values",
     "components",
-    "main-theme-visual-v2",
+    "main-semantic-cascade",
     "late-semantic-status-modifiers",
     "late-feedback-theme-states",
     "late-data-control-states",
@@ -25,7 +25,7 @@
     "late-component-sizing",
     "late-focus-feedback",
     "late-control-interaction",
-    "main-theme-visual-v2-style",
+    "late-semantic-inputs",
     "late-component-appearance"
   ],
   "conceptualOrder": [
@@ -98,7 +98,7 @@
     "src/styles/components/composition.css",
     "src/styles/components/focus-closeout.css",
     "src/styles/components/visual-recipe.css",
-    "src/styles/main/theme-visual-v2.css",
+    "src/styles/main/semantic-cascade.css",
     "src/styles/components/semantic-status-modifiers.css",
     "src/styles/components/feedback-theme-states.css",
     "src/styles/components/data-control-states.css",

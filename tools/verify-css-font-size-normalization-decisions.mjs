@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {STYLE_RULE_VERSION,STYLE_ROLES,STYLE_APPEARANCE,normalizeStyleConfig} from '../docs/assets/theme-generator/style-engine-v2.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const source=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
+const source=[ 'src/styles/main/semantic-cascade.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
 
 assert.equal(STYLE_RULE_VERSION,'qx-style-3');
 for(const role of ['font-family','font-family-heading','font-family-mono','typography-body-size','typography-meta-size','typography-heading-size','typography-kpi-size','typography-body-weight','typography-label-weight','control-font-weight','control-letter-spacing','control-text-transform','heading-letter-spacing','heading-text-transform']){

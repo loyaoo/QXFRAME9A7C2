@@ -46,8 +46,8 @@
       "components/upload": 1,
       "components/visual-recipe": 12,
       "main/fixed-values": 26,
-      "main/theme-visual-v2": 34,
-      "components/component-appearance": 12
+      "components/component-appearance": 12,
+      "main/semantic-cascade": 9
     },
     "unregistered-theme-token": {}
   },

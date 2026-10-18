@@ -8,7 +8,7 @@ import {verifySemanticRuleSource} from './theme-v2-contract.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const css=readCanonicalStyleSource({root});
-const theme=[ 'src/styles/main/theme-visual-v2.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(read).join('\n');
+const theme=[ 'src/styles/main/semantic-cascade.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(read).join('\n');
 
 const dynamicOwners=new Map([
   ['--qxframe9a7c2-collapse-motion-height',{file:'src/components/collapse.js',set:/setProperty\(['"]--qxframe9a7c2-collapse-motion-height['"]/}],

@@ -53,3 +53,7 @@ Owner correction: Card Grid Hover public --qxframe9a7c2-card-shadow override mus
 
 ## Seven component-family modules (exact-head CI pending)
 153 plain consumer rules (54,358 B) have been extracted byte-for-byte from legacy theme-visual-v2.css to seven late component-domain CSS modules. The legacy core now contains 31 scoped rules and root tokens, at 24,856 B. Rule order preserved and canonical source readers updated. See SEMANTIC-CONSUMER-PARTITION.md. No extra @scope; PR remains Draft.
+
+
+## R5 semantic cascade core consolidation — 2026-10-18
+Last historical production CSS filename `src/styles/main/theme-visual-v2.css` is retired. Its 31 remaining scoped rules, root tokens, actual selectors and declaration order now live at exactly the same canonical CSS loading position in `src/styles/main/semantic-cascade.css`. Tooling/readers/source gate/order/size exceptions/ratchet references atomically follow the new owner. No change to public Theme variables, JS, DOM, @scope count, visual output, or developer-facing selectors. Duplicate-owner baseline allowance transfers from historic `main/theme-visual-v2:34` to `main/semantic-cascade:9` (observed current green count); allowed duplicate owners decrease by 25. This removes the last live versioned CSS file, but the 31 scoped rules, 3 other scope blocks, component owners, and Stage5/112 style browser/Portal gates remain **unfinished**. Evidence file `tools/qa/css-refactor/SEMANTIC-CASCADE-RENAME.md`. Await exact HEAD Fast/QXFRAME/Schema success; PR #268 remains Draft and main/B0 frozen.

@@ -1,7 +1,7 @@
-/* THEME-VISUAL-V2-001 canonical chain.
- * Theme inputs are full colors. Shared rules resolve in each consumer.
- * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT.
- * This versioned module is NOT a legacy token bridge or an expanded state matrix. */
+/* Semantic cascade: root-derived shared roles and precedence-sensitive component consumers.
+ * Theme input colors are resolved by shared component rules.
+ * Source inspiration: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT.
+ * The remaining scoped rules retain their tested cascade precedence until ownership closes. */
 /* Theme consumer chain (createApp v3 §5).
  * Inputs are the closed --qxframe9a7c2-theme-* list (theme-default.css or an exported theme).
  * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
