@@ -7,3 +7,10 @@
 - No Theme generator, public/private token name, color-mix formula, runtime JS/DOM or source order list modified. Strict contract asserts the four exact selector/declaration recipes in target modules and exactly 17 rules still scoped.
 - Browser smoke gains actual Tag default/solid/disabled/colored, Button filled/focused, Table surface and nested local dark nodes. Existing real Card docs, whole-page screenshot, negative mutation and action-hover evidence remain mandatory.
 - Risks not claimed closed: Theme public override edge cases, nested popover/local dark, four Framework scope-removal packages and full 112 Theme CreateApp/portal matrix. Exact-head QXFRAME + CSS Schema + Chromium Fast must pass; revert production changes if any CSSOM or screenshot regression. No ratchet relaxation.
+
+## Duplicate-owner correction before final acceptance
+- Strict Fast #39189758228 found three valid duplicate CSS owner keys in early components: `.tag { color }`, `.badge.is-solid { color }` and `.button.is-filled { --_qxframe9a7c2-button-focus-border }`.
+- Do **not** increase `duplicate-owner` ratchet. Remove only the superseded early property declarations in `tags.css`, `badge.css`, `button.css`, retaining all other button/tag/badge private slots and states.
+- Their exact late values remain in `feedback-theme-states.css` and `input-action-states.css`. The tag/badge fields are still assigned from the Theme and per-Type roles. No earlier owner is left competing for the same key.
+- Corrected the initial structural assertion's whitespace-normalization regular expression: `/\\s+/g` (literal backslash) → `/\s+/g` (actual whitespace). This corrects the test; it does not relax a requirement.
+- This is one closed component-family owner migration; the previous failed HEAD and its screenshots cannot be used as acceptance. Exact corrected SHA three CIs and negative controls required.

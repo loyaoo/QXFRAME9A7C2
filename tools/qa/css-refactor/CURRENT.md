@@ -102,3 +102,6 @@ Correction to four-owner migration: original root @scope count remains 21. Fast 
 
 ## Four late component owner closures (pending exact-head CI)
 Semantic cascade root scope 21→17 rules: Tag base, Tag solid, Table base, Button filled focus move to their existing late component domain CSS files with unchanged selectors/values. Fast synthetic fixture expanded with Tag/filled Button/Table/nested dark; strict source contract checks exact target declarations. See tools/qa/css-refactor/OWNER-CLOSURE-TAG-TABLE-BUTTON.md. No Theme/JS/DOM changes, PR Draft.
+
+
+Owner-ratchet corrective batch: three earlier tag, badge solid and filled-button focus declarations eliminated because the migrated final component-family rules already supply the same CSS properties. No increase to duplicate-owner ratchet; exact-head triple CI pending. Other public and internal state roles remain untouched.
