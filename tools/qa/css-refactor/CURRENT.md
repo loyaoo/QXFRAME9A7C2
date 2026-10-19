@@ -95,3 +95,6 @@ delete duplicate scoped Textarea padding because native-input.css already owns e
 Remove superseded early color/disabled-bg component declarations to avoid duplicate owners.
 Add real notification/menu/textarea/nested .dark Chromium fixture. Exact-head triple CI pending;
 no baseline or Theme/JS/DOM edits. See OWNER-CLOSURE-MENU-NOTICE-TEXTAREA.md.
+
+
+Correction to four-owner migration: original root @scope count remains 21. Fast exposed Textarea padding override by later component-sizing module; zero padding moved from native-input base to final component-sizing owner, and source gate explicitly pins the three new late selectors with exact Theme declarations instead of relaxing original 153 fingerprint. New HEAD CI pending.

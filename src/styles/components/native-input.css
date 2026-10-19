@@ -101,7 +101,7 @@ select:not([class*="qxframe9a7c2-"])[multiple]{height:auto;min-height:5.5rem;cur
 .qxframe9a7c2-input-segment-field.has-mask.has-mask-value>.qxframe9a7c2-input-segment-input::selection{color:transparent;-webkit-text-fill-color:transparent;text-shadow:none}
 .qxframe9a7c2-input-segment-input::placeholder{color:var(--_qxframe9a7c2-semantic-text-placeholder)}.qxframe9a7c2-input-segment-separator{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--_qxframe9a7c2-semantic-text-secondary);user-select:none}
 
-.qxframe9a7c2-input.is-textarea{position:relative;display:block;min-height:auto;padding:0}
+.qxframe9a7c2-input.is-textarea{position:relative;display:block;min-height:auto}
 .qxframe9a7c2-input.is-textarea>.qxframe9a7c2-input-control{display:block;width:100%;height:auto;min-height:5.5rem;line-height:var(--_qxframe9a7c2-control-line-height);resize:vertical;padding:var(--_qxframe9a7c2-control-padding-block) var(--_qxframe9a7c2-control-padding-inline);padding-block-end:calc(var(--_qxframe9a7c2-control-padding-block) + 1.35em + var(--_qxframe9a7c2-fixed-space-1))}
 .qxframe9a7c2-input.is-textarea>.qxframe9a7c2-input-prefix{position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-block-start:var(--_qxframe9a7c2-control-padding-block);inset-inline-start:var(--_qxframe9a7c2-control-padding-inline)}
 .qxframe9a7c2-input.is-textarea>.qxframe9a7c2-input-suffix{position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline-end:var(--_qxframe9a7c2-control-padding-inline);inset-block-end:var(--_qxframe9a7c2-control-padding-block);max-width:calc(100% - var(--_qxframe9a7c2-control-padding-inline)*2);align-self:auto;background:var(--_qxframe9a7c2-state-bg)}

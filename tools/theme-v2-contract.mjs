@@ -124,7 +124,23 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\{\s*--_qxframe9a7c2-control-border-width:\s*1px;\s*\}/g)]
     .filter(x=>isSizedDefault(x[1].trim()));
   assert.equal(onePixelOwners.length,1,'All 47 non-Control defaults must retain the exact 1px declaration');
-  const originalConsumers=unscopedPreludes.filter(x=>!isSizedDefault(x));
+  // Exactly three former B0 scoped roles are now authored in their late
+  // actual component families. Their SELECTORS are frozen here; this does
+  // not open the original 153-selector hash to arbitrary additional CSS.
+  const approvedOwnerSelectorKeys=new Set([
+    '.qxframe9a7c2-notification-root',
+    '.qxframe9a7c2-menu',
+    '.qxframe9a7c2-menu-item.is-danger.is-disabled,.qxframe9a7c2-menu-item.is-danger:disabled,.qxframe9a7c2-menu-item.is-disabled,.qxframe9a7c2-menu-item:disabled,.qxframe9a7c2-menu.is-disabled.qxframe9a7c2-menu-item'
+  ]);
+  const compactOwnerSelector=s=>s.replace(/\\s+/g,'');
+  const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
+  assert.equal(transferredOwners.length,3,'Only the three exact transferred component selectors are newly permitted');
+  const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
+  const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
+  assert.match(noticeOwner,/\\.qxframe9a7c2-notification-root\\s*\\{\\s*background-color:\\s*var\\(--qxframe9a7c2-theme-card\\);\\s*color:\\s*var\\(--_qxframe9a7c2-type\\);\\s*border-color:\\s*var\\(--qxframe9a7c2-theme-card-edge\\);\\s*\\}/,'Notification keeps B0 exact final Theme surface');
+  assert.match(menuOwner,/\\.qxframe9a7c2-menu\\s*\\{\\s*background-color:\\s*var\\(--qxframe9a7c2-theme-sidebar,\\s*var\\(--qxframe9a7c2-theme-background\\)\\);\\s*color:\\s*var\\(--qxframe9a7c2-theme-sidebar-foreground,\\s*var\\(--qxframe9a7c2-theme-foreground\\)\\);\\s*\\}/,'Menu final surface must keep B0 Theme fallbacks');
+  assert.match(menuOwner,/\\.qxframe9a7c2-menu-item\\.is-danger\\.is-disabled[^{}]*\\{\\s*--_qxframe9a7c2-menu-item-bg:\\s*transparent;\\s*--_qxframe9a7c2-navigation-text:\\s*inherit;\\s*opacity:\\s*\\.5;\\s*\\}/,'Menu disabled must keep all three original declarations');
+  const originalConsumers=unscopedPreludes.filter(x=>!isSizedDefault(x) && !approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
   assert.equal(originalConsumers.length,153,'No unexpected or missing B0-approved unscoped rules');
   assert.equal(createHash('sha256').update(originalConsumers.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'The original 153 B0-owned selector list and order must stay frozen');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');

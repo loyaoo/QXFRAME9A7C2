@@ -106,3 +106,7 @@
     color:var(--qxframe9a7c2-theme-foreground);
     border-color:var(--qxframe9a7c2-theme-border);
   }
+
+/* Final Textarea spacing owner: override shared [class] Control padding.
+ * Its native-input base still owns positioning and multiline min-height. */
+.qxframe9a7c2-input.is-textarea{padding:0}
