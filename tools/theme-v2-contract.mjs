@@ -169,12 +169,11 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     // against their final late files, not allowed as anonymous new consumers.
     '.qxframe9a7c2-tag',
     '.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid',
-    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap',
-    '.qxframe9a7c2-form-check-input[type="checkbox"]'
+    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap'
   ]);
   const compactOwnerSelector=s=>s.replace(/\s+/g,'');
   const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
-  assert.equal(transferredOwners.length,8,'Only eight exact transferred component selectors are newly permitted, each with its declared owner');
+  assert.equal(transferredOwners.length,7,'Only the seven previously approved semantic source module owners may be transferred in this scanned source set');
   const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
   const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
   assert.match(noticeOwner,/\.qxframe9a7c2-notification-root\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-card\);\s*color:\s*var\(--_qxframe9a7c2-type\);\s*border-color:\s*var\(--qxframe9a7c2-theme-card-edge\);\s*\}/,'Notification keeps B0 exact final Theme surface');
