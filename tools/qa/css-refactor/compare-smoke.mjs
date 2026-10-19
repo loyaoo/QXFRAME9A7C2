@@ -75,6 +75,19 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
   <div id="card-inherited" class="qxframe9a7c2-card is-sm"><h3 class="qxframe9a7c2-card-title">Ancestor override</h3><div class="qxframe9a7c2-card-description">Description</div></div>
   <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
 </div>
+<section id="menu-notification-textarea-owner-matrix">
+  <div class="qxframe9a7c2-notification-root" id="scope-notice-default">Notification</div>
+  <div class="qxframe9a7c2-notification-root is-warning" id="scope-notice-warning" style="--qxframe9a7c2-notification-bg:rgb(31,45,65)">Warning notification</div>
+  <nav class="qxframe9a7c2-menu" id="scope-menu-default">
+    <div class="qxframe9a7c2-menu-item" id="scope-menu-item">Menu regular</div>
+    <div class="qxframe9a7c2-menu-item is-disabled" id="scope-menu-disabled">Menu disabled</div>
+    <button class="qxframe9a7c2-menu-item is-danger" id="scope-menu-danger-disabled" disabled>Danger disabled</button>
+    <div class="qxframe9a7c2-menu-item is-hover is-disabled" id="scope-menu-hover-disabled">Hover disabled</div>
+  </nav>
+  <nav class="qxframe9a7c2-menu is-disabled" id="scope-menu-disabled-root"><div class="qxframe9a7c2-menu-item">Parent disabled</div></nav>
+  <div class="qxframe9a7c2-input is-textarea" id="scope-textarea-default"><textarea class="qxframe9a7c2-input-control">Textarea</textarea></div>
+  <div class="dark" id="scope-local-dark"><div class="qxframe9a7c2-notification-root">Local dark notification</div><nav class="qxframe9a7c2-menu"><div class="qxframe9a7c2-menu-item is-disabled">Local dark disabled menu</div></nav></div>
+</section>
 <section id="table-progress-scroll-owner-matrix">
  <div class="qxframe9a7c2-table-wrap is-bordered">
   <table class="qxframe9a7c2-table is-striped is-hover" style="--qxframe9a7c2-table-row-hover:rgb(26,87,142)">

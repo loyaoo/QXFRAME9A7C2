@@ -87,3 +87,11 @@ Strict source gate closure: Fast #39134378268 passed no-visual CSS, but QXFRAME/
 
 ## Table / Progress / Scroll owner closure (pending CI)
 Four final precedence-sensitive declarations from the sole active semantic-cascade @scope are now declared by Table, Progress and Scroll source owners; core 29→25 scoped, no new scope blocks. Local browser full CSSOM/geometry on 220-node Table state matrix and 202-node cross-component/public-variable matrix: 0 Light/Dark differences. Exact head CI must verify Card docs, negative controls, Schema and release; no Stage5 signoff. See OWNER-CLOSURE-TABLE-PROGRESS-SCROLL.md.
+
+## Last root @scope: 4 exact component owner closures (current candidate)
+Scoped semantic cascade 25 → 21 qualified rules. Move Notification final paint to
+feedback-theme-states.css and Menu default/disabled final paint to menu-selection-states.css;
+delete duplicate scoped Textarea padding because native-input.css already owns exactly padding:0.
+Remove superseded early color/disabled-bg component declarations to avoid duplicate owners.
+Add real notification/menu/textarea/nested .dark Chromium fixture. Exact-head triple CI pending;
+no baseline or Theme/JS/DOM edits. See OWNER-CLOSURE-MENU-NOTICE-TEXTAREA.md.

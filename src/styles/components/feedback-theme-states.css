@@ -1,3 +1,10 @@
+/* Notification surface: final shared Theme paint formerly in scoped
+ * semantic-cascade. Current component ownership is intentionally late. */
+.qxframe9a7c2-notification-root {
+    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
+    border-color: var(--qxframe9a7c2-theme-card-edge);
+  }
+
 
   /* Default Badge is a neutral status label; explicit is-* colors still win. */
   .qxframe9a7c2-badge { --_qxframe9a7c2-default-type: var(--qxframe9a7c2-theme-muted-foreground); --_qxframe9a7c2-default-foreground: var(--qxframe9a7c2-theme-background); }

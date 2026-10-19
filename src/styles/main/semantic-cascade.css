@@ -112,10 +112,6 @@
   .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {
     background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground);
   }
-  .qxframe9a7c2-notification-root {
-    background-color: var(--qxframe9a7c2-theme-card); color: var(--_qxframe9a7c2-type);
-    border-color: var(--qxframe9a7c2-theme-card-edge);
-  }
 
   /* Table is a data surface. Its selected background is muted, not Primary. */
   .qxframe9a7c2-table, .qxframe9a7c2-table-wrap { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
@@ -202,10 +198,6 @@
     box-shadow: var(--_qxframe9a7c2-dialog-shadow);
     filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
   }
-
-  /* navigation: shadcn item highlighting uses accent, not primary. */
-  .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
-  .qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
   /* Shared native/projected choice; state source and QX focus protocol unchanged. */
   .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
   .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
@@ -224,8 +216,7 @@
   .qxframe9a7c2-button.is-sm, .qxframe9a7c2-input.is-sm, .qxframe9a7c2-text-field.is-sm, .qxframe9a7c2-form-input.is-sm, .qxframe9a7c2-form-select.is-sm, .qxframe9a7c2-form-textarea.is-sm, .qxframe9a7c2-selectgroup.is-sm, .qxframe9a7c2-form-check.is-sm, .qxframe9a7c2-form-check-input.is-sm, .qxframe9a7c2-form-segmented.is-sm, .qxframe9a7c2-button-group.is-sm, .qxframe9a7c2-input-group.is-sm, .qxframe9a7c2-form-group.is-sm, .qxframe9a7c2-tags.is-sm, .qxframe9a7c2-tag.is-sm, .qxframe9a7c2-badge.is-sm, .qxframe9a7c2-input-otp.is-sm, .qxframe9a7c2-switch.is-sm, .qxframe9a7c2-slider.is-sm, .qxframe9a7c2-progress.is-sm, .qxframe9a7c2-rate.is-sm, .qxframe9a7c2-card.is-sm, .qxframe9a7c2-collapse.is-sm, .qxframe9a7c2-descriptions.is-sm, .qxframe9a7c2-avatar.is-sm, .qxframe9a7c2-empty.is-sm, .qxframe9a7c2-result.is-sm, .qxframe9a7c2-list.is-sm, .qxframe9a7c2-tree.is-sm, .qxframe9a7c2-transfer.is-sm, .qxframe9a7c2-table.is-sm, .qxframe9a7c2-menu.is-sm, .qxframe9a7c2-tabs.is-sm, .qxframe9a7c2-steps.is-sm, .qxframe9a7c2-pagination.is-sm, .qxframe9a7c2-upload.is-sm, .qxframe9a7c2-alert-root.is-sm, .qxframe9a7c2-message.is-sm, .qxframe9a7c2-notification.is-sm, .qxframe9a7c2-popup-surface.is-sm, .qxframe9a7c2-popover-root.is-sm, .qxframe9a7c2-modal-root.is-sm, .qxframe9a7c2-drawer-root.is-sm, .qxframe9a7c2-calendar.is-sm, .qxframe9a7c2-period-panel.is-sm, .qxframe9a7c2-time-panel.is-sm, .qxframe9a7c2-wheel-panel.is-sm, .qxframe9a7c2-color-panel.is-sm { --_qxframe9a7c2-size-index: -1; }
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
     min-height: var(--_qxframe9a7c2-control-height);
-  }
-  .qxframe9a7c2-input.is-textarea { padding: 0; }}
+  }}
 /* Generic type roles apply only to framework descendants, never html. */
 
   /* Resolve current Type locally, including parts that inherit their owner.
