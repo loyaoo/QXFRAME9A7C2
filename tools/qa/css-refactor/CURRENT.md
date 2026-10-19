@@ -105,3 +105,6 @@ Semantic cascade root scope 21→17 rules: Tag base, Tag solid, Table base, Butt
 
 
 Owner-ratchet corrective batch: three earlier tag, badge solid and filled-button focus declarations eliminated because the migrated final component-family rules already supply the same CSS properties. No increase to duplicate-owner ratchet; exact-head triple CI pending. Other public and internal state roles remain untouched.
+
+
+Chromium-corrected Button ownership: Filled focus rule returned to scoped semantic-cascade after 6 Light/Dark custom-property regressions. Scoped core count 18 (not 17); three Tag/Table rules transferred. Early and late Button source files fully restored from prior triple-green HEAD; Theme/JS untouched. Current triple gates pending.

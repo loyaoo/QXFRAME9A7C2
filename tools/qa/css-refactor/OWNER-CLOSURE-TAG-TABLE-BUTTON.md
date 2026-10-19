@@ -20,3 +20,9 @@ The full QXFRAME #39189833778 also identified two Table `color` collisions that 
 
 ## Exact 153-selector structural gate correction
 CI #39190351327 exposed that `input-action-states.css` already had a B0-approved `.button.is-filled` selector. The migrated declaration was appended as a second rule, producing 9 matches against 8 approved keys. This is not a new selector; merge the original focus-border property into the existing Button Filled rule, leaving ONE final component selector. Keep the frozen original 153-rule SHA256 unchanged; the genuinely new Tag/TagSolid/Table selector identities are explicitly approved as 3 new owner expressions, total historical owner exceptions **4 → 7**, with their actual full values asserted. This is a genuine single-owner improvement, not raising unrelated source limits.
+
+## Browser-evidenced Filled Button rollback
+- Fast Chromium #39190678523 detected 6 CSSOM differences per mode: `--_qxframe9a7c2-button-focus-border` changed from a 40% Type color-mix to the full Theme pointer focus. Whole Card screenshots were identical, so full CSSOM equivalence is essential.
+- Root cause: the still scoped generic Button variant recipe shadows an unscoped Filled focus declaration at equal specificity via scoped cascade proximity. Moving Filled alone is invalid.
+- Restore exact former scoped #10 rule after the shared scoped Button owner; restore earlier Button and late input-action files **byte for byte** from prior exact triple-green HEAD `c2996b3dbe9562d44a3f955dc9c40da00b9ed2ea`. Do not duplicate a new Filled selector, do not change focus formula or suppress CSSOM differences. Core scope count corrects 17→18; 3 Tag/TagSolid/Table owner transfers remain in this batch.
+- Future Filled migration is blocked until its shared Button scope authority is migrated as one dependency-closed set. This rollback does not negate valid Tag and Table closures; exact new-head triple CI remains mandatory.

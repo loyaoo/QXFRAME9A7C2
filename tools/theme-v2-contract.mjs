@@ -93,7 +93,7 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,17,'Root scope retains exactly 17 precedence-sensitive owners');
+  assert.equal(scopedBodies.length,18,'Root scope retains exactly 18 precedence-sensitive owners, including Filled Button focus');
   // Four owner closures have exact selectors and Theme expressions in their
   // late, domain-specific files. No arbitrary unscoped core exceptions.
   const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\s+/g,'');
@@ -101,10 +101,12 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.ok(lateTag.includes('.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid{background-color:var(--_qxframe9a7c2-type);color:var(--_qxframe9a7c2-type-foreground);}'),'Tag solid type/foreground must retain the original recipe');
   const lateTable=fs.readFileSync(path.join(root,'src/styles/components/data-control-states.css'),'utf8').replace(/\s+/g,'');
   assert.ok(lateTable.includes('.qxframe9a7c2-table,.qxframe9a7c2-table-wrap{background-color:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground);border-color:var(--qxframe9a7c2-theme-border);}'),'Table surface must retain Theme-owned background/foreground/edge');
-  const lateAction=fs.readFileSync(path.join(root,'src/styles/components/input-action-states.css'),'utf8').replace(/\s+/g,'');
-  const filledActionRules=[...lateAction.matchAll(/\.qxframe9a7c2-button\.is-filled\{([^{}]*)\}/g)];
-  assert.equal(filledActionRules.length,1,'Filled Button must have one final component rule');
-  assert.ok(filledActionRules[0][1].includes('--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);'),'Filled Button focus border alpha must be unchanged');
+  // Filled Button focus remains the last *scoped* size-independent winner.
+  // Splitting this declaration from the shared scoped Button states caused a
+  // real full-CSSOM regression, despite identical screenshot pixels.
+  const filledScopedRules=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/\.qxframe9a7c2-button\.is-filled\s*\{([^{}]*)\}/g)];
+  assert.equal(filledScopedRules.length,1,'Filled Button must remain a single scoped focus owner');
+  assert.ok(filledScopedRules[0][1].replace(/\s+/g,'').includes('--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);'),'Filled Button scoped focus border must preserve exact B0 alpha');
   // Zero-specificity root-excluding projection of the original 62 semantic roles.
   const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
   assert.ok(descendantRoles,'Descendant semantic roles must exist outside root scope');
