@@ -38,6 +38,16 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
 <div id="card" class="qxframe9a7c2-card"><div id="card-header" class="qxframe9a7c2-card-header">Header</div><div id="card-body" class="qxframe9a7c2-card-body">Content</div></div>
 <input id="input" class="qxframe9a7c2-input" placeholder="Text" value="Sample">
 <label id="check-host" class="qxframe9a7c2-field"><input id="checkbox" type="checkbox" checked>Check</label>
+<div id="choice-height-owner-override" style="--_qxframe9a7c2-choice-radius:3px;--_qxframe9a7c2-control-height:3.75rem">
+  <input id="choice-radius-local" class="qxframe9a7c2-form-check-input" type="checkbox" checked>
+  <button id="control-height-local" class="qxframe9a7c2-button is-sm">Height override</button>
+  <select id="select-height-local" class="qxframe9a7c2-form-select"><option>Custom height</option></select>
+</div>
+<div id="choice-height-dark-override" class="dark" style="--_qxframe9a7c2-choice-radius:0;--_qxframe9a7c2-control-height:1.5rem">
+  <input id="choice-radius-dark" class="qxframe9a7c2-form-check-input" type="checkbox">
+  <input id="input-height-dark" class="qxframe9a7c2-form-input" value="Dark height">
+  <button id="button-height-dark" class="qxframe9a7c2-button is-lg">Dark height</button>
+</div>
 <span id="badge" class="qxframe9a7c2-badge is-success">Success</span>
 <div id="tag-table-button-owners">
   <span id="tag-default-owner" class="qxframe9a7c2-tag">Default tag</span>

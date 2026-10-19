@@ -115,3 +115,7 @@ Failed b5f356ec removed three root scoped rules; docs Card CSSOM 152 nodes showe
 
 
 2026-10-19 pixel regression correction: Item base private roles remain in components/item-surface.css; scoped semantic-cascade.css restores ONLY Item background-color/color painter (one 18th scoped rule) to preserve sidebar Card selected background. Fast real Card docs CSSOM now samples sidebar Menu Items as well. Rejected HEAD 04e5874 lost 8067 pixels in Light/Dark screenshots. Local 16 Item variants full CSSOM matched golden; exact-head triple CI pending. See ITEM-BASE-PAINTER-CORRECTION.md.
+
+
+## Final Choice radius + single-line Control height ownership (pending CI)
+Two real rules formerly inside the single remaining semantic cascade @scope are now owned by components/component-appearance.css (Checkbox-only derived radius) and components/component-sizing.css (Button/Input/Select shared min-height; Textarea explicitly excluded). Original scope: 18→16 qualified rules, one remaining @scope block. The broader native checkbox Theme radius rule excludes the transferred Checkbox selector to avoid duplicate radius owners. Strict Theme source contract and CreateApp height test check semantic values, not adjacency. Chromium synthetic fixture now includes private Choice radius/height overrides + nested .dark. Local Playwright headless 236 elements in both Light/Dark returned zero computed CSSOM and geometry differences for the combined source move; AST scan found no new identical selector/property duplicates. Exact-head triple CI and real docs pixel evidence pending.

@@ -93,7 +93,15 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,18,'Root scope retains exactly 18 precedence-sensitive owners, including Item paint, selection and Filled Button focus');
+  assert.equal(scopedBodies.length,16,'Root scope retains exactly 16 precedence-sensitive owners; Choice radius and single-line height belong to component modules');
+  const choiceOwner=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
+  const sizeOwner=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
+  assert.match(choiceOwner,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:\s*var\(--_qxframe9a7c2-choice-radius\);\s*\}/,
+    'Final Checkbox Choice radius must preserve the derived density-shaped slot');
+  assert.match(sizeOwner,/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{\s*min-height:\s*var\(--_qxframe9a7c2-control-height\);\s*\}/,
+    'The final single-line Control height must preserve Theme geometry');
+  assert.doesNotMatch(source,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:/,
+    'Removed Checkbox radius must not remain a second scoped painter');
   // Base Item Theme text is component-owned, while selected and hover remain
   // scoped to preserve the actual docs navigation selected background.
   const itemOwner=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
