@@ -17,7 +17,6 @@
   border:1px solid var(--_qxframe9a7c2-semantic-border-subtle);
   border-radius:var(--_qxframe9a7c2-table-radius);
   background:var(--_qxframe9a7c2-semantic-surface-raised);
-  color:var(--_qxframe9a7c2-semantic-text);
   opacity:var(--_qxframe9a7c2-table-wrap-opacity);
 }
 .qxframe9a7c2-table-scroll.qxframe9a7c2-scroll{width:100%;height:auto;min-height:0;flex:1 1 auto}
@@ -39,7 +38,6 @@
   border-collapse:separate;
   border-spacing:0;
   table-layout:auto;
-  color:inherit;
   background:transparent;
   font-size:0.875rem;
   line-height:1.5;

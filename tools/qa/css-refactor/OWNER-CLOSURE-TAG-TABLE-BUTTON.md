@@ -14,3 +14,6 @@
 - Their exact late values remain in `feedback-theme-states.css` and `input-action-states.css`. The tag/badge fields are still assigned from the Theme and per-Type roles. No earlier owner is left competing for the same key.
 - Corrected the initial structural assertion's whitespace-normalization regular expression: `/\\s+/g` (literal backslash) → `/\s+/g` (actual whitespace). This corrects the test; it does not relax a requirement.
 - This is one closed component-family owner migration; the previous failed HEAD and its screenshots cannot be used as acceptance. Exact corrected SHA three CIs and negative controls required.
+
+## Table final-owner correction
+The full QXFRAME #39189833778 also identified two Table `color` collisions that the preceding fast log abbreviated. Remove `table-wrap { color:var(--_semantic-text) }` and `table { color:inherit }` from the early canonical `table.css`; keep all other Table geometry and variable declarations. The new later `data-control-states.css` continues to supply exactly `color:var(--qxframe9a7c2-theme-foreground)` to both, matching the original scoped final owner. This closes five explicit duplicate-owner keys in one family batch, not by increasing ratchets.
