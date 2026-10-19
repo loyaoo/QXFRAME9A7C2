@@ -96,12 +96,12 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   assert.equal(scopedBodies.length,17,'Root scope retains exactly 17 precedence-sensitive owners');
   // Four owner closures have exact selectors and Theme expressions in their
   // late, domain-specific files. No arbitrary unscoped core exceptions.
-  const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\\s+/g,'');
+  const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\s+/g,'');
   assert.ok(lateTag.includes('.qxframe9a7c2-tag{background-color:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground);border-color:transparent;}'),'Tag default must retain neutral Theme paint');
   assert.ok(lateTag.includes('.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid{background-color:var(--_qxframe9a7c2-type);color:var(--_qxframe9a7c2-type-foreground);}'),'Tag solid type/foreground must retain the original recipe');
-  const lateTable=fs.readFileSync(path.join(root,'src/styles/components/data-control-states.css'),'utf8').replace(/\\s+/g,'');
+  const lateTable=fs.readFileSync(path.join(root,'src/styles/components/data-control-states.css'),'utf8').replace(/\s+/g,'');
   assert.ok(lateTable.includes('.qxframe9a7c2-table,.qxframe9a7c2-table-wrap{background-color:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground);border-color:var(--qxframe9a7c2-theme-border);}'),'Table surface must retain Theme-owned background/foreground/edge');
-  const lateAction=fs.readFileSync(path.join(root,'src/styles/components/input-action-states.css'),'utf8').replace(/\\s+/g,'');
+  const lateAction=fs.readFileSync(path.join(root,'src/styles/components/input-action-states.css'),'utf8').replace(/\s+/g,'');
   assert.ok(lateAction.includes('.qxframe9a7c2-button.is-filled{--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);}'),'Filled Button focus border alpha must be unchanged');
   // Zero-specificity root-excluding projection of the original 62 semantic roles.
   const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
