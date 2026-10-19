@@ -336,8 +336,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 .qxframe9a7c2-native-form input[type="text"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="search"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="email"]:hover:not(:disabled):not([readonly]):not(:focus),
-.qxframe9a7c2-native-form input[type="password"]:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
-.qxframe9a7c2-native-form input[type="url"]:hover:not(:disabled):not([readonly]):not(:focus),
+.qxframe9a7c2-native-form input[type="password"]:hover:not(:disabled):not([readonly]):not(:focus),.qxframe9a7c2-native-form input[type="url"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="tel"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="number"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="date"]:hover:not(:disabled):not([readonly]):not(:focus),
@@ -345,8 +344,7 @@ select:not([class*="qxframe9a7c2-"]):not([multiple]):not([size]) optgroup{
 .qxframe9a7c2-native-form input[type="time"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="month"]:hover:not(:disabled):not([readonly]):not(:focus),
 .qxframe9a7c2-native-form input[type="week"]:hover:not(:disabled):not([readonly]):not(:focus),
-.qxframe9a7c2-native-form select:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
-.qxframe9a7c2-native-form textarea:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
+.qxframe9a7c2-native-form select:hover:not(:disabled):not([readonly]):not(:focus),.qxframe9a7c2-native-form textarea:hover:not(:disabled):not([readonly]):not(:focus){--_qxframe9a7c2-native-field-border:var(--_qxframe9a7c2-control-border-hover)}
 .qxframe9a7c2-form-input:focus,
 .qxframe9a7c2-form-select:focus,
 .qxframe9a7c2-form-textarea:focus,

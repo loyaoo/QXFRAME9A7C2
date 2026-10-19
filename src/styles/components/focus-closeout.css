@@ -56,20 +56,14 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[ty
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe9a7c2-native-field:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input:not([type]):focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="text"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="search"]:focus-visible{
-  outline:none
-}
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="email"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="search"]:focus-visible,html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="email"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="password"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="url"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="tel"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="number"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="date"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="datetime-local"]:focus-visible,
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="time"]:focus-visible{
-  outline:none
-}
-html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="month"]:focus-visible,
+html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="time"]:focus-visible,html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="month"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form input[type="week"]:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form select:focus-visible,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form textarea:focus-visible{
@@ -118,3 +112,14 @@ html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-native-form .qxframe
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-input:focus,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-select:focus,
 html:not(.qxframe9a7c2-keyboard-focus-origin) .qxframe9a7c2-input-group-field>.qxframe9a7c2-form-textarea:focus{outline:none}
+
+/* Keyboard focus width/offset projection on descendants (root excluded). */
+
+  /* Keyboard focus remains the framework-wide 2px light/dark black-white
+     rule. Re-resolve it inside the v2 scope so no inherited legacy color is
+     captured before a local theme boundary is applied. */
+  * * {
+    --_qxframe9a7c2-focus-visible-width: var(--qxframe9a7c2-focus-visible-width, var(--qxframe9a7c2-theme-focus-width));
+    --_qxframe9a7c2-focus-visible-offset: var(--qxframe9a7c2-focus-visible-offset, var(--qxframe9a7c2-theme-focus-offset));
+    --_qxframe9a7c2-focus-visible-outline: var(--_qxframe9a7c2-focus-visible-width) solid color-mix(in oklab, var(--_qxframe9a7c2-semantic-focus-visible) var(--qxframe9a7c2-theme-focus-opacity), transparent);
+  }

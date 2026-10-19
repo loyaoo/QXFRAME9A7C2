@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, baseline/post-main-cleanup-css-readable-62d9a840]
   workflow_dispatch:
 
 permissions:
@@ -68,22 +68,41 @@ jobs:
       - name: createApp interactions (browser)
         run: npm run verify:create-app-browser
 
-      - name: Checkout main for qxframe.js comparison
+      - name: Checkout immutable B0 for qxframe.js comparison
         if: github.event_name == 'pull_request'
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: main
-          path: .qxframe-main
+          ref: 62d9a8402c19460ced37265acc6d110ae2cfda76
+          path: .qxframe-baseline
           persist-credentials: false
 
-      - name: JS build integrity (main parity or approved component source changes)
+      - name: Verify immutable B0 application JS and embedded Theme
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          (cd .qxframe-main && npm ci --ignore-scripts && node tools/build-release.mjs)
-          node tools/verify-js-build-matches-main.mjs --reference=.qxframe-main/dist
-          rm -rf .qxframe-main
+          cmp .qxframe-baseline/src/styles/main/theme.css src/styles/main/theme.css
+          diff -u <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort) <(find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+          while IFS= read -r p; do
+            cmp ".qxframe-baseline/$p" "$p" || { echo "Frozen application JS changed: $p" >&2; exit 1; }
+          done < <(cd .qxframe-baseline && find src docs/create -type f \( -name '*.js' -o -name '*.mjs' \) | LC_ALL=C sort)
+
+      - name: JS build integrity (frozen B0 parity)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd .qxframe-baseline && npm ci --ignore-scripts && node tools/build-release.mjs)
+          node tools/verify-js-build-matches-main.mjs --reference=.qxframe-baseline/dist
+          node --check tools/qa/css-refactor/compare-smoke.mjs
+          node --check tools/qa/css-equivalence.mjs
+          node --check tools/qa/css-refactor/token-usage.mjs
+          node --check tools/qa/css-refactor/theme-case-manifest.mjs
+          mkdir -p artifacts
+          node tools/qa/css-refactor/token-usage.mjs --out=artifacts/css-refactor-token-usage.json
+          node tools/qa/css-refactor/theme-case-manifest.mjs --baseline=.qxframe-baseline/src/styles/main/theme.css --out=artifacts/css-refactor-theme-cases.json
+          node tools/qa/css-refactor/compare-smoke.mjs --baseline=.qxframe-baseline/dist/qxframe9a7c2.css --candidate=dist/qxframe9a7c2.css --out=artifacts/css-refactor-smoke.json
+          rm -rf .qxframe-baseline
 
       - name: Upload QA reports
         if: always()
@@ -168,6 +187,15 @@ jobs:
         with:
           name: verification-evidence-${{ github.sha }}
           path: artifacts/*.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload Card CSS refactor baseline screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: css-refactor-card-screenshots-${{ github.sha }}
+          path: artifacts/css-refactor-card-screenshots/
           if-no-files-found: ignore
           retention-days: 30
 

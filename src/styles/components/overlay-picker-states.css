@@ -1,0 +1,228 @@
+
+
+  /* popup: public Popup, popover, submenu and Dialog consume one local role chain.
+     The real border uses the source ring color; QX geometry stays QX-owned. */
+  /* Menu color axis: floating menus use the menu surface; popovers and dialogs keep the popover surface. */
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container, .qxframe9a7c2-popover-root, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel {
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-menu-foreground);
+    backdrop-filter: blur(var(--qxframe9a7c2-theme-menu-blur));
+  }
+  /* Popup ItemCollection and ItemSurface otherwise force the page foreground
+     onto floating Select options, breaking inverted menu readability.
+     Selected/hover items below retain the menu accent foreground pair. */
+  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-collection {
+    color: var(--_qxframe9a7c2-popup-surface-text);
+  }
+  /* The Popup is the only backdrop painter. Nested option collections must not
+     stack another translucent Menu surface and make 80% opacity look solid.
+     Keep a caller's explicit ItemCollection background override. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-collection {
+    background: var(--qxframe9a7c2-item-collection-bg,transparent);
+  }
+  .qxframe9a7c2-popup-surface .qxframe9a7c2-item-surface {
+    --_qxframe9a7c2-item-text: var(--_qxframe9a7c2-popup-surface-text);
+  }
+
+  /* Popup-context contrast contract. Menu color is independent of page light/dark.
+     An inverted menu can be dark on a light page or light on a dark page.
+     Popup children re-declare semantic roles through the scoped universal rule,
+     so a foreground on the panel alone cannot reach nested Picker controls.
+     Resolve each nested consumer against its *own popup surface* instead.
+     This affects Select, Cascader, TreeSelect, DatePicker, TimePicker,
+     ColorPicker and WheelPicker, not their closed trigger controls. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) *,
+  .qxframe9a7c2-menu-submenu-panel,
+  .qxframe9a7c2-menu-submenu-panel *,
+  .qxframe9a7c2-menu-overflow-panel,
+  .qxframe9a7c2-menu-overflow-panel * {
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-menu);
+    /* One alpha-composited recipe for solid and translucent Popup surfaces.
+       Only the popup surface opacity changes between Menu modes; descendant
+       Hover, Selected and passive borders remain translucent overlays. */
+    --_qxframe9a7c2-menu-hover-soft: color-mix(in oklab, color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground)) 70%, transparent);
+    --_qxframe9a7c2-menu-selected-soft: color-mix(in oklab, var(--qxframe9a7c2-theme-menu-accent) 84%, transparent);
+    --_qxframe9a7c2-semantic-surface-muted: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-surface-hover: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-field-border);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-field-border);
+    --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-navigation-hover-bg: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-navigation-selected-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-menu);
+    --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-control-text-secondary: var(--_qxframe9a7c2-semantic-text-secondary);
+    --_qxframe9a7c2-control-text-disabled: var(--_qxframe9a7c2-semantic-text-disabled);
+    --_qxframe9a7c2-control-border: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-hover: var(--_qxframe9a7c2-semantic-border);
+    --_qxframe9a7c2-control-border-disabled: var(--_qxframe9a7c2-semantic-border-subtle);
+  }
+
+  /* Menu inversion reuses the compiled dark palette. Scroll and Picker
+     decoration must consume Menu foreground contrast, not page colors. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-scroll {
+    --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 12%, transparent));
+    --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, color-mix(in oklab, var(--qxframe9a7c2-theme-menu-foreground) 26%, transparent));
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-scroll-thumb:hover {
+    background: var(--qxframe9a7c2-scroll-thumb-hover-color, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  /* A translucent Menu accent already contains the source palette Primary.
+     Restore its original chroma at full opacity for small markers and focus
+     boundaries: neutral stays legible, colored inverted menus stay colored.
+     No extra Theme token or light/dark/inverted selector is necessary. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) {
+    --_qxframe9a7c2-menu-primary-solid: oklch(from var(--qxframe9a7c2-theme-menu-accent) l c h / 1);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-today:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-calendar-cell.is-current:not(.is-selected):not(.is-disabled) .qxframe9a7c2-calendar-cell-inner::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-today:not(.is-selected):not(.is-disabled)::after,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.qxframe9a7c2-calendar-cell).is-current:not(.is-selected):not(.is-disabled)::after {
+    background: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+  /* TreeSelect indicators use the same Choice checked/indeterminate paint as
+     other Checkbox controls. Menu inverse changes only the surface scheme;
+     it must never override the checked mark foreground with Menu background. */
+  /* Hover is a neutral highlight; selected rows alone consume the saturated
+     Menu accent/foreground pair. This applies to all shared ItemSurface users. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-hover:not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface:hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-menu-hover-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-accent-foreground);
+  }
+  .qxframe9a7c2-popup-surface.qxframe9a7c2-popover-container .qxframe9a7c2-item-surface.is-hover:not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--_qxframe9a7c2-semantic-subtle-hover);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-popover-foreground);
+  }
+  /* An open ancestor is disclosure, not selection. All Picker-backed collections,
+     including Cascader/TreeSelect, keep readable Menu foreground on transparent
+     hover/ancestor paint even with inverted bold accents. */
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-open:not(.qxframe9a7c2-tree-item):not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-descendant-selected:not(.qxframe9a7c2-tree-item):not(.is-selected),
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-surface.is-indeterminate:not(.qxframe9a7c2-tree-item):not(.is-selected) {
+    --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-menu-accent);
+    --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* Tree uses the published main implementation and shared Item states. */
+  /* Picker popup foreground contract: normal day/period cells and wheel rows
+     must use the popup Menu ink even when their nested panel owns color.
+     Keep explicit date-panel text overrides, selected/today and outside-day
+     projection independent. Never apply Menu paint to Popover/Dialog. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel {
+    --_qxframe9a7c2-date-panel-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell:not(.is-selected):not(.is-outside):not(.is-today):not(.is-current):not(.is-disabled):not(:disabled) {
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-date-panel-text, var(--qxframe9a7c2-theme-menu-foreground));
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-date-panel-cell-border: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }
+  /* Current day/month/year retains normal ink + primary bottom dot, not a border. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-today:not(.is-selected),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-current:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-border: transparent;
+    --_qxframe9a7c2-date-panel-cell-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-in-range:not(.is-selected) {
+    --_qxframe9a7c2-date-panel-cell-bg: var(--_qxframe9a7c2-menu-hover-soft);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
+    --_qxframe9a7c2-date-panel-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-picker-preset {
+    --_qxframe9a7c2-date-picker-preset-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel {
+    --_qxframe9a7c2-color-panel-field-bg: var(--_qxframe9a7c2-control-bg);
+    /* ColorPanel itself owns field borders; nested Picker does not override. */
+    --_qxframe9a7c2-color-panel-field-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Keyboard outline remains the shared 2px / -1px Focus contract, but on
+     inverse-light popups its color must be derived from the Menu surface,
+     not from the light page. Pointer borders use solid Menu Primary. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel *,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-angle,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-remove {
+    --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-menu-foreground);
+    --_qxframe9a7c2-semantic-focus: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+
+  /* Picker's auxiliary controls are not ItemSurface rows. They previously
+     painted page-primary ink onto a potentially opposite menu background. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-time-picker-now {
+    --_qxframe9a7c2-time-picker-now-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Embedded ColorPanel already owns its field paint. Do not repaint its
+     children per Picker type: public ColorPanel overrides remain authoritative. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-mode-button.is-active {
+    --_qxframe9a7c2-color-picker-mode-bg: var(--_qxframe9a7c2-menu-selected-soft);
+    --_qxframe9a7c2-color-picker-mode-text: var(--qxframe9a7c2-theme-menu-accent-foreground);
+    --_qxframe9a7c2-color-picker-mode-border: var(--_qxframe9a7c2-semantic-border);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-add {
+    --_qxframe9a7c2-color-picker-action-text: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-active,
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-picker-gradient-stop.is-active {
+    border-color: var(--_qxframe9a7c2-menu-primary-solid);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset:hover:not(:disabled):not(.is-active),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-color-panel-preset.is-hover:not(:disabled):not(.is-active) {
+    border-color: var(--qxframe9a7c2-theme-field-border);
+  }
+  .qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container):not(.qxframe9a7c2-tooltip-container) .qxframe9a7c2-item-selection-indicator.is-check {
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Native Tree checkbox state stays in the input; glyph pairs to Menu surface. */
+
+  /* Inverted Picker: navigation idle/hover and selected cells own paired menu paint. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:not(:disabled) {
+    background: transparent;
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-nav:hover:not(:disabled),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-title-action:hover:not(:disabled) {
+    background: var(--_qxframe9a7c2-menu-hover-soft);
+    color: var(--qxframe9a7c2-theme-menu-foreground);
+  }
+  /* Calendar draws selected day using the inherited Theme state roles on the
+     inner square. Keep direct physical paint only on PeriodPanel's separate DOM. */
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-date-panel-cell.is-selected:not(:disabled):not(.qxframe9a7c2-calendar-cell),
+  .qxframe9a7c2-picker-field-panel .qxframe9a7c2-period-panel-cell.is-selected:not(:disabled) {
+    background: var(--_qxframe9a7c2-menu-selected-soft);
+    border-color: var(--_qxframe9a7c2-menu-selected-soft);
+    color: var(--qxframe9a7c2-theme-menu-accent-foreground);
+  }

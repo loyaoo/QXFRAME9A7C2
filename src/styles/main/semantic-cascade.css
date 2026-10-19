@@ -1,0 +1,227 @@
+/* Semantic cascade: root-derived shared roles and precedence-sensitive component consumers.
+ * Theme input colors are resolved by shared component rules.
+ * Source inspiration: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT.
+ * The remaining scoped rules retain their tested cascade precedence until ownership closes. */
+/* Theme consumer chain (createApp v3 §5).
+ * Inputs are the closed --qxframe9a7c2-theme-* list (theme-default.css or an exported theme).
+ * Shared rules (color-mix states, size curve) resolve at each consumer; no style selectors.
+ * Source: shadcn 295a1f114a138f23b5dfee0e0c6812394dfeb90c; MIT. */
+:root { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); }
+/* Semantic roles apply to descendants, not the document root; zero specificity. */
+* * {
+    --_qxframe9a7c2-semantic-bg: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-surface: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-surface-raised: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-semantic-surface-muted: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-semantic-surface-hover: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-semantic-subtle: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-item-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 78%, var(--qxframe9a7c2-theme-muted-foreground));
+    --_qxframe9a7c2-semantic-subtle-hover: var(--_qxframe9a7c2-item-hover);
+    --_qxframe9a7c2-semantic-subtle-active: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 65%, var(--qxframe9a7c2-theme-muted-foreground));
+    --_qxframe9a7c2-semantic-text: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-semantic-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-muted: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-placeholder: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-semantic-text-inverse: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-overlay-text: var(--qxframe9a7c2-theme-popover-foreground);
+    --_qxframe9a7c2-semantic-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-semantic-border-subtle: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-semantic-border-strong: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-border-hover: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-border-disabled: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-input-border: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-semantic-focus: var(--qxframe9a7c2-theme-pointer-focus);
+    --_qxframe9a7c2-semantic-mask: var(--qxframe9a7c2-theme-overlay);
+    --_qxframe9a7c2-semantic-bg-readonly: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-bg-disabled: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-semantic-success: var(--qxframe9a7c2-theme-success);
+    --_qxframe9a7c2-semantic-warning: var(--qxframe9a7c2-theme-warning);
+    --_qxframe9a7c2-semantic-error: var(--qxframe9a7c2-theme-destructive);
+    --_qxframe9a7c2-semantic-info: var(--qxframe9a7c2-theme-info);
+    --_qxframe9a7c2-semantic-loading-mask: var(--qxframe9a7c2-theme-overlay);
+    --_qxframe9a7c2-semantic-overlay-base: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-semantic-overlay-control-hover: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-semantic-accent-border: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-navigation-bg: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-navigation-hover-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-navigation-selected-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-popup-bg: var(--qxframe9a7c2-theme-popover);
+    --_qxframe9a7c2-popup-text: var(--qxframe9a7c2-theme-popover-foreground);
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-surface-bg: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-surface-raised-bg: var(--qxframe9a7c2-theme-card);
+    --_qxframe9a7c2-surface-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-data-border: var(--qxframe9a7c2-theme-border);
+    --_qxframe9a7c2-data-header-bg: var(--qxframe9a7c2-theme-muted);
+    --_qxframe9a7c2-semantic-focus-visible: var(--qxframe9a7c2-theme-focus);
+    /* Shared roles that the retired legacy palette used to feed at :root (docs and plain hosts read them). */
+    --_qxframe9a7c2-semantic-accent-hover: color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 80%, transparent);
+    --_qxframe9a7c2-semantic-accent-focus-color: color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);
+    --_qxframe9a7c2-semantic-accent-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent));
+    --_qxframe9a7c2-semantic-accent-soft-hover: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 30%, transparent));
+    --_qxframe9a7c2-semantic-success-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-success) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-success) 20%, transparent));
+    --_qxframe9a7c2-semantic-error-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent));
+    --_qxframe9a7c2-semantic-info-soft: light-dark(color-mix(in oklab, var(--qxframe9a7c2-theme-info) 10%, transparent), color-mix(in oklab, var(--qxframe9a7c2-theme-info) 20%, transparent));
+    --_qxframe9a7c2-focus-focus-shadow: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-pointer-focus) 50%, transparent);
+    --_qxframe9a7c2-validation-error-focus-shadow: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 20%, transparent);
+    --_qxframe9a7c2-validation-warning-focus-shadow: 0 0 0 .125rem color-mix(in oklab, var(--qxframe9a7c2-theme-warning) 20%, transparent);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
+    --_qxframe9a7c2-semantic-on-status: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-destructive-foreground));
+    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-semantic-on-accent: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground));
+    --_qxframe9a7c2-accent: var(--qxframe9a7c2-theme-primary);
+    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-semantic-on-accent);
+  }
+@scope (:root) {
+
+  /* Existing semantic/family consumer slots remain the component-facing contract.
+     Bind only real shared roles, at each consumer so local Theme changes resolve here.
+     This is not a legacy Palette/state-token translation table. */
+
+  .qxframe9a7c2-button, .qxframe9a7c2-tag, .qxframe9a7c2-badge, .qxframe9a7c2-badge-count, .qxframe9a7c2-badge-ribbon, .qxframe9a7c2-badge-status, .qxframe9a7c2-alert-root, .qxframe9a7c2-message, .qxframe9a7c2-message-root, .qxframe9a7c2-notification, .qxframe9a7c2-notification-root, .qxframe9a7c2-carousel, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root, .qxframe9a7c2-result, .qxframe9a7c2-progress, .qxframe9a7c2-slider, .qxframe9a7c2-rate, .qxframe9a7c2-switch, .qxframe9a7c2-selectgroup, .qxframe9a7c2-form-check-input, .qxframe9a7c2-native-form, .qxframe9a7c2-table, .qxframe9a7c2-item-surface, .qxframe9a7c2-menu, .qxframe9a7c2-tags, .qxframe9a7c2-input, .qxframe9a7c2-loading, .qxframe9a7c2-steps, .qxframe9a7c2-upload, .qxframe9a7c2-pagination, .qxframe9a7c2-tabs, .qxframe9a7c2-tree, .qxframe9a7c2-list, .qxframe9a7c2-transfer, .qxframe9a7c2-avatar, .qxframe9a7c2-card, .qxframe9a7c2-collapse, .qxframe9a7c2-descriptions, .qxframe9a7c2-empty, .qxframe9a7c2-drawer, .qxframe9a7c2-modal-container, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-form-segmented, .qxframe9a7c2-input-otp, .qxframe9a7c2-wheel-panel, .qxframe9a7c2-calendar, .qxframe9a7c2-period-panel, .qxframe9a7c2-time-panel, .qxframe9a7c2-color-panel {
+    --_qxframe9a7c2-type: var(--_qxframe9a7c2-default-type, var(--qxframe9a7c2-theme-primary));
+    --_qxframe9a7c2-type-foreground: var(--_qxframe9a7c2-default-foreground, var(--qxframe9a7c2-theme-primary-foreground));
+    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
+    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
+    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground);
+    --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-control-text-disabled: var(--qxframe9a7c2-theme-muted-foreground);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-control-border-disabled: var(--qxframe9a7c2-theme-input);
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-background);
+    --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-background);
+  }
+  /* Item private roles belong to item-surface.css; the final background and
+     foreground painter stays at scoped cascade precedence. Ordinary Item
+     background shorthand loses to the docs sidebar selection surface. */
+  .qxframe9a7c2-item-surface { background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
+  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
+
+  /* Source decoration distribution; inline feedback has no popup shadow. */
+  .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
+  /* Image Preview owns its one chrome background/border/foreground and hover in
+     components/image.css. Do not repaint toolbar or tools from the page Theme. */
+  .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
+
+  /* action: current Type is an input binding, not a separate formula per Type. */
+  /* Button already owns physical background/border/text/shadow in button.css.
+     Supply only the existing per-state slots, at matching variant specificity:
+     no later Theme painter and no action-current surrogate state machine. */
+  .qxframe9a7c2-button,
+  .qxframe9a7c2-button.is-solid,
+  .qxframe9a7c2-button.is-default.is-solid,
+  .qxframe9a7c2-button.is-outlined,
+  .qxframe9a7c2-button.is-dashed,
+  .qxframe9a7c2-button.is-filled,
+  .qxframe9a7c2-button.is-plain,
+  .qxframe9a7c2-button.is-text,
+  .qxframe9a7c2-button.is-link {
+    --_qxframe9a7c2-button-bg: var(--_qxframe9a7c2-action-bg);
+    --_qxframe9a7c2-button-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-hover-bg: var(--_qxframe9a7c2-action-hover);
+    --_qxframe9a7c2-button-hover-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-hover-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-focus-bg: var(--_qxframe9a7c2-action-bg);
+    --_qxframe9a7c2-button-focus-border: var(--qxframe9a7c2-theme-pointer-focus);
+    --_qxframe9a7c2-button-focus-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-active-bg: var(--_qxframe9a7c2-action-hover);
+    --_qxframe9a7c2-button-active-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-active-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-disabled-bg: var(--_qxframe9a7c2-action-bg);
+    --_qxframe9a7c2-button-disabled-border: var(--_qxframe9a7c2-action-border);
+    --_qxframe9a7c2-button-disabled-text: var(--_qxframe9a7c2-action-text);
+    --_qxframe9a7c2-button-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-hover-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-active-shadow: var(--_qxframe9a7c2-action-shadow);
+    --_qxframe9a7c2-button-disabled-shadow: none;
+  }
+  .qxframe9a7c2-button.is-filled {
+    --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
+  }
+
+  /* control: same owner for native Input and all existing Picker Controls. */
+  .qxframe9a7c2-input, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp-segment, .qxframe9a7c2-pagination-input {
+    --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-field);
+    --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-field-border);
+    background-color: var(--_qxframe9a7c2-control-bg);
+    border-color: var(--_qxframe9a7c2-control-border);
+    color: var(--qxframe9a7c2-theme-foreground);
+  }
+
+  /* surface: retain Card composition and opt-in divider geometry. */
+  .qxframe9a7c2-card {
+    --_qxframe9a7c2-card-bg: var(--qxframe9a7c2-theme-card);
+    --_qxframe9a7c2-card-border: var(--qxframe9a7c2-card-border-color, var(--qxframe9a7c2-theme-card-edge));
+    --_qxframe9a7c2-card-divider: var(--qxframe9a7c2-card-divider-color, var(--qxframe9a7c2-theme-border));
+    --_qxframe9a7c2-card-muted-bg: var(--qxframe9a7c2-theme-muted);
+    color: var(--qxframe9a7c2-theme-card-foreground);
+  }
+  .qxframe9a7c2-popup-surface, .qxframe9a7c2-popover-root, .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel, .qxframe9a7c2-modal-root, .qxframe9a7c2-drawer-root {
+    --_qxframe9a7c2-popup-border: var(--qxframe9a7c2-theme-popup-edge);
+    --_qxframe9a7c2-popup-shadow: var(--qxframe9a7c2-theme-shadow-popup);
+    --_qxframe9a7c2-dialog-shadow: var(--qxframe9a7c2-theme-shadow-dialog);
+    --_qxframe9a7c2-modal-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-modal-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-modal-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    --_qxframe9a7c2-drawer-bg: var(--_qxframe9a7c2-popup-bg);
+    --_qxframe9a7c2-drawer-border: var(--_qxframe9a7c2-popup-border);
+    --_qxframe9a7c2-drawer-shadow: var(--_qxframe9a7c2-dialog-shadow);
+  }
+  .qxframe9a7c2-modal-container, .qxframe9a7c2-drawer {
+    background-color: var(--qxframe9a7c2-theme-popover);
+    color: var(--qxframe9a7c2-theme-popover-foreground);
+    border: 1px solid var(--_qxframe9a7c2-popup-border);
+    box-shadow: var(--_qxframe9a7c2-dialog-shadow);
+    filter: drop-shadow(0 1.125rem 1.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay))) drop-shadow(0 0.375rem 0.75rem var(--qxframe9a7c2-dialog-depth-color,var(--qxframe9a7c2-theme-overlay)));
+  }
+  /* Shared native/projected choice; state source and QX focus protocol unchanged. */
+  .qxframe9a7c2-native-form input[type="checkbox"], .qxframe9a7c2-native-form input[type="radio"], .qxframe9a7c2-form-check-input[type="checkbox"], .qxframe9a7c2-form-check-input[type="radio"], .qxframe9a7c2-item-selection-indicator.is-checkbox, .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-indicator.is-radio { --_qxframe9a7c2-check-indicator-bg: var(--qxframe9a7c2-theme-choice); --_qxframe9a7c2-check-indicator-border: var(--qxframe9a7c2-theme-choice-border); background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-native-form input[type="checkbox"]:checked, .qxframe9a7c2-native-form input[type="checkbox"]:indeterminate, .qxframe9a7c2-form-check-input[type="checkbox"]:checked, .qxframe9a7c2-form-check-input[type="checkbox"]:indeterminate, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-checked, .qxframe9a7c2-item-selection-indicator.is-checkbox.is-indeterminate, .qxframe9a7c2-tree-check:checked + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-tree-check:indeterminate + .qxframe9a7c2-tree-check-indicator, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox, .qxframe9a7c2-selectgroup-input:indeterminate + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-checkbox { background-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); border-color: var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)); color: var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)); }
+  
+  .qxframe9a7c2-native-form input[type="checkbox"]:disabled, .qxframe9a7c2-native-form input[type="radio"]:disabled, .qxframe9a7c2-form-check-input[type="checkbox"]:disabled, .qxframe9a7c2-form-check-input[type="radio"]:disabled { opacity: .5; background-color: var(--_qxframe9a7c2-check-indicator-bg); border-color: var(--_qxframe9a7c2-check-indicator-border); color: var(--qxframe9a7c2-theme-foreground); }
+
+  /* Tree Choice is global: Popup Menu never changes checkbox painting. */
+
+  /* Radio fill (theme input): 100% = filled type color, 0% = outlined foreground ring + dot (Sera). */
+  .qxframe9a7c2-native-form input[type="radio"]:checked, .qxframe9a7c2-form-check-input[type="radio"]:checked, .qxframe9a7c2-selectgroup-input:checked + .qxframe9a7c2-selectgroup-label .qxframe9a7c2-selectgroup-indicator.is-radio,
+  .qxframe9a7c2-native-form input[type="radio"]:checked:disabled, .qxframe9a7c2-form-check-input[type="radio"]:checked:disabled {
+    background-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), transparent);
+    border-color: color-mix(in oklab, var(--_qxframe9a7c2-type, var(--qxframe9a7c2-theme-primary)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+    color: color-mix(in oklab, var(--_qxframe9a7c2-type-foreground, var(--qxframe9a7c2-theme-primary-foreground)) var(--qxframe9a7c2-theme-radio-fill), var(--qxframe9a7c2-theme-foreground));
+  }
+  .qxframe9a7c2-button.is-sm, .qxframe9a7c2-input.is-sm, .qxframe9a7c2-text-field.is-sm, .qxframe9a7c2-form-input.is-sm, .qxframe9a7c2-form-select.is-sm, .qxframe9a7c2-form-textarea.is-sm, .qxframe9a7c2-selectgroup.is-sm, .qxframe9a7c2-form-check.is-sm, .qxframe9a7c2-form-check-input.is-sm, .qxframe9a7c2-form-segmented.is-sm, .qxframe9a7c2-button-group.is-sm, .qxframe9a7c2-input-group.is-sm, .qxframe9a7c2-form-group.is-sm, .qxframe9a7c2-tags.is-sm, .qxframe9a7c2-tag.is-sm, .qxframe9a7c2-badge.is-sm, .qxframe9a7c2-input-otp.is-sm, .qxframe9a7c2-switch.is-sm, .qxframe9a7c2-slider.is-sm, .qxframe9a7c2-progress.is-sm, .qxframe9a7c2-rate.is-sm, .qxframe9a7c2-card.is-sm, .qxframe9a7c2-collapse.is-sm, .qxframe9a7c2-descriptions.is-sm, .qxframe9a7c2-avatar.is-sm, .qxframe9a7c2-empty.is-sm, .qxframe9a7c2-result.is-sm, .qxframe9a7c2-list.is-sm, .qxframe9a7c2-tree.is-sm, .qxframe9a7c2-transfer.is-sm, .qxframe9a7c2-table.is-sm, .qxframe9a7c2-menu.is-sm, .qxframe9a7c2-tabs.is-sm, .qxframe9a7c2-steps.is-sm, .qxframe9a7c2-pagination.is-sm, .qxframe9a7c2-upload.is-sm, .qxframe9a7c2-alert-root.is-sm, .qxframe9a7c2-message.is-sm, .qxframe9a7c2-notification.is-sm, .qxframe9a7c2-popup-surface.is-sm, .qxframe9a7c2-popover-root.is-sm, .qxframe9a7c2-modal-root.is-sm, .qxframe9a7c2-drawer-root.is-sm, .qxframe9a7c2-calendar.is-sm, .qxframe9a7c2-period-panel.is-sm, .qxframe9a7c2-time-panel.is-sm, .qxframe9a7c2-wheel-panel.is-sm, .qxframe9a7c2-color-panel.is-sm { --_qxframe9a7c2-size-index: -1; }
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
+    min-height: var(--_qxframe9a7c2-control-height);
+  }}
+/* Generic type roles apply only to framework descendants, never html. */
+
+  /* Resolve current Type locally, including parts that inherit their owner.
+     Specificity prevents legacy .is-color aliases from replacing this chain. */
+  * *[class*="qxframe9a7c2-"][class] {
+    --_qxframe9a7c2-solid-hover: color-mix(in oklab, var(--_qxframe9a7c2-type) 80%, transparent);
+    --_qxframe9a7c2-soft: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 10%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent));
+    --_qxframe9a7c2-soft-hover: light-dark(color-mix(in oklab, var(--_qxframe9a7c2-type) 20%, transparent), color-mix(in oklab, var(--_qxframe9a7c2-type) 30%, transparent));
+    --_qxframe9a7c2-accent: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-on: var(--_qxframe9a7c2-type-foreground);
+    --_qxframe9a7c2-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-accent-active: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+    --_qxframe9a7c2-semantic-accent-soft-hover: var(--_qxframe9a7c2-soft-hover);
+    --_qxframe9a7c2-semantic-accent-hover: var(--_qxframe9a7c2-solid-hover);
+    --_qxframe9a7c2-semantic-accent-active: var(--_qxframe9a7c2-type);
+  }

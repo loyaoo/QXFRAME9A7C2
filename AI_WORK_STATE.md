@@ -1,3 +1,16 @@
+# ACTIVE CURRENT — CSS-READABILITY-TOKEN-CONSOLIDATION-001 / CSS-HISTORY-INTEGRATION-001 (2026-10-17)
+
+> **Sole current task pointer**. All older headings titled CURRENT below are historical snapshots, not active instructions. See `tools/qa/css-refactor/README.md` for exact work packages and evidence.
+
+- Golden B0: `main@62d9a8402c19460ced37265acc6d110ae2cfda76`, Git tree `a96bb959a69f15ce27d1c78182c273d422a531e9`. Read-only `baseline/post-main-cleanup-css-readable-62d9a840` is fixed at B0.
+- Active branch `refactor/css-readable-token-chain-postcleanup-20261017`, [Draft PR #268](https://github.com/loyaoo/QXFRAME9A7C2/pull/268) based on frozen branch. Main and prior backup/Stage5 branches are protected from this task, and no merge authorized.
+- R0-01 completed by actual GitHub recheck; R0-02 created branch/PR and adapted both CI PR-base filters. QXFRAME PR CI now compares JS output against immutable B0 and checks business JS/default Theme frozen files; Schema PR acceptance also targets frozen B0. **Both exact-head workflows must pass before a batch is accepted.**
+- Product CSS, business JS/DOM and Theme generation have NOT been modified in this task. R0-03 B0 official artifact/readiness and R0-04 B0→B0 browser + negative self-test are **pending**. R1–R7 structural migration has NOT started; original Stage5 S5-A requires separate owner signoff.
+- Latest exact step: inspect latest-head PR #268 QXFRAME and Schema CI, fix any non-product infrastructure failures, freeze same-tree source/artifact details, instrument reliable geometry/computed/interaction comparison, and do fault-injection. Then build R1 ledgers and choose a minimal Card pilot. No production CSS editing until comparator proof.
+- Gates G00–G13 apply, including zero undocumented visual/Theme differences, no main changes, no test weakening, and Windows official same-tree full dist+docs artifact before delivery. Task engineering completion is not user visual signoff.
+
+---
+
 ## CURRENT — 2026-10-17 MAIN-CSS-HISTORY-CLEANUP-001 (post PR #267)
 - Owner authorized targeted main cleanup. Baseline commit 5602a04ef38cca27fccb3c46b9cd7afad7f73df0; exact-head main CI #39001652215 success prior to cleanup. Saved immutable baseline/post-pr267-css-readable-5602a04e and pre-merge backup branches.
 - Deleted only orphan historical root handoff/change-log notes and comment-only src/styles/components/compatibility.css; synchronized css-order.json. Removed redundant blank lines and obsolete version labels in comments within foundation.css and fixed-values.css; functional declarations untouched.

@@ -1,0 +1,112 @@
+
+
+  /* GEOMETRY qx-md-1: public md lengths -> local fixed CSS rules.
+     Every independent root owns index zero; connected groups explicitly share it. */
+  .qxframe9a7c2-notice-slot[class], .qxframe9a7c2-message-root[class], .qxframe9a7c2-notification-root[class], .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-text-field[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class], .qxframe9a7c2-selectgroup[class], .qxframe9a7c2-form-check[class], .qxframe9a7c2-form-check-input[class], .qxframe9a7c2-form-segmented[class], .qxframe9a7c2-button-group[class], .qxframe9a7c2-input-group[class], .qxframe9a7c2-form-input-group[class], .qxframe9a7c2-form-group[class], .qxframe9a7c2-tags[class], .qxframe9a7c2-tag[class], .qxframe9a7c2-badge[class], .qxframe9a7c2-input-otp[class], .qxframe9a7c2-switch[class], .qxframe9a7c2-slider[class], .qxframe9a7c2-progress[class], .qxframe9a7c2-rate[class], .qxframe9a7c2-card[class], .qxframe9a7c2-collapse[class], .qxframe9a7c2-descriptions[class], .qxframe9a7c2-avatar[class], .qxframe9a7c2-empty[class], .qxframe9a7c2-result[class], .qxframe9a7c2-list[class], .qxframe9a7c2-tree[class], .qxframe9a7c2-transfer[class], .qxframe9a7c2-table[class], .qxframe9a7c2-menu[class], .qxframe9a7c2-tabs[class], .qxframe9a7c2-steps[class], .qxframe9a7c2-pagination[class], .qxframe9a7c2-upload[class], .qxframe9a7c2-alert-root[class], .qxframe9a7c2-message[class], .qxframe9a7c2-notification[class], .qxframe9a7c2-popup-surface[class], .qxframe9a7c2-popover-root[class], .qxframe9a7c2-modal-root[class], .qxframe9a7c2-drawer-root[class], .qxframe9a7c2-date-panel[class], .qxframe9a7c2-calendar[class], .qxframe9a7c2-period-panel[class], .qxframe9a7c2-time-panel[class], .qxframe9a7c2-wheel-panel[class], .qxframe9a7c2-color-panel[class] {
+    --_qxframe9a7c2-size-index: 0;
+    --_qxframe9a7c2-size-ratio: calc(1 + var(--_qxframe9a7c2-size-index) * .125);
+    --_qxframe9a7c2-font-step: clamp(-1, var(--_qxframe9a7c2-size-index), 1);
+    --_qxframe9a7c2-control-height: calc(var(--qxframe9a7c2-theme-control-height) + var(--_qxframe9a7c2-size-index) * .25rem);
+    --_qxframe9a7c2-control-local-height: var(--_qxframe9a7c2-control-height);
+    --_qxframe9a7c2-control-font-size: max(.75rem, calc(var(--qxframe9a7c2-theme-control-font-size) + var(--_qxframe9a7c2-font-step) * .125rem));
+    --_qxframe9a7c2-control-line-height: max(var(--_qxframe9a7c2-control-font-size), calc(var(--qxframe9a7c2-theme-control-line-height) + var(--_qxframe9a7c2-font-step) * .125rem));
+    --_qxframe9a7c2-control-icon-size: max(.5rem, calc(var(--qxframe9a7c2-theme-control-icon) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-control-padding-inline: max(0rem, calc(var(--qxframe9a7c2-theme-control-padding) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-control-gap: max(0rem, calc(var(--qxframe9a7c2-theme-control-gap) + var(--_qxframe9a7c2-size-index) * .125rem));
+    
+    --_qxframe9a7c2-control-padding-block: round(down, max(0rem, calc((var(--_qxframe9a7c2-control-height) - max(var(--_qxframe9a7c2-control-line-height), var(--_qxframe9a7c2-control-icon-size)) - 2px) / 2)), .125rem);
+    --_qxframe9a7c2-control-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-field) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-action-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-button) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-choice-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-choice) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-card) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-popup-radius: round(nearest, calc(var(--qxframe9a7c2-theme-radius-popup) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-padding: round(nearest, calc(var(--qxframe9a7c2-theme-card-padding) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-surface-gap: round(nearest, calc(var(--qxframe9a7c2-theme-card-gap) * var(--_qxframe9a7c2-size-ratio)), .125rem);
+    --_qxframe9a7c2-form-check-size: calc(var(--qxframe9a7c2-theme-choice-size) + var(--_qxframe9a7c2-size-index) * .125rem);
+  }
+.qxframe9a7c2-notice-slot[class],.qxframe9a7c2-message-root[class],.qxframe9a7c2-notification-root[class],.qxframe9a7c2-selectgroup[class],.qxframe9a7c2-form-check[class],.qxframe9a7c2-form-check-input[class],.qxframe9a7c2-form-segmented[class],.qxframe9a7c2-button-group[class],.qxframe9a7c2-input-group[class],.qxframe9a7c2-form-input-group[class],.qxframe9a7c2-form-group[class],.qxframe9a7c2-tags[class],.qxframe9a7c2-tag[class],.qxframe9a7c2-badge[class],.qxframe9a7c2-input-otp[class],.qxframe9a7c2-switch[class],.qxframe9a7c2-slider[class],.qxframe9a7c2-progress[class],.qxframe9a7c2-rate[class],.qxframe9a7c2-card[class],.qxframe9a7c2-collapse[class],.qxframe9a7c2-descriptions[class],.qxframe9a7c2-avatar[class],.qxframe9a7c2-empty[class],.qxframe9a7c2-result[class],.qxframe9a7c2-list[class],.qxframe9a7c2-tree[class],.qxframe9a7c2-transfer[class],.qxframe9a7c2-table[class],.qxframe9a7c2-menu[class],.qxframe9a7c2-tabs[class],.qxframe9a7c2-steps[class],.qxframe9a7c2-pagination[class],.qxframe9a7c2-upload[class],.qxframe9a7c2-alert-root[class],.qxframe9a7c2-message[class],.qxframe9a7c2-notification[class],.qxframe9a7c2-popup-surface[class],.qxframe9a7c2-popover-root[class],.qxframe9a7c2-modal-root[class],.qxframe9a7c2-drawer-root[class],.qxframe9a7c2-date-panel[class],.qxframe9a7c2-calendar[class],.qxframe9a7c2-period-panel[class],.qxframe9a7c2-time-panel[class],.qxframe9a7c2-wheel-panel[class],.qxframe9a7c2-color-panel[class]{--_qxframe9a7c2-control-border-width: 1px;}
+  .qxframe9a7c2-button.is-xs, .qxframe9a7c2-input.is-xs, .qxframe9a7c2-text-field.is-xs, .qxframe9a7c2-form-input.is-xs, .qxframe9a7c2-form-select.is-xs, .qxframe9a7c2-form-textarea.is-xs, .qxframe9a7c2-selectgroup.is-xs, .qxframe9a7c2-form-check.is-xs, .qxframe9a7c2-form-check-input.is-xs, .qxframe9a7c2-form-segmented.is-xs, .qxframe9a7c2-button-group.is-xs, .qxframe9a7c2-input-group.is-xs, .qxframe9a7c2-form-group.is-xs, .qxframe9a7c2-tags.is-xs, .qxframe9a7c2-tag.is-xs, .qxframe9a7c2-badge.is-xs, .qxframe9a7c2-input-otp.is-xs, .qxframe9a7c2-switch.is-xs, .qxframe9a7c2-slider.is-xs, .qxframe9a7c2-progress.is-xs, .qxframe9a7c2-rate.is-xs, .qxframe9a7c2-card.is-xs, .qxframe9a7c2-collapse.is-xs, .qxframe9a7c2-descriptions.is-xs, .qxframe9a7c2-avatar.is-xs, .qxframe9a7c2-empty.is-xs, .qxframe9a7c2-result.is-xs, .qxframe9a7c2-list.is-xs, .qxframe9a7c2-tree.is-xs, .qxframe9a7c2-transfer.is-xs, .qxframe9a7c2-table.is-xs, .qxframe9a7c2-menu.is-xs, .qxframe9a7c2-tabs.is-xs, .qxframe9a7c2-steps.is-xs, .qxframe9a7c2-pagination.is-xs, .qxframe9a7c2-upload.is-xs, .qxframe9a7c2-alert-root.is-xs, .qxframe9a7c2-message.is-xs, .qxframe9a7c2-notification.is-xs, .qxframe9a7c2-popup-surface.is-xs, .qxframe9a7c2-popover-root.is-xs, .qxframe9a7c2-modal-root.is-xs, .qxframe9a7c2-drawer-root.is-xs, .qxframe9a7c2-calendar.is-xs, .qxframe9a7c2-period-panel.is-xs, .qxframe9a7c2-time-panel.is-xs, .qxframe9a7c2-wheel-panel.is-xs, .qxframe9a7c2-color-panel.is-xs { --_qxframe9a7c2-size-index: -2; }
+  .qxframe9a7c2-button.is-md, .qxframe9a7c2-input.is-md, .qxframe9a7c2-text-field.is-md, .qxframe9a7c2-form-input.is-md, .qxframe9a7c2-form-select.is-md, .qxframe9a7c2-form-textarea.is-md, .qxframe9a7c2-selectgroup.is-md, .qxframe9a7c2-form-check.is-md, .qxframe9a7c2-form-check-input.is-md, .qxframe9a7c2-form-segmented.is-md, .qxframe9a7c2-button-group.is-md, .qxframe9a7c2-input-group.is-md, .qxframe9a7c2-form-group.is-md, .qxframe9a7c2-tags.is-md, .qxframe9a7c2-tag.is-md, .qxframe9a7c2-badge.is-md, .qxframe9a7c2-input-otp.is-md, .qxframe9a7c2-switch.is-md, .qxframe9a7c2-slider.is-md, .qxframe9a7c2-progress.is-md, .qxframe9a7c2-rate.is-md, .qxframe9a7c2-card.is-md, .qxframe9a7c2-collapse.is-md, .qxframe9a7c2-descriptions.is-md, .qxframe9a7c2-avatar.is-md, .qxframe9a7c2-empty.is-md, .qxframe9a7c2-result.is-md, .qxframe9a7c2-list.is-md, .qxframe9a7c2-tree.is-md, .qxframe9a7c2-transfer.is-md, .qxframe9a7c2-table.is-md, .qxframe9a7c2-menu.is-md, .qxframe9a7c2-tabs.is-md, .qxframe9a7c2-steps.is-md, .qxframe9a7c2-pagination.is-md, .qxframe9a7c2-upload.is-md, .qxframe9a7c2-alert-root.is-md, .qxframe9a7c2-message.is-md, .qxframe9a7c2-notification.is-md, .qxframe9a7c2-popup-surface.is-md, .qxframe9a7c2-popover-root.is-md, .qxframe9a7c2-modal-root.is-md, .qxframe9a7c2-drawer-root.is-md, .qxframe9a7c2-calendar.is-md, .qxframe9a7c2-period-panel.is-md, .qxframe9a7c2-time-panel.is-md, .qxframe9a7c2-wheel-panel.is-md, .qxframe9a7c2-color-panel.is-md { --_qxframe9a7c2-size-index: 0; }
+  .qxframe9a7c2-button.is-lg, .qxframe9a7c2-input.is-lg, .qxframe9a7c2-text-field.is-lg, .qxframe9a7c2-form-input.is-lg, .qxframe9a7c2-form-select.is-lg, .qxframe9a7c2-form-textarea.is-lg, .qxframe9a7c2-selectgroup.is-lg, .qxframe9a7c2-form-check.is-lg, .qxframe9a7c2-form-check-input.is-lg, .qxframe9a7c2-form-segmented.is-lg, .qxframe9a7c2-button-group.is-lg, .qxframe9a7c2-input-group.is-lg, .qxframe9a7c2-form-group.is-lg, .qxframe9a7c2-tags.is-lg, .qxframe9a7c2-tag.is-lg, .qxframe9a7c2-badge.is-lg, .qxframe9a7c2-input-otp.is-lg, .qxframe9a7c2-switch.is-lg, .qxframe9a7c2-slider.is-lg, .qxframe9a7c2-progress.is-lg, .qxframe9a7c2-rate.is-lg, .qxframe9a7c2-card.is-lg, .qxframe9a7c2-collapse.is-lg, .qxframe9a7c2-descriptions.is-lg, .qxframe9a7c2-avatar.is-lg, .qxframe9a7c2-empty.is-lg, .qxframe9a7c2-result.is-lg, .qxframe9a7c2-list.is-lg, .qxframe9a7c2-tree.is-lg, .qxframe9a7c2-transfer.is-lg, .qxframe9a7c2-table.is-lg, .qxframe9a7c2-menu.is-lg, .qxframe9a7c2-tabs.is-lg, .qxframe9a7c2-steps.is-lg, .qxframe9a7c2-pagination.is-lg, .qxframe9a7c2-upload.is-lg, .qxframe9a7c2-alert-root.is-lg, .qxframe9a7c2-message.is-lg, .qxframe9a7c2-notification.is-lg, .qxframe9a7c2-popup-surface.is-lg, .qxframe9a7c2-popover-root.is-lg, .qxframe9a7c2-modal-root.is-lg, .qxframe9a7c2-drawer-root.is-lg, .qxframe9a7c2-calendar.is-lg, .qxframe9a7c2-period-panel.is-lg, .qxframe9a7c2-time-panel.is-lg, .qxframe9a7c2-wheel-panel.is-lg, .qxframe9a7c2-color-panel.is-lg { --_qxframe9a7c2-size-index: 1; }
+  .qxframe9a7c2-button.is-xl, .qxframe9a7c2-input.is-xl, .qxframe9a7c2-text-field.is-xl, .qxframe9a7c2-form-input.is-xl, .qxframe9a7c2-form-select.is-xl, .qxframe9a7c2-form-textarea.is-xl, .qxframe9a7c2-selectgroup.is-xl, .qxframe9a7c2-form-check.is-xl, .qxframe9a7c2-form-check-input.is-xl, .qxframe9a7c2-form-segmented.is-xl, .qxframe9a7c2-button-group.is-xl, .qxframe9a7c2-input-group.is-xl, .qxframe9a7c2-form-group.is-xl, .qxframe9a7c2-tags.is-xl, .qxframe9a7c2-tag.is-xl, .qxframe9a7c2-badge.is-xl, .qxframe9a7c2-input-otp.is-xl, .qxframe9a7c2-switch.is-xl, .qxframe9a7c2-slider.is-xl, .qxframe9a7c2-progress.is-xl, .qxframe9a7c2-rate.is-xl, .qxframe9a7c2-card.is-xl, .qxframe9a7c2-collapse.is-xl, .qxframe9a7c2-descriptions.is-xl, .qxframe9a7c2-avatar.is-xl, .qxframe9a7c2-empty.is-xl, .qxframe9a7c2-result.is-xl, .qxframe9a7c2-list.is-xl, .qxframe9a7c2-tree.is-xl, .qxframe9a7c2-transfer.is-xl, .qxframe9a7c2-table.is-xl, .qxframe9a7c2-menu.is-xl, .qxframe9a7c2-tabs.is-xl, .qxframe9a7c2-steps.is-xl, .qxframe9a7c2-pagination.is-xl, .qxframe9a7c2-upload.is-xl, .qxframe9a7c2-alert-root.is-xl, .qxframe9a7c2-message.is-xl, .qxframe9a7c2-notification.is-xl, .qxframe9a7c2-popup-surface.is-xl, .qxframe9a7c2-popover-root.is-xl, .qxframe9a7c2-modal-root.is-xl, .qxframe9a7c2-drawer-root.is-xl, .qxframe9a7c2-calendar.is-xl, .qxframe9a7c2-period-panel.is-xl, .qxframe9a7c2-time-panel.is-xl, .qxframe9a7c2-wheel-panel.is-xl, .qxframe9a7c2-color-panel.is-xl { --_qxframe9a7c2-size-index: 2; }
+
+  .qxframe9a7c2-form-check > .qxframe9a7c2-form-check-input,
+  .qxframe9a7c2-button-group:not(.is-mixed-size) > .qxframe9a7c2-button,
+  .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-input,
+  .qxframe9a7c2-input-group:not(.is-mixed-size) > .qxframe9a7c2-button,
+  .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-form-input,
+  .qxframe9a7c2-form-group:not(.is-mixed-size) > .qxframe9a7c2-button { --_qxframe9a7c2-size-index: inherit; }
+  /* Controls and multi-line Textarea share typography and padding, not
+     minimum height: Textarea's base 5rem and authored size overrides must win. */
+  .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class], .qxframe9a7c2-form-textarea[class] {
+    height: auto;
+    padding-block: var(--_qxframe9a7c2-control-padding-block);
+    font-size: var(--_qxframe9a7c2-control-font-size);
+    line-height: var(--_qxframe9a7c2-control-line-height);
+  }
+  /* The scoped V2 geometry owner is final for Button typography:
+     shadcn text-sm uses the source style scale (Nova 12.8px), while icon-sm
+     still inherits source body/control type (Nova 14px). Do not resize the
+     full control, or shadow this owner with an earlier component CSS rule. */
+  .qxframe9a7c2-button.is-sm{
+    font-size:var(--qxframe9a7c2-theme-button-sm-font-size,var(--_qxframe9a7c2-control-font-size));
+  }
+  .qxframe9a7c2-button.is-sm.is-square,
+  .qxframe9a7c2-button.is-sm.is-icon-only{
+    font-size:var(--qxframe9a7c2-theme-control-font-size,var(--_qxframe9a7c2-control-font-size));
+  }
+  .qxframe9a7c2-input > .qxframe9a7c2-input-control, .qxframe9a7c2-text-field > .qxframe9a7c2-input-control { height: auto; min-height: var(--_qxframe9a7c2-control-line-height); }
+  .qxframe9a7c2-input.is-textarea > .qxframe9a7c2-input-control { min-height: calc(var(--_qxframe9a7c2-control-height) - 2px); }
+  /* is-square is geometric (width = height), not a hard-corner shape. */
+  .qxframe9a7c2-card[class] {
+    --_qxframe9a7c2-card-padding: var(--qxframe9a7c2-card-padding,var(--_qxframe9a7c2-surface-padding));
+    --_qxframe9a7c2-card-radius: var(--qxframe9a7c2-card-radius,var(--qxframe9a7c2-theme-radius-card));
+    --_qxframe9a7c2-card-heading-gap: var(--qxframe9a7c2-theme-card-meta-gap);
+  }
+  .qxframe9a7c2-switch[class] {
+    --_qxframe9a7c2-switch-height: calc(var(--qxframe9a7c2-theme-switch-height) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-switch-width: calc(var(--qxframe9a7c2-theme-switch-width) + var(--_qxframe9a7c2-size-index) * .25rem);
+    --_qxframe9a7c2-switch-padding: var(--qxframe9a7c2-theme-switch-inset);
+    --_qxframe9a7c2-switch-thumb-height: calc(var(--_qxframe9a7c2-switch-height) - var(--_qxframe9a7c2-switch-padding) * 2);
+    --_qxframe9a7c2-switch-thumb-width: var(--qxframe9a7c2-switch-thumb-width, min(calc(var(--_qxframe9a7c2-switch-thumb-height) + var(--qxframe9a7c2-theme-switch-thumb-extra)), calc(var(--_qxframe9a7c2-switch-width) - var(--_qxframe9a7c2-switch-padding) * 2 - .25rem)));
+  }
+  /* Track is a border box. Offsets are measured from its inner border edge. */
+  .qxframe9a7c2-switch .qxframe9a7c2-switch-track { --_qxframe9a7c2-switch-thumb-inline-start: calc(var(--_qxframe9a7c2-switch-padding) - var(--_qxframe9a7c2-switch-track-border-width)); }
+  /* Shared Slider geometry applies to the real Slider and ColorPanel native
+     hue/alpha controls; neither owns a separate Style/density mapping. */
+  .qxframe9a7c2-slider[class], .qxframe9a7c2-color-panel[class] {
+    --_qxframe9a7c2-slider-rail: max(.125rem, calc(var(--qxframe9a7c2-theme-slider-track) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-slider-handle-width: calc(var(--qxframe9a7c2-theme-slider-thumb-width) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-height: calc(var(--qxframe9a7c2-theme-slider-thumb) + var(--_qxframe9a7c2-size-index) * .125rem);
+    --_qxframe9a7c2-slider-handle-shadow: var(--qxframe9a7c2-theme-shadow-thumb);
+  }
+  .qxframe9a7c2-slider-handle { box-sizing: border-box; }
+  .qxframe9a7c2-progress[class] {
+    --_qxframe9a7c2-progress-line-size: max(.125rem, calc(var(--qxframe9a7c2-theme-progress-track) + var(--_qxframe9a7c2-size-index) * .125rem));
+    --_qxframe9a7c2-progress-circle-size: round(nearest, calc(var(--qxframe9a7c2-theme-progress-ring) * (1 + var(--_qxframe9a7c2-size-index) * .25)), .125rem);
+  }
+  /* END GEOMETRY qx-md-1 */
+
+  /* Shared Badge label-size + role mapping (pinned shadcn preview-02):
+   * Destructive is a 10%-tinted semantic label, Secondary is the neutral
+   * background, Outline is the outlined role. Sera's editorial Badge policy
+   * suppresses the paint as well as the padding/border; no per-Card PV CSS. */
+  .qxframe9a7c2-badge.is-status-label.is-destructive{
+    background:var(--qxframe9a7c2-theme-badge-label-destructive-bg);
+    color:var(--qxframe9a7c2-theme-destructive);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
+  }
+  .qxframe9a7c2-badge.is-status-label.is-secondary{
+    background:var(--qxframe9a7c2-theme-badge-label-secondary-bg);
+    color:var(--qxframe9a7c2-theme-badge-label-secondary-fg);
+    border-color:var(--qxframe9a7c2-theme-badge-label-solid-border);
+  }
+  .qxframe9a7c2-badge.is-status-label.is-outlined{
+    background:var(--qxframe9a7c2-theme-badge-label-outline-bg,transparent);
+    color:var(--qxframe9a7c2-theme-foreground);
+    border-color:var(--qxframe9a7c2-theme-border);
+  }
+
+/* Final Textarea spacing owner: override shared [class] Control padding.
+ * Its native-input base still owns positioning and multiline min-height. */
+.qxframe9a7c2-input.is-textarea{padding:0}

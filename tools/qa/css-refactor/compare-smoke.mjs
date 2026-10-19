@@ -1,0 +1,462 @@
+// Deterministic Chromium B0↔candidate CSS smoke and negative-control fixture.
+// Strictly supplemental to full canonical pages/interaction/screenshot verification.
+// Usage: node tools/qa/css-refactor/compare-smoke.mjs --baseline=<B0/dist.css> --candidate=<HEAD/dist.css> --out=<report.json>
+// Always proves baseline self/self AND intentional mutation detection first.
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import http from 'node:http';
+import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
+const MIME={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.woff':'font/woff'};
+let activeVariant='baseline';
+import { spawn } from 'node:child_process';
+import { getWebSocketConstructor } from '../../websocket-client.mjs';
+
+const arg = name => process.argv.find(v => v.startsWith('--' + name + '='))?.slice(name.length + 3);
+const baselineFile = arg('baseline'), candidateFile = arg('candidate');
+if (!baselineFile || !candidateFile) throw new Error('Missing --baseline and/or --candidate');
+const baseline = fs.readFileSync(path.resolve(baselineFile), 'utf8');
+const candidate = fs.readFileSync(path.resolve(candidateFile), 'utf8');
+const b0Digest = crypto.createHash('sha256').update(baseline).digest('hex');
+const expected = '93d2eeba7cce1af8a6e461c514d0e4b1d38886717b98c10fe13fd1444745187e';
+if (b0Digest !== expected) throw new Error('B0 CSS bytes do not match exact-tree official artifact: ' + b0Digest);
+const css = {
+  baseline,
+  candidate,
+  mutant: baseline + '\nhtml,body { background-color: rgb(13, 79, 211) !important; } .qxframe9a7c2-card { background-color: rgb(13, 79, 211) !important; box-shadow: 0 0 0 30px rgb(13, 79, 211) !important; }\n',
+  mutantHover: baseline + '\n.qxframe9a7c2-card-action:hover,.qxframe9a7c2-card-action-item:hover{background-color:rgb(255,0,174)!important;color:rgb(12,250,23)!important}\n'
+};
+const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'dark':''}"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/style.css?which=${which}"></head><body>
+<section id="primary" class="qxframe9a7c2-stack">
+<button id="button" class="qxframe9a7c2-button">Example Button</button>
+<button id="button-selected" class="qxframe9a7c2-button is-selected">Selected Button</button>
+<button id="button-disabled" class="qxframe9a7c2-button is-disabled" disabled>Disabled Button</button>
+<div id="card" class="qxframe9a7c2-card"><div id="card-header" class="qxframe9a7c2-card-header">Header</div><div id="card-body" class="qxframe9a7c2-card-body">Content</div></div>
+<input id="input" class="qxframe9a7c2-input" placeholder="Text" value="Sample">
+<label id="check-host" class="qxframe9a7c2-field"><input id="checkbox" type="checkbox" checked>Check</label>
+<div id="choice-height-owner-override" style="--_qxframe9a7c2-choice-radius:3px;--_qxframe9a7c2-control-height:3.75rem">
+  <input id="choice-radius-local" class="qxframe9a7c2-form-check-input" type="checkbox" checked>
+  <button id="control-height-local" class="qxframe9a7c2-button is-sm">Height override</button>
+  <select id="select-height-local" class="qxframe9a7c2-form-select"><option>Custom height</option></select>
+</div>
+<div id="choice-height-dark-override" class="dark" style="--_qxframe9a7c2-choice-radius:0;--_qxframe9a7c2-control-height:1.5rem">
+  <input id="choice-radius-dark" class="qxframe9a7c2-form-check-input" type="checkbox">
+  <input id="input-height-dark" class="qxframe9a7c2-form-input" value="Dark height">
+  <button id="button-height-dark" class="qxframe9a7c2-button is-lg">Dark height</button>
+</div>
+<span id="badge" class="qxframe9a7c2-badge is-success">Success</span>
+<div id="tag-table-button-owners">
+  <span id="tag-default-owner" class="qxframe9a7c2-tag">Default tag</span>
+  <div id="tag-solid-owner" class="qxframe9a7c2-tags is-variant-solid"><span class="qxframe9a7c2-tag">Solid tag</span><span class="qxframe9a7c2-tag is-colored is-success">Colored solid tag</span></div>
+  <span id="tag-disabled-owner" class="qxframe9a7c2-tag is-disabled">Disabled tag</span>
+  <button id="filled-button-owner" class="qxframe9a7c2-button is-filled" type="button">Filled</button>
+  <button id="filled-focus-owner" class="qxframe9a7c2-button is-filled is-focused" type="button">Focused filled</button>
+  <div id="table-owning-surface" class="qxframe9a7c2-table-wrap"><table class="qxframe9a7c2-table"><thead><tr><th>Owner header</th></tr></thead><tbody><tr><td>Owner cell</td></tr></tbody></table></div>
+  <div class="dark" id="tag-table-local-dark"><span class="qxframe9a7c2-tag">Local dark tag</span><div class="qxframe9a7c2-tags is-variant-solid"><span class="qxframe9a7c2-tag">Solid local dark</span></div></div>
+</div>
+<div id="menu" class="qxframe9a7c2-menu"><div id="menu-item" class="qxframe9a7c2-menu-item is-selected">Item</div></div>
+<div id="local-dark" class="dark"><button id="nested-button" class="qxframe9a7c2-button">Nested dark</button></div>
+<div id="public-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-button-radius:0">
+<div id="override-card" class="qxframe9a7c2-card">Local public override</div></div>
+<div id="card-sizes">
+  <div id="card-xs" class="qxframe9a7c2-card is-xs"><div class="qxframe9a7c2-card-header"><h3 class="qxframe9a7c2-card-title">XS</h3></div><div class="qxframe9a7c2-card-description">Small description</div></div>
+  <div id="card-sm" class="qxframe9a7c2-card is-sm"><div class="qxframe9a7c2-card-body">Small</div></div>
+  <div id="card-md" class="qxframe9a7c2-card is-md"><div class="qxframe9a7c2-card-body">Medium</div></div>
+  <div id="card-lg" class="qxframe9a7c2-card is-lg"><div class="qxframe9a7c2-card-body">Large</div></div>
+  <div id="card-xl" class="qxframe9a7c2-card is-xl"><div class="qxframe9a7c2-card-body">Extra large</div></div>
+</div>
+<div id="card-state-matrix">
+  <div id="card-outlined" class="qxframe9a7c2-card is-outlined"><div class="qxframe9a7c2-card-title">Outline</div></div>
+  <div id="card-elevated" class="qxframe9a7c2-card is-elevated">Elevated</div>
+  <div id="card-selected" class="qxframe9a7c2-card is-selected">Selected</div>
+  <div id="card-loading" class="qxframe9a7c2-card is-loading is-hoverable">Loading + hoverable</div>
+  <div id="card-hover" class="qxframe9a7c2-card is-hoverable is-hover-shadow">Hoverable</div>
+  <div id="card-divided" class="qxframe9a7c2-card is-divided"><div class="qxframe9a7c2-card-header">Divided</div><div class="qxframe9a7c2-card-content">Content</div><div class="qxframe9a7c2-card-footer">Footer</div></div>
+  <div id="card-grid" class="qxframe9a7c2-card"><div class="qxframe9a7c2-card-grid"><div class="qxframe9a7c2-card-grid-item">Cell 1</div><div class="qxframe9a7c2-card-grid-item">Cell 2</div></div></div>
+</div>
+<div id="card-actions-matrix" class="qxframe9a7c2-card">
+  <div class="qxframe9a7c2-card-actions">
+    <button id="card-action-standard" class="qxframe9a7c2-card-action" type="button">Standard</button>
+    <button id="card-action-item" class="qxframe9a7c2-card-action-item" type="button">Item</button>
+    <button id="card-action-disabled" class="qxframe9a7c2-card-action" type="button" disabled>Disabled</button>
+    <button id="card-action-item-disabled" class="qxframe9a7c2-card-action-item" type="button" disabled>Item disabled</button>
+  </div>
+  <div class="qxframe9a7c2-card-actions">
+    <a id="card-link-standard" class="qxframe9a7c2-card-action" href="#card-action-standard">Link</a>
+    <a id="card-link-item" class="qxframe9a7c2-card-action-item" href="#card-action-item">Last link</a>
+  </div>
+</div>
+<div id="card-ancestor-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-card-padding:1.25rem;--qxframe9a7c2-card-border-color:rgb(123,45,67)">
+  <div id="card-inherited" class="qxframe9a7c2-card is-sm"><h3 class="qxframe9a7c2-card-title">Ancestor override</h3><div class="qxframe9a7c2-card-description">Description</div></div>
+  <div id="card-local-override" class="qxframe9a7c2-card" style="--qxframe9a7c2-card-shadow:0 0 0 2px rgb(25,88,144);--qxframe9a7c2-card-padding:0">Local override</div>
+</div>
+<section id="menu-notification-textarea-owner-matrix">
+  <div class="qxframe9a7c2-notification-root" id="scope-notice-default">Notification</div>
+  <div class="qxframe9a7c2-notification-root is-warning" id="scope-notice-warning" style="--qxframe9a7c2-notification-bg:rgb(31,45,65)">Warning notification</div>
+  <nav class="qxframe9a7c2-menu" id="scope-menu-default">
+    <div class="qxframe9a7c2-menu-item" id="scope-menu-item">Menu regular</div>
+    <div class="qxframe9a7c2-menu-item is-disabled" id="scope-menu-disabled">Menu disabled</div>
+    <button class="qxframe9a7c2-menu-item is-danger" id="scope-menu-danger-disabled" disabled>Danger disabled</button>
+    <div class="qxframe9a7c2-menu-item is-hover is-disabled" id="scope-menu-hover-disabled">Hover disabled</div>
+  </nav>
+  <nav class="qxframe9a7c2-menu is-disabled" id="scope-menu-disabled-root"><div class="qxframe9a7c2-menu-item">Parent disabled</div></nav>
+  <div class="qxframe9a7c2-input is-textarea" id="scope-textarea-default"><textarea class="qxframe9a7c2-input-control">Textarea</textarea></div>
+  <div class="dark" id="scope-local-dark"><div class="qxframe9a7c2-notification-root">Local dark notification</div><nav class="qxframe9a7c2-menu"><div class="qxframe9a7c2-menu-item is-disabled">Local dark disabled menu</div></nav></div>
+</section>
+<section id="table-progress-scroll-owner-matrix">
+ <div class="qxframe9a7c2-table-wrap is-bordered">
+  <table class="qxframe9a7c2-table is-striped is-hover" style="--qxframe9a7c2-table-row-hover:rgb(26,87,142)">
+   <thead><tr><th>Owner</th><th>Value</th></tr></thead><tbody>
+    <tr><td>Default</td><td>Row</td></tr>
+    <tr class="is-selected"><td>Selected</td><td>Row</td></tr>
+    <tr class="is-disabled"><td>Disabled</td><td>Row</td></tr>
+    <tr class="is-warning"><td>Warning</td><td>Row</td></tr>
+   </tbody>
+  </table>
+ </div>
+ <div class="qxframe9a7c2-progress is-sm" style="--qxframe9a7c2-progress-rail-color:rgb(3,44,71);--qxframe9a7c2-progress-color:rgb(6,104,83);--qxframe9a7c2-progress-success-color:rgb(201,5,90)">Progress user overrides</div>
+ <div class="qxframe9a7c2-scroll" style="--qxframe9a7c2-scroll-track-bg:rgb(10,40,70);--qxframe9a7c2-scroll-thumb-bg:rgb(11,41,71);--qxframe9a7c2-scroll-edge-shadow:rgb(12,42,72)">Scrollable</div>
+ <div class="dark" style="--qxframe9a7c2-theme-muted:rgb(92,42,108);--qxframe9a7c2-theme-border:rgb(81,20,161)">
+  <table class="qxframe9a7c2-table is-hover"><thead><tr><th>Dark</th></tr></thead><tbody><tr class="is-selected"><td>Nested row</td></tr></tbody></table>
+  <div class="qxframe9a7c2-progress" style="--qxframe9a7c2-progress-rail-color:rgb(25,39,93)">Nested progress</div>
+  <div class="qxframe9a7c2-scroll" style="--qxframe9a7c2-scroll-track-color:rgb(26,40,93)">Nested scroll</div>
+ </div>
+</section>
+<div id="card-dark-nested" class="dark"><div id="card-nested-dark" class="qxframe9a7c2-card is-xs">Nested scheme card</div></div>
+<section id="focus-and-mask-ownership" style="--qxframe9a7c2-theme-pointer-width:3px;--qxframe9a7c2-theme-pointer-offset:-1px;--qxframe9a7c2-theme-pointer-opacity:100%">
+  <input id="focus-owner-native" class="qxframe9a7c2-form-input" placeholder="Native pointer focus" />
+  <select class="qxframe9a7c2-form-select"><option>Choice</option></select>
+  <textarea class="qxframe9a7c2-form-textarea">Pointer focus</textarea>
+  <input class="qxframe9a7c2-form-input" readonly value="Readonly" />
+  <input class="qxframe9a7c2-form-input" disabled value="Disabled" />
+  <div id="focus-image-default" class="qxframe9a7c2-image"><div class="qxframe9a7c2-image-mask"></div></div>
+  <div id="focus-image-public-override" class="qxframe9a7c2-image" style="--qxframe9a7c2-image-mask-bg:rgb(50,100,150)"><div class="qxframe9a7c2-image-mask"></div></div>
+  <div class="dark" style="--qxframe9a7c2-theme-overlay:rgb(60,100,140)">
+    <input class="qxframe9a7c2-form-input" placeholder="Nested dark" />
+    <div class="qxframe9a7c2-image"><div class="qxframe9a7c2-image-mask"></div></div>
+  </div>
+</section>
+<section id="appearance-control-states" style="--qxframe9a7c2-theme-field-sides:0%;--qxframe9a7c2-theme-pointer-focus:rgb(215,30,30)">
+  <div class="qxframe9a7c2-input is-focused"><input class="qxframe9a7c2-input-control" value="Focused"></div>
+  <div class="qxframe9a7c2-input is-expanded"><input class="qxframe9a7c2-input-control" value="Expanded"></div>
+  <div class="qxframe9a7c2-input is-error"><input class="qxframe9a7c2-input-control" value="Error"></div>
+  <div class="qxframe9a7c2-input is-invalid"><input class="qxframe9a7c2-input-control" value="Invalid"></div>
+  <div class="qxframe9a7c2-input is-warning"><input class="qxframe9a7c2-input-control" value="Warning"></div>
+  <div class="qxframe9a7c2-input is-disabled"><input class="qxframe9a7c2-input-control" disabled value="Disabled"></div>
+  <input class="qxframe9a7c2-form-input is-focused" value="Focus Form">
+  <input class="qxframe9a7c2-form-input is-invalid" value="Invalid Form">
+  <input class="qxframe9a7c2-form-input" disabled value="Disabled Form">
+  <select class="qxframe9a7c2-form-select is-focused"><option>Focused Select</option></select>
+  <select class="qxframe9a7c2-form-select" disabled><option>Disabled Select</option></select>
+  <textarea class="qxframe9a7c2-form-textarea is-invalid">Invalid Textarea</textarea>
+  <textarea class="qxframe9a7c2-form-textarea" disabled>Disabled Textarea</textarea>
+  <input class="qxframe9a7c2-input-otp-segment is-focused" value="1">
+  <input class="qxframe9a7c2-pagination-input is-invalid" value="2">
+  <div class="dark" style="--qxframe9a7c2-theme-field-sides:100%;--qxframe9a7c2-theme-field:rgb(190,235,180)">
+    <div class="qxframe9a7c2-input is-focused"><input class="qxframe9a7c2-input-control" value="Nested dark focus"></div>
+    <input class="qxframe9a7c2-form-input is-invalid" value="Nested dark invalid">
+    <select class="qxframe9a7c2-form-select is-focused"><option>Nested dark select</option></select>
+    <textarea class="qxframe9a7c2-form-textarea is-invalid">Nested dark textarea</textarea>
+  </div>
+</section>
+<section id="component-owner-closure">
+  <div class="qxframe9a7c2-item-surface is-disabled">Disabled Item</div>
+  <div class="qxframe9a7c2-list is-disabled"><div class="qxframe9a7c2-item-surface">Disabled List child</div></div>
+  <div class="qxframe9a7c2-tree is-disabled"><div class="qxframe9a7c2-item-surface">Disabled Tree child</div></div>
+  <div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-handle"></div></div>
+  <div class="qxframe9a7c2-switch"><input class="qxframe9a7c2-switch-input" type="checkbox" checked /><div class="qxframe9a7c2-switch-track"></div></div>
+  <div class="qxframe9a7c2-switch is-checked"><div class="qxframe9a7c2-switch-track"></div></div>
+  <div class="qxframe9a7c2-carousel"><button type="button" class="qxframe9a7c2-carousel-arrow">Next</button><div class="qxframe9a7c2-carousel-caption">Caption</div></div>
+  <div class="dark" style="--qxframe9a7c2-theme-shadow-thumb:0 0 0 3px rgb(60,110,170);--qxframe9a7c2-theme-background:rgb(10,20,30)">
+    <div class="qxframe9a7c2-slider"><div class="qxframe9a7c2-slider-handle"></div></div>
+    <div class="qxframe9a7c2-carousel"><button type="button" class="qxframe9a7c2-carousel-arrow">Local dark</button><div class="qxframe9a7c2-carousel-caption">Local caption</div></div>
+  </div>
+</section>
+</section></body></html>`;
+
+const server = http.createServer((req, res) => {
+  const u = new URL(req.url, 'http://127.0.0.1');
+  if (u.pathname === '/favicon.ico') { res.writeHead(204); return res.end(); }
+  if (u.pathname === '/style.css') {
+    const value = css[u.searchParams.get('which')];
+    if (value === undefined) { res.writeHead(404); return res.end(); }
+    res.writeHead(200, { 'Content-Type': 'text/css', 'Cache-Control': 'no-store' }); return res.end(value);
+  }
+  if (u.pathname === '/fixture') {
+    const which = u.searchParams.get('which'), mode = u.searchParams.get('mode');
+    if (!css[which] || !['light','dark'].includes(mode)) { res.writeHead(400); return res.end(); }
+    res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store' }); return res.end(fixture(which,mode));
+  }
+  // Real canonical docs/Card route: serve unchanged JS/DOM from this exact tree,
+  // swapping ONLY the dist CSS source. Prevent directory traversal and missing-file silence.
+  const pathname=decodeURIComponent(u.pathname);
+  const file=path.resolve(projectRoot,'.'+pathname);
+  if (!file.startsWith(projectRoot+path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+    res.writeHead(404); return res.end();
+  }
+  if (pathname==='/dist/qxframe9a7c2.css') {
+    res.writeHead(200,{'Content-Type':'text/css','Cache-Control':'no-store'});
+    return res.end(css[activeVariant]);
+  }
+  res.writeHead(200,{'Content-Type':MIME[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
+  res.end(fs.readFileSync(file));
+});
+await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
+const origin = 'http://127.0.0.1:' + server.address().port;
+const bin = [process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome','/usr/bin/google-chrome-stable'].filter(Boolean).find(p => fs.existsSync(p));
+let profile = fs.mkdtempSync(path.join(os.tmpdir(),'qx-css-refactor-cdp-'));
+const chromiumProfiles=[profile];
+let child, socket, cid=0;
+const pending = new Map(), runtimeErrors = [], httpErrors = [];
+let sessionId, endpoint='', stderr='';
+function sleep(ms) { return new Promise(r => setTimeout(r,ms)); }
+async function call(method,params={},session) {
+  return new Promise((resolve,reject) => {
+    const id=++cid;
+    pending.set(id,{resolve,reject});
+    socket.send(JSON.stringify({id,method,params,...(session?{sessionId:session}:{})}));
+  });
+}
+const s = (method,params={}) => call(method,params,sessionId);
+async function evalJs(expression) {
+  const data = await s('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
+  if (data.exceptionDetails) throw new Error('JS evaluation error: ' + (data.exceptionDetails.exception?.description || data.exceptionDetails.text));
+  return data.result.value;
+}
+async function waitFor(expression,label) {
+  for (let i=0;i<200;i++) {
+    if (await evalJs(expression)) return;
+    await sleep(50);
+  }
+  throw new Error('Timed out: '+label);
+}
+async function sample(which,mode,route='synthetic',hoverId=null) {
+  const errorsStart=runtimeErrors.length, networkStart=httpErrors.length;
+  activeVariant=which;
+  const actualDoc=route==='card-doc';
+  await s('Page.navigate',{url: actualDoc ? origin+'/docs/components/card.html' : origin+'/fixture?which='+which+'&mode='+mode});
+  if (actualDoc) {
+    await waitFor('document.readyState==="complete" && document.body.dataset.qxframe9a7c2Component==="Card" && document.querySelectorAll(".qxframe9a7c2-card").length>=1','real Card docs mount');
+    // Use the docs site's own mode API. Merely adding .dark leaves its
+    // qxframe9a7c2-theme-light class and data-theme="light" contradictory.
+    const applied=await evalJs("(() => { const api=window.QXFRAME9A7C2_DOCS_THEME; if(!api)throw Error('Docs Theme runtime missing'); const state=api.setState({mode:"+JSON.stringify(mode)+"},{persist:false,emit:true}); const root=document.documentElement; return {mode:state.effectiveMode,dark:root.classList.contains('dark'),themeDark:root.classList.contains('qxframe9a7c2-theme-dark'),attr:root.getAttribute('data-theme')}; })()");
+    if(applied.mode!==mode || applied.dark!==(mode==='dark') || applied.themeDark!==(mode==='dark') || applied.attr!==mode)
+      throw Error('Docs Theme mode not applied: '+JSON.stringify(applied));
+    // Docs Theme events update auxiliary site controls asynchronously. Allow
+    // CSS transitions and delayed DOM projections to settle before freezing
+    // the remaining *infinite* Skeleton animation at the same WAAPI time.
+    // Preserve full-page screenshot equality; do NOT mask unrelated pixels.
+    await sleep(800);
+  } else {
+    await waitFor('document.readyState==="complete" && !!document.querySelector("#override-card")','fixture load');
+    // Programmatically focused text field exercises FocusOrigin pointer
+    // outline ownership rather than merely comparing unfocused controls.
+    await evalJs('document.querySelector("#focus-owner-native").focus()');
+  }
+  await evalJs('document.fonts.ready.then(()=>true)');
+  if(hoverId){
+    if(actualDoc)throw Error('Hover fixture requires synthetic Card page');
+    const selector='#'+hoverId;
+    await evalJs("(() => { const el=document.querySelector("+JSON.stringify(selector)+"); if(!el)throw Error('Missing action fixture'); el.scrollIntoView({block:'center',inline:'nearest'}); return true; })()");
+    await sleep(80);
+    const target=await evalJs("(() => { const box=document.querySelector("+JSON.stringify(selector)+").getBoundingClientRect(); return {x:box.x+box.width/2,y:box.y+box.height/2}; })()");
+    await s('Input.dispatchMouseEvent',{type:'mouseMoved',x:target.x,y:target.y});
+    await waitFor("document.querySelector("+JSON.stringify(selector)+").matches(':hover')",'native pointer hover '+selector);
+  }else{
+    await s('Input.dispatchMouseEvent',{type:'mouseMoved',x:1430,y:15});
+  }
+  // Synthetic FocusOrigin and hover CSS may still be interpolating immediately
+  // after native focus()/mouseMoved. Await the *real* transition completion
+  // before pausing animations at t=0. No computed property is excluded:
+  // B0 self, poison and candidate all traverse this identical stable state.
+  if(!actualDoc)await sleep(800);
+  // Capture at an identical animation timeline, without changing the source
+  // CSS animation-name/duration/keyframes or suppressing animation assertions.
+  // WAAPI freezing at time 0 avoids Card Skeleton background-position drift.
+  // This is a deterministic snapshot mode, NOT motion playback acceptance.
+  const animationEvidence=await evalJs(`(() => {
+    const all=document.getAnimations({subtree:true});
+    const initial={running:all.filter(a=>a.playState==='running').length,
+      skeleton:all.filter(a=>a.effect?.target?.classList?.contains('qxframe9a7c2-card-skeleton-line')).length,
+      withKeyframes:all.filter(a=>Array.isArray(a.effect?.getKeyframes?.()) && a.effect.getKeyframes().length>0).length};
+    for(const a of all){a.pause();a.currentTime=0;}
+    return {count:all.length,initial};
+  })()`);
+  await sleep(40);
+  const snapshot = await evalJs(`(() => {
+    const rows=[];
+    const realDoc=!!document.body.dataset.qxframe9a7c2Component;
+    const all=realDoc ?
+      [document.documentElement,document.body,
+        ...[...document.querySelectorAll('.qxframe9a7c2-docs-sidebar .qxframe9a7c2-menu-item')].slice(0,90),
+        ...[...document.querySelectorAll('.qxframe9a7c2-card,.qxframe9a7c2-card *')].slice(0,250)] :
+      [document.documentElement,document.body,...document.querySelectorAll('body *')];
+    const domPath=el=>{
+      const out=[];
+      while(el && el.nodeType===1){
+        let n=1; for(let x=el.previousElementSibling;x;x=x.previousElementSibling)if(x.tagName===el.tagName)n++;
+        out.unshift(el.tagName.toLowerCase()+':nth-of-type('+n+')'); el=el.parentElement;
+      }
+      return out.join('>');
+    };
+    for (const el of all) {
+      const name=domPath(el);
+      const box=el.getBoundingClientRect();
+      const geom=[box.x,box.y,box.width,box.height,el.scrollWidth,el.scrollHeight,el.clientWidth,el.clientHeight];
+      const values={};
+      for (const pseud of ['', '::before','::after']) {
+        const cs=getComputedStyle(el,pseud), props={};
+        for (let i=0;i<cs.length;i++) { const key=cs[i]; props[key]=cs.getPropertyValue(key); }
+        values[pseud||'base']=props;
+      }
+      rows.push({name,tag:el.tagName,geom,values});
+    }
+    return {rows,styleSheets:document.styleSheets.length,scopeRuleCounts:[...document.styleSheets].map(sheet=>{try{return sheet.cssRules.length}catch{return -1}})};
+  })()`);
+  if (snapshot.styleSheets === 0 || snapshot.rows.length < (actualDoc ? 25 : 45))
+    throw new Error('Incomplete '+route+': '+JSON.stringify({sheets:snapshot.styleSheets,rows:snapshot.rows.length}));
+  // The Semantic DOM debugger prints a LIVE pseudo-rule count in the docs UI.
+  // Removing source rules legitimately changes that number (543 -> 540), but
+  // it is not a component pixel or layout regression. Capture its raw value
+  // as an independent source diagnostic BEFORE screenshot sampling, then
+  // normalize ONLY these three numeric glyphs. No rectangle/pixel masking,
+  // threshold increase, stylesheet mutation or skipped rendered components.
+  // All computed properties and bounding boxes above use the unmodified DOM.
+  const semanticDiagnostics=actualDoc ? await evalJs(`(() => {
+    const label=document.querySelector('[data-semantic-stats]');
+    if(!label) throw new Error('Missing mandatory Semantic DOM rule diagnostics');
+    const actual=label.textContent || '';
+    const matched=actual.match(/^(.* · )([0-9]{3}) pseudo rules$/);
+    if(!matched) throw new Error('Unexpected Semantic DOM diagnostic label: '+actual);
+    const rawCount=Number(matched[2]);
+    if(rawCount<100 || rawCount>999)throw new Error('Implausible pseudo rule count '+rawCount);
+    label.textContent=matched[1]+'000 pseudo rules';
+    return {rawCount,display:'000',source:actual};
+  })()`) : null;
+  const image=actualDoc ? Buffer.from((await s('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64') : null;
+  const errors=runtimeErrors.slice(errorsStart), http=httpErrors.slice(networkStart);
+  return {snapshot,errors,http,image,animationEvidence,semanticDiagnostics};
+
+}
+function compare(a,b,label) {
+  const out=[];
+  for (const [i,node] of a.snapshot.rows.entries()) {
+    const other=b.snapshot.rows[i];
+    if (!other || node.name!==other.name || node.tag!==other.tag) {out.push({label,index:i,reason:'DOM',baseline:node.name,candidate:other?.name});continue;}
+    if (JSON.stringify(node.geom)!==JSON.stringify(other.geom)) out.push({label,node:node.name,property:'raw-geometry',baseline:node.geom,candidate:other.geom});
+    for (const pseudo of ['base','::before','::after']) {
+      for (const [key,val] of Object.entries(node.values[pseudo])) {
+        const newVal=other.values[pseudo]?.[key];
+        if (val!==newVal) out.push({label,node:node.name,pseudo,property:key,baseline:val,candidate:newVal});
+      }
+    }
+  }
+  if (a.snapshot.rows.length!==b.snapshot.rows.length) out.push({label,reason:'element-count',baseline:a.snapshot.rows.length,candidate:b.snapshot.rows.length});
+  return out;
+}
+const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML, native docs Theme state API, deterministic WAAPI t=0 sampling and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Expanded synthetic fixture covers Card size xs–xl, states, public ancestor/root overrides and local dark, but is not a replacement for pointer-hover/keyboard/112-config/portal acceptance.']};
+try {
+  if (!bin) throw new Error('Chromium is required; set CHROMIUM_BIN');
+  // Chromium can exit before publishing CDP under shared GitHub runner load.
+  // Retry only startup with a fresh browser profile; never retry/ignore
+  // CSSOM, screenshot, network or negative-control comparison failures.
+  const launchFailures=[];
+  for(let attempt=1;attempt<=3 && !endpoint;attempt++){
+    if(attempt>1){
+      profile=fs.mkdtempSync(path.join(os.tmpdir(),'qx-css-refactor-cdp-'));
+      chromiumProfiles.push(profile);
+      await sleep(400*attempt);
+    }
+    stderr='';
+    child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+    child.on('error',err=>{stderr+='\\nChromium spawn error: '+String(err);});
+    child.stderr.setEncoding('utf8');
+    child.stderr.on('data',d=>{stderr+=d;endpoint ||= (stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/)||[])[1]||'';});
+    for(let i=0;i<600 && !endpoint && child.exitCode===null;i++)await sleep(50);
+    if(endpoint){report.browserLaunchAttempts=attempt;break;}
+    launchFailures.push({attempt,exitCode:child.exitCode,stderr:stderr.slice(-700)});
+    child.kill('SIGKILL');
+    await sleep(300);
+  }
+  if(!endpoint)throw new Error('Cannot launch Chromium CDP after three isolated startup attempts: '+JSON.stringify(launchFailures));
+  if(launchFailures.length)report.warnings.push('Chromium startup required '+launchFailures.length+' transient retry(ies): '+JSON.stringify(launchFailures));
+  const WebSocketClient=await getWebSocketConstructor();
+  socket=new WebSocketClient(endpoint);
+  await new Promise((resolve,reject)=>{socket.onopen=resolve;socket.onerror=()=>reject(new Error('CDP connection failed'));});
+  socket.onmessage=event=>{
+    const msg=JSON.parse(event.data);
+    if(msg.id&&pending.has(msg.id)){const p=pending.get(msg.id);pending.delete(msg.id);return msg.error?p.reject(new Error(msg.error.message)):p.resolve(msg.result);}
+    if(msg.sessionId===sessionId && msg.method==='Runtime.exceptionThrown')runtimeErrors.push(msg.params.exceptionDetails.text);
+    if(msg.sessionId===sessionId && msg.method==='Network.responseReceived' && msg.params.response.status>=400)httpErrors.push(msg.params.response.status+' '+msg.params.response.url);
+    if(msg.sessionId===sessionId && msg.method==='Network.loadingFailed' && !msg.params.canceled)httpErrors.push(msg.params.errorText);
+  };
+  const {targetId}=await call('Target.createTarget',{url:'about:blank'});
+  ({sessionId}=await call('Target.attachToTarget',{targetId,flatten:true}));
+  await s('Page.enable');await s('Runtime.enable');await s('Network.enable');
+  await s('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  report.browser=(await call('Browser.getVersion')).product;
+  for(const mode of ['light','dark']) {
+    const a=await sample('baseline',mode), b=await sample('baseline',mode), bad=await sample('mutant',mode), fresh=await sample('candidate',mode);
+    const selfDiff=compare(a,b,mode),negativeDiff=compare(a,bad,mode),candidateDiff=compare(a,fresh,mode);
+    const errs=[...a.errors,...b.errors,...bad.errors,...fresh.errors,...a.http,...b.http,...bad.http,...fresh.http];
+    report.cases.push({mode,styleElementCount:a.snapshot.rows.length,selfDiffCount:selfDiff.length,negativeDiffCount:negativeDiff.length,candidateDiffCount:candidateDiff.length,negativeSamples:negativeDiff.slice(0,3),candidateSamples:candidateDiff.slice(0,20),errors:errs});
+  }
+  // Real source Card docs: repeat self, poison, and candidate in the same Chromium.
+  // A large CSS difference must fail on both actual DOM/computed values and pixels.
+  report.realDocs=[];
+  const artifactDir=arg('out') ? path.join(path.dirname(path.resolve(arg('out'))),'css-refactor-card-screenshots') : null;
+  if(artifactDir)fs.mkdirSync(artifactDir,{recursive:true});
+  for(const mode of ['light','dark']) {
+    const base=await sample('baseline',mode,'card-doc');
+    const again=await sample('baseline',mode,'card-doc');
+    const mutant=await sample('mutant',mode,'card-doc');
+    const head=await sample('candidate',mode,'card-doc');
+    const self=compare(base,again,mode+'-docs-self'),neg=compare(base,mutant,mode+'-docs-poison'),cand=compare(base,head,mode+'-docs-candidate');
+    const pngHash = img => crypto.createHash('sha256').update(img).digest('hex');
+    const imageHashes={baseline:pngHash(base.image),self:pngHash(again.image),negative:pngHash(mutant.image),candidate:pngHash(head.image)};
+    const errors=[...base.errors,...again.errors,...mutant.errors,...head.errors,...base.http,...again.http,...mutant.http,...head.http];
+    const record={mode,elements:base.snapshot.rows.length,cssSheets:base.snapshot.styleSheets,
+      animationEvidence:{baseline:base.animationEvidence,candidate:head.animationEvidence},
+      selfDiffs:self.length,negativeDiffs:neg.length,candidateDiffs:cand.length,
+      imageHashes,selfPixelsEqual:imageHashes.baseline===imageHashes.self,
+      negativePixelsDetected:imageHashes.baseline!==imageHashes.negative,
+      candidatePixelsEqual:imageHashes.baseline===imageHashes.candidate,
+      errors,negativeSamples:neg.slice(0,3),candidateSamples:cand.slice(0,8)};
+    if(artifactDir){for(const [key,object] of Object.entries({baseline:base,negative:mutant,candidate:head}))fs.writeFileSync(path.join(artifactDir,'card-'+mode+'-'+key+'.png'),object.image);}
+    report.realDocs.push(record);
+  }
+  // G06: native browser pointer hover, for BOTH aliases, with deliberate
+  // hover-only poison and direct B0/candidate computed + geometry checks.
+  report.actionHover=[];
+  for(const mode of ['light','dark'])for(const hoverId of ['card-action-standard','card-action-item']){
+    const first=await sample('baseline',mode,'synthetic',hoverId);
+    const second=await sample('baseline',mode,'synthetic',hoverId);
+    const mutant=await sample('mutantHover',mode,'synthetic',hoverId);
+    const candidate=await sample('candidate',mode,'synthetic',hoverId);
+    const self=compare(first,second,'hover-self'),broken=compare(first,mutant,'hover-mutation'),actual=compare(first,candidate,'hover-candidate');
+    const errs=[...first.errors,...second.errors,...mutant.errors,...candidate.errors,...first.http,...second.http,...mutant.http,...candidate.http];
+    report.actionHover.push({mode,hoverId,selfDifferences:self.length,negativeDifferences:broken.length,
+      candidateDifferences:actual.length,errors:errs,
+      negativeSamples:broken.filter(x=>x.node.includes('card-actions-matrix')||x.property==='color'||x.property==='background-color').slice(0,3),
+      actualSamples:actual.slice(0,10)});
+  }
+  report.actionHoverPassed=report.actionHover.every(r=>r.selfDifferences===0 && r.negativeDifferences>0 && r.candidateDifferences===0 && r.errors.length===0);
+  report.selfPassed=report.cases.every(x=>x.selfDiffCount===0 && x.errors.length===0);
+  report.negativePassed=report.cases.every(x=>x.negativeDiffCount>0);
+  report.realCandidatePassed=report.cases.every(x=>x.candidateDiffCount===0);
+  report.realDocsPassed=report.realDocs.every(r=>r.elements>=25 && r.errors.length===0 && r.selfDiffs===0 && r.negativeDiffs>0 && r.candidateDiffs===0 && r.selfPixelsEqual && r.negativePixelsDetected && r.candidatePixelsEqual);
+  report.ok=report.selfPassed&&report.negativePassed&&report.realCandidatePassed&&report.realDocsPassed&&report.actionHoverPassed;
+}catch(e){report.ok=false;report.errors.push(String(e.stack||e));}
+finally{
+  if(socket)socket.close();
+  if(child){child.kill('SIGTERM');await sleep(100);if(child.exitCode===null)child.kill('SIGKILL');}
+  server.close();
+  for(const candidateProfile of chromiumProfiles)fs.rmSync(candidateProfile,{recursive:true,force:true,maxRetries:15,retryDelay:200});
+}
+if(arg('out')){fs.mkdirSync(path.dirname(path.resolve(arg('out'))),{recursive:true});fs.writeFileSync(path.resolve(arg('out')),JSON.stringify(report,null,2)+'\n');}
+console.log(JSON.stringify({...report,cases:report.cases.map(x=>({...x,candidateSamples:x.candidateSamples.slice(0,3)}))}));
+if(!report.ok)process.exitCode=1;

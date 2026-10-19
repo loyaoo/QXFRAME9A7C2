@@ -15,10 +15,17 @@
     "main-foundation",
     "main-fixed-values",
     "components",
-    "main-theme-visual-v2",
-    "main-theme-visual-v2-consumers",
-    "main-theme-visual-v2-style",
-    "main-theme-visual-v2-style-consumers"
+    "main-semantic-cascade",
+    "late-semantic-status-modifiers",
+    "late-feedback-theme-states",
+    "late-data-control-states",
+    "late-input-action-states",
+    "late-overlay-picker-states",
+    "late-menu-selection-states",
+    "late-component-sizing",
+    "late-control-interaction",
+    "late-semantic-inputs",
+    "late-component-appearance"
   ],
   "conceptualOrder": [
     "foundation",
@@ -90,9 +97,16 @@
     "src/styles/components/composition.css",
     "src/styles/components/focus-closeout.css",
     "src/styles/components/visual-recipe.css",
-    "src/styles/main/theme-visual-v2.css",
-    "src/styles/main/theme-visual-v2-consumers.css",
-    "src/styles/main/theme-visual-v2-style.css",
-    "src/styles/main/theme-visual-v2-style-consumers.css"
+    "src/styles/main/semantic-cascade.css",
+    "src/styles/components/semantic-status-modifiers.css",
+    "src/styles/components/feedback-theme-states.css",
+    "src/styles/components/data-control-states.css",
+    "src/styles/components/input-action-states.css",
+    "src/styles/components/overlay-picker-states.css",
+    "src/styles/components/menu-selection-states.css",
+    "src/styles/components/component-sizing.css",
+    "src/styles/components/control-interaction.css",
+    "src/styles/main/semantic-inputs.css",
+    "src/styles/components/component-appearance.css"
   ]
 }

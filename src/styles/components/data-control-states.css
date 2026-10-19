@@ -1,0 +1,38 @@
+
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row):hover, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-hover { --_qxframe9a7c2-table-row-bg: color-mix(in oklab, var(--qxframe9a7c2-theme-muted) 50%, transparent); }
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-selected, .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-transfer-selected { --_qxframe9a7c2-table-row-bg: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-table th { background-color: var(--qxframe9a7c2-theme-background); }
+  .qxframe9a7c2-table tbody tr:not(.qxframe9a7c2-table-expanded-row).is-disabled { opacity: .5; }
+  /* Transfer's public/local panel roles win over generic surface Theme paint.
+     In particular, disabled foreground must inherit from its Transfer owner. */
+  .qxframe9a7c2-transfer-panel { background-color: var(--_qxframe9a7c2-transfer-panel-bg); color: inherit; border-color: var(--_qxframe9a7c2-transfer-panel-border); }
+  .qxframe9a7c2-slider-rail { background-color: var(--qxframe9a7c2-theme-slider-rail); }
+  .qxframe9a7c2-slider-track { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-slider-handle { background-color: var(--qxframe9a7c2-theme-thumb); border-color: var(--qxframe9a7c2-theme-thumb-border); }
+  .qxframe9a7c2-selectgroup-indicator.is-overlay { box-shadow: none; }
+  /* Alert keeps source-owned configurable elevation. */
+  /* Remaining QX consumers enter existing source responsibilities. Geometry,
+     value ownership, native events, focus and popup mounting remain unchanged. */
+  .qxframe9a7c2-form-input[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-select[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-textarea[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-input-otp-segment[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  /* ColorPanel source paints input, format and eye as one field family. */
+  .qxframe9a7c2-pagination-input[class] {  border-color: var(--_qxframe9a7c2-control-border); color: var(--qxframe9a7c2-theme-foreground); }
+  .qxframe9a7c2-form-input:focus, .qxframe9a7c2-form-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-select:focus, .qxframe9a7c2-form-select.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-textarea:focus, .qxframe9a7c2-form-textarea.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-input-otp-segment:focus, .qxframe9a7c2-input-otp-segment.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-color-panel-input:focus, .qxframe9a7c2-color-panel-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-pagination-input:focus, .qxframe9a7c2-pagination-input.is-focused { --_qxframe9a7c2-control-border: var(--qxframe9a7c2-theme-pointer-focus); }
+  .qxframe9a7c2-form-input.is-invalid, .qxframe9a7c2-form-select.is-invalid, .qxframe9a7c2-form-textarea.is-invalid, .qxframe9a7c2-input-otp-segment.is-invalid, .qxframe9a7c2-color-panel-input.is-invalid, .qxframe9a7c2-pagination-input.is-invalid { --_qxframe9a7c2-control-border: light-dark(var(--qxframe9a7c2-theme-destructive), color-mix(in oklab, var(--qxframe9a7c2-theme-destructive) 50%, transparent)); }
+  .qxframe9a7c2-form-input:disabled, .qxframe9a7c2-form-input.is-disabled, .qxframe9a7c2-form-select:disabled, .qxframe9a7c2-form-select.is-disabled, .qxframe9a7c2-form-textarea:disabled, .qxframe9a7c2-form-textarea.is-disabled, .qxframe9a7c2-input-otp-segment:disabled, .qxframe9a7c2-input-otp-segment.is-disabled, .qxframe9a7c2-color-panel-input:disabled, .qxframe9a7c2-color-panel-input.is-disabled, .qxframe9a7c2-pagination-input:disabled, .qxframe9a7c2-pagination-input.is-disabled { opacity: .5; }
+  .qxframe9a7c2-badge-count[class], .qxframe9a7c2-badge-ribbon[class] { background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground); }
+  .qxframe9a7c2-badge-status-dot[class] { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-badge-ribbon::after { border-top-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-carousel-dot-bar[class] { background-color: var(--qxframe9a7c2-theme-muted); }
+  .qxframe9a7c2-carousel-dot.is-active .qxframe9a7c2-carousel-dot-bar { background-color: var(--_qxframe9a7c2-type); }
+  .qxframe9a7c2-upload-preview-mask[class] { background-color: var(--qxframe9a7c2-theme-overlay); }
+  .qxframe9a7c2-native-form, .qxframe9a7c2-form-input, .qxframe9a7c2-form-select, .qxframe9a7c2-form-textarea, .qxframe9a7c2-input-otp, .qxframe9a7c2-color-panel { --_qxframe9a7c2-control-border-hover: var(--qxframe9a7c2-theme-input); --_qxframe9a7c2-control-text: var(--qxframe9a7c2-theme-foreground); --_qxframe9a7c2-control-text-secondary: var(--qxframe9a7c2-theme-muted-foreground); }
+/* Final canonical Table surface owner, formerly scoped semantic cascade #4. */
+.qxframe9a7c2-table, .qxframe9a7c2-table-wrap {background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border);}

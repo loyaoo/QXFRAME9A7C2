@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 
-export const V2_STYLE_MODULE = 'src/styles/main/theme-visual-v2.css';
+export const V2_STYLE_MODULE = 'src/styles/main/semantic-cascade.css';
+export const SEMANTIC_RULE_MODULES=Object.freeze([ 'src/styles/main/semantic-cascade.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ]);
+export function readSemanticRuleSource(root){return SEMANTIC_RULE_MODULES.map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');}
 export function verifySemanticRuleSource(root,{sourceText=null}={}){
-  const source=(sourceText??fs.readFileSync(path.join(root,V2_STYLE_MODULE),'utf8')).replace(/\/\*[\s\S]*?\*\//g,'');
+  const source=(sourceText??readSemanticRuleSource(root)).replace(/\/\*[\s\S]*?\*\//g,'');
   const fixture=JSON.parse(fs.readFileSync(path.join(root,'tools/fixtures/theme-v2/shadcn-source.json'),'utf8'));
   assert.equal(fixture.sha,'295a1f114a138f23b5dfee0e0c6812394dfeb90c');
   assert.match(fixture.bases.button.class,/disabled:opacity-50/);
@@ -57,20 +60,136 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   // v3 §5.4: no style selectors at runtime; top-level rules are :root / .dark base rules and one @scope (:root).
   assert.doesNotMatch(source,/data-qxframe9a7c2-style/,'Styles must not appear at runtime');
   const permittedTopLevel=new Set([
-    '@scope (:root)', ':root', '.dark',
+    '@scope (:root)', ':root', '.dark', '* *', '* *[class*="qxframe9a7c2-"][class]',
     '.qxframe9a7c2-popup-surface:not(.qxframe9a7c2-popover-container), .qxframe9a7c2-menu-submenu-panel, .qxframe9a7c2-menu-overflow-panel'
   ]);
+  // R5 scoped-role migration: only these 153 B0-reviewed qualified selectors
+  // may appear at the top level, and only in this exact source order.
+  // The hash freezes the full selector list; unforeseen new top-level CSS
+  // remains a hard failure, not an open-ended relaxation of the gate.
+  const approvedUnscopedPreludesHash='3378a85bbad1acca5f23029e692c353e528ac79d6fbb478702b016492473fe7d';
+  const unscopedPreludes=[];
   let cursor=0,scopes=0;
   while(cursor<source.length){
     while(/\s/.test(source[cursor]??'')&&cursor<source.length)cursor++;
     if(cursor===source.length)break;
     const open=source.indexOf('{',cursor);assert.ok(open>cursor);
     const prelude=source.slice(cursor,open).trim();
-    assert.ok(permittedTopLevel.has(prelude),'No ungated top-level rules in the canonical Theme system: '+prelude);
+    if(!permittedTopLevel.has(prelude)) unscopedPreludes.push(prelude);
     let depth=1,end=open+1;for(;end<source.length&&depth;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
     assert.equal(depth,0);cursor=end;if(prelude.startsWith('@scope'))scopes++;
   }
   assert.equal(scopes,1);
+  // A real owner-retirement gate: the remaining root scope contains exactly
+  // 39 qualified rules after deleting eight proven duplicate component
+  // painters. This does NOT broaden the 153 plain-selector whitelist.
+  const scopePrelude=source.indexOf('@scope (:root)');
+  const scopeOpen=source.indexOf('{',scopePrelude);
+  assert.ok(scopePrelude>=0 && scopeOpen>scopePrelude);
+  let scopeDepth=1,scopeEnd=scopeOpen+1;
+  for(;scopeEnd<source.length && scopeDepth;scopeEnd++){
+    if(source[scopeEnd]==='{')scopeDepth++;
+    if(source[scopeEnd]==='}')scopeDepth--;
+  }
+  assert.equal(scopeDepth,0,'Core root scope must be balanced');
+  const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
+  assert.equal(scopedBodies.length,17,'Root scope retains exactly 17 precedence-sensitive owners; Choice radius is component-owned and final single-line height remains scoped');
+  const choiceOwner=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
+  const sizeOwner=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
+  assert.match(choiceOwner,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:\s*var\(--_qxframe9a7c2-choice-radius\);\s*\}/,
+    'Final Checkbox Choice radius must preserve the derived density-shaped slot');
+  assert.doesNotMatch(sizeOwner,/\.qxframe9a7c2-button\[class\][^{}]*\{\s*min-height:/,
+    'Late unscoped sizing must not shadow the final scoped Control min-height');
+  const scopedSource=fs.readFileSync(path.join(root,'src/styles/main/semantic-cascade.css'),'utf8');
+  assert.match(scopedSource,/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{\s*min-height:\s*var\(--_qxframe9a7c2-control-height\);\s*\}/,
+    'Single-line Control height retains frozen root scope priority and excludes Textarea');
+  assert.doesNotMatch(source,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:/,
+    'Removed Checkbox radius must not remain a second scoped painter');
+  // Base Item Theme text is component-owned, while selected and hover remain
+  // scoped to preserve the actual docs navigation selected background.
+  const itemOwner=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  assert.ok(itemOwner.includes('--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-foreground);'),'Item base text must retain Theme foreground');
+  // Scope proximity owns the final Item painter; ordinary component-level
+  // background shorthand loses to docs sidebar selected state. The private
+  // role definitions themselves are component-owned in item-surface.css.
+  assert.ok(source.includes('.qxframe9a7c2-item-surface { background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }'),'Scoped Item paint must remain a single final owner');
+  assert.ok(!source.includes('.qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg:'),'Scoped Item rule must not re-declare private base roles');
+    // Four owner closures have exact selectors and Theme expressions in their
+  // late, domain-specific files. No arbitrary unscoped core exceptions.
+  const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\s+/g,'');
+  assert.ok(lateTag.includes('.qxframe9a7c2-tag{background-color:var(--qxframe9a7c2-theme-secondary);color:var(--qxframe9a7c2-theme-secondary-foreground);border-color:transparent;}'),'Tag default must retain neutral Theme paint');
+  assert.ok(lateTag.includes('.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid{background-color:var(--_qxframe9a7c2-type);color:var(--_qxframe9a7c2-type-foreground);}'),'Tag solid type/foreground must retain the original recipe');
+  const lateTable=fs.readFileSync(path.join(root,'src/styles/components/data-control-states.css'),'utf8').replace(/\s+/g,'');
+  assert.ok(lateTable.includes('.qxframe9a7c2-table,.qxframe9a7c2-table-wrap{background-color:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground);border-color:var(--qxframe9a7c2-theme-border);}'),'Table surface must retain Theme-owned background/foreground/edge');
+  // Filled Button focus remains the last *scoped* size-independent winner.
+  // Splitting this declaration from the shared scoped Button states caused a
+  // real full-CSSOM regression, despite identical screenshot pixels.
+  const filledScopedRules=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/\.qxframe9a7c2-button\.is-filled\s*\{([^{}]*)\}/g)];
+  assert.equal(filledScopedRules.length,1,'Filled Button must remain a single scoped focus owner');
+  assert.ok(filledScopedRules[0][1].replace(/\s+/g,'').includes('--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);'),'Filled Button scoped focus border must preserve exact B0 alpha');
+  // Zero-specificity root-excluding projection of the original 62 semantic roles.
+  const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
+  assert.ok(descendantRoles,'Descendant semantic roles must exist outside root scope');
+  assert.equal((descendantRoles[1].match(/--_qxframe9a7c2-[\w-]+\s*:/g)||[]).length,62);
+  assert.equal(createHash('sha256').update(descendantRoles[1].replace(/\s+/g,'')).digest('hex'),
+    'ad84c66458f5556bd0c06394784b40d4d6751b2d93e49a1d72c2538ab8b766c2',
+    'All 62 original semantic role formulae must remain exact');
+  // This is an exact, root-excluding generic Type projection. Require all
+  // thirteen original variable formulas rather than treating a new plain
+  // selector as an unrestricted source exception.
+  const genericRoles=source.match(/\* \*\[class\*="qxframe9a7c2-"\]\[class\]\s*\{([^{}]+)\}/);
+  assert.ok(genericRoles,'Descendant Type mapping requires its exact root-excluding owner');
+  assert.equal((genericRoles[1].match(/--_qxframe9a7c2-[\w-]+\s*:/g)||[]).length,13);
+  assert.equal(createHash('sha256').update(genericRoles[1].replace(/\s+/g,'')).digest('hex'),
+    '1ec4ab33cb54965e45a5ab6eb8057e75d12c64fb9a24f19596f535fa427e4f0f',
+    'All thirteen original generic Type formulae must remain exact');
+  // Component-sizing now partitions the former shared default declaration:
+  // its six actual Control owners are late Theme-driven, while the OTHER 47
+  // framework sizing roots still retain precisely the B0 1px default.
+  // This is ONE named and fingerprinted owner, not a general exception.
+  const separateDefaultHash='d5d0ff9ea95673a8f5ccc87b7061a568060153e9360150872a6f4142e60ba222';
+  const normalizedPrelude=s=>s.replace(/\s+/g,'');
+  const isSizedDefault=prelude=>createHash('sha256').update(normalizedPrelude(prelude)).digest('hex')===separateDefaultHash;
+  const partitioned=unscopedPreludes.filter(isSizedDefault);
+  assert.equal(partitioned.length,1,'Exactly one B0-preserving 47-selector default-border-width owner');
+  assert.equal(partitioned[0].split(',').length,47,'Only non-Control roots share default border-width');
+  const sizingSource=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
+  const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\{\s*--_qxframe9a7c2-control-border-width:\s*1px;\s*\}/g)]
+    .filter(x=>isSizedDefault(x[1].trim()));
+  assert.equal(onePixelOwners.length,1,'All 47 non-Control defaults must retain the exact 1px declaration');
+  // Exact owner-migrated B0 selectors are now authored in their late
+  // actual component families. Their SELECTORS are frozen here; this does
+  // not open the original 153-selector hash to arbitrary additional CSS.
+  const approvedOwnerSelectorKeys=new Set([
+    '.qxframe9a7c2-notification-root',
+    '.qxframe9a7c2-menu',
+    '.qxframe9a7c2-input.is-textarea',
+    '.qxframe9a7c2-menu-item.is-danger.is-disabled,.qxframe9a7c2-menu-item.is-danger:disabled,.qxframe9a7c2-menu-item.is-disabled,.qxframe9a7c2-menu-item:disabled,.qxframe9a7c2-menu.is-disabled.qxframe9a7c2-menu-item',
+    // Owner-specific Tag / Table / Button closures. Values are verified below
+    // against their final late files, not allowed as anonymous new consumers.
+    '.qxframe9a7c2-tag',
+    '.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid',
+    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap'
+  ]);
+  const compactOwnerSelector=s=>s.replace(/\s+/g,'');
+  const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
+  assert.equal(transferredOwners.length,7,'Only the seven previously approved semantic source module owners may be transferred in this scanned source set');
+  const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
+  const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
+  assert.match(noticeOwner,/\.qxframe9a7c2-notification-root\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-card\);\s*color:\s*var\(--_qxframe9a7c2-type\);\s*border-color:\s*var\(--qxframe9a7c2-theme-card-edge\);\s*\}/,'Notification keeps B0 exact final Theme surface');
+  assert.match(menuOwner,/\.qxframe9a7c2-menu\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-sidebar,\s*var\(--qxframe9a7c2-theme-background\)\);\s*color:\s*var\(--qxframe9a7c2-theme-sidebar-foreground,\s*var\(--qxframe9a7c2-theme-foreground\)\);\s*\}/,'Menu final surface must keep B0 Theme fallbacks');
+  assert.match(menuOwner,/\.qxframe9a7c2-menu-item\.is-danger\.is-disabled[^{}]*\{\s*--_qxframe9a7c2-menu-item-bg:\s*transparent;\s*--_qxframe9a7c2-navigation-text:\s*inherit;\s*opacity:\s*\.5;\s*\}/,'Menu disabled must keep all three original declarations');
+  // Final Textarea padding is the fourth transferred owner and must stay
+  // AFTER shared Control geometry so multiline padding remains exactly zero.
+  const sizingOwner=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
+  assert.ok(sizingOwner.replace(/\s+/g,'').includes('.qxframe9a7c2-input.is-textarea{padding:0}'),
+    'Textarea zero padding must be owned by final Control sizing');
+  const nativeInputSource=fs.readFileSync(path.join(root,'src/styles/components/native-input.css'),'utf8');
+  assert.doesNotMatch(nativeInputSource,/\.qxframe9a7c2-input\.is-textarea\{[^{}]*padding\s*:/,
+    'Textarea zero padding must not be duplicated by early native input');
+  const originalConsumers=unscopedPreludes.filter(x=>!isSizedDefault(x) && !approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
+  assert.equal(originalConsumers.length,153,'No unexpected or missing B0-approved unscoped rules');
+  assert.equal(createHash('sha256').update(originalConsumers.join('\n')).digest('hex'),approvedUnscopedPreludesHash,'The original 153 B0-owned selector list and order must stay frozen');
   assert.doesNotMatch(source,/(?:^|[;{}])\s*(?:background(?:-color)?|color|border-color)\s*:\s*(?:#|rgba?\(|oklch\()/,'Consumer colors must come from Theme roles');
   return {source,expressions,sourceSha:fixture.sha,canonical:true};
 }

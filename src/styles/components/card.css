@@ -63,7 +63,7 @@
 .qxframe9a7c2-card-footer{gap:var(--_qxframe9a7c2-card-padding);align-items:center;padding:var(--qxframe9a7c2-theme-card-section-inset,0) var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding);background:var(--qxframe9a7c2-theme-card-section,transparent);border-top:var(--qxframe9a7c2-theme-card-section-width,0) solid var(--qxframe9a7c2-theme-card-section-border,var(--_qxframe9a7c2-card-divider));border-end-start-radius:max(0px,var(--_qxframe9a7c2-card-radius));border-end-end-radius:max(0px,var(--_qxframe9a7c2-card-radius))}
 .qxframe9a7c2-card-footer.is-divided,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-footer{padding-top:var(--_qxframe9a7c2-card-padding);border-top-width:1px}
 .qxframe9a7c2-card-heading{display:flex;min-width:0;flex:1 1 auto;flex-direction:column;gap:var(--_qxframe9a7c2-card-heading-gap)}
-.qxframe9a7c2-card-title{min-width:0;margin:0;color:var(--_qxframe9a7c2-semantic-text);font-family:var(--_qxframe9a7c2-fixed-font-family-heading,inherit);font-size:calc(var(--_qxframe9a7c2-card-font-size) + var(--_qxframe9a7c2-fixed-card-title-delta));font-weight:var(--qxframe9a7c2-theme-control-weight,500);line-height:var(--qxframe9a7c2-theme-heading-leading,1.375)}
+.qxframe9a7c2-card-title{min-width:0;margin:0;color:inherit;font-family:var(--_qxframe9a7c2-fixed-font-family-heading,inherit);font-size:calc(var(--_qxframe9a7c2-card-font-size) + var(--_qxframe9a7c2-fixed-card-title-delta));font-weight:var(--qxframe9a7c2-theme-control-weight,500);line-height:var(--qxframe9a7c2-theme-heading-leading,1.375)}
 /* Source CardTitle text-5xl overrides its font but carries each style's
  * explicit typography leading (Vega normal, Nova snug, all others default
  * display-tight). Keep this a shared CardTitle variant, not preview CSS. */
@@ -81,12 +81,10 @@
 .qxframe9a7c2-card-header-action,.qxframe9a7c2-card-extra{min-width:0;flex:0 0 auto;align-self:flex-start;color:var(--_qxframe9a7c2-semantic-text-secondary)}
 
 .qxframe9a7c2-card-body,.qxframe9a7c2-card-content{min-width:0;padding:calc(var(--_qxframe9a7c2-card-padding) / 2) var(--_qxframe9a7c2-card-padding) var(--_qxframe9a7c2-card-padding)}
-.qxframe9a7c2-card>.qxframe9a7c2-card-body:first-child,.qxframe9a7c2-card>.qxframe9a7c2-card-content:first-child{padding-top:var(--_qxframe9a7c2-card-padding)}
-.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-body,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-content,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-body,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-content{padding-top:var(--_qxframe9a7c2-card-padding)}
+.qxframe9a7c2-card>.qxframe9a7c2-card-body:first-child,.qxframe9a7c2-card>.qxframe9a7c2-card-content:first-child,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-body,.qxframe9a7c2-card-header.is-divided+.qxframe9a7c2-card-content,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-body,.qxframe9a7c2-card.is-divided>.qxframe9a7c2-card-header+.qxframe9a7c2-card-content{padding-top:var(--_qxframe9a7c2-card-padding)}
 .qxframe9a7c2-card-body.is-flush,.qxframe9a7c2-card-content.is-flush{padding:0}
 
-.qxframe9a7c2-card-body+.qxframe9a7c2-card-body,.qxframe9a7c2-card-content+.qxframe9a7c2-card-content,.qxframe9a7c2-card-body+.qxframe9a7c2-card-content,.qxframe9a7c2-card-content+.qxframe9a7c2-card-body{padding-top:0}
-.qxframe9a7c2-card-body+.qxframe9a7c2-card-header,.qxframe9a7c2-card-content+.qxframe9a7c2-card-header{padding-top:0}
+.qxframe9a7c2-card-body+.qxframe9a7c2-card-body,.qxframe9a7c2-card-content+.qxframe9a7c2-card-content,.qxframe9a7c2-card-body+.qxframe9a7c2-card-content,.qxframe9a7c2-card-content+.qxframe9a7c2-card-body,.qxframe9a7c2-card-body+.qxframe9a7c2-card-header,.qxframe9a7c2-card-content+.qxframe9a7c2-card-header{padding-top:0}
 .qxframe9a7c2-card-header+.qxframe9a7c2-card-footer{margin-top:calc(var(--_qxframe9a7c2-card-padding) / 2)}
 
 /* Lightweight sections avoid nesting full Card surfaces just to create hierarchy. */
@@ -110,14 +108,12 @@
 .qxframe9a7c2-card-meta-title{color:var(--_qxframe9a7c2-semantic-text);font-weight:600}
 .qxframe9a7c2-card-meta-description{margin-top:var(--_qxframe9a7c2-fixed-card-meta-gap);color:var(--_qxframe9a7c2-semantic-text-secondary);font-size:inherit;line-height:1.5}
 .qxframe9a7c2-card-actions{display:flex;border-top:1px solid var(--_qxframe9a7c2-card-divider)}
-.qxframe9a7c2-card-action{display:flex;min-width:0;min-height:2.625rem;flex:1 1 0;align-items:center;justify-content:center;gap:0.375rem;border:0;border-inline-end:1px solid var(--_qxframe9a7c2-card-divider);background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;text-decoration:none;cursor:pointer}
-.qxframe9a7c2-card-action:last-child{border-inline-end:0}
-.qxframe9a7c2-card-action:hover:not(:disabled){background:var(--_qxframe9a7c2-card-muted-bg);color:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-card-action:disabled{cursor:not-allowed;color:var(--_qxframe9a7c2-semantic-text-disabled)}
-.qxframe9a7c2-card-action-item{display:flex;min-width:0;min-height:2.625rem;flex:1 1 0;align-items:center;justify-content:center;gap:0.375rem;border:0;border-inline-end:1px solid var(--_qxframe9a7c2-card-divider);background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;text-decoration:none;cursor:pointer}
-.qxframe9a7c2-card-action-item:last-child{border-inline-end:0}
-.qxframe9a7c2-card-action-item:hover:not(:disabled){background:var(--_qxframe9a7c2-card-muted-bg);color:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-card-action-item:disabled{cursor:not-allowed;color:var(--_qxframe9a7c2-semantic-text-disabled)}
+/* Card actions share one semantic recipe; the two public class names are aliases.
+ * Each selector keeps its original specificity and all four interaction states. */
+.qxframe9a7c2-card-action,.qxframe9a7c2-card-action-item{display:flex;min-width:0;min-height:2.625rem;flex:1 1 0;align-items:center;justify-content:center;gap:0.375rem;border:0;border-inline-end:1px solid var(--_qxframe9a7c2-card-divider);background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;text-decoration:none;cursor:pointer}
+.qxframe9a7c2-card-action:last-child,.qxframe9a7c2-card-action-item:last-child{border-inline-end:0}
+.qxframe9a7c2-card-action:hover:not(:disabled),.qxframe9a7c2-card-action-item:hover:not(:disabled){background:var(--_qxframe9a7c2-card-muted-bg);color:var(--qxframe9a7c2-theme-primary)}
+.qxframe9a7c2-card-action:disabled,.qxframe9a7c2-card-action-item:disabled{cursor:not-allowed;color:var(--_qxframe9a7c2-semantic-text-disabled)}
 .qxframe9a7c2-card-grid{display:flex;flex-wrap:wrap}
 .qxframe9a7c2-card-grid-item,.qxframe9a7c2-card-grid>*{min-width:var(--qxframe9a7c2-card-grid-min,var(--_qxframe9a7c2-fixed-card-grid-min-width));flex-grow:1;flex-shrink:1;flex-basis:calc(100% / var(--qxframe9a7c2-card-grid-columns,999));padding:var(--_qxframe9a7c2-card-padding);border-inline-end:1px solid var(--_qxframe9a7c2-card-divider);border-bottom:1px solid var(--_qxframe9a7c2-card-divider);transition:box-shadow var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1),background-color var(--_qxframe9a7c2-fixed-motion-duration-3) cubic-bezier(.2, 0, 0, 1)}
 .qxframe9a7c2-card-grid-item:hover{position:relative;z-index:var(--qxframe9a7c2-z-local-raised);background:var(--_qxframe9a7c2-card-muted-bg);box-shadow:var(--qxframe9a7c2-card-shadow,var(--qxframe9a7c2-theme-shadow-card))}
@@ -127,8 +123,7 @@
 .qxframe9a7c2-card-tab{position:relative;z-index:var(--qxframe9a7c2-z-local-raised);display:inline-flex;min-height:2.625rem;align-items:center;border:0;background:transparent;color:var(--_qxframe9a7c2-semantic-text-secondary);font:inherit;cursor:pointer;white-space:nowrap}
 .qxframe9a7c2-card-tab.is-active{color:var(--qxframe9a7c2-theme-primary)}
 .qxframe9a7c2-card-tab.is-active::after{content:"";position:absolute;z-index:var(--qxframe9a7c2-z-local-above);inset-inline:0;bottom:0;height:var(--_qxframe9a7c2-fixed-tabs-indicator-size);background:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-card.is-horizontal{display:flex;align-items:stretch}
-.qxframe9a7c2-card.is-horizontal{flex-direction:row}
+.qxframe9a7c2-card.is-horizontal{display:flex;align-items:stretch;flex-direction:row}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover{height:100%;flex:0 0 max(7.5rem,var(--qxframe9a7c2-card-media-width,36%));border-radius:var(--_qxframe9a7c2-card-radius) 0 0 var(--_qxframe9a7c2-card-radius)}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-cover>img{height:100%}
 .qxframe9a7c2-card.is-horizontal>.qxframe9a7c2-card-main{min-width:0;flex:1 1 0}

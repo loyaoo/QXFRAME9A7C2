@@ -1,0 +1,28 @@
+# Four scoped consumer closures — Tag, Table and Button
+
+## Baseline and safety
+- Immutable B0/main `62d9a8402c19460ced37265acc6d110ae2cfda76`; exact last-green development HEAD `c2996b3dbe9562d44a3f955dc9c40da00b9ed2ea`, QXFRAME, CSS Schema and Chromium Fast all success. PR #268 remains Draft.
+- Production core `src/styles/main/semantic-cascade.css`: **21 → 17** root-scoped qualified rules; one remaining `@scope (:root)` block. Removes actual rule numbers **2,3,4,10** from this HEAD's scoped-rule inventory. All other 17 scoped rules and all non-scoped semantic assignments preserved verbatim. No global new @scope or alternate patch file.
+- Transfer original Tag neutral surface and Tag solid type foreground to `components/feedback-theme-states.css`, the Table background/text/border to `components/data-control-states.css`, and Button filled focus-border alpha to `components/input-action-states.css`. These already-loaded late component-domain modules preserve exact selectors and body declarations; moving to earlier base component CSS would have changed source order and is not attempted.
+- No Theme generator, public/private token name, color-mix formula, runtime JS/DOM or source order list modified. Strict contract asserts the four exact selector/declaration recipes in target modules and exactly 17 rules still scoped.
+- Browser smoke gains actual Tag default/solid/disabled/colored, Button filled/focused, Table surface and nested local dark nodes. Existing real Card docs, whole-page screenshot, negative mutation and action-hover evidence remain mandatory.
+- Risks not claimed closed: Theme public override edge cases, nested popover/local dark, four Framework scope-removal packages and full 112 Theme CreateApp/portal matrix. Exact-head QXFRAME + CSS Schema + Chromium Fast must pass; revert production changes if any CSSOM or screenshot regression. No ratchet relaxation.
+
+## Duplicate-owner correction before final acceptance
+- Strict Fast #39189758228 found three valid duplicate CSS owner keys in early components: `.tag { color }`, `.badge.is-solid { color }` and `.button.is-filled { --_qxframe9a7c2-button-focus-border }`.
+- Do **not** increase `duplicate-owner` ratchet. Remove only the superseded early property declarations in `tags.css`, `badge.css`, `button.css`, retaining all other button/tag/badge private slots and states.
+- Their exact late values remain in `feedback-theme-states.css` and `input-action-states.css`. The tag/badge fields are still assigned from the Theme and per-Type roles. No earlier owner is left competing for the same key.
+- Corrected the initial structural assertion's whitespace-normalization regular expression: `/\\s+/g` (literal backslash) → `/\s+/g` (actual whitespace). This corrects the test; it does not relax a requirement.
+- This is one closed component-family owner migration; the previous failed HEAD and its screenshots cannot be used as acceptance. Exact corrected SHA three CIs and negative controls required.
+
+## Table final-owner correction
+The full QXFRAME #39189833778 also identified two Table `color` collisions that the preceding fast log abbreviated. Remove `table-wrap { color:var(--_semantic-text) }` and `table { color:inherit }` from the early canonical `table.css`; keep all other Table geometry and variable declarations. The new later `data-control-states.css` continues to supply exactly `color:var(--qxframe9a7c2-theme-foreground)` to both, matching the original scoped final owner. This closes five explicit duplicate-owner keys in one family batch, not by increasing ratchets.
+
+## Exact 153-selector structural gate correction
+CI #39190351327 exposed that `input-action-states.css` already had a B0-approved `.button.is-filled` selector. The migrated declaration was appended as a second rule, producing 9 matches against 8 approved keys. This is not a new selector; merge the original focus-border property into the existing Button Filled rule, leaving ONE final component selector. Keep the frozen original 153-rule SHA256 unchanged; the genuinely new Tag/TagSolid/Table selector identities are explicitly approved as 3 new owner expressions, total historical owner exceptions **4 → 7**, with their actual full values asserted. This is a genuine single-owner improvement, not raising unrelated source limits.
+
+## Browser-evidenced Filled Button rollback
+- Fast Chromium #39190678523 detected 6 CSSOM differences per mode: `--_qxframe9a7c2-button-focus-border` changed from a 40% Type color-mix to the full Theme pointer focus. Whole Card screenshots were identical, so full CSSOM equivalence is essential.
+- Root cause: the still scoped generic Button variant recipe shadows an unscoped Filled focus declaration at equal specificity via scoped cascade proximity. Moving Filled alone is invalid.
+- Restore exact former scoped #10 rule after the shared scoped Button owner; restore earlier Button and late input-action files **byte for byte** from prior exact triple-green HEAD `c2996b3dbe9562d44a3f955dc9c40da00b9ed2ea`. Do not duplicate a new Filled selector, do not change focus formula or suppress CSSOM differences. Core scope count corrects 17→18; 3 Tag/TagSolid/Table owner transfers remain in this batch.
+- Future Filled migration is blocked until its shared Button scope authority is migrated as one dependency-closed set. This rollback does not negate valid Tag and Table closures; exact new-head triple CI remains mandatory.

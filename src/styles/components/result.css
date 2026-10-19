@@ -17,3 +17,35 @@
 .qxframe9a7c2-result-extra{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--_qxframe9a7c2-fixed-space-2,0.5rem);margin-top:var(--_qxframe9a7c2-fixed-space-5,1.25rem)}
 .qxframe9a7c2-result-title[hidden],.qxframe9a7c2-result-subtitle[hidden],.qxframe9a7c2-result-extra[hidden]{display:none}
 
+/* Shared Result status roles are owned by Result, not the global focus layer. */
+
+
+  /* Hover is painted by the shared state consumers after this scope. */
+
+  /* Result's legacy status class names are not the framework-wide is-* Type
+     aliases. Bind them to the already-shared v2 current-Type resolver instead
+     of duplicating the shadcn soft formula in a second module. */
+  .qxframe9a7c2-result-success {
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-success);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-success-foreground);
+    --_qxframe9a7c2-semantic-success: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-semantic-success-soft: var(--_qxframe9a7c2-soft);
+  }
+  .qxframe9a7c2-result-warning {
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-warning);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-warning-foreground);
+    --_qxframe9a7c2-semantic-warning: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-semantic-warning-soft: var(--_qxframe9a7c2-soft);
+  }
+  .qxframe9a7c2-result-error {
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-destructive);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-destructive-foreground);
+    --_qxframe9a7c2-semantic-error: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-semantic-error-soft: var(--_qxframe9a7c2-soft);
+  }
+  .qxframe9a7c2-result-info {
+    --_qxframe9a7c2-type: var(--qxframe9a7c2-theme-info);
+    --_qxframe9a7c2-type-foreground: var(--qxframe9a7c2-theme-info-foreground);
+    --_qxframe9a7c2-semantic-accent: var(--_qxframe9a7c2-type);
+    --_qxframe9a7c2-semantic-accent-soft: var(--_qxframe9a7c2-soft);
+  }

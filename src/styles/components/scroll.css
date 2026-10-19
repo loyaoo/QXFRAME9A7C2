@@ -2,10 +2,10 @@
   --_qxframe9a7c2-scroll-track-size: var(--qxframe9a7c2-scroll-track-size, 0.5rem);
   --_qxframe9a7c2-scroll-track-inset: var(--qxframe9a7c2-scroll-track-inset, var(--_qxframe9a7c2-fixed-scroll-track-inset));
   --_qxframe9a7c2-scroll-track-radius: var(--qxframe9a7c2-scroll-track-radius, 100rem);
-  --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-bg, var(--qxframe9a7c2-scroll-track-color));
-  --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-bg, var(--qxframe9a7c2-scroll-thumb-color));
+  --_qxframe9a7c2-scroll-track-bg: var(--qxframe9a7c2-scroll-track-color);
+  --_qxframe9a7c2-scroll-thumb-bg: var(--qxframe9a7c2-scroll-thumb-color);
   --_qxframe9a7c2-scroll-thumb-inset: var(--qxframe9a7c2-scroll-thumb-inset, 1px);
-  --_qxframe9a7c2-scroll-edge-shadow: var(--qxframe9a7c2-scroll-edge-shadow, var(--_qxframe9a7c2-semantic-border-strong));
+  --_qxframe9a7c2-scroll-edge-shadow: transparent;
   --_qxframe9a7c2-scroll-motion-duration: var(--qxframe9a7c2-scroll-motion-duration, 120ms);
   --_qxframe9a7c2-scroll-motion-easing: var(--qxframe9a7c2-scroll-motion-easing, ease);
   position: relative;

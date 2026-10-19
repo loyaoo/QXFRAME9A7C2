@@ -10,7 +10,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 const exists=rel=>fs.existsSync(path.join(root,rel));
 const component=readCanonicalComponentStyleSource({root});
-const theme=[read('src/styles/main/theme.css'),read('src/styles/main/theme-visual-v2.css'),read('src/styles/main/theme-visual-v2-style.css'),read('src/styles/main/theme-visual-v2-style-consumers.css')].join('\n');
+const theme=[read('src/styles/main/theme.css'),[ 'src/styles/main/semantic-cascade.css', 'src/styles/components/semantic-status-modifiers.css', 'src/styles/components/feedback-theme-states.css', 'src/styles/components/data-control-states.css', 'src/styles/components/input-action-states.css', 'src/styles/components/overlay-picker-states.css', 'src/styles/components/menu-selection-states.css', 'src/styles/components/component-sizing.css' ].map(read).join('\n'),read('src/styles/main/semantic-inputs.css'),read('src/styles/components/component-appearance.css')].join('\n');
 const fixed=read('src/styles/main/fixed-values.css');
 
 for(const retired of ['src/styles/preset/_foundation.scss','src/styles/theme/_default.scss','src/styles/theme/_family.scss'])assert.equal(exists(retired),false,'Retired public Theme layer must stay deleted: '+retired);

@@ -1,0 +1,8 @@
+# Item/Card scoped correction — pixel and public API evidence
+
+- B0/main frozen `62d9a8402c19460ced37265acc6d110ae2cfda76`. Last three-gate green `862a7113e227415f27327a7c6ef214f4a2bd5f6a`; PR #268 stays Draft.
+- Rejected `b5f356ecb793cd988a02263eaf18975238c96dc2` intended three core-scope owner transfers. QXFRAME #39197418150 failed the Card Grid hover public shadow contract. Fast #39197418115 compared 152 Card elements per mode with 0 CSSOM/layout differences but its full-page image differed.
+- Official failed artifact `12162228845` downloaded and ZIP CRC verified; Pillow decoded **RGB** comparison found **8067 actual changed pixels** each Light/Dark, bounding box (12,373,239,409): docs sidebar Card selected background missing. This is **real CSS regression** in Item selected/hover scope, not PNG encoder variance. RGBA ImageChops.getbbox is not valid for this check because alpha difference is zero.
+- Revert both problematic scoped rules (#3 Item selected/hover; #4 Card Grid hover) byte-for-byte from last-green. Restore complete Card CSS/public shadow override and existing earlier Item states. Only replace early Item base text `--_qxframe9a7c2-item-text:inherit` with `var(--qxframe9a7c2-theme-foreground)`, which was the former B0 scoped winning declaration.
+- Core scope 18 → **17**; rest of source/plain selectors remain unchanged. No new module or Theme/JS/DOM change. Existing full strict CSSOM, real screenshot zero-pixel rule, negative mutants and owner ratchets all still required.
+- Exact SHA three CI workflows must pass. Failure must revert to `862a7113e227415f27327a7c6ef214f4a2bd5f6a`, not soften tests or mask sidebar.
