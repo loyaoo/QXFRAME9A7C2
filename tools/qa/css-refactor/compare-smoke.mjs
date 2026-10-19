@@ -39,6 +39,15 @@ const fixture = (which, mode) => `<!doctype html><html class="${mode==='dark'?'d
 <input id="input" class="qxframe9a7c2-input" placeholder="Text" value="Sample">
 <label id="check-host" class="qxframe9a7c2-field"><input id="checkbox" type="checkbox" checked>Check</label>
 <span id="badge" class="qxframe9a7c2-badge is-success">Success</span>
+<div id="tag-table-button-owners">
+  <span id="tag-default-owner" class="qxframe9a7c2-tag">Default tag</span>
+  <div id="tag-solid-owner" class="qxframe9a7c2-tags is-variant-solid"><span class="qxframe9a7c2-tag">Solid tag</span><span class="qxframe9a7c2-tag is-colored is-success">Colored solid tag</span></div>
+  <span id="tag-disabled-owner" class="qxframe9a7c2-tag is-disabled">Disabled tag</span>
+  <button id="filled-button-owner" class="qxframe9a7c2-button is-filled" type="button">Filled</button>
+  <button id="filled-focus-owner" class="qxframe9a7c2-button is-filled is-focused" type="button">Focused filled</button>
+  <div id="table-owning-surface" class="qxframe9a7c2-table-wrap"><table class="qxframe9a7c2-table"><thead><tr><th>Owner header</th></tr></thead><tbody><tr><td>Owner cell</td></tr></tbody></table></div>
+  <div class="dark" id="tag-table-local-dark"><span class="qxframe9a7c2-tag">Local dark tag</span><div class="qxframe9a7c2-tags is-variant-solid"><span class="qxframe9a7c2-tag">Solid local dark</span></div></div>
+</div>
 <div id="menu" class="qxframe9a7c2-menu"><div id="menu-item" class="qxframe9a7c2-menu-item is-selected">Item</div></div>
 <div id="local-dark" class="dark"><button id="nested-button" class="qxframe9a7c2-button">Nested dark</button></div>
 <div id="public-overrides" style="--qxframe9a7c2-card-shadow:none;--qxframe9a7c2-button-radius:0">

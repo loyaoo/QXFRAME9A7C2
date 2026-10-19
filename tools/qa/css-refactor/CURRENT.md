@@ -98,3 +98,7 @@ no baseline or Theme/JS/DOM edits. See OWNER-CLOSURE-MENU-NOTICE-TEXTAREA.md.
 
 
 Correction to four-owner migration: original root @scope count remains 21. Fast exposed Textarea padding override by later component-sizing module; zero padding moved from native-input base to final component-sizing owner, and source gate explicitly pins the three new late selectors with exact Theme declarations instead of relaxing original 153 fingerprint. New HEAD CI pending.
+
+
+## Four late component owner closures (pending exact-head CI)
+Semantic cascade root scope 21→17 rules: Tag base, Tag solid, Table base, Button filled focus move to their existing late component domain CSS files with unchanged selectors/values. Fast synthetic fixture expanded with Tag/filled Button/Table/nested dark; strict source contract checks exact target declarations. See tools/qa/css-refactor/OWNER-CLOSURE-TAG-TABLE-BUTTON.md. No Theme/JS/DOM changes, PR Draft.

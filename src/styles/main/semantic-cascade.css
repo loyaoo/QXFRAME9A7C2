@@ -103,18 +103,6 @@
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-background);
   }
-  /* Badge/Tag reuse action paint, with their own source secondary/80 hover. */
-  .qxframe9a7c2-tag {
-    background-color: var(--qxframe9a7c2-theme-secondary);
-    color: var(--qxframe9a7c2-theme-secondary-foreground);
-    border-color: transparent;
-  }
-  .qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {
-    background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground);
-  }
-
-  /* Table is a data surface. Its selected background is muted, not Primary. */
-  .qxframe9a7c2-table, .qxframe9a7c2-table-wrap { background-color: var(--qxframe9a7c2-theme-background); color: var(--qxframe9a7c2-theme-foreground); border-color: var(--qxframe9a7c2-theme-border); }
 
   /* Selection item paint is source Command/Select highlight, not feedback soft. */
   .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
@@ -158,9 +146,6 @@
     --_qxframe9a7c2-button-hover-shadow: var(--_qxframe9a7c2-action-shadow);
     --_qxframe9a7c2-button-active-shadow: var(--_qxframe9a7c2-action-shadow);
     --_qxframe9a7c2-button-disabled-shadow: none;
-  }
-  .qxframe9a7c2-button.is-filled {
-    --_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);
   }
 
   /* control: same owner for native Input and all existing Picker Controls. */
@@ -216,7 +201,8 @@
   .qxframe9a7c2-button.is-sm, .qxframe9a7c2-input.is-sm, .qxframe9a7c2-text-field.is-sm, .qxframe9a7c2-form-input.is-sm, .qxframe9a7c2-form-select.is-sm, .qxframe9a7c2-form-textarea.is-sm, .qxframe9a7c2-selectgroup.is-sm, .qxframe9a7c2-form-check.is-sm, .qxframe9a7c2-form-check-input.is-sm, .qxframe9a7c2-form-segmented.is-sm, .qxframe9a7c2-button-group.is-sm, .qxframe9a7c2-input-group.is-sm, .qxframe9a7c2-form-group.is-sm, .qxframe9a7c2-tags.is-sm, .qxframe9a7c2-tag.is-sm, .qxframe9a7c2-badge.is-sm, .qxframe9a7c2-input-otp.is-sm, .qxframe9a7c2-switch.is-sm, .qxframe9a7c2-slider.is-sm, .qxframe9a7c2-progress.is-sm, .qxframe9a7c2-rate.is-sm, .qxframe9a7c2-card.is-sm, .qxframe9a7c2-collapse.is-sm, .qxframe9a7c2-descriptions.is-sm, .qxframe9a7c2-avatar.is-sm, .qxframe9a7c2-empty.is-sm, .qxframe9a7c2-result.is-sm, .qxframe9a7c2-list.is-sm, .qxframe9a7c2-tree.is-sm, .qxframe9a7c2-transfer.is-sm, .qxframe9a7c2-table.is-sm, .qxframe9a7c2-menu.is-sm, .qxframe9a7c2-tabs.is-sm, .qxframe9a7c2-steps.is-sm, .qxframe9a7c2-pagination.is-sm, .qxframe9a7c2-upload.is-sm, .qxframe9a7c2-alert-root.is-sm, .qxframe9a7c2-message.is-sm, .qxframe9a7c2-notification.is-sm, .qxframe9a7c2-popup-surface.is-sm, .qxframe9a7c2-popover-root.is-sm, .qxframe9a7c2-modal-root.is-sm, .qxframe9a7c2-drawer-root.is-sm, .qxframe9a7c2-calendar.is-sm, .qxframe9a7c2-period-panel.is-sm, .qxframe9a7c2-time-panel.is-sm, .qxframe9a7c2-wheel-panel.is-sm, .qxframe9a7c2-color-panel.is-sm { --_qxframe9a7c2-size-index: -1; }
   .qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
     min-height: var(--_qxframe9a7c2-control-height);
-  }}
+  }
+}
 /* Generic type roles apply only to framework descendants, never html. */
 
   /* Resolve current Type locally, including parts that inherit their owner.

@@ -30,3 +30,10 @@
   .qxframe9a7c2-alert-root.is-default .qxframe9a7c2-alert-description { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-message-content { color: var(--qxframe9a7c2-theme-popover-foreground); }
   .qxframe9a7c2-notification-description { color: var(--qxframe9a7c2-theme-card-foreground); }
+/* Final canonical Tag appearance owner, formerly scoped semantic cascade #2. */
+.qxframe9a7c2-tag {background-color: var(--qxframe9a7c2-theme-secondary);
+    color: var(--qxframe9a7c2-theme-secondary-foreground);
+    border-color: transparent;}
+
+/* Final canonical Tag appearance owner, formerly scoped semantic cascade #3. */
+.qxframe9a7c2-tags.is-variant-solid .qxframe9a7c2-tag, .qxframe9a7c2-badge.is-solid {background-color: var(--_qxframe9a7c2-type); color: var(--_qxframe9a7c2-type-foreground);}

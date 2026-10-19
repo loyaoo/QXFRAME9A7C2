@@ -63,3 +63,5 @@
   .qxframe9a7c2-input.is-draft-value > .qxframe9a7c2-input-control { color: var(--qxframe9a7c2-theme-muted-foreground); }
   .qxframe9a7c2-input.is-variant-filled { --_qxframe9a7c2-control-bg: var(--qxframe9a7c2-theme-muted); }
   .qxframe9a7c2-input.is-variant-borderless { --_qxframe9a7c2-control-border: transparent; --_qxframe9a7c2-control-bg: transparent; }
+/* Final canonical Button filled focus owner, formerly scoped semantic cascade #10. */
+.qxframe9a7c2-button.is-filled {--_qxframe9a7c2-button-focus-border: color-mix(in oklab, var(--_qxframe9a7c2-type) 40%, transparent);}
