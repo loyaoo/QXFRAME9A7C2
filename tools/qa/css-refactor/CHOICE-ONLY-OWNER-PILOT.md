@@ -1,0 +1,9 @@
+# One-owner Choice radius pilot after failed Control-height transfer
+
+- Frozen baseline/main `62d9a8402c19460ced37265acc6d110ae2cfda76`; last 3-way green `f400341bac4256ffbdc43460ae6aae0c7f3ac3a3`; prior failed head `f582d2e620487b673263a56ff226fe65bf8f47f4`.
+- Failed pilot moved Checkbox density radius and Button/Input/FormInput/FormSelect min-height together. GitHub Fast #39222856893 caught 249 real Card docs computed/layout differences Light and Dark and different screenshots; the synthetic matrix did not detect those. Full CI #39222856769 + Schema #39222857035 also failed because the contract saw 154 rather than frozen 153 B0-owned unscoped selectors.
+- This candidate **restores the min-height rule to its original scoped location and exact declaration** from last green `f400341bac4256ffbdc43460ae6aae0c7f3ac3a3`, and removes the late component-sizing rule that shadowed it. Form Textarea remains excluded. No change to full CSSOM/geometry/pixel gate.
+- The Form Checkbox Choice `border-radius:var(--_qxframe9a7c2-choice-radius)` stays in the existing late component-appearance.css; that file deliberately removes Form Checkbox from the broader `theme-radius-choice` selector list, so a density-shaped custom value can keep its own owner.
+- The source verifier now explicitly counts that one exact Checkbox selector as an eighth named transferred owner, asserts its private slot, and freezes all original 153 unscoped selectors and original hash unchanged. It requires **17** scoped owners including final Control min-height and rejects a late unscoped duplicate.
+- Exact-head triple CI must pass, especially real Card screenshot, Choice nested-dark private/public overrides and any Form screenshot diffs. If it fails, revert the entire remaining Checkbox migration to last green rather than weaken tests.
+- No public Theme input, JS/DOM, CSS build-order/module change, main/B0 merge, broad selector modifier, new scope, or historical-version alias.

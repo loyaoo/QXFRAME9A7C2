@@ -93,13 +93,16 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,16,'Root scope retains exactly 16 precedence-sensitive owners; Choice radius and single-line height belong to component modules');
+  assert.equal(scopedBodies.length,17,'Root scope retains exactly 17 precedence-sensitive owners; Choice radius is component-owned and final single-line height remains scoped');
   const choiceOwner=fs.readFileSync(path.join(root,'src/styles/components/component-appearance.css'),'utf8');
   const sizeOwner=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8');
   assert.match(choiceOwner,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:\s*var\(--_qxframe9a7c2-choice-radius\);\s*\}/,
     'Final Checkbox Choice radius must preserve the derived density-shaped slot');
-  assert.match(sizeOwner,/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{\s*min-height:\s*var\(--_qxframe9a7c2-control-height\);\s*\}/,
-    'The final single-line Control height must preserve Theme geometry');
+  assert.doesNotMatch(sizeOwner,/\.qxframe9a7c2-button\[class\][^{}]*\{\s*min-height:/,
+    'Late unscoped sizing must not shadow the final scoped Control min-height');
+  const scopedSource=fs.readFileSync(path.join(root,'src/styles/main/semantic-cascade.css'),'utf8');
+  assert.match(scopedSource,/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{\s*min-height:\s*var\(--_qxframe9a7c2-control-height\);\s*\}/,
+    'Single-line Control height retains frozen root scope priority and excludes Textarea');
   assert.doesNotMatch(source,/\.qxframe9a7c2-form-check-input\[type="checkbox"\]\s*\{\s*border-radius:/,
     'Removed Checkbox radius must not remain a second scoped painter');
   // Base Item Theme text is component-owned, while selected and hover remain
@@ -166,11 +169,12 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     // against their final late files, not allowed as anonymous new consumers.
     '.qxframe9a7c2-tag',
     '.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid',
-    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap'
+    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap',
+    '.qxframe9a7c2-form-check-input[type="checkbox"]'
   ]);
   const compactOwnerSelector=s=>s.replace(/\s+/g,'');
   const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
-  assert.equal(transferredOwners.length,7,'Only seven exact transferred component selectors are newly permitted, each with its declared owner');
+  assert.equal(transferredOwners.length,8,'Only eight exact transferred component selectors are newly permitted, each with its declared owner');
   const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
   const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
   assert.match(noticeOwner,/\.qxframe9a7c2-notification-root\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-card\);\s*color:\s*var\(--_qxframe9a7c2-type\);\s*border-color:\s*var\(--qxframe9a7c2-theme-card-edge\);\s*\}/,'Notification keeps B0 exact final Theme surface');

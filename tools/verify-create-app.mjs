@@ -1822,7 +1822,7 @@ check('multi-line Textarea does not inherit single-line Theme min-height', () =>
   // that scoped core rules are sorted into their actual cascade contexts.
   // Locate it by the COMPLETE single-line selector group and enforce that
   // Textarea is excluded rather than relying on adjacent source blocks.
-  const singleLine=fs.readFileSync(path.join(root,'src/styles/components/component-sizing.css'),'utf8').match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{([^{}]+)\}/);
+  const singleLine=theme.match(/\.qxframe9a7c2-button\[class\],\s*\.qxframe9a7c2-input\[class\],\s*\.qxframe9a7c2-form-input\[class\],\s*\.qxframe9a7c2-form-select\[class\]\s*\{([^{}]+)\}/);
   assert.ok(singleLine,'single-line controls require a unique theme-height owner');
   assert.match(singleLine[1],/min-height:\s*var\(--_qxframe9a7c2-control-height\)/,'single-line controls retain theme height');
   assert.doesNotMatch(singleLine[0],/\.qxframe9a7c2-form-textarea/,'Textarea must not inherit the single-line height owner');

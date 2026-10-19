@@ -110,9 +110,3 @@
 /* Final Textarea spacing owner: override shared [class] Control padding.
  * Its native-input base still owns positioning and multiline min-height. */
 .qxframe9a7c2-input.is-textarea{padding:0}
-
-/* Final single-line control height. Textarea deliberately excluded so its
- * independent multiline min-height and content padding continue to win. */
-.qxframe9a7c2-button[class], .qxframe9a7c2-input[class], .qxframe9a7c2-form-input[class], .qxframe9a7c2-form-select[class] {
-    min-height: var(--_qxframe9a7c2-control-height);
-  }
