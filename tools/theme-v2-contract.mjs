@@ -133,18 +133,24 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   const onePixelOwners=[...sizingSource.matchAll(/([^{}]+)\{\s*--_qxframe9a7c2-control-border-width:\s*1px;\s*\}/g)]
     .filter(x=>isSizedDefault(x[1].trim()));
   assert.equal(onePixelOwners.length,1,'All 47 non-Control defaults must retain the exact 1px declaration');
-  // Exactly three former B0 scoped roles are now authored in their late
+  // Exact owner-migrated B0 selectors are now authored in their late
   // actual component families. Their SELECTORS are frozen here; this does
   // not open the original 153-selector hash to arbitrary additional CSS.
   const approvedOwnerSelectorKeys=new Set([
     '.qxframe9a7c2-notification-root',
     '.qxframe9a7c2-menu',
     '.qxframe9a7c2-input.is-textarea',
-    '.qxframe9a7c2-menu-item.is-danger.is-disabled,.qxframe9a7c2-menu-item.is-danger:disabled,.qxframe9a7c2-menu-item.is-disabled,.qxframe9a7c2-menu-item:disabled,.qxframe9a7c2-menu.is-disabled.qxframe9a7c2-menu-item'
+    '.qxframe9a7c2-menu-item.is-danger.is-disabled,.qxframe9a7c2-menu-item.is-danger:disabled,.qxframe9a7c2-menu-item.is-disabled,.qxframe9a7c2-menu-item:disabled,.qxframe9a7c2-menu.is-disabled.qxframe9a7c2-menu-item',
+    // Owner-specific Tag / Table / Button closures. Values are verified below
+    // against their final late files, not allowed as anonymous new consumers.
+    '.qxframe9a7c2-tag',
+    '.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid',
+    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap',
+    '.qxframe9a7c2-button.is-filled'
   ]);
   const compactOwnerSelector=s=>s.replace(/\s+/g,'');
   const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
-  assert.equal(transferredOwners.length,4,'Only the four exact transferred component selectors are newly permitted');
+  assert.equal(transferredOwners.length,8,'Only eight exact transferred component selectors are permitted, each with its declared owner');
   const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
   const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
   assert.match(noticeOwner,/\.qxframe9a7c2-notification-root\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-card\);\s*color:\s*var\(--_qxframe9a7c2-type\);\s*border-color:\s*var\(--qxframe9a7c2-theme-card-edge\);\s*\}/,'Notification keeps B0 exact final Theme surface');
