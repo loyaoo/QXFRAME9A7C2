@@ -1,7 +1,7 @@
 /* Menu container and disabled state: same final Theme declarations,
  * now owned together by the late Menu family instead of root @scope. */
 .qxframe9a7c2-menu { background-color: var(--qxframe9a7c2-theme-sidebar, var(--qxframe9a7c2-theme-background)); color: var(--qxframe9a7c2-theme-sidebar-foreground, var(--qxframe9a7c2-theme-foreground)); }
-.qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
+
 
 
   /* Shared ColorPanel control source handles idle, hover and keyboard focus. */
@@ -50,3 +50,7 @@
   .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-track { background-color: var(--_qxframe9a7c2-type); border-color: var(--_qxframe9a7c2-type); }
   .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--qxframe9a7c2-theme-foreground)); }
   .qxframe9a7c2-switch-input:checked + .qxframe9a7c2-switch-track .qxframe9a7c2-switch-thumb, .qxframe9a7c2-switch.is-checked .qxframe9a7c2-switch-thumb { background-color: light-dark(var(--qxframe9a7c2-theme-background), var(--_qxframe9a7c2-type-foreground)); }
+
+/* Final Menu disabled projection: after ordinary Menu item paint, preserving
+ * the original root-scope precedence without retaining a global @scope. */
+.qxframe9a7c2-menu-item.is-danger.is-disabled, .qxframe9a7c2-menu-item.is-danger:disabled, .qxframe9a7c2-menu-item.is-disabled, .qxframe9a7c2-menu-item:disabled, .qxframe9a7c2-menu.is-disabled .qxframe9a7c2-menu-item { --_qxframe9a7c2-menu-item-bg: transparent; --_qxframe9a7c2-navigation-text: inherit; opacity: .5; }
