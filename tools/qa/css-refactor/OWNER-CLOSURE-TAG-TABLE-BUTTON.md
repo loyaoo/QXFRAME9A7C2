@@ -17,3 +17,6 @@
 
 ## Table final-owner correction
 The full QXFRAME #39189833778 also identified two Table `color` collisions that the preceding fast log abbreviated. Remove `table-wrap { color:var(--_semantic-text) }` and `table { color:inherit }` from the early canonical `table.css`; keep all other Table geometry and variable declarations. The new later `data-control-states.css` continues to supply exactly `color:var(--qxframe9a7c2-theme-foreground)` to both, matching the original scoped final owner. This closes five explicit duplicate-owner keys in one family batch, not by increasing ratchets.
+
+## Exact 153-selector structural gate correction
+CI #39190351327 exposed that `input-action-states.css` already had a B0-approved `.button.is-filled` selector. The migrated declaration was appended as a second rule, producing 9 matches against 8 approved keys. This is not a new selector; merge the original focus-border property into the existing Button Filled rule, leaving ONE final component selector. Keep the frozen original 153-rule SHA256 unchanged; the genuinely new Tag/TagSolid/Table selector identities are explicitly approved as 3 new owner expressions, total historical owner exceptions **4 → 7**, with their actual full values asserted. This is a genuine single-owner improvement, not raising unrelated source limits.

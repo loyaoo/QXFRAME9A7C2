@@ -102,7 +102,9 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   const lateTable=fs.readFileSync(path.join(root,'src/styles/components/data-control-states.css'),'utf8').replace(/\s+/g,'');
   assert.ok(lateTable.includes('.qxframe9a7c2-table,.qxframe9a7c2-table-wrap{background-color:var(--qxframe9a7c2-theme-background);color:var(--qxframe9a7c2-theme-foreground);border-color:var(--qxframe9a7c2-theme-border);}'),'Table surface must retain Theme-owned background/foreground/edge');
   const lateAction=fs.readFileSync(path.join(root,'src/styles/components/input-action-states.css'),'utf8').replace(/\s+/g,'');
-  assert.ok(lateAction.includes('.qxframe9a7c2-button.is-filled{--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);}'),'Filled Button focus border alpha must be unchanged');
+  const filledActionRules=[...lateAction.matchAll(/\.qxframe9a7c2-button\.is-filled\{([^{}]*)\}/g)];
+  assert.equal(filledActionRules.length,1,'Filled Button must have one final component rule');
+  assert.ok(filledActionRules[0][1].includes('--_qxframe9a7c2-button-focus-border:color-mix(inoklab,var(--_qxframe9a7c2-type)40%,transparent);'),'Filled Button focus border alpha must be unchanged');
   // Zero-specificity root-excluding projection of the original 62 semantic roles.
   const descendantRoles=source.match(/\*\s+\*\s*\{([^{}]+)\}/);
   assert.ok(descendantRoles,'Descendant semantic roles must exist outside root scope');
@@ -145,12 +147,11 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
     // against their final late files, not allowed as anonymous new consumers.
     '.qxframe9a7c2-tag',
     '.qxframe9a7c2-tags.is-variant-solid.qxframe9a7c2-tag,.qxframe9a7c2-badge.is-solid',
-    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap',
-    '.qxframe9a7c2-button.is-filled'
+    '.qxframe9a7c2-table,.qxframe9a7c2-table-wrap'
   ]);
   const compactOwnerSelector=s=>s.replace(/\s+/g,'');
   const transferredOwners=unscopedPreludes.filter(x=>approvedOwnerSelectorKeys.has(compactOwnerSelector(x)));
-  assert.equal(transferredOwners.length,8,'Only eight exact transferred component selectors are permitted, each with its declared owner');
+  assert.equal(transferredOwners.length,7,'Only seven exact transferred component selectors are newly permitted, each with its declared owner');
   const noticeOwner=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8');
   const menuOwner=fs.readFileSync(path.join(root,'src/styles/components/menu-selection-states.css'),'utf8');
   assert.match(noticeOwner,/\.qxframe9a7c2-notification-root\s*\{\s*background-color:\s*var\(--qxframe9a7c2-theme-card\);\s*color:\s*var\(--_qxframe9a7c2-type\);\s*border-color:\s*var\(--qxframe9a7c2-theme-card-edge\);\s*\}/,'Notification keeps B0 exact final Theme surface');
