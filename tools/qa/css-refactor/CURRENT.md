@@ -108,3 +108,7 @@ Owner-ratchet corrective batch: three earlier tag, badge solid and filled-button
 
 
 Chromium-corrected Button ownership: Filled focus rule returned to scoped semantic-cascade after 6 Light/Dark custom-property regressions. Scoped core count 18 (not 17); three Tag/Table rules transferred. Early and late Button source files fully restored from prior triple-green HEAD; Theme/JS untouched. Current triple gates pending.
+
+
+## Last root-scope Item/Card owners — pending exact-head CI
+Transferred Item surface default foreground, selected/hover muted foreground and Card Grid hover Theme shadow from 3 scoped rules to their real early component CSS owners. The old Item selected property assignments were replaced rather than left as duplicate owners. Scoped semantic-cascade qualified rules 18→15, plain selector list and SHA unchanged, @scope count remains 1. Current exact HEAD triple CI / full CSSOM / pixel screenshot mandatory. Do not claim completion or merge. See ITEM-CARD-OWNERS.md.

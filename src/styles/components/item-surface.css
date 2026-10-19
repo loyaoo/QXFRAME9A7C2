@@ -18,7 +18,7 @@
  */
 .qxframe9a7c2-item-surface{
   --_qxframe9a7c2-item-bg:transparent;
-  --_qxframe9a7c2-item-text:inherit;
+  --_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-foreground);
   --_qxframe9a7c2-item-focus-shadow:none;
   --_qxframe9a7c2-item-outline:0 solid transparent;
   --_qxframe9a7c2-item-cursor:pointer;
@@ -33,10 +33,9 @@
 .qxframe9a7c2-item-surface.is-hover:not(.is-selected){--_qxframe9a7c2-item-bg:var(--_qxframe9a7c2-semantic-subtle-hover)}
 .qxframe9a7c2-item-surface.is-descendant-selected.is-hover:not(.qxframe9a7c2-tree-item):not(.is-selected),
 .qxframe9a7c2-item-surface.is-indeterminate.is-hover:not(.qxframe9a7c2-tree-item):not(.is-selected){--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent)}
-.qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item){--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 10%, transparent);--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-primary)}
+/* Selected Item Type/foreground now resolves once in the final component state owner below. */
 /* Tree selection changes text only; disclosure and ancestor flags retain DOM semantics, not paint. */
 .qxframe9a7c2-item-surface.qxframe9a7c2-tree-item.is-selected{--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-primary)}
-.qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item),
 .qxframe9a7c2-item-surface.is-selected.is-open:not(.qxframe9a7c2-tree-item),
 .qxframe9a7c2-item-surface.is-selected.is-active:not(.qxframe9a7c2-tree-item){--_qxframe9a7c2-item-bg:color-mix(in oklab, var(--qxframe9a7c2-theme-primary) 20%, transparent)}
 .qxframe9a7c2-item-surface.is-keyboard-focus{--_qxframe9a7c2-item-focus-shadow:none;--_qxframe9a7c2-item-outline:var(--_qxframe9a7c2-focus-visible-outline);position:relative;z-index:var(--qxframe9a7c2-z-local-raised)}
@@ -154,3 +153,8 @@
  * standalone minimum. Scope intrinsic shrinking to this opt-in layout;
  * regular standalone Slider retains its default minimum. */
 .qxframe9a7c2-item.is-actions-equal .qxframe9a7c2-slider{min-width:0}
+
+
+/* Final Item selected/hover painter. Original B0 scoped precedence is now
+ * resolved once in this component's own state chain, without @scope. */
+.qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }

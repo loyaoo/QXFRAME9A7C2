@@ -93,7 +93,19 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,18,'Root scope retains exactly 18 precedence-sensitive owners, including Filled Button focus');
+  assert.equal(scopedBodies.length,15,'Root scope retains exactly 15 precedence-sensitive owners, including Filled Button focus');
+  // Core Item state and Card Grid hover have moved to their actual early
+  // component owners. Preserve B0's final theme color and shadow recipes.
+  const itemOwner=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
+  assert.match(itemOwner,/--_qxframe9a7c2-item-text:var\(--qxframe9a7c2-theme-foreground\)/,
+    'Item base foreground must continue to resolve from the Theme');
+  assert.match(itemOwner,/\.qxframe9a7c2-item-surface\.is-selected:not\(\.qxframe9a7c2-tree-item\)[^{}]*\{[^{}]*--_qxframe9a7c2-item-bg:\s*var\(--qxframe9a7c2-theme-muted\)/,
+    'Selected Item must retain its final muted background');
+  assert.match(itemOwner,/\.qxframe9a7c2-item-surface\.is-selected\.is-hover:not\(\.qxframe9a7c2-tree-item\)[^{}]*\{[^{}]*--_qxframe9a7c2-item-text:\s*var\(--qxframe9a7c2-theme-foreground\)/,
+    'Hovered selected Item text must retain B0 Theme foreground');
+  const cardOwner=fs.readFileSync(path.join(root,'src/styles/components/card.css'),'utf8');
+  assert.match(cardOwner,/\.qxframe9a7c2-card-grid-item:hover\s*\{[^{}]*box-shadow:var\(--qxframe9a7c2-theme-shadow-card\)\}/,
+    'Card Grid hover must retain its final Theme shadow');
   // Four owner closures have exact selectors and Theme expressions in their
   // late, domain-specific files. No arbitrary unscoped core exceptions.
   const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\s+/g,'');

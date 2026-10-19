@@ -103,13 +103,6 @@
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-background);
   }
-
-  /* Selection item paint is source Command/Select highlight, not feedback soft. */
-  .qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg: transparent; --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
-  .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
-
-  /* Source decoration distribution; inline feedback has no popup shadow. */
-  .qxframe9a7c2-card-grid-item:hover { box-shadow: var(--qxframe9a7c2-theme-shadow-card); }
   /* Image Preview owns its one chrome background/border/foreground and hover in
      components/image.css. Do not repaint toolbar or tools from the page Theme. */
   .qxframe9a7c2-loading, .qxframe9a7c2-layout, .qxframe9a7c2-json, .qxframe9a7c2-collapse, .qxframe9a7c2-tabs, .qxframe9a7c2-steps, .qxframe9a7c2-descriptions, .qxframe9a7c2-sort, .qxframe9a7c2-date-panel, .qxframe9a7c2-time-panel-root { color: var(--qxframe9a7c2-theme-foreground); }
