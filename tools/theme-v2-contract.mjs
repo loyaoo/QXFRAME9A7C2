@@ -93,11 +93,16 @@ export function verifySemanticRuleSource(root,{sourceText=null}={}){
   }
   assert.equal(scopeDepth,0,'Core root scope must be balanced');
   const scopedBodies=[...source.slice(scopeOpen+1,scopeEnd-1).matchAll(/[^{}]+\{[^{}]*\}/g)];
-  assert.equal(scopedBodies.length,17,'Root scope retains exactly 17 precedence-sensitive owners, including Item selected and Filled Button focus');
+  assert.equal(scopedBodies.length,18,'Root scope retains exactly 18 precedence-sensitive owners, including Item paint, selection and Filled Button focus');
   // Base Item Theme text is component-owned, while selected and hover remain
   // scoped to preserve the actual docs navigation selected background.
   const itemOwner=fs.readFileSync(path.join(root,'src/styles/components/item-surface.css'),'utf8');
   assert.ok(itemOwner.includes('--_qxframe9a7c2-item-text:var(--qxframe9a7c2-theme-foreground);'),'Item base text must retain Theme foreground');
+  // Scope proximity owns the final Item painter; ordinary component-level
+  // background shorthand loses to docs sidebar selected state. The private
+  // role definitions themselves are component-owned in item-surface.css.
+  assert.ok(source.includes('.qxframe9a7c2-item-surface { background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }'),'Scoped Item paint must remain a single final owner');
+  assert.ok(!source.includes('.qxframe9a7c2-item-surface { --_qxframe9a7c2-item-bg:'),'Scoped Item rule must not re-declare private base roles');
     // Four owner closures have exact selectors and Theme expressions in their
   // late, domain-specific files. No arbitrary unscoped core exceptions.
   const lateTag=fs.readFileSync(path.join(root,'src/styles/components/feedback-theme-states.css'),'utf8').replace(/\s+/g,'');

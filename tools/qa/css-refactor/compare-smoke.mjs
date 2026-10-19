@@ -280,7 +280,9 @@ async function sample(which,mode,route='synthetic',hoverId=null) {
     const rows=[];
     const realDoc=!!document.body.dataset.qxframe9a7c2Component;
     const all=realDoc ?
-      [document.documentElement,document.body,...[...document.querySelectorAll('.qxframe9a7c2-card,.qxframe9a7c2-card *')].slice(0,250)] :
+      [document.documentElement,document.body,
+        ...[...document.querySelectorAll('.qxframe9a7c2-docs-sidebar .qxframe9a7c2-menu-item')].slice(0,90),
+        ...[...document.querySelectorAll('.qxframe9a7c2-card,.qxframe9a7c2-card *')].slice(0,250)] :
       [document.documentElement,document.body,...document.querySelectorAll('body *')];
     const domPath=el=>{
       const out=[];

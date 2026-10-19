@@ -112,3 +112,6 @@ Chromium-corrected Button ownership: Filled focus rule returned to scoped semant
 
 ## Scope correction after browser pixel-negative result
 Failed b5f356ec removed three root scoped rules; docs Card CSSOM 152 nodes showed 0 but true RGB screenshot differed by 8067 pixels at sidebar selected Card. PNG SHA mismatch was NOT just encoding: initial RGBA diff accidentally hid RGB differences due zero alpha-channel diff. Reverted Item selected/hover and Card Grid hover scoped rules, fully restored Card public shadow owner and all Item state rules from previous triple-green 862a7113. Only Item base text role remains transferred. Scoped semantic core count 18→17. Exact new-head Fast/QXFRAME/Schema acceptance pending; no comparison gate was changed.
+
+
+2026-10-19 pixel regression correction: Item base private roles remain in components/item-surface.css; scoped semantic-cascade.css restores ONLY Item background-color/color painter (one 18th scoped rule) to preserve sidebar Card selected background. Fast real Card docs CSSOM now samples sidebar Menu Items as well. Rejected HEAD 04e5874 lost 8067 pixels in Light/Dark screenshots. Local 16 Item variants full CSSOM matched golden; exact-head triple CI pending. See ITEM-BASE-PAINTER-CORRECTION.md.

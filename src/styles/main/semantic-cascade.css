@@ -103,6 +103,10 @@
     --_qxframe9a7c2-control-bg-disabled: var(--qxframe9a7c2-theme-background);
     --_qxframe9a7c2-control-bg-readonly: var(--qxframe9a7c2-theme-background);
   }
+  /* Item private roles belong to item-surface.css; the final background and
+     foreground painter stays at scoped cascade precedence. Ordinary Item
+     background shorthand loses to the docs sidebar selection surface. */
+  .qxframe9a7c2-item-surface { background-color: var(--_qxframe9a7c2-item-bg); color: var(--_qxframe9a7c2-item-text); }
   .qxframe9a7c2-item-surface.is-hover, .qxframe9a7c2-item-surface:hover, .qxframe9a7c2-item-surface.is-selected:not(.qxframe9a7c2-tree-item), .qxframe9a7c2-item-surface.is-selected.is-hover:not(.qxframe9a7c2-tree-item) { --_qxframe9a7c2-item-bg: var(--qxframe9a7c2-theme-muted); --_qxframe9a7c2-item-text: var(--qxframe9a7c2-theme-foreground); }
 
   /* Source decoration distribution; inline feedback has no popup shadow. */
