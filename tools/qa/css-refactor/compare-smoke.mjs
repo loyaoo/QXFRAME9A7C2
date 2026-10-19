@@ -208,7 +208,8 @@ const server = http.createServer((req, res) => {
 await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
 const origin = 'http://127.0.0.1:' + server.address().port;
 const bin = [process.env.CHROMIUM_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome','/usr/bin/google-chrome-stable'].filter(Boolean).find(p => fs.existsSync(p));
-const profile = fs.mkdtempSync(path.join(os.tmpdir(),'qx-css-refactor-cdp-'));
+let profile = fs.mkdtempSync(path.join(os.tmpdir(),'qx-css-refactor-cdp-'));
+const chromiumProfiles=[profile];
 let child, socket, cid=0;
 const pending = new Map(), runtimeErrors = [], httpErrors = [];
 let sessionId, endpoint='', stderr='';
@@ -360,11 +361,29 @@ function compare(a,b,label) {
 const report={realDocCoverage:'docs/components/card.html, same-source JS/HTML, native docs Theme state API, deterministic WAAPI t=0 sampling and CSS swap',baselineSha256:b0Digest,candidateSha256:crypto.createHash('sha256').update(candidate).digest('hex'),source:'real Chromium CSSOM/computedStyle/getBoundingClientRect',cases:[],selfPassed:false,negativePassed:false,realCandidatePassed:false,errors:[],warnings:['Expanded synthetic fixture covers Card size xs–xl, states, public ancestor/root overrides and local dark, but is not a replacement for pointer-hover/keyboard/112-config/portal acceptance.']};
 try {
   if (!bin) throw new Error('Chromium is required; set CHROMIUM_BIN');
-  child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
-  child.stderr.setEncoding('utf8');
-  child.stderr.on('data',d=>{stderr+=d;endpoint ||= (stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/)||[])[1]||'';});
-  for(let i=0;i<600 && !endpoint && child.exitCode===null;i++)await sleep(50);
-  if(!endpoint)throw new Error('Cannot launch Chromium CDP: '+stderr.slice(-700));
+  // Chromium can exit before publishing CDP under shared GitHub runner load.
+  // Retry only startup with a fresh browser profile; never retry/ignore
+  // CSSOM, screenshot, network or negative-control comparison failures.
+  const launchFailures=[];
+  for(let attempt=1;attempt<=3 && !endpoint;attempt++){
+    if(attempt>1){
+      profile=fs.mkdtempSync(path.join(os.tmpdir(),'qx-css-refactor-cdp-'));
+      chromiumProfiles.push(profile);
+      await sleep(400*attempt);
+    }
+    stderr='';
+    child=spawn(bin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--remote-debugging-port=0','--window-size=1440,900','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+    child.on('error',err=>{stderr+='\\nChromium spawn error: '+String(err);});
+    child.stderr.setEncoding('utf8');
+    child.stderr.on('data',d=>{stderr+=d;endpoint ||= (stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/)||[])[1]||'';});
+    for(let i=0;i<600 && !endpoint && child.exitCode===null;i++)await sleep(50);
+    if(endpoint){report.browserLaunchAttempts=attempt;break;}
+    launchFailures.push({attempt,exitCode:child.exitCode,stderr:stderr.slice(-700)});
+    child.kill('SIGKILL');
+    await sleep(300);
+  }
+  if(!endpoint)throw new Error('Cannot launch Chromium CDP after three isolated startup attempts: '+JSON.stringify(launchFailures));
+  if(launchFailures.length)report.warnings.push('Chromium startup required '+launchFailures.length+' transient retry(ies): '+JSON.stringify(launchFailures));
   const WebSocketClient=await getWebSocketConstructor();
   socket=new WebSocketClient(endpoint);
   await new Promise((resolve,reject)=>{socket.onopen=resolve;socket.onerror=()=>reject(new Error('CDP connection failed'));});
@@ -436,7 +455,7 @@ finally{
   if(socket)socket.close();
   if(child){child.kill('SIGTERM');await sleep(100);if(child.exitCode===null)child.kill('SIGKILL');}
   server.close();
-  fs.rmSync(profile,{recursive:true,force:true,maxRetries:15,retryDelay:200});
+  for(const candidateProfile of chromiumProfiles)fs.rmSync(candidateProfile,{recursive:true,force:true,maxRetries:15,retryDelay:200});
 }
 if(arg('out')){fs.mkdirSync(path.dirname(path.resolve(arg('out'))),{recursive:true});fs.writeFileSync(path.resolve(arg('out')),JSON.stringify(report,null,2)+'\n');}
 console.log(JSON.stringify({...report,cases:report.cases.map(x=>({...x,candidateSamples:x.candidateSamples.slice(0,3)}))}));
