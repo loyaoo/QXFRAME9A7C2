@@ -24,7 +24,13 @@ const LEGACY_OPTIONS = Object.freeze([
   'fieldNames','nodeKey','props','showCheckbox','expandOnClickNode','checkOnClickNode','autoExpandSelectedParents','expandSelectedPath'
 ]);
 const hasOwn = Utils.own;
+function selectionAreaOf(value) {
+  if (value === undefined || value === null) return 'full';
+  if (value === 'full' || value === 'half' || value === 'content') return value;
+  throw new TypeError('[QXFRAME9A7C2] Tree selectionArea must be "full", "half", or "content".');
+}
 function assertCanonicalOptions(options) {
+  if (options && Object.prototype.hasOwnProperty.call(options, 'selectionArea')) selectionAreaOf(options.selectionArea);
   const source = options || {};
   LEGACY_OPTIONS.forEach(name => { if (hasOwn(source, name)) throw new TypeError('[QXFRAME9A7C2] Tree does not accept legacy/non-canonical option "' + name + '".'); });
 }
@@ -307,6 +313,8 @@ function setupTreeRuntime(instance) {
     
           var ancestors = model.getAncestors(row.key).reverse();
           for (var level = 0; level < row.depth; level += 1) {
+            // Root siblings never share a vertical continuation guide.
+            if (level === 0 && row.depth > 1) continue;
             var unit = doc.createElement('span');
             unit.className = 'qxframe9a7c2-tree-line-unit';
             unit.style.insetInlineStart = String(level * indentSize) + 'px';
@@ -369,10 +377,13 @@ function setupTreeRuntime(instance) {
             var rendered = opts.itemRender(row.item, itemCtx);
             Renderer.append(label, rendered === undefined || rendered === null ? String(row.label) : rendered);
           } else DOM.setText(label, row.label);
+          var selectionContent = doc.createElement('span');
+          selectionContent.className = 'qxframe9a7c2-tree-select-content';
+          if (icon) selectionContent.appendChild(icon);
+          selectionContent.appendChild(label);
           if (toggle) wrap.appendChild(toggle);
           if (checkbox) wrap.appendChild(checkbox);
-          if (icon) wrap.appendChild(icon);
-          wrap.appendChild(label);
+          wrap.appendChild(selectionContent);
           return wrap;
         }
     
@@ -409,6 +420,10 @@ function setupTreeRuntime(instance) {
           root.classList.toggle('is-draggable', opts.draggable !== false);
           root.classList.toggle('is-show-line', opts.showLine === true);
           root.classList.toggle('is-block-node', opts.blockNode === true);
+          var selectionArea = selectionAreaOf(opts.selectionArea);
+          root.classList.toggle('is-selection-full', selectionArea === 'full');
+          root.classList.toggle('is-selection-half', selectionArea === 'half');
+          root.classList.toggle('is-selection-content', selectionArea === 'content');
           var nodes = root.querySelectorAll('.qxframe9a7c2-tree-item');
           Array.prototype.forEach.call(nodes, function (node) {
             var key = treeKeyFromRowNode(node);
@@ -848,6 +863,10 @@ function setupTreeRuntime(instance) {
             var originalTarget = detail && detail.originalEvent && detail.originalEvent.target;
             var inlineControl = originalTarget && originalTarget.closest ? originalTarget.closest('.qxframe9a7c2-tree-toggle,.qxframe9a7c2-tree-check') : null;
             if (inlineControl && root && root.contains(inlineControl)) return false;
+            if (detail.source === 'pointer' && selectionAreaOf(opts.selectionArea) !== 'full') {
+              var selectionTarget = originalTarget && originalTarget.closest ? originalTarget.closest('.qxframe9a7c2-tree-select-content') : null;
+              if (!selectionTarget || !root.contains(selectionTarget)) return false;
+            }
             if (opts.expandOnRowClick === true && canExpand(row.record)) toggleExpand(row.key, { source: 'pointer', reason: 'row-click-expand', originalEvent: detail.originalEvent });
             /* In multi-select Tree, row selection and checkbox checking are separate
                interaction owners. Pointer checking is checkbox-only even if a caller
@@ -968,6 +987,7 @@ function setupTreeRuntime(instance) {
             checkStrictly: opts.checkStrictly === true,
             draggable: opts.draggable !== false,
             blockNode: opts.blockNode === true,
+            selectionArea: selectionAreaOf(opts.selectionArea),
             showLine: opts.showLine === true,
             disabled: opts.disabled === true,
             readOnly: opts.readOnly === true,
@@ -1024,7 +1044,7 @@ export class Tree extends Component {
     selection:Object.freeze({ channels:Object.freeze(['selected','checked']), hierarchical:true }),
     ownership:Object.freeze({ selection:'SelectionController' })
   });
-  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, size:'md' });
+  static options = Object.freeze({ multiple:false, selectable:true, checkable:false, checkStrictly:false, expandOnRowClick:false, checkOnRowClick:false, expandSelectedAncestors:false, draggable:false, showLine:false, blockNode:false, selectionArea:'full', size:'md' });
   static immutableOptions = Object.freeze(['container']);
   static createDefaultDOM = ItemCollection.createDefaultDOM;
 
