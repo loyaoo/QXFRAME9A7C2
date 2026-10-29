@@ -306,13 +306,15 @@ function setupTreeRuntime(instance) {
         }
     
         function renderTreeLines(row, indentSize) {
-          if (opts.showLine !== true || !row || row.depth <= 1) return null;
+          if (opts.showLine !== true || !row || row.depth <= 0) return null;
           var lines = doc.createElement('span');
           lines.className = 'qxframe9a7c2-tree-lines';
           lines.style.width = String(row.depth * indentSize) + 'px';
     
           var ancestors = model.getAncestors(row.key).reverse();
-          for (var level = 1; level < row.depth; level += 1) {
+          for (var level = 0; level < row.depth; level += 1) {
+            // Root siblings never share a vertical continuation guide.
+            if (level === 0 && row.depth > 1) continue;
             var unit = doc.createElement('span');
             unit.className = 'qxframe9a7c2-tree-line-unit';
             unit.style.insetInlineStart = String(level * indentSize) + 'px';

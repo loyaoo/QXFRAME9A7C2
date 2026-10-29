@@ -206,7 +206,7 @@
       record('regression-tree-selection-area-default-full',areaTree.getState().selectionArea==='full'&&areaRoot.classList.contains('is-selection-full')&&getComputedStyle(areaRow).backgroundColor!=='rgba(0, 0, 0, 0)','area='+areaTree.getState().selectionArea+',bg='+getComputedStyle(areaRow).backgroundColor);
       var areaToggle=areaRow.querySelector('.qxframe9a7c2-tree-toggle'),areaSize=areaToggle.getBoundingClientRect();
       record('regression-tree-toggle-sized-box',areaSize.width>=19.5&&Math.abs(areaSize.width-areaSize.height)<1,'dimensions='+areaSize.width+'x'+areaSize.height);
-      record('regression-tree-lines-start-second-level',!areaTree.getList().getItemElement('child').querySelector('.qxframe9a7c2-tree-lines')&&!!areaTree.getList().getItemElement('grand').querySelector('.qxframe9a7c2-tree-line-unit.is-current'),'line depth');
+      record('regression-tree-lines-start-second-level',!areaTree.getList().getItemElement('root').querySelector('.qxframe9a7c2-tree-lines')&&!!areaTree.getList().getItemElement('child').querySelector('.qxframe9a7c2-tree-line-unit.is-current')&&!!areaTree.getList().getItemElement('grand').querySelector('.qxframe9a7c2-tree-line-unit.is-current')&&!areaTree.getList().getItemElement('grand').querySelector('.qxframe9a7c2-tree-line-unit.is-ancestor:not(.is-current)'),'line depth');
       areaTree.updateOptions({selectionArea:'half'});
       areaRow=areaTree.getList().getItemElement('child');
       var halfRect=areaRow.querySelector('.qxframe9a7c2-tree-select-content').getBoundingClientRect(),halfRowRect=areaRow.getBoundingClientRect();
